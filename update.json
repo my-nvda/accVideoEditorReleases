@@ -1,6 +1,6 @@
 ﻿{
-    "releaseNotes":  "تم إصلاح الشوائب الـ 10 (النص المتحرك، المعالجة المتعددة، السجل، رسالة التحديث المتكررة، وغيرها).",
-    "versionCode":  11,
-    "versionName":  "2.1.9",
+    "releaseNotes":  "تم إصلاح الشوائب الـ 10 (النص المتحرك، المعالجة المتعددة، السجل، رسالة التحديث المتكررة، وغيرها). وتم تصغير أزرار القائمة الرئيسية لتوفير مساحة وتسهيل التنقل.",
+    "versionCode":  12,
+    "versionName":  "2.1.10",
     "downloadUrl":  "https://github.com/my-nvda/accVideoEditorReleases/raw/main/AccessibleVideoEditor_Update.apk"
 }
