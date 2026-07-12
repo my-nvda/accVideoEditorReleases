@@ -1,1 +1,6 @@
-{"versionCode": 9, "versionName": "2.1.7", "downloadUrl": "https://github.com/my-nvda/AccessibleVideoEditor/raw/main/app-debug.apk", "releaseNotes": "تحديث فرعي: إصلاح مشكلة ظهور رسالة التحديث مرتين متتاليتين عند فتح التطبيق."}
+{
+    "versionCode": 10,
+    "versionName": "2.1.8",
+    "downloadUrl": "https://github.com/my-nvda/AccessibleVideoEditor/raw/main/app-debug.apk",
+    "releaseNotes": "تحديث: إصلاح مثبت الحزم، ترتيب الشاشة الرئيسية، وتوافق مربعات التحرير مع جيشو."
+}

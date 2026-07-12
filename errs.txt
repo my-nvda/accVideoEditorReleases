@@ -1,0 +1,3 @@
+The client will now receive all logging from the daemon (pid: 18260). The daemon log file: C:\Users\AHMED\.gradle\daemon\9.1.0\daemon-18260.out.log
+
+Encryption key source: default Gradle keystore (pkcs12)
