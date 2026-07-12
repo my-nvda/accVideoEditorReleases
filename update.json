@@ -1,6 +1,6 @@
 ﻿{
-    "releaseNotes":  "تم إصلاح الشوائب الـ 10 (النص المتحرك، المعالجة المتعددة، السجل، رسالة التحديث المتكررة، وغيرها). وتم تصغير أزرار القائمة الرئيسية لتوفير مساحة وتسهيل التنقل.",
-    "versionCode":  12,
-    "versionName":  "2.1.10",
+    "releaseNotes":  "تم إصلاح ميزة الكتابة على الصور بشكل جذري بحيث تدعم اللغة العربية بالكامل وبجودة أعلى.",
+    "versionCode":  25,
+    "versionName":  "2.2.1",
     "downloadUrl":  "https://github.com/my-nvda/accVideoEditorReleases/raw/main/AccessibleVideoEditor_Update.apk"
 }
