@@ -1,6 +1,6 @@
 ﻿{
-    "releaseNotes":  "إضافة نظام التقرير الشامل عن الأخطاء لعرض النافذة المنبثقة بدقة عند فشل أي عملية.",
-    "versionCode":  26,
-    "versionName":  "2.2.2",
+    "releaseNotes":  "تفعيل تقرير الأخطاء الشامل داخل نافذة النص المتحرك لالتقاط المشكلة بدقة.",
+    "versionCode":  27,
+    "versionName":  "2.2.3",
     "downloadUrl":  "https://github.com/my-nvda/accVideoEditorReleases/raw/main/AccessibleVideoEditor_Update.apk"
 }
