@@ -37,7 +37,7 @@ object AppUpdater {
 
     suspend fun checkForUpdate(context: Context): UpdateInfo? = withContext(Dispatchers.IO) {
         try {
-            val url = URL("https://github.com/my-nvda/AccessibleVideoEditor/raw/main/update.json?t=${System.currentTimeMillis()}")
+            val url = URL("https://github.com/my-nvda/accVideoEditorReleases/raw/main/update.json?t=${System.currentTimeMillis()}")
             val connection = url.openConnection() as HttpURLConnection
             connection.useCaches = false
             connection.requestMethod = "GET"
