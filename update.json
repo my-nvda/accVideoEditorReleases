@@ -1,6 +1,6 @@
 ﻿{
-    "releaseNotes":  "حل مشكلة تشفير الفيديو (Unknown encoder libx264) في الشاشات المختلفة.",
-    "versionCode":  28,
-    "versionName":  "2.2.4",
+    "releaseNotes":  "حل مشكلة Unknown encoder libx264 في شاشات الدمج ومعالجة الدفعات.",
+    "versionCode":  29,
+    "versionName":  "2.2.5",
     "downloadUrl":  "https://github.com/my-nvda/accVideoEditorReleases/raw/main/AccessibleVideoEditor_Update.apk"
 }
