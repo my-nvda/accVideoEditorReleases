@@ -1,6 +1,6 @@
-{
-    "versionCode": 23,
-    "versionName": "2.1.8",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v2.1.8/app-debug.apk",
-    "releaseNotes": "تحديث: إصلاح مثبت الحزم، ترتيب الشاشة الرئيسية، وتوافق مربعات التحرير مع جيشو."
+﻿{
+    "releaseNotes":  "تم إصلاح الشوائب الـ 10 (النص المتحرك، المعالجة المتعددة، السجل، رسالة التحديث المتكررة، وغيرها).",
+    "versionCode":  11,
+    "versionName":  "2.1.9",
+    "downloadUrl":  "https://github.com/my-nvda/accVideoEditorReleases/raw/main/AccessibleVideoEditor_Update.apk"
 }
