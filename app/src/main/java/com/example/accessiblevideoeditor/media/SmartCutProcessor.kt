@@ -2,9 +2,7 @@ package com.example.accessiblevideoeditor.media
 
 import android.content.Context
 import com.arthenica.ffmpegkit.FFmpegKit
-import com.arthenica.ffmpegkit.FFmpegSession
-import com.arthenica.ffmpegkit.LogCallback
-import java.io.File
+import com.arthenica.ffmpegkit.FFprobeKit
 import kotlin.math.min
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,16 +11,38 @@ object SmartCutProcessor {
 
     suspend fun removeSilence(context: Context, inputPath: String, outputPath: String, thresholdDb: Int = -30, durationSec: Float = 0.5f): Boolean = withContext(Dispatchers.IO) {
         try {
+            val mediaInfo = FFprobeKit.getMediaInformation(inputPath)
+            val info = mediaInfo.mediaInformation
+            val duration = info?.duration?.toDoubleOrNull() ?: 36000.0
+            
+            // Check if there is an audio stream
+            val streams = info?.streams ?: emptyList()
+            val hasAudio = streams.any { it.type == "audio" }
+            
+            if (!hasAudio) {
+                // No audio, just copy
+                val copyCmd = arrayOf("-y", "-i", inputPath, "-c", "copy", outputPath)
+                return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath)
+            }
+
             // Pass 1: Detect silence
-            val detectCommand = "-i \"$inputPath\" -af silencedetect=noise=${thresholdDb}dB:d=$durationSec -f null -"
-            val detectSession = FFmpegKit.execute(detectCommand)
+            val detectCommandArgs = arrayOf("-i", inputPath, "-af", "silencedetect=noise=${thresholdDb}dB:d=$durationSec", "-f", "null", "-")
+            val detectSession = FFmpegKit.executeWithArguments(detectCommandArgs)
+            if (!com.arthenica.ffmpegkit.ReturnCode.isSuccess(detectSession.returnCode)) {
+                val logs = detectSession.failStackTrace ?: detectSession.allLogsAsString ?: "Unknown FFmpeg Error"
+                val detailedLog = "Command:\n${detectCommandArgs.joinToString(" ")}\n\nLogs:\n$logs"
+                withContext(Dispatchers.Main) {
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.showError(detailedLog)
+                }
+                return@withContext false
+            }
             val logs = detectSession.allLogsAsString
             
             val silenceStarts = mutableListOf<Double>()
             val silenceEnds = mutableListOf<Double>()
             
-            val startRegex = Regex("silence_start: (\\d+\\.?\\d*)")
-            val endRegex = Regex("silence_end: (\\d+\\.?\\d*)")
+            val startRegex = Regex("silence_start: ([\\d.eE+-]+)")
+            val endRegex = Regex("silence_end: ([\\d.eE+-]+)")
             
             startRegex.findAll(logs).forEach { silenceStarts.add(it.groupValues[1].toDouble()) }
             endRegex.findAll(logs).forEach { silenceEnds.add(it.groupValues[1].toDouble()) }
@@ -30,8 +50,7 @@ object SmartCutProcessor {
             if (silenceStarts.isEmpty() || silenceEnds.isEmpty()) {
                 // No silence found, just copy
                 val copyCmd = arrayOf("-y", "-i", inputPath, "-c", "copy", outputPath)
-                val session = FFmpegKit.executeWithArguments(copyCmd)
-                return@withContext session.returnCode.isValueSuccess
+                return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath)
             }
             
             // Generate non-silent segments with padding
@@ -54,8 +73,8 @@ object SmartCutProcessor {
                 lastKeepStart = sEnd
             }
             
-            // Assume video ends at 10 hours if last silence isn't at the very end
-            keepSegments.add(Pair(lastKeepStart, 36000.0))
+            // Use actual video duration
+            keepSegments.add(Pair(lastKeepStart, duration))
             
             // Pass 2: Build filter_complex
             val filterBuilder = StringBuilder()
@@ -74,13 +93,11 @@ object SmartCutProcessor {
                 "-y", "-i", inputPath, 
                 "-filter_complex", filterBuilder.toString(),
                 "-map", "[outv]", "-map", "[outa]",
-                "-c:v", "libx264", "-preset", "fast", "-pix_fmt", "yuv420p", "-c:a", "aac",
+                "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac",
                 outputPath
             )
             
-            val cutSession = FFmpegKit.executeWithArguments(commandArgs)
-            
-            return@withContext cutSession.returnCode.isValueSuccess
+            return@withContext FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
         } catch (e: Exception) {
             e.printStackTrace()
             return@withContext false

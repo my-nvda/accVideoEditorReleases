@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.content.Intent
 import android.net.Uri
@@ -127,7 +127,7 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(onClick = onNavigateToTranslation, modifier = Modifier.fillMaxWidth().height(60.dp)) {
-                    Text("Volunteer Translation (المساهمة في الترجمة)")
+                    Text("Volunteer Translation (ط§ظ„ظ…ط³ط§ظ‡ظ…ط© ظپظٹ ط§ظ„طھط±ط¬ظ…ط©)")
                 }
             }
             item {
@@ -189,3 +189,4 @@ fun SettingsSwitchRow(text: String, checked: Boolean, onCheckedChange: (Boolean)
         onCheckedChange = onCheckedChange
     )
 }
+

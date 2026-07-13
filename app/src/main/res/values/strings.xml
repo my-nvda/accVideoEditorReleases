@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">Accessible Video Editor</string>
     <string name="string_1">Describe this photo or video in detail in Arabic. Focus on visuals, people, actions and written texts if available.</string>
@@ -177,4 +177,7 @@
     <string name="string_179">- Smart Cut: Automatically remove silence from audio or video.</string>
     <string name="string_180">- Ticker Text: Add moving news-style ticker text to videos.</string>
     <string name="string_181">Navigate using the main menu. All buttons are labeled for screen readers.</string>
+    <string name="string_182">تمت العملية بنجاح</string>
+    <string name="string_183">حدث خطأ أثناء العملية</string>
 </resources>
+

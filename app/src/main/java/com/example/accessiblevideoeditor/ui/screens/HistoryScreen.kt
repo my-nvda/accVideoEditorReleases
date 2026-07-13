@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.content.Intent
 import android.net.Uri
@@ -60,10 +60,10 @@ fun HistoryScreen(onBack: () -> Unit) {
                             if (oldFile.renameTo(newFile)) {
                                 loadFiles()
                                 com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_176), android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
                             } else {
                                 com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -91,10 +91,10 @@ fun HistoryScreen(onBack: () -> Unit) {
                         if (file.delete()) {
                             loadFiles()
                             com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_176), android.widget.Toast.LENGTH_SHORT).show()
+                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
                         } else {
                             com.example.accessiblevideoeditor.media.SoundManager.playError()
-                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_SHORT).show()
+                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_SHORT).show()
                         }
                     }
                     fileToDelete = null
@@ -124,7 +124,7 @@ fun HistoryScreen(onBack: () -> Unit) {
                     Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_29), style = MaterialTheme.typography.bodyLarge)
                 }
             } else {
-                items(files) { file ->
+                items(files, key = { it.absolutePath }) { file ->
                     Card(
                         modifier = Modifier.fillMaxWidth().clickable {
                             val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
@@ -142,7 +142,7 @@ fun HistoryScreen(onBack: () -> Unit) {
                                 context.startActivity(intent)
                             } catch (e: Exception) {
                                 e.printStackTrace()
-                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_SHORT).show()
                             }
                         },
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -158,9 +158,9 @@ fun HistoryScreen(onBack: () -> Unit) {
                             Box {
                                 IconButton(
                                     onClick = { menuExpanded = true },
-                                    modifier = Modifier.semantics { contentDescription = "خيارات إضافية" }
+                                    modifier = Modifier.semantics { contentDescription = "ط®ظٹط§ط±ط§طھ ط¥ط¶ط§ظپظٹط©" }
                                 ) {
-                                    Text("⋮", style = MaterialTheme.typography.titleLarge)
+                                    Text("â‹®", style = MaterialTheme.typography.titleLarge)
                                 }
                                 
                                 DropdownMenu(
@@ -168,7 +168,7 @@ fun HistoryScreen(onBack: () -> Unit) {
                                     onDismissRequest = { menuExpanded = false }
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_173)) },
+                                        text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_172)) },
                                         onClick = {
                                             menuExpanded = false
                                             val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
@@ -184,7 +184,7 @@ fun HistoryScreen(onBack: () -> Unit) {
                                                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                             }
                                             try {
-                                                context.startActivity(Intent.createChooser(intent, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_173)))
+                                                context.startActivity(Intent.createChooser(intent, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_172)))
                                             } catch (e: Exception) {
                                                 e.printStackTrace()
                                             }
@@ -214,3 +214,4 @@ fun HistoryScreen(onBack: () -> Unit) {
         }
     }
 }
+

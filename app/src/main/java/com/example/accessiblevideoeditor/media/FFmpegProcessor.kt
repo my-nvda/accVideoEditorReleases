@@ -32,7 +32,13 @@ object FFmpegProcessor {
             { session ->
                 if (continuation.isActive) {
                     val isSuccess = ReturnCode.isSuccess(session.returnCode)
-                    continuation.resume(isSuccess) {}
+                    try {
+                        if (continuation.isActive) {
+                            continuation.resumeWith(Result.success(isSuccess))
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             },
             { log -> },
@@ -80,9 +86,8 @@ object FFmpegProcessor {
     suspend fun removeAudio(sourceVideo: String, outputPath: String): Boolean = withContext(Dispatchers.IO) {
         // -c:v copy : Copy video stream as is (no re-encoding, very fast)
         // -an : No audio
-        val command = "-y -i \"$sourceVideo\" -c:v copy -an \"$outputPath\""
-        val session = FFmpegKit.execute(command)
-        ReturnCode.isSuccess(session.returnCode)
+        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-c:v", "copy", "-an", outputPath)
+        return@withContext executeWithProgress(commandArgs, sourceVideo)
     }
 
     /**
@@ -94,18 +99,16 @@ object FFmpegProcessor {
         // -c:v copy : Copy video stream
         // -c:a aac : Encode audio to AAC
         // Removed -shortest to avoid clipping video if audio is shorter
-        val command = "-y -i \"$sourceVideo\" -i \"$newAudio\" -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac \"$outputPath\""
-        val session = FFmpegKit.execute(command)
-        ReturnCode.isSuccess(session.returnCode)
+        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-i", newAudio, "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", outputPath)
+        return@withContext executeWithProgress(commandArgs, sourceVideo)
     }
 
     /**
      * Mixes a new audio file with the original video audio.
      */
     suspend fun mixAudio(sourceVideo: String, newAudio: String, outputPath: String): Boolean = withContext(Dispatchers.IO) {
-        val command = "-y -i \"$sourceVideo\" -i \"$newAudio\" -filter_complex \"[0:a][1:a]amix=inputs=2:duration=longest[a]\" -map 0:v -map \"[a]\" -c:v copy -c:a aac \"$outputPath\""
-        val session = com.arthenica.ffmpegkit.FFmpegKit.execute(command)
-        com.arthenica.ffmpegkit.ReturnCode.isSuccess(session.returnCode)
+        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-i", newAudio, "-filter_complex", "[0:a][1:a]amix=inputs=2:duration=longest[a]", "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", outputPath)
+        return@withContext executeWithProgress(commandArgs, sourceVideo)
     }
 
     /**
@@ -181,9 +184,8 @@ object FFmpegProcessor {
         durationInSeconds: String,
         outputPath: String
     ): Boolean = withContext(Dispatchers.IO) {
-        val command = "-y -ss $startTimeInSeconds -i \"$sourceVideo\" -t $durationInSeconds -c copy \"$outputPath\""
-        val session = FFmpegKit.execute(command)
-        ReturnCode.isSuccess(session.returnCode)
+        val commandArgs = arrayOf("-y", "-ss", startTimeInSeconds, "-i", sourceVideo, "-t", durationInSeconds, "-c", "copy", outputPath)
+        return@withContext executeWithProgress(commandArgs, sourceVideo)
     }
 
     /**

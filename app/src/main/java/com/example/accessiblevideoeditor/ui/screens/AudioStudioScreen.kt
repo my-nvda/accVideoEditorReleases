@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -54,26 +54,26 @@ fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri
                         isProcessing = true
                         coroutineScope.launch {
                             val inputPath = FileUtils.getPathFromUri(context, uri)
-                            val outputPath = context.cacheDir.absolutePath + "/extracted_audio_${System.currentTimeMillis()}.mp3"
+                            val outputPath = context.cacheDir.absolutePath + "/extracted_audio_${System.currentTimeMillis()}.m4a"
                             if (inputPath != null) {
-                                val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.extractAudio(inputPath, outputPath, "mp3")
+                                val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.extractAudio(inputPath, outputPath, "m4a")
                                 if (success) {
-                                    val savedUri = FileUtils.saveToGallery(context, File(outputPath), "audio/mpeg")
+                                    val savedUri = FileUtils.saveToGallery(context, File(outputPath), "audio/mp4")
                                     if (savedUri != null) {
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_176), android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     } else {
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     }
                                 } else {
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                         com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_LONG).show()
+                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
@@ -93,26 +93,26 @@ fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri
                         isProcessing = true
                         coroutineScope.launch {
                             val inputPath = FileUtils.getPathFromUri(context, uri)
-                            val outputPath = context.cacheDir.absolutePath + "/bass_boosted_${System.currentTimeMillis()}.mp3"
+                            val outputPath = context.cacheDir.absolutePath + "/bass_boosted_${System.currentTimeMillis()}.m4a"
                             if (inputPath != null) {
                                 val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.applyAudioStudioEffects(inputPath, "bass_boost", outputPath)
                                 if (success) {
-                                    val savedUri = FileUtils.saveToGallery(context, File(outputPath), "audio/mpeg")
+                                    val savedUri = FileUtils.saveToGallery(context, File(outputPath), "audio/mp4")
                                     if (savedUri != null) {
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_176), android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     } else {
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     }
                                 } else {
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                         com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_LONG).show()
+                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
@@ -128,3 +128,4 @@ fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri
         }
     }
 }
+

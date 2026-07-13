@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import android.widget.Toast
@@ -55,24 +55,38 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_28, progress))
         } else {
-            val successMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_176) // "Saved successfully"
-            val errorMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_177) // "An error occurred while saving"
+            val successMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_182) // "Saved successfully"
+            val errorMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_183) // "An error occurred while saving"
             
             Button(
                 onClick = {
                     selectedImageUri?.let { uri ->
                         isProcessing = true
                         coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                            val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_img_${System.currentTimeMillis()}.jpg")
-                            val outputPath = context.cacheDir.absolutePath + "/edited_image_${System.currentTimeMillis()}.jpg"
                             var success = false
-                            if (tempInput != null) {
-                                success = com.example.accessiblevideoeditor.media.FFmpegProcessor.drawTextOnImage(context, tempInput.absolutePath, textOptions, outputPath)
-                                if (success) {
-                                    val savedUri = FileUtils.saveToGallery(context, File(outputPath), "image/jpeg")
-                                    if(savedUri == null) success = false
+                            try {
+                                val bitmap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                                    val source = android.graphics.ImageDecoder.createSource(context.contentResolver, uri)
+                                    android.graphics.ImageDecoder.decodeBitmap(source)
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    android.provider.MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
                                 }
+                                
+                                val resultBitmap = TextRenderer.drawTextOnImage(bitmap, textOptions)
+                                val outputPath = context.cacheDir.absolutePath + "/edited_image_${System.currentTimeMillis()}.jpg"
+                                val out = java.io.FileOutputStream(outputPath)
+                                resultBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, out)
+                                out.flush()
+                                out.close()
+                                
+                                val savedUri = FileUtils.saveToGallery(context, File(outputPath), "image/jpeg")
+                                if (savedUri != null) success = true
+                                
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
+                            
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                 isProcessing = false
                                 if (success) {
@@ -92,3 +106,4 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
         }
     }
 }
+

@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.serialization)
@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 10
-        versionName = "2.1.8"
+        versionCode = 30
+        versionName = "2.2.6"
     }
 
     buildTypes {
@@ -103,4 +103,12 @@ dependencies {
   
 
 }
+
+
+
+
+
+
+
+
 

@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -83,10 +83,6 @@ fun VideoEditorScreen(
             )
         }
 
-        TextCustomizationPanel(
-            onOptionsChanged = { textOptions = it }
-        )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -106,6 +102,10 @@ fun VideoEditorScreen(
             )
         }
 
+        TextCustomizationPanel(
+            onOptionsChanged = { textOptions = it }
+        )
+
         if (isProcessing) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
@@ -123,3 +123,4 @@ fun VideoEditorScreen(
         }
     }
 }
+

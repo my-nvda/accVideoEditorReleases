@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -192,3 +192,4 @@ fun TextCustomizationPanel(
         }
     }
 }
+

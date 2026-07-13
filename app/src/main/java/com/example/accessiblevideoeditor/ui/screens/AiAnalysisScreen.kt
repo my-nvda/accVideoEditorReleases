@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import android.media.MediaMetadataRetriever
@@ -159,7 +159,12 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
                         
                         generatedDescription = response
                     } catch (e: Exception) {
-                        generatedDescription = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_56, e.message ?: "")
+                        val errorMsg = e.message ?: ""
+                        if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
+                            generatedDescription = "ط¹ط°ط±ط§ظ‹طŒ ط®ظˆط§ط¯ظ… ط§ظ„ط°ظƒط§ط، ط§ظ„ط§طµط·ظ†ط§ط¹ظٹ طھظˆط§ط¬ظ‡ ط¶ط؛ط·ط§ظ‹ ظƒط¨ظٹط±ط§ظ‹ ط­ط§ظ„ظٹط§ظ‹. ظٹط±ط¬ظ‰ ط§ظ„ظ…ط­ط§ظˆظ„ط© ط¨ط¹ط¯ ظ‚ظ„ظٹظ„."
+                        } else {
+                            generatedDescription = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_56, errorMsg)
+                        }
                     } finally {
                         ProcessingManager.stopProcessing()
                     }
@@ -198,3 +203,4 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
         }
     }
 }
+

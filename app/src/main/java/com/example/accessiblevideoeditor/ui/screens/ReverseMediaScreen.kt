@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -53,21 +53,37 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                 onClick = {
                     isProcessing = true
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                        val input = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, selectedUri!!)
+                        val uri = selectedUri ?: return@launch
+                        val input = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, uri)
                         if (input != null) {
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                 com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_53))
                             }
                             val outputPath = context.cacheDir.absolutePath + "/reverse_${System.currentTimeMillis()}.mp4"
                             
-                            val filters = mutableListOf<String>()
-                            if (reverseVideo) filters.add("-vf reverse")
-                            if (reverseAudio) filters.add("-af areverse")
+                            val commandArgs = mutableListOf("-y", "-i", input)
+                            if (reverseVideo) {
+                                commandArgs.add("-vf")
+                                commandArgs.add("reverse")
+                            }
+                            if (reverseAudio) {
+                                commandArgs.add("-af")
+                                commandArgs.add("areverse")
+                            }
+                            commandArgs.add(outputPath)
                             
-                            val command = "-i \"$input\" ${filters.joinToString(" ")} \"$outputPath\""
+                            val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray(), input)
                             
-                            com.arthenica.ffmpegkit.FFmpegKit.execute(command)
-                            com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
+                            if (success) {
+                                com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    android.widget.Toast.makeText(context, "طھظ…طھ ط§ظ„ط¹ظ…ظ„ظٹط© ط¨ظ†ط¬ط§ط­", android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    android.widget.Toast.makeText(context, "ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ظ…ط¹ط§ظ„ط¬ط© ط§ظ„ظپظٹط¯ظٹظˆ", android.widget.Toast.LENGTH_LONG).show()
+                                }
+                            }
                             
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                 isProcessing = false
@@ -86,3 +102,4 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
         }
     }
 }
+

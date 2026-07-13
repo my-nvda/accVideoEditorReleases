@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.progressBarRangeInfo
 import com.example.accessiblevideoeditor.R
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -92,7 +93,9 @@ fun BatchProcessScreen(
             Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_28, progress))
             LinearProgressIndicator(
                 progress = progress / 100f,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().semantics {
+                    progressBarRangeInfo = androidx.compose.ui.semantics.ProgressBarRangeInfo(progress / 100f, 0f..1f)
+                }
             )
         } else {
             Button(
@@ -100,23 +103,31 @@ fun BatchProcessScreen(
                     isProcessing = true
                     progress = 0
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_32))
+                        }
+                        var successCount = 0
                         selectedUris.forEachIndexed { index, uri ->
-                            val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "batch_temp_${System.currentTimeMillis()}.mp4")
+                            val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "batch_temp_${System.currentTimeMillis()}_${index}.mp4")
                             if (tempFile != null) {
                                 val inputPath = tempFile.absolutePath
                                 val isAudioExtraction = selectedOperation.contains(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_146))
                                 val ext = if (isAudioExtraction) "mp3" else "mp4"
                                 val outputPath = context.cacheDir.absolutePath + "/batch_${System.currentTimeMillis()}_${index}.$ext"
-                                if (isAudioExtraction) {
+                                
+                                val success = if (isAudioExtraction) {
                                     com.example.accessiblevideoeditor.media.FFmpegProcessor.extractAudio(inputPath, outputPath, "mp3")
-                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "audio/mpeg")
                                 } else if (selectedOperation.contains("MP4")) {
-                                    val commandArgs = arrayOf("-y", "-i", inputPath, "-c:v", "libx264", "-preset", "ultrafast", "-c:a", "aac", outputPath)
+                                    val commandArgs = arrayOf("-y", "-i", inputPath, "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac", outputPath)
                                     com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
-                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                 } else {
                                     com.example.accessiblevideoeditor.media.FFmpegProcessor.compressVideo(inputPath, outputPath)
-                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
+                                }
+
+                                if (success) {
+                                    val mimeType = if (isAudioExtraction) "audio/mpeg" else "video/mp4"
+                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), mimeType)
+                                    successCount++
                                 }
                             }
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
@@ -125,8 +136,13 @@ fun BatchProcessScreen(
                         }
                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                             isProcessing = false
-                            com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_176), android.widget.Toast.LENGTH_LONG).show()
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                            if (successCount > 0) {
+                                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                                android.widget.Toast.makeText(context, "${com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182)} ($successCount/${selectedUris.size})", android.widget.Toast.LENGTH_LONG).show()
+                            } else {
+                                com.example.accessiblevideoeditor.media.SoundManager.playError()
+                            }
                         }
                     }
                 },
@@ -138,3 +154,4 @@ fun BatchProcessScreen(
         }
     }
 }
+

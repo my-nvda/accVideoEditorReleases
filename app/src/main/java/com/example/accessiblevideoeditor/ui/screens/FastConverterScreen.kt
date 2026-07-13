@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -74,7 +74,7 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                             val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_fast_conv_${System.currentTimeMillis()}.mp4")
                             if (tempFile != null) {
                                 val inputPath = tempFile.absolutePath
-                                val fileName = "converted_${System.currentTimeMillis()}"
+                                val fileName = "FastConverted_Video_${System.currentTimeMillis()}"
                                 val outputPath = context.cacheDir.absolutePath + "/" + fileName + "." + selectedFormat.lowercase()
                                 
                                 val commandArgs = arrayOf("-y", "-i", inputPath, outputPath)
@@ -85,18 +85,18 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                                     if (savedUri != null) {
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_176), android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     } else {
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     }
                                 } else {
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                         com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_177), android.widget.Toast.LENGTH_LONG).show()
+                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
@@ -114,3 +114,4 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
         }
     }
 }
+

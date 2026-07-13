@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -64,14 +64,14 @@ fun MergeVideosScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                             val concatParts = StringBuilder()
                             
                             inputs.forEachIndexed { index, _ ->
-                                filterParts.append("[$index:v]scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1[v$index];")
+                                filterParts.append("[$index:v]scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30[v$index];")
                                 filterParts.append("[$index:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a$index];")
                                 concatParts.append("[v$index][a$index]")
                             }
                             
                             val commandArgs = mutableListOf<String>()
                             inputs.forEach { commandArgs.addAll(listOf("-i", it)) }
-                            commandArgs.addAll(listOf("-filter_complex", "${filterParts.toString()}${concatParts.toString()}concat=n=${inputs.size}:v=1:a=1[outv][outa]", "-map", "[outv]", "-map", "[outa]", "-c:v", "libx264", "-preset", "fast", "-crf", "28", outputPath))
+                            commandArgs.addAll(listOf("-filter_complex", "${filterParts.toString()}${concatParts.toString()}concat=n=${inputs.size}:v=1:a=1[outv][outa]", "-map", "[outv]", "-map", "[outa]", "-c:v", "mpeg4", "-q:v", "2", outputPath))
                             
                             val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray())
                             if (success) {
@@ -97,3 +97,4 @@ fun MergeVideosScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
         }
     }
 }
+

@@ -36,6 +36,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.unit.dp
 import android.content.Context
 
@@ -106,7 +108,11 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         Text("اكتمل: $percent%")
                         LinearProgressIndicator(
                             progress = { if (progress!!.totalBytes > 0) progress!!.bytesDownloaded.toFloat() / progress!!.totalBytes.toFloat() else 0f },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().height(8.dp).semantics {
+                                progressBarRangeInfo = androidx.compose.ui.semantics.ProgressBarRangeInfo(
+                                    if (progress!!.totalBytes > 0) progress!!.bytesDownloaded.toFloat() / progress!!.totalBytes.toFloat() else 0f, 0f..1f
+                                )
+                            }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text("تم تحميل: %.2f MB من %.2f MB".format(downloadedMB, totalMB))
@@ -296,7 +302,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                         val uri = pendingUri
                                         val path = pendingPath
                                         if (uri != null && path != null) {
-                                            com.example.accessiblevideoeditor.ui.ProcessingManager.updateStatus(context.getString(R.string.app_name))
+                                            com.example.accessiblevideoeditor.ui.ProcessingManager.updateStatus("جاري استخراج الصوت...")
                                             coroutineScope.launch(Dispatchers.IO) {
                                                 try {
                                                     val outputFile = java.io.File(context.cacheDir, "output_extracted_${System.currentTimeMillis()}.$format")
@@ -328,7 +334,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                                         }
                                                         com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                                                     } else {
-                                                        withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show() }
+                                                        withContext(Dispatchers.Main) { Toast.makeText(context, "حدث خطأ أثناء استخراج الصوت", Toast.LENGTH_LONG).show() }
                                                     }
                                                 } catch (e: Exception) {
                                                     withContext(Dispatchers.Main) { Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show() }

@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -24,7 +24,7 @@ fun WatermarkScreen(
     onBack: () -> Unit, initialUris: List<android.net.Uri> = emptyList()
 ) {
     val context = LocalContext.current
-    var selectedVideoUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedVideoUri by remember { mutableStateOf<Uri?>(initialUris.firstOrNull()) }
     var selectedWatermarkUri by remember { mutableStateOf<Uri?>(null) }
     var selectedPosition by remember { mutableStateOf(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_121)) }
     var isProcessing by remember { mutableStateOf(false) }
@@ -99,8 +99,10 @@ fun WatermarkScreen(
                 onClick = {
                     isProcessing = true
                         coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                            val inputVideo = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, selectedVideoUri!!)
-                            val inputImage = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, selectedWatermarkUri!!)
+                            val vUri = selectedVideoUri ?: return@launch
+                            val wUri = selectedWatermarkUri ?: return@launch
+                            val inputVideo = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, vUri)
+                            val inputImage = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, wUri)
                             val outputPath = context.cacheDir.absolutePath + "/watermark_${System.currentTimeMillis()}.mp4"
                             
                             if (inputVideo != null && inputImage != null) {
@@ -116,17 +118,17 @@ fun WatermarkScreen(
                                     else -> "10:10"
                                 }
                                 
-                                val command = "-y -i \"$inputVideo\" -i \"$inputImage\" -filter_complex \"[0:v][1:v]overlay=$overlayStr\" -c:v libx264 -preset fast -pix_fmt yuv420p -c:a copy \"$outputPath\""
+                                val commandArgs = arrayOf("-y", "-i", inputVideo, "-i", inputImage, "-filter_complex", "[0:v][1:v]overlay=$overlayStr", "-c:v", "mpeg4", "-q:v", "2", "-c:a", "copy", outputPath)
                                 
-                                val session = com.arthenica.ffmpegkit.FFmpegKit.execute(command)
-                                if (com.arthenica.ffmpegkit.ReturnCode.isSuccess(session.returnCode)) {
+                                val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs, inputVideo)
+                                if (success) {
                                     com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                        android.widget.Toast.makeText(context, "تمت العملية بنجاح", android.widget.Toast.LENGTH_SHORT).show()
+                                        android.widget.Toast.makeText(context, "طھظ…طھ ط§ظ„ط¹ظ…ظ„ظٹط© ط¨ظ†ط¬ط§ط­", android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 } else {
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                        android.widget.Toast.makeText(context, "حدث خطأ أثناء معالجة الفيديو", android.widget.Toast.LENGTH_LONG).show()
+                                        android.widget.Toast.makeText(context, "ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ظ…ط¹ط§ظ„ط¬ط© ط§ظ„ظپظٹط¯ظٹظˆ", android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
                                 
@@ -149,3 +151,5 @@ fun WatermarkScreen(
         }
     }
 }
+
+

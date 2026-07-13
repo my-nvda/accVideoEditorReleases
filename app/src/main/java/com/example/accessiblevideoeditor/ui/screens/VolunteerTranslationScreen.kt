@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.content.Context
 import android.net.Uri
@@ -22,27 +22,27 @@ import java.io.File
 import kotlinx.coroutines.launch
 
 val SUPPORTED_LANGUAGES_AR = listOf(
-    "ar" to "العربية",
-    "en" to "الإنجليزية",
-    "fr" to "الفرنسية",
-    "es" to "الإسبانية",
-    "zh-CN" to "الصينية",
-    "ru" to "الروسية",
-    "ja" to "اليابانية",
-    "iw" to "العبرية",
-    "fa" to "الفارسية",
-    "ur" to "الأردية",
-    "tr" to "التركية"
+    "ar" to "ط§ظ„ط¹ط±ط¨ظٹط©",
+    "en" to "ط§ظ„ط¥ظ†ط¬ظ„ظٹط²ظٹط©",
+    "fr" to "ط§ظ„ظپط±ظ†ط³ظٹط©",
+    "es" to "ط§ظ„ط¥ط³ط¨ط§ظ†ظٹط©",
+    "zh-CN" to "ط§ظ„طµظٹظ†ظٹط©",
+    "ru" to "ط§ظ„ط±ظˆط³ظٹط©",
+    "ja" to "ط§ظ„ظٹط§ط¨ط§ظ†ظٹط©",
+    "iw" to "ط§ظ„ط¹ط¨ط±ظٹط©",
+    "fa" to "ط§ظ„ظپط§ط±ط³ظٹط©",
+    "ur" to "ط§ظ„ط£ط±ط¯ظٹط©",
+    "tr" to "ط§ظ„طھط±ظƒظٹط©"
 )
 
 fun getCategoryArabic(arText: String): String {
     val text = arText.lowercase()
-    if (listOf("إعداد", "لغة", "مفتاح", "تطبيق", "لون", "شاشة").any { it in text }) return "إعدادات"
-    if (listOf("قص", "استخراج", "صمت", "صوت", "فيديو", "معالجة", "تحديد", "تصدير", "دمج", "تحويل", "صورة").any { it in text }) return "أدوات ووسائط"
-    if (listOf("تشغيل", "ايقاف", "إيقاف", "تقديم", "تأخير", "مدة", "وقت").any { it in text }) return "مشغل الفيديو"
-    if (listOf("مساعدة", "حول", "تحديث", "مطور", "دليل", "بريد").any { it in text }) return "مساعدة وحول"
-    if (listOf("خطأ", "فشل", "نجاح", "انتظر", "تحميل", "إلغاء", "موافق", "نعم", "لا", "حفظ", "يرجى").any { it in text }) return "حوارات عامة"
-    return "نصوص عامة"
+    if (listOf("ط¥ط¹ط¯ط§ط¯", "ظ„ط؛ط©", "ظ…ظپطھط§ط­", "طھط·ط¨ظٹظ‚", "ظ„ظˆظ†", "ط´ط§ط´ط©").any { it in text }) return "ط¥ط¹ط¯ط§ط¯ط§طھ"
+    if (listOf("ظ‚طµ", "ط§ط³طھط®ط±ط§ط¬", "طµظ…طھ", "طµظˆطھ", "ظپظٹط¯ظٹظˆ", "ظ…ط¹ط§ظ„ط¬ط©", "طھط­ط¯ظٹط¯", "طھطµط¯ظٹط±", "ط¯ظ…ط¬", "طھط­ظˆظٹظ„", "طµظˆط±ط©").any { it in text }) return "ط£ط¯ظˆط§طھ ظˆظˆط³ط§ط¦ط·"
+    if (listOf("طھط´ط؛ظٹظ„", "ط§ظٹظ‚ط§ظپ", "ط¥ظٹظ‚ط§ظپ", "طھظ‚ط¯ظٹظ…", "طھط£ط®ظٹط±", "ظ…ط¯ط©", "ظˆظ‚طھ").any { it in text }) return "ظ…ط´ط؛ظ„ ط§ظ„ظپظٹط¯ظٹظˆ"
+    if (listOf("ظ…ط³ط§ط¹ط¯ط©", "ط­ظˆظ„", "طھط­ط¯ظٹط«", "ظ…ط·ظˆط±", "ط¯ظ„ظٹظ„", "ط¨ط±ظٹط¯").any { it in text }) return "ظ…ط³ط§ط¹ط¯ط© ظˆط­ظˆظ„"
+    if (listOf("ط®ط·ط£", "ظپط´ظ„", "ظ†ط¬ط§ط­", "ط§ظ†طھط¸ط±", "طھط­ظ…ظٹظ„", "ط¥ظ„ط؛ط§ط،", "ظ…ظˆط§ظپظ‚", "ظ†ط¹ظ…", "ظ„ط§", "ط­ظپط¸", "ظٹط±ط¬ظ‰").any { it in text }) return "ط­ظˆط§ط±ط§طھ ط¹ط§ظ…ط©"
+    return "ظ†طµظˆطµ ط¹ط§ظ…ط©"
 }
 
 @Composable
@@ -58,10 +58,10 @@ fun TranslationItem(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "النص الأصلي:",
+                text = "ط§ظ„ظ†طµ ط§ظ„ط£طµظ„ظٹ:",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.semantics { contentDescription = "النص الأصلي" }
+                modifier = Modifier.semantics { contentDescription = "ط§ظ„ظ†طµ ط§ظ„ط£طµظ„ظٹ" }
             )
             Text(
                 text = originalText,
@@ -69,7 +69,7 @@ fun TranslationItem(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
-                    .semantics { contentDescription = "النص الأصلي هو: $originalText" }
+                    .semantics { contentDescription = "ط§ظ„ظ†طµ ط§ظ„ط£طµظ„ظٹ ظ‡ظˆ: $originalText" }
             )
             
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
@@ -77,11 +77,11 @@ fun TranslationItem(
                 onValueChange = { 
                     onTranslationChanged(keyName, it)
                 },
-                hint = "الترجمة",
+                hint = "ط§ظ„طھط±ط¬ظ…ط©",
                 modifier = Modifier
                     .fillMaxWidth()
                     .semantics { 
-                        contentDescription = "حقل إدخال لترجمة النص: $originalText" 
+                        contentDescription = "ط­ظ‚ظ„ ط¥ط¯ط®ط§ظ„ ظ„طھط±ط¬ظ…ط© ط§ظ„ظ†طµ: $originalText" 
                     }
             )
         }
@@ -95,7 +95,7 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     
     var selectedLangCode by remember { mutableStateOf("en") }
-    var selectedCategory by remember { mutableStateOf("نصوص عامة") }
+    var selectedCategory by remember { mutableStateOf("ظ†طµظˆطµ ط¹ط§ظ…ط©") }
     var isLangMenuExpanded by remember { mutableStateOf(false) }
     
     // Original Strings Map (key -> original arabic text)
@@ -156,13 +156,13 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
             val file = File(context.filesDir, "custom_lang.json")
             file.writeText(json.toString(4))
             AppStrings.loadCustomStrings(context)
-            Toast.makeText(context, "تم الحفظ والتطبيق بنجاح", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "طھظ… ط§ظ„ط­ظپط¸ ظˆط§ظ„طھط·ط¨ظٹظ‚ ط¨ظ†ط¬ط§ط­", Toast.LENGTH_SHORT).show()
             if (context is android.app.Activity) {
                 context.recreate()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "حدث خطأ أثناء الحفظ", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ط§ظ„ط­ظپط¸", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -176,10 +176,10 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                 context.contentResolver.openOutputStream(uri)?.use { output ->
                     output.write(json.toString(4).toByteArray(Charsets.UTF_8))
                 }
-                Toast.makeText(context, "تم تصدير الترجمة بنجاح", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "طھظ… طھطµط¯ظٹط± ط§ظ„طھط±ط¬ظ…ط© ط¨ظ†ط¬ط§ط­", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context, "فشل تصدير الترجمة", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "ظپط´ظ„ طھطµط¯ظٹط± ط§ظ„طھط±ط¬ظ…ط©", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -211,17 +211,17 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                             translations[k] = json.getString(k)
                         }
                         
-                        Toast.makeText(context, "تم استيراد الترجمة وتطبيقها", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "طھظ… ط§ط³طھظٹط±ط§ط¯ ط§ظ„طھط±ط¬ظ…ط© ظˆطھط·ط¨ظٹظ‚ظ‡ط§", Toast.LENGTH_SHORT).show()
                         if (context is android.app.Activity) {
                             context.recreate()
                         }
                     } else {
-                        Toast.makeText(context, "ملف غير صالح. لا يحتوي على نصوص الترجمة.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "ظ…ظ„ظپ ط؛ظٹط± طµط§ظ„ط­. ظ„ط§ ظٹط­طھظˆظٹ ط¹ظ„ظ‰ ظ†طµظˆطµ ط§ظ„طھط±ط¬ظ…ط©.", Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context, "حدث خطأ أثناء الاستيراد", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ط§ظ„ط§ط³طھظٹط±ط§ط¯", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -229,26 +229,26 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("ترجمة التطبيق") },
+                title = { Text("طھط±ط¬ظ…ط© ط§ظ„طھط·ط¨ظٹظ‚") },
                 navigationIcon = {
-                    IconButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "رجوع للخلف" }) {
-                        Text("رجوع")
+                    IconButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "ط±ط¬ظˆط¹ ظ„ظ„ط®ظ„ظپ" }) {
+                        Text("ط±ط¬ظˆط¹")
                     }
                 },
                 actions = {
                     Button(onClick = { importLauncher.launch(arrayOf("application/json", "*/*")) }) {
-                        Text("استيراد")
+                        Text("ط§ط³طھظٹط±ط§ط¯")
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     Button(onClick = saveAndApply) {
-                        Text("حفظ وتطبيق")
+                        Text("ط­ظپط¸ ظˆطھط·ط¨ظٹظ‚")
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     Button(onClick = {
                         val fileName = "translations_${selectedLangCode}.json"
                         exportLauncher.launch(fileName)
                     }) {
-                        Text("تصدير")
+                        Text("طھطµط¯ظٹط±")
                     }
                 }
             )
@@ -268,10 +268,10 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                 Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                     OutlinedButton(
                         onClick = { isLangMenuExpanded = true },
-                        modifier = Modifier.fillMaxWidth().semantics { contentDescription = "اختيار لغة الترجمة المستهدفة" }
+                        modifier = Modifier.fillMaxWidth().semantics { contentDescription = "ط§ط®طھظٹط§ط± ظ„ط؛ط© ط§ظ„طھط±ط¬ظ…ط© ط§ظ„ظ…ط³طھظ‡ط¯ظپط©" }
                     ) {
                         val langName = SUPPORTED_LANGUAGES_AR.find { it.first == selectedLangCode }?.second ?: selectedLangCode
-                        Text("ترجمة إلى: $langName ▼")
+                        Text("طھط±ط¬ظ…ط© ط¥ظ„ظ‰: $langName â–¼")
                     }
                     DropdownMenu(
                         expanded = isLangMenuExpanded,
@@ -300,7 +300,7 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                                 selected = selectedCategory == cat,
                                 onClick = { selectedCategory = cat },
                                 text = { Text(cat) },
-                                modifier = Modifier.semantics { contentDescription = "قسم $cat" }
+                                modifier = Modifier.semantics { contentDescription = "ظ‚ط³ظ… $cat" }
                             )
                         }
                     }
@@ -337,3 +337,4 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
         }
     }
 }
+

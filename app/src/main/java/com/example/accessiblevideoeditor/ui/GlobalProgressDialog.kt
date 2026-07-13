@@ -1,12 +1,15 @@
 package com.example.accessiblevideoeditor.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.unit.dp
 import com.example.accessiblevideoeditor.R
 import androidx.compose.ui.res.stringResource
@@ -29,7 +32,9 @@ fun GlobalProgressDialog() {
                     if (ProcessingManager.progress > 0f) {
                         LinearProgressIndicator(
                             progress = { ProcessingManager.progress },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().semantics {
+                                progressBarRangeInfo = androidx.compose.ui.semantics.ProgressBarRangeInfo(ProcessingManager.progress, 0f..1f)
+                            }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text("${(ProcessingManager.progress * 100).toInt()}%")
@@ -45,10 +50,7 @@ fun GlobalProgressDialog() {
                 }
             },
             confirmButton = {
-                // If finished (100%), failed, or success, show OK button
-                val isDone = ProcessingManager.progress >= 1f || 
-                             ProcessingManager.statusMessage == com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name) || 
-                             ProcessingManager.statusMessage == com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name)
+                val isDone = ProcessingManager.progress >= 1f
                 
                 if (isDone) {
                     TextButton(onClick = { ProcessingManager.stopProcessing() }) {
@@ -57,14 +59,43 @@ fun GlobalProgressDialog() {
                 }
             },
             dismissButton = {
-                val isDone = ProcessingManager.progress >= 1f || 
-                             ProcessingManager.statusMessage == com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name) || 
-                             ProcessingManager.statusMessage == com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name)
+                val isDone = ProcessingManager.progress >= 1f
 
                 if (ProcessingManager.isCancellable && !isDone) {
                     TextButton(onClick = { ProcessingManager.cancelCurrentProcess() }) {
-                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name), color = MaterialTheme.colorScheme.error)
+                        Text(stringResource(android.R.string.cancel), color = MaterialTheme.colorScheme.error)
                     }
+                }
+            }
+        )
+    }
+
+    // Global Error Dialog
+    ProcessingManager.errorLog?.let { log ->
+        AlertDialog(
+            properties = androidx.compose.ui.window.DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
+            onDismissRequest = { ProcessingManager.dismissError() },
+            title = { Text("حدث خطأ تقني (Error)") },
+            text = {
+                // Use a scrollable column for long logs
+                val scrollState = rememberScrollState()
+                Column(
+                    modifier = Modifier.fillMaxWidth().heightIn(max = 400.dp).verticalScroll(scrollState)
+                ) {
+                    Text("تفاصيل الخطأ:", style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    androidx.compose.foundation.text.selection.SelectionContainer {
+                        Text(
+                            text = log,
+                            style = MaterialTheme.typography.bodySmall.copy(fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { ProcessingManager.dismissError() }) {
+                    Text(stringResource(android.R.string.ok))
                 }
             }
         )

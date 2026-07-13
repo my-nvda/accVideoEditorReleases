@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -29,7 +29,6 @@ import kotlinx.coroutines.withContext
 @Composable
 fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = emptyList()) {
     var selectedUri by remember { mutableStateOf<android.net.Uri?>(initialUris.firstOrNull()) }
-    var text by remember { mutableStateOf("") }
     var textOptions by remember { mutableStateOf(TextRenderer.TextOptions(text = "")) }
     var isProcessing by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -48,13 +47,8 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
             Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_131))
         }
         
-        com.example.accessiblevideoeditor.ui.screens.TextCustomizationPanel(onOptionsChanged = { textOptions = it.copy(text = textOptions.text) })
-        com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
-            value = text,
-            onValueChange = { text = it; textOptions = textOptions.copy(text = it) },
-            hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_107),
-            modifier = Modifier.fillMaxWidth()
-        )
+        com.example.accessiblevideoeditor.ui.screens.TextCustomizationPanel(onOptionsChanged = { textOptions = it })
+        
 
         if (isProcessing) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
@@ -64,7 +58,7 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
             Button(
                 onClick = {
                     val uri = selectedUri
-                    if (uri != null && text.isNotBlank()) {
+                    if (uri != null && textOptions.text.isNotBlank()) {
                         isProcessing = true
                         com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_62))
                         
@@ -74,24 +68,27 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                             val pngFile = java.io.File(context.cacheDir, "ticker_${System.currentTimeMillis()}.png")
                             
                             if (inputPath != null) {
-                                TextRenderer.createTickerPng(textOptions.copy(text = text), pngFile)
+                                TextRenderer.createTickerPng(textOptions, pngFile)
                                 
                                 val yExpr = when (textOptions.position) {
-                                    TextRenderer.TextPosition.TOP -> "h/10"
-                                    TextRenderer.TextPosition.CENTER -> "(h-th)/2"
-                                    TextRenderer.TextPosition.BOTTOM -> "h-h/10-th"
+                                    TextRenderer.TextPosition.TOP -> "H/10"
+                                    TextRenderer.TextPosition.CENTER -> "(H-h)/2"
+                                    TextRenderer.TextPosition.BOTTOM -> "H-H/10-h"
                                 }
-                                val command = "-y -i \"${inputPath}\" -i \"${pngFile.absolutePath}\" -filter_complex \"[1:v]format=rgba[img];[0:v][img]overlay=x='w-mod(t*150,w+tw)':y='$yExpr'\" -c:v libx264 -preset fast -pix_fmt yuv420p -c:a copy \"${outputPath}\""
+                                val command = "-y -i \"${inputPath}\" -i \"${pngFile.absolutePath}\" -filter_complex \"[0:v]scale=trunc(iw/2)*2:trunc(ih/2)*2[main];[1:v]format=rgba[img];[main][img]overlay=x='W-mod(t*150,W+w)':y='$yExpr'\" -c:v mpeg4 -q:v 2 -c:a copy \"${outputPath}\""
                                 
                                 val session = FFmpegKit.execute(command)
                                 if (com.arthenica.ffmpegkit.ReturnCode.isSuccess(session.returnCode)) {
                                     com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                     withContext(Dispatchers.Main) {
-                                        android.widget.Toast.makeText(context, "تمت العملية بنجاح", android.widget.Toast.LENGTH_SHORT).show()
+                                        android.widget.Toast.makeText(context, "طھظ…طھ ط§ظ„ط¹ظ…ظ„ظٹط© ط¨ظ†ط¬ط§ط­", android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 } else {
+                                    val logs = session.failStackTrace ?: session.allLogsAsString ?: "Unknown Error"
+                                    val detailedLog = "Command:\n$command\n\nLogs:\n$logs"
                                     withContext(Dispatchers.Main) {
-                                        android.widget.Toast.makeText(context, "حدث خطأ أثناء معالجة الفيديو", android.widget.Toast.LENGTH_LONG).show()
+                                        com.example.accessiblevideoeditor.ui.ProcessingManager.showError(detailedLog)
+                                        android.widget.Toast.makeText(context, "ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ظ…ط¹ط§ظ„ط¬ط© ط§ظ„ظپظٹط¯ظٹظˆ", android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
                                 withContext(Dispatchers.Main) {
@@ -105,10 +102,13 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = selectedUri != null && text.isNotBlank()
+                enabled = selectedUri != null && textOptions.text.isNotBlank()
             ) {
                 Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_62))
             }
         }
     }
 }
+
+
+

@@ -44,7 +44,12 @@ class OcrProcessor {
                 fallbackModel.generateContent(inputContent).text ?: "Failed to extract text."
             } catch (ex: Exception) {
                 ex.printStackTrace()
-                "Error processing image: ${ex.message}"
+                val errorMsg = ex.message ?: ""
+                if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
+                    "عذراً، خوادم الذكاء الاصطناعي تواجه ضغطاً كبيراً حالياً. يرجى المحاولة بعد قليل."
+                } else {
+                    "Error processing image: $errorMsg"
+                }
             }
         }
     }

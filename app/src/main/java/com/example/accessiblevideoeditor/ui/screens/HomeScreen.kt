@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -91,9 +91,11 @@ fun HomeScreen(
 fun AccessibleMenuButton(text: String, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().height(60.dp),
+        modifier = Modifier.fillMaxWidth().height(48.dp),
         colors = ButtonDefaults.buttonColors()
     ) {
         Text(text, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
     }
 }
+
+

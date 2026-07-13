@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = emptyList()) {
-    var selectedVideoUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedVideoUri by remember { mutableStateOf<Uri?>(initialUris.firstOrNull()) }
     var silenceThreshold by remember { mutableStateOf("-30") }
     var minSilenceDuration by remember { mutableStateOf("0.5") }
     var isProcessing by remember { mutableStateOf(false) }
@@ -65,7 +65,8 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
                 onClick = {
                     isProcessing = true
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                        val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, selectedVideoUri!!, "temp_video_${System.currentTimeMillis()}.mp4")
+                        val uri = selectedVideoUri ?: return@launch
+                        val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_video_${System.currentTimeMillis()}.mp4")
                         val input = tempFile?.absolutePath
                         if (input != null) {
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
@@ -83,6 +84,13 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
                             
                             if (success) {
                                 com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    android.widget.Toast.makeText(context, "طھظ…طھ ط§ظ„ط¹ظ…ظ„ظٹط© ط¨ظ†ط¬ط§ط­", android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    android.widget.Toast.makeText(context, "ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ظ…ط¹ط§ظ„ط¬ط© ط§ظ„ظپظٹط¯ظٹظˆ", android.widget.Toast.LENGTH_LONG).show()
+                                }
                             }
                             
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
@@ -102,3 +110,4 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
         }
     }
 }
+

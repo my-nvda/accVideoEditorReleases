@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
 import com.example.accessiblevideoeditor.R
@@ -86,7 +87,9 @@ fun SlideshowMakerScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> 
                 Spacer(modifier = Modifier.height(8.dp))
                 LinearProgressIndicator(
                     progress = { progress / 100f },
-                    modifier = Modifier.fillMaxWidth().height(8.dp)
+                    modifier = Modifier.fillMaxWidth().semantics {
+                        progressBarRangeInfo = androidx.compose.ui.semantics.ProgressBarRangeInfo(progress / 100f, 0f..1f)
+                    }
                 )
                 Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_10, progress))
             }
@@ -124,3 +127,4 @@ fun SlideshowMakerScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> 
         }
     }
 }
+

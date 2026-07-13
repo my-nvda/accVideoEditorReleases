@@ -20,13 +20,13 @@ object MediaUtils {
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, outputFileName)
             put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-            if (true) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + "/AccessibleVideoEditor")
                 put(MediaStore.MediaColumns.IS_PENDING, 1)
             }
         }
         
-        val collection = if (true) {
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         } else {
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI
@@ -41,7 +41,7 @@ object MediaUtils {
                 }
             }
             
-            if (true) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 contentValues.clear()
                 contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
                 resolver.update(it, contentValues, null, null)
@@ -58,13 +58,13 @@ object MediaUtils {
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, outputFileName)
             put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-            if (true) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MUSIC + "/AccessibleVideoEditor")
                 put(MediaStore.MediaColumns.IS_PENDING, 1)
             }
         }
         
-        val collection = if (true) {
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         } else {
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -79,7 +79,7 @@ object MediaUtils {
                 }
             }
             
-            if (true) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 contentValues.clear()
                 contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
                 resolver.update(it, contentValues, null, null)
@@ -96,13 +96,13 @@ object MediaUtils {
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, outputFileName)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if (true) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/AccessibleVideoEditor")
                 put(MediaStore.MediaColumns.IS_PENDING, 1)
             }
         }
         
-        val collection = if (true) {
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         } else {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
@@ -117,7 +117,7 @@ object MediaUtils {
                 }
             }
             
-            if (true) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 contentValues.clear()
                 contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
                 resolver.update(it, contentValues, null, null)

@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import com.example.accessiblevideoeditor.R
 
@@ -179,4 +179,10 @@ val allAppStringIds = listOf(
     R.string.string_179,
     R.string.string_180,
     R.string.string_181,
+    R.string.string_182,
+    R.string.string_183,
 )
+
+
+
+

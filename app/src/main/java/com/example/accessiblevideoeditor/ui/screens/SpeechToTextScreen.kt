@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.screens
+﻿package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -90,7 +90,12 @@ fun SpeechToTextScreen(
                                 transcribedText = model.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_71)
                             } catch (e: Exception) {
                                 e.printStackTrace()
-                                transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_73, e.message ?: "")
+                                val errorMsg = e.message ?: ""
+                                if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
+                                    transcribedText = "ط¹ط°ط±ط§ظ‹طŒ ط®ظˆط§ط¯ظ… ط§ظ„ط°ظƒط§ط، ط§ظ„ط§طµط·ظ†ط§ط¹ظٹ طھظˆط§ط¬ظ‡ ط¶ط؛ط·ط§ظ‹ ظƒط¨ظٹط±ط§ظ‹ ط­ط§ظ„ظٹط§ظ‹. ظٹط±ط¬ظ‰ ط§ظ„ظ…ط­ط§ظˆظ„ط© ط¨ط¹ط¯ ظ‚ظ„ظٹظ„."
+                                } else {
+                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_73, errorMsg)
+                                }
                             }
                             isProcessing = false
                         }
@@ -124,3 +129,4 @@ fun SpeechToTextScreen(
         }
     }
 }
+
