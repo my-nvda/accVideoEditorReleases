@@ -1,6 +1,6 @@
 {
-    "releaseNotes": "تم إصلاح وترجمة جميع ملفات اللغات وإضافة النصوص المفقودة وتصحيح الأخطاء اللغوية لجميع اللغات (11 لغة)",
-    "versionCode": 34,
-    "versionName": "2.3.0",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v2.3.0/app-debug.apk"
+    "releaseNotes": "تمت إضافة خيارات جيميناي للإعدادات، وإمكانية إضافة العلامات المائية النصية، وإصلاح توافقية ألوان وظلال النصوص مع قارئات الشاشة، بالإضافة لإصلاح أبعاد صانع الشرائح.",
+    "versionCode": 35,
+    "versionName": "2.4.0",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v2.4.0/AccessibleVideoEditor.apk"
 }
