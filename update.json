@@ -1,6 +1,6 @@
-﻿{
-    "releaseNotes":  "حل مشكلة القص الذكي وتحديث التشفير، وإضافة تتبع الأخطاء في أداة القص.",
-    "versionCode":  30,
-    "versionName":  "2.2.6",
-    "downloadUrl":  "https://github.com/my-nvda/accVideoEditorReleases/raw/main/AccessibleVideoEditor_Update.apk?v=30"
+{
+    "releaseNotes": "تحديث: جميع إصلاحات التطبيق الجذرية، تحسين استوديو الصوت (AAC)، القص الذكي بدون صوت، وحل مشاكل دمج الفيديوهات وأخطاء الترجمة.",
+    "versionCode": 31,
+    "versionName": "2.2.7",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v2.2.7/app-debug.apk"
 }
