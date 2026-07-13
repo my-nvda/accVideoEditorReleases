@@ -1,6 +1,6 @@
 {
-    "releaseNotes": "تحديث: جميع إصلاحات التطبيق الجذرية، تحسين استوديو الصوت (AAC)، القص الذكي بدون صوت، وحل مشاكل دمج الفيديوهات وأخطاء الترجمة.",
-    "versionCode": 31,
-    "versionName": "2.2.7",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v2.2.7/app-debug.apk"
+    "releaseNotes": "تحديث: الإصدار 2.2.8، إصلاح جذري للترجمة الإنجليزية والترميز العربي (UTF-8) وعودة النصوص المفقودة.",
+    "versionCode": 32,
+    "versionName": "2.2.8",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v2.2.8/app-debug.apk"
 }
