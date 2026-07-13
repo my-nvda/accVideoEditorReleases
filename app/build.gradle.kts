@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.serialization)
@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 30
-        versionName = "2.2.6"
+        versionCode = 32
+        versionName = "2.2.8"
     }
 
     buildTypes {
@@ -28,6 +28,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
       compose = true
       aidl = false
@@ -112,3 +113,5 @@ dependencies {
 
 
 
+tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach { compilerOptions { freeCompilerArgs.add("-Xencoding=utf8") } }

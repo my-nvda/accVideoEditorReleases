@@ -69,7 +69,7 @@ class SpeechToTextProcessor {
         outputStream.close()
         
         if (conn.responseCode != 200) {
-            val reader = java.io.BufferedReader(java.io.InputStreamReader(conn.errorStream ?: conn.inputStream))
+            val reader = java.io.BufferedReader(java.io.InputStreamReader(conn.errorStream ?: conn.inputStream, kotlin.text.Charsets.UTF_8))
             val errResponse = java.lang.StringBuilder()
             var errLine: String?
             while (reader.readLine().also { errLine = it } != null) {
@@ -79,7 +79,7 @@ class SpeechToTextProcessor {
             return "ERROR: Wit.ai HTTP ${conn.responseCode} - $errResponse"
         }
         
-        val reader = BufferedReader(InputStreamReader(conn.inputStream))
+        val reader = BufferedReader(InputStreamReader(conn.inputStream, kotlin.text.Charsets.UTF_8))
         val response = StringBuilder()
         var line: String?
         while (reader.readLine().also { line = it } != null) {
@@ -131,7 +131,7 @@ class SpeechToTextProcessor {
         outputStream.close()
         
         if (conn.responseCode != 200) {
-            val reader = java.io.BufferedReader(java.io.InputStreamReader(conn.errorStream ?: conn.inputStream))
+            val reader = java.io.BufferedReader(java.io.InputStreamReader(conn.errorStream ?: conn.inputStream, kotlin.text.Charsets.UTF_8))
             val errResponse = java.lang.StringBuilder()
             var errLine: String?
             while (reader.readLine().also { errLine = it } != null) {
@@ -141,7 +141,7 @@ class SpeechToTextProcessor {
             return "ERROR: OpenAI HTTP ${conn.responseCode} - $errResponse"
         }
         
-        val reader = BufferedReader(InputStreamReader(conn.inputStream))
+        val reader = BufferedReader(InputStreamReader(conn.inputStream, kotlin.text.Charsets.UTF_8))
         val response = StringBuilder()
         var line: String?
         while (reader.readLine().also { line = it } != null) {

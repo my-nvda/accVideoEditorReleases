@@ -1,8 +1,8 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">Accessible Video Editor</string>
-    <string name="string_1">Describe this photo or video in detail in Arabic. Focus on visuals, people, actions and written texts if available.</string>
-    <string name="string_2">Extract and transcribe the text from this audio file in Arabic with high accuracy. Write only the extracted text without additions.</string>
+    <string name="string_1">Describe this photo or video in detail. Focus on visuals, people, actions and written texts if available.</string>
+    <string name="string_2">Extract and transcribe the text from this audio file with high accuracy. Write only the extracted text without additions.</string>
     <string name="string_3">Error: Gemini API key is missing. Please add it from settings.</string>
     <string name="string_4">%1$s videos selected</string>
     <string name="string_5">Ask a question about the photo/video (optional)</string>
@@ -72,7 +72,7 @@
     <string name="string_69">Background color: %1$s</string>
     <string name="string_70">The video has been selected</string>
     <string name="string_71">Text extraction failed.</string>
-    <string name="string_72">Writing on pictures</string>
+    <string name="string_72">Add Text to Image</string>
     <string name="string_73">Error: %1$s</string>
     <string name="string_74">Add a watermark</string>
     <string name="string_75">Merge videos</string>
@@ -82,7 +82,7 @@
     <string name="string_79">Presentation slide maker</string>
     <string name="string_80">Photo slideshow maker</string>
     <string name="string_81">Smart cutting application</string>
-    <string name="string_82">Startup sound</string>
+    <string name="string_82">Play sound on success</string>
     <string name="string_83">Cancellation...</string>
     <string name="string_84">Text color: %1$s</string>
     <string name="string_85">The sound is selected</string>
@@ -145,24 +145,29 @@
     <string name="string_142">Process</string>
     <string name="string_143">purple</string>
     <string name="string_144">Facebook</string>
-    <string name="string_145">employment</string>
+    <string name="string_145">Play</string>
     <string name="string_146">Sound</string>
-    <string name="string_147">transformation</string>
+    <string name="string_147">Convert</string>
     <string name="string_148">Twitter</string>
-    <string name="string_149">heavenly</string>
+    <string name="string_149">Cyan</string>
     <string name="string_150">black</string>
     <string name="string_151">blue</string>
     <string name="string_152">green</string>
     <string name="string_153">red</string>
     <string name="string_154">yellow</string>
-    <string name="string_155">higher</string>
+    <string name="string_155">Top</string>
     <string name="string_156">white</string>
-    <string name="string_157">lowest</string>
-    <string name="string_158">middle</string>
+    <string name="string_157">Bottom</string>
+    <string name="string_158">Center</string>
+    <string name="string_182">Operation completed successfully</string>
+    <string name="string_183">Operation failed</string>
+
     <string name="string_159">Help and About</string>
     <string name="string_160">How to Use</string>
     <string name="string_161">About</string>
-    <string name="string_162">Accessible Video Editor is a comprehensive media editing tool designed with accessibility in mind. It supports 11 languages and offers professional features such as video merging, text customization, smart cutting, and more.</string>
+    <string name="string_162">Accessible Video Editor is a comprehensive media editing tool designed with 
+accessibility in mind. It supports 11 languages and offers professional features such as video merging, text 
+customization, smart cutting, and more.</string>
     <string name="string_163">Version 1.0.0</string>
     <string name="string_164">Developed by Accessibility First Team</string>
     <string name="string_170">Choose a file</string>
@@ -177,7 +182,6 @@
     <string name="string_179">- Smart Cut: Automatically remove silence from audio or video.</string>
     <string name="string_180">- Ticker Text: Add moving news-style ticker text to videos.</string>
     <string name="string_181">Navigate using the main menu. All buttons are labeled for screen readers.</string>
-    <string name="string_182">تمت العملية بنجاح</string>
-    <string name="string_183">حدث خطأ أثناء العملية</string>
-</resources>
 
+
+</resources>
