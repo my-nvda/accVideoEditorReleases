@@ -1,6 +1,6 @@
 {
-    "releaseNotes": "تحديث: الإصدار 2.2.8، إصلاح جذري للترجمة الإنجليزية والترميز العربي (UTF-8) وعودة النصوص المفقودة.",
-    "versionCode": 32,
-    "versionName": "2.2.8",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v2.2.8/app-debug.apk"
+    "releaseNotes": "إصلاح مشكلة قارئ الشاشة والتصنيفات غير المفهومة في الأزرار في شاشة العمليات وغيرها.",
+    "versionCode": 33,
+    "versionName": "2.2.9",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v2.2.9/app-debug.apk"
 }
