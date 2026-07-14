@@ -75,7 +75,7 @@ object FFmpegProcessor {
                             etaMessage = if (context != null) {
                                 com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_208, minutes, seconds)
                             } else {
-                                String.format(java.util.Locale.getDefault(), "الوقت المتبقي: %02d:%02d", minutes, seconds)
+                                String.format(java.util.Locale.getDefault(), String.format(java.util.Locale.getDefault(), "%s: %02d:%02d", com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_227), "%02d", "%02d").replace("%02d", "%02d"), minutes, seconds) // Fallback if no context
                             }
                         }
                     }

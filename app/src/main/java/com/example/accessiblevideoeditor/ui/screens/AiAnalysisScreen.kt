@@ -84,13 +84,13 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
                 onClick = { imagePickerLauncher.launch("image/*") },
                 modifier = Modifier.weight(1f).height(60.dp)
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_124))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_124))
             }
             Button(
                 onClick = { videoPickerLauncher.launch("video/*") },
                 modifier = Modifier.weight(1f).height(60.dp)
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_113))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_113))
             }
         }
         
@@ -99,7 +99,7 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
         com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
             value = userQuestion,
             onValueChange = { userQuestion = it },
-            hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_5),
+            hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_5),
             modifier = Modifier.fillMaxWidth() // Removed contentDescription to let TalkBack read the label naturally
         )
 
@@ -108,7 +108,7 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
         Button(
             onClick = {
                 coroutineScope.launch {
-                    ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_91), cancellable = true)
+                    ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_91), cancellable = true)
                     ProcessingManager.updateJob(coroutineContext[kotlinx.coroutines.Job])
                     try {
                         val apiKeyToUse = SettingsManager.geminiApiKey.trim()
@@ -131,29 +131,29 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
                         
                         val inputContent = content {
                             bitmaps.forEach { image(it) }
-                            val promptText = if (userQuestion.isNotBlank()) userQuestion else com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_1)
+                            val promptText = if (userQuestion.isNotBlank()) userQuestion else com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_1)
                             text(promptText)
                         }
                         
                         var response = ""
                         try {
-                            response = model.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_66)
+                            response = model.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_66)
                         } catch (e: Exception) {
                             // Fallback to gemini-2.0-flash if the selected one fails
                             val fallbackModel = GenerativeModel(
                                 modelName = "gemini-2.0-flash",
                                 apiKey = apiKeyToUse
                             )
-                            response = fallbackModel.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_66)
+                            response = fallbackModel.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_66)
                         }
                         
                         generatedDescription = response
                     } catch (e: Exception) {
                         val errorMsg = e.message ?: ""
                         if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
-                            generatedDescription = "عذراً، خوادم الذكاء الاصطناعي تواجه ضغطاً كبيراً حالياً. يرجى المحاولة بعد قليل."
+                            generatedDescription = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_228)
                         } else {
-                            generatedDescription = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_56, errorMsg)
+                            generatedDescription = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_56, errorMsg)
                         }
                     } finally {
                         ProcessingManager.stopProcessing()
@@ -163,7 +163,7 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
             enabled = (selectedImage != null || selectedVideo != null) && SettingsManager.geminiApiKey.isNotBlank() && !ProcessingManager.isProcessing,
             modifier = Modifier.fillMaxWidth().height(60.dp)
         ) {
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_50))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_50))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -174,7 +174,7 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                 value = generatedDescription,
                 onValueChange = {},
-                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_103),
+                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_103),
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 200.dp),
@@ -188,7 +188,7 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
                 onClick = { clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(generatedDescription)) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_141))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_141))
             }
         }
     }

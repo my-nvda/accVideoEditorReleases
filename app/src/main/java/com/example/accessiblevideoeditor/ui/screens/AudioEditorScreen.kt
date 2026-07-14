@@ -46,35 +46,35 @@ fun AudioEditorScreen(
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_77), style = MaterialTheme.typography.titleMedium)
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_77), style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = { videoPickerLauncher.launch("video/*") },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(if (selectedVideoUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_67))
+                    Text(if (selectedVideoUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_67))
                 }
                 
                 Button(
                     onClick = { audioPickerLauncher.launch("audio/*") },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(if (selectedAudioUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_85) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_19))
+                    Text(if (selectedAudioUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_85) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_19))
                 }
             }
         }
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_57))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_57))
         } else {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_110), style = MaterialTheme.typography.titleMedium)
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_110), style = MaterialTheme.typography.titleMedium)
                     
                     Button(
                         onClick = { selectedVideoUri?.let { onRemoveAudio(it) } },
@@ -82,7 +82,7 @@ fun AudioEditorScreen(
                         enabled = selectedVideoUri != null,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_25))
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_25))
                     }
 
                     Button(
@@ -94,7 +94,7 @@ fun AudioEditorScreen(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = selectedVideoUri != null && selectedAudioUri != null
                     ) {
-                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_7)) // Replace Audio
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_7)) // Replace Audio
                     }
 
                     Button(
@@ -106,7 +106,7 @@ fun AudioEditorScreen(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = selectedVideoUri != null && selectedAudioUri != null
                     ) {
-                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_9)) // Mix Audio
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_9)) // Mix Audio
                     }
                 }
             }

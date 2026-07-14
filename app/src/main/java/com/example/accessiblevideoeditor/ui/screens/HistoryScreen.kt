@@ -40,12 +40,12 @@ fun HistoryScreen(onBack: () -> Unit) {
     if (itemToRename != null) {
         AlertDialog(
             onDismissRequest = { itemToRename = null },
-            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_174)) },
+            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_174)) },
             text = {
                 com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                     value = newFileName,
                     onValueChange = { newFileName = it },
-                    hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_174),
+                    hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_174),
                     modifier = Modifier.fillMaxWidth()
                 )
             },
@@ -59,17 +59,17 @@ fun HistoryScreen(onBack: () -> Unit) {
                             HistoryManager.saveFullHistory(context, list)
                             loadHistory()
                             SoundManager.playSuccess()
-                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
+                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
                         }
                     }
                     itemToRename = null
                 }) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_174))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_174))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { itemToRename = null }) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_207))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_207))
                 }
             }
         )
@@ -78,8 +78,8 @@ fun HistoryScreen(onBack: () -> Unit) {
     if (itemToDelete != null) {
         AlertDialog(
             onDismissRequest = { itemToDelete = null },
-            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_204)) },
-            text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_205)) },
+            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_204)) },
+            text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_205)) },
             confirmButton = {
                 TextButton(onClick = {
                     itemToDelete?.let { item ->
@@ -94,16 +94,16 @@ fun HistoryScreen(onBack: () -> Unit) {
                             e.printStackTrace()
                         }
                         SoundManager.playSuccess()
-                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
                     }
                     itemToDelete = null
                 }) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_206))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_206))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { itemToDelete = null }) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_207))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_207))
                 }
             }
         )
@@ -112,7 +112,7 @@ fun HistoryScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_116)) },
+                title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_116)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Text("←", style = MaterialTheme.typography.titleLarge)
@@ -127,7 +127,7 @@ fun HistoryScreen(onBack: () -> Unit) {
         ) {
             if (historyItems.isEmpty()) {
                 item {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_29), style = MaterialTheme.typography.bodyLarge)
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_29), style = MaterialTheme.typography.bodyLarge)
                 }
             } else {
                 items(historyItems, key = { it.uriString }) { item ->
@@ -141,7 +141,7 @@ fun HistoryScreen(onBack: () -> Unit) {
                                 context.startActivity(intent)
                             } catch (e: Exception) {
                                 e.printStackTrace()
-                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_183), android.widget.Toast.LENGTH_SHORT).show()
                             }
                         },
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -172,7 +172,7 @@ fun HistoryScreen(onBack: () -> Unit) {
                                     onDismissRequest = { menuExpanded = false }
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_172)) },
+                                        text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_172)) },
                                         onClick = {
                                             menuExpanded = false
                                             try {
@@ -181,14 +181,14 @@ fun HistoryScreen(onBack: () -> Unit) {
                                                     putExtra(Intent.EXTRA_STREAM, Uri.parse(item.uriString))
                                                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                                 }
-                                                context.startActivity(Intent.createChooser(intent, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_172)))
+                                                context.startActivity(Intent.createChooser(intent, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_172)))
                                             } catch (e: Exception) {
                                                 e.printStackTrace()
                                             }
                                         }
                                     )
                                     DropdownMenuItem(
-                                        text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_174)) },
+                                        text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_174)) },
                                         onClick = {
                                             menuExpanded = false
                                             itemToRename = item
@@ -196,7 +196,7 @@ fun HistoryScreen(onBack: () -> Unit) {
                                         }
                                     )
                                     DropdownMenuItem(
-                                        text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_175)) },
+                                        text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_175)) },
                                         onClick = {
                                             menuExpanded = false
                                             itemToDelete = item

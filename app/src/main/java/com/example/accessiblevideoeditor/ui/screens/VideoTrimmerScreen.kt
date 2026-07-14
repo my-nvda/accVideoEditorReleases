@@ -63,7 +63,7 @@ fun VideoTrimmerScreen(
             onClick = { videoPickerLauncher.launch("video/*") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_90))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_90))
         }
 
         if (selectedVideoUri != null) {
@@ -86,7 +86,7 @@ fun VideoTrimmerScreen(
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                 value = startTimeStr,
                 onValueChange = { startTimeStr = it },
-                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_23),
+                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_23),
                 modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next)
             )
@@ -94,7 +94,7 @@ fun VideoTrimmerScreen(
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                 value = durationStr,
                 onValueChange = { durationStr = it },
-                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_49),
+                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_49),
                 modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done)
             )
@@ -107,7 +107,7 @@ fun VideoTrimmerScreen(
             modifier = Modifier.fillMaxWidth(),
             enabled = selectedVideoUri != null
         ) {
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_76))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_76))
         }
     }
 }

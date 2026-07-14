@@ -57,7 +57,7 @@ object AppUpdater {
                         versionCode = serverVersionCode,
                         versionName = json.getString("versionName"),
                         downloadUrl = json.getString("downloadUrl"),
-                        releaseNotes = json.optString("releaseNotes", com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_201))
+                        releaseNotes = json.optString("releaseNotes", com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_201))
                     )
                 }
             }
@@ -70,8 +70,8 @@ object AppUpdater {
     fun downloadAndInstall(context: Context, updateInfo: UpdateInfo): Long {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(updateInfo.downloadUrl)
-        val title = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_202)
-        val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_203).replace("%s", updateInfo.versionName)
+        val title = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_202)
+        val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_203).replace("%s", updateInfo.versionName)
         val request = DownloadManager.Request(uri)
             .setTitle(title)
             .setDescription(desc)
@@ -188,8 +188,8 @@ object AppUpdater {
 
         val builder = androidx.core.app.NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.stat_sys_download_done) // system icon
-            .setContentTitle("تحديث جديد متوفر!")
-            .setContentText("يتوفر الإصدار ${updateInfo.versionName} للتحميل. اضغط للتحديث الآن.")
+            .setContentTitle(context.getString(R.string.string_242))
+            .setContentText(context.getString(R.string.string_243, updateInfo.versionName) + " " + context.getString(R.string.string_244))
             .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)

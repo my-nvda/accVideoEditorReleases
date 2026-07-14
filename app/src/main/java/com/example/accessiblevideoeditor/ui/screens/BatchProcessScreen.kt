@@ -56,19 +56,19 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_32), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_32), style = MaterialTheme.typography.titleLarge)
         
         Button(
             onClick = { multipleMediaPicker.launch("video/*") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_93))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_93))
         }
 
         if (selectedUris.isNotEmpty()) {
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_6, selectedUris.size), style = MaterialTheme.typography.bodyMedium)
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_6, selectedUris.size), style = MaterialTheme.typography.bodyMedium)
             
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_98), modifier = Modifier.align(Alignment.Start))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_98), modifier = Modifier.align(Alignment.Start))
             var expanded by remember { mutableStateOf(false) }
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedButton(
@@ -76,7 +76,7 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     val label = com.example.accessiblevideoeditor.ui.AppStrings.get(context, selectedOperationId)
-                    Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_142)}: $label")
+                    Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_142)}: $label")
                 }
                 DropdownMenu(
                     expanded = expanded,
@@ -97,10 +97,10 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
         }
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
-                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_28, overallProgress.toInt()),
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_28, overallProgress.toInt()),
                 modifier = Modifier.semantics {
                     liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
                 }
@@ -118,7 +118,7 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                     currentIndex = 0
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                            com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_32))
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_32))
                         }
                         var successCount = 0
                         selectedUris.forEachIndexed { index, uri ->
@@ -170,7 +170,7 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                             com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                             if (successCount > 0) {
                                 com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                android.widget.Toast.makeText(context, "${com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182)} ($successCount/${selectedUris.size})", android.widget.Toast.LENGTH_LONG).show()
+                                android.widget.Toast.makeText(context, "${com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182)} ($successCount/${selectedUris.size})", android.widget.Toast.LENGTH_LONG).show()
                             } else {
                                 com.example.accessiblevideoeditor.media.SoundManager.playError()
                             }
@@ -180,7 +180,7 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedUris.isNotEmpty()
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_117))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_117))
             }
         }
     }

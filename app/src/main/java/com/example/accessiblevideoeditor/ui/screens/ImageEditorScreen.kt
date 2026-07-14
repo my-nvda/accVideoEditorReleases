@@ -41,10 +41,10 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_72), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_72), style = MaterialTheme.typography.titleLarge)
         
         Button(onClick = { imagePickerLauncher.launch("image/*") }, modifier = Modifier.fillMaxWidth()) {
-            Text(if (selectedImageUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_108) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_134))
+            Text(if (selectedImageUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_108) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_134))
         }
 
         TextCustomizationPanel(
@@ -52,17 +52,17 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
         )
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
-                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_28, progress),
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_28, progress),
                 modifier = Modifier.semantics {
                     liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
                 }
             )
         } else {
-            val successMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_182) // "Saved successfully"
-            val errorMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_183) // "An error occurred while saving"
+            val successMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_182) // "Saved successfully"
+            val errorMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_183) // "An error occurred while saving"
             
             Button(
                 onClick = {
@@ -107,7 +107,7 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedImageUri != null && textOptions.text.isNotBlank()
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_127))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_127))
             }
         }
     }

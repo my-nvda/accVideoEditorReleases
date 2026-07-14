@@ -21,7 +21,7 @@ fun GlobalProgressDialog() {
         AlertDialog(
             properties = androidx.compose.ui.window.DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
             onDismissRequest = { /* No dismiss by clicking outside */ },
-            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name)) },
+            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.app_name)) },
             text = {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -45,7 +45,7 @@ fun GlobalProgressDialog() {
                             }
                         )
                     } else {
-                        val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+                        val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
                         CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
                     }
                     
@@ -81,14 +81,14 @@ fun GlobalProgressDialog() {
         AlertDialog(
             properties = androidx.compose.ui.window.DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
             onDismissRequest = { ProcessingManager.dismissError() },
-            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.R.string.string_224)) },
+            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_224)) },
             text = {
                 // Use a scrollable column for long logs
                 val scrollState = rememberScrollState()
                 Column(
                     modifier = Modifier.fillMaxWidth().heightIn(max = 400.dp).verticalScroll(scrollState)
                 ) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.R.string.string_225), style = MaterialTheme.typography.titleMedium)
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_225), style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(8.dp))
                     androidx.compose.foundation.text.selection.SelectionContainer {
                         Text(

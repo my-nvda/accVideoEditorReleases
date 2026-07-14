@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -43,7 +43,7 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("Accessible Video Editor") },
                 actions = {
-                    val settingsDesc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_133)
+                    val settingsDesc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_133)
                     IconButton(
                         onClick = onNavigateToSettings,
                         modifier = Modifier.clearAndSetSemantics { contentDescription = settingsDesc }
@@ -63,26 +63,26 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_112), onNavigateToVideoEditor) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_128), onNavigateToImageEditor) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_94), onNavigateToVideoTrimmer) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_45), onNavigateToSmartCut) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_102), onNavigateToAudioEditor) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_55), onNavigateToAudioStudio) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_31), onNavigateToAiAnalysis) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_63), onNavigateToStt) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_20), onNavigateToOcr) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_59), onNavigateToFastConverter) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_86), onNavigateToBoostVolume) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_41), onNavigateToExtractAudio) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_125), onNavigateToCompressVideo) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_75), onNavigateToMergeVideos) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_68), onNavigateToReverseMedia) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_80), onNavigateToSlideshowMaker) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_74), onNavigateToWatermark) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_52), onNavigateToTickerText) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_32), onNavigateToBatchProcess) }
-            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_116), onNavigateToHistory) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_112), onNavigateToVideoEditor) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_128), onNavigateToImageEditor) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_94), onNavigateToVideoTrimmer) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_45), onNavigateToSmartCut) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_102), onNavigateToAudioEditor) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_55), onNavigateToAudioStudio) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_31), onNavigateToAiAnalysis) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_63), onNavigateToStt) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_20), onNavigateToOcr) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_59), onNavigateToFastConverter) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_86), onNavigateToBoostVolume) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_41), onNavigateToExtractAudio) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_125), onNavigateToCompressVideo) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_75), onNavigateToMergeVideos) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_68), onNavigateToReverseMedia) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_80), onNavigateToSlideshowMaker) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_74), onNavigateToWatermark) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_52), onNavigateToTickerText) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_32), onNavigateToBatchProcess) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_116), onNavigateToHistory) }
         }
     }
 }

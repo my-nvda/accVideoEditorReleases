@@ -36,7 +36,7 @@ fun SettingsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_133)) })
+            TopAppBar(title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_133)) })
         }
     ) { paddingValues ->
         LazyColumn(
@@ -44,25 +44,25 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_96), style = MaterialTheme.typography.titleMedium)
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_96), style = MaterialTheme.typography.titleMedium)
             }
             item {
-                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_82), isStartupSoundEnabled) { 
+                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_82), isStartupSoundEnabled) { 
                     SettingsManager.isStartupSoundEnabled = it 
                 }
             }
             item {
-                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111), isProcessingSoundEnabled) { 
+                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111), isProcessingSoundEnabled) { 
                     SettingsManager.isProcessingSoundEnabled = it 
                 }
             }
             item {
-                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_130), isSuccessSoundEnabled) { 
+                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_130), isSuccessSoundEnabled) { 
                     SettingsManager.isSuccessSoundEnabled = it 
                 }
             }
             item {
-                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_136), isErrorSoundEnabled) { 
+                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_136), isErrorSoundEnabled) { 
                     SettingsManager.isErrorSoundEnabled = it 
                 }
             }
@@ -70,13 +70,13 @@ fun SettingsScreen(
             item { Divider() }
 
             item {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_196), style = MaterialTheme.typography.titleMedium)
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_196), style = MaterialTheme.typography.titleMedium)
             }
             item {
                 com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                     value = SettingsManager.geminiApiKey,
                     onValueChange = { SettingsManager.geminiApiKey = it },
-                    hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_197),
+                    hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_197),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -90,7 +90,7 @@ fun SettingsScreen(
                         onClick = { expandedModel = true },
                         modifier = Modifier.fillMaxWidth().height(60.dp)
                     ) {
-                        Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_198)}: $currentModel")
+                        Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_198)}: $currentModel")
                     }
                     DropdownMenu(
                         expanded = expandedModel,
@@ -113,10 +113,10 @@ fun SettingsScreen(
             item { Divider() }
 
             item {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_100), style = MaterialTheme.typography.titleMedium)
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_100), style = MaterialTheme.typography.titleMedium)
             }
             item {
-                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_109), isDarkMode) { 
+                SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_109), isDarkMode) { 
                     SettingsManager.isDarkMode = it 
                 }
             }
@@ -130,7 +130,7 @@ fun SettingsScreen(
                         onClick = { expanded = true },
                         modifier = Modifier.fillMaxWidth().height(60.dp)
                     ) {
-                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_17))
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_17))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("($currentLanguageName)")
                     }
@@ -157,16 +157,16 @@ fun SettingsScreen(
             item { Divider() }
 
             item {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_87), style = MaterialTheme.typography.titleMedium)
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_87), style = MaterialTheme.typography.titleMedium)
             }
             item {
                 Button(onClick = onCheckUpdates, modifier = Modifier.fillMaxWidth().height(60.dp)) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_48))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_48))
                 }
             }
             item {
                 Button(onClick = onNavigateToHelp, modifier = Modifier.fillMaxWidth().height(60.dp)) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_105))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_105))
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(onClick = onNavigateToTranslation, modifier = Modifier.fillMaxWidth().height(60.dp)) {
@@ -183,7 +183,7 @@ fun SettingsScreen(
                     },
                     modifier = Modifier.fillMaxWidth().height(60.dp)
                 ) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_27))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_27))
                 }
             }
             item {
@@ -194,7 +194,7 @@ fun SettingsScreen(
                     },
                     modifier = Modifier.fillMaxWidth().height(60.dp)
                 ) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_61))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_61))
                 }
             }
             item {
@@ -205,7 +205,7 @@ fun SettingsScreen(
                     },
                     modifier = Modifier.fillMaxWidth().height(60.dp)
                 ) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_148))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_148))
                 }
             }
             item {
@@ -216,7 +216,7 @@ fun SettingsScreen(
                     },
                     modifier = Modifier.fillMaxWidth().height(60.dp)
                 ) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_144))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_144))
                 }
             }
         }

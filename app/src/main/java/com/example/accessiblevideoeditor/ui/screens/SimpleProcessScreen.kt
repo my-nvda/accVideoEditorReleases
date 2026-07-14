@@ -55,14 +55,14 @@ fun SimpleProcessScreen(
             onClick = { pickerLauncher.launch("*/*") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_88) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_140))
+            Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_88) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_140))
         }
 
         if (isProcessing || isPreparing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
-                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_142),
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_142),
                 modifier = Modifier.semantics {
                     liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
                 }
@@ -86,7 +86,7 @@ fun SimpleProcessScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedUri != null
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_117))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_117))
             }
         }
     }

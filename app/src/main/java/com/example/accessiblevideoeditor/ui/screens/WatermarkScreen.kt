@@ -26,7 +26,7 @@ fun WatermarkScreen(
     val context = LocalContext.current
     var selectedVideoUri by remember { mutableStateOf<Uri?>(initialUris.firstOrNull()) }
     var selectedWatermarkUri by remember { mutableStateOf<Uri?>(null) }
-    var selectedPosition by remember { mutableStateOf(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_121)) }
+    var selectedPosition by remember { mutableStateOf(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_121)) }
     var isProcessing by remember { mutableStateOf(false) }
     
     var isTextMode by remember { mutableStateOf(false) }
@@ -42,7 +42,7 @@ fun WatermarkScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? -> selectedWatermarkUri = uri }
 
-    val positions = listOf(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_121), com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_126), com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_119), com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_120))
+    val positions = listOf(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_121), com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_126), com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_119), com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_120))
 
     Column(
         modifier = Modifier
@@ -52,25 +52,25 @@ fun WatermarkScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_21), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_21), style = MaterialTheme.typography.titleLarge)
         
         Button(
             onClick = { videoPickerLauncher.launch("video/*") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (selectedVideoUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_89))
+            Text(if (selectedVideoUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_89))
         }
 
         TabRow(selectedTabIndex = if (isTextMode) 1 else 0) {
             Tab(
                 selected = !isTextMode,
                 onClick = { isTextMode = false },
-                text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_200)) }
+                text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_200)) }
             )
             Tab(
                 selected = isTextMode,
                 onClick = { isTextMode = true },
-                text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_199)) }
+                text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_199)) }
             )
         }
 
@@ -83,7 +83,7 @@ fun WatermarkScreen(
                 onClick = { imagePickerLauncher.launch("image/*") },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(if (selectedWatermarkUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_14) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_24))
+                Text(if (selectedWatermarkUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_14) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_24))
             }
         }
 
@@ -93,7 +93,7 @@ fun WatermarkScreen(
                 onClick = { expanded = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_60)}: ${positions.find { it == selectedPosition } ?: ""}")
+                Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_60)}: ${positions.find { it == selectedPosition } ?: ""}")
             }
             DropdownMenu(
                 expanded = expanded,
@@ -113,9 +113,9 @@ fun WatermarkScreen(
         }
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_18))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_18))
         } else {
             Button(
                 onClick = {
@@ -139,14 +139,14 @@ fun WatermarkScreen(
                             
                             if (inputVideo != null && inputImage != null) {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_74))
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_74))
                                 }
                                 
                                 val overlayStr = when (selectedPosition) {
-                                    com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_126) -> "10:10" // Top Left
-                                    com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_121) -> "W-w-10:10" // Top Right
-                                    com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_120) -> "10:H-h-10" // Bottom Left
-                                    com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_119) -> "W-w-10:H-h-10" // Bottom Right
+                                    com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_126) -> "10:10" // Top Left
+                                    com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_121) -> "W-w-10:10" // Top Right
+                                    com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_120) -> "10:H-h-10" // Bottom Left
+                                    com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_119) -> "W-w-10:H-h-10" // Bottom Right
                                     else -> "10:10"
                                 }
                                 
@@ -156,12 +156,12 @@ fun WatermarkScreen(
                                 if (success) {
                                     com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                        val successMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182)
+                                        val successMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182)
                                         android.widget.Toast.makeText(context, successMsg, android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 } else {
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                        val errMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183)
+                                        val errMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_183)
                                         android.widget.Toast.makeText(context, errMsg, android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
@@ -180,7 +180,7 @@ fun WatermarkScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = if (isTextMode) selectedVideoUri != null && textOptions.text.isNotBlank() else selectedVideoUri != null && selectedWatermarkUri != null
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_53))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_53))
             }
         }
     }

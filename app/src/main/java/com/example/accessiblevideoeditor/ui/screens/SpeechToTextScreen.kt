@@ -50,20 +50,20 @@ fun SpeechToTextScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_40), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_40), style = MaterialTheme.typography.titleLarge)
         
         Button(
             onClick = { mediaPickerLauncher.launch("audio/*") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (selectedMediaUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_16) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_99))
+            Text(if (selectedMediaUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_16) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_99))
         }
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
-                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_30),
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_30),
                 modifier = Modifier.semantics {
                     liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
                 }
@@ -77,7 +77,7 @@ fun SpeechToTextScreen(
                             try {
                                 val apiKey = com.example.accessiblevideoeditor.ui.SettingsManager.geminiApiKey
                                 if (apiKey.isBlank()) {
-                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_3)
+                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_3)
                                     isProcessing = false
                                     return@launch
                                 }
@@ -92,16 +92,16 @@ fun SpeechToTextScreen(
                                 val mimeType = context.contentResolver.getType(uri) ?: "audio/mpeg"
                                 val inputContent = com.google.ai.client.generativeai.type.content {
                                     blob(mimeType, bytes)
-                                    text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_2))
+                                    text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_2))
                                 }
-                                transcribedText = model.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_71)
+                                transcribedText = model.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_71)
                             } catch (e: Exception) {
                                 e.printStackTrace()
                                 val errorMsg = e.message ?: ""
                                 if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
-                                    transcribedText = "عذراً، خوادم الذكاء الاصطناعي تواجه ضغطاً كبيراً حالياً. يرجى المحاولة بعد قليل."
+                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_228)
                                 } else {
-                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_73, errorMsg)
+                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_73, errorMsg)
                                 }
                             }
                             isProcessing = false
@@ -111,7 +111,7 @@ fun SpeechToTextScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedMediaUri != null
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_123))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_123))
             }
         }
 
@@ -119,7 +119,7 @@ fun SpeechToTextScreen(
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                 value = transcribedText,
                 onValueChange = {},
-                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_103),
+                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_103),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
@@ -131,7 +131,7 @@ fun SpeechToTextScreen(
                 onClick = { clipboardManager.setText(AnnotatedString(transcribedText)) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_141))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_141))
             }
         }
     }

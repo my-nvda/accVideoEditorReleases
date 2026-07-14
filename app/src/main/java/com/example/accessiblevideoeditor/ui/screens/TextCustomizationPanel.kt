@@ -31,7 +31,7 @@ fun TextCustomizationPanel(
     var options by remember { mutableStateOf(TextRenderer.TextOptions(text = "")) }
 
     val colors = listOf(
-        Color.White to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_156), Color.Black to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_150), Color.Red to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_153), Color.Green to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_152), Color.Blue to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_151), Color.Yellow to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_154), Color.Magenta to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_143), Color.Cyan to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_149)
+        Color.White to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_156), Color.Black to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_150), Color.Red to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_153), Color.Green to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_152), Color.Blue to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_151), Color.Yellow to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_154), Color.Magenta to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_143), Color.Cyan to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_149)
     )
 
     fun notifyChange() {
@@ -42,16 +42,16 @@ fun TextCustomizationPanel(
         com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
             value = options.text,
             onValueChange = { options = options.copy(text = it); notifyChange() },
-            hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_104),
+            hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_104),
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_135))
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_135))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             items(colors) { (color, name) ->
-                val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_84, name)
+                val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_84, name)
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -66,11 +66,11 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_115))
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_115))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             items(colors) { (color, name) ->
                 val bgColorAlpha = color.copy(alpha = 0.5f)
-                val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_69, name)
+                val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_69, name)
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -85,10 +85,10 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_184))
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_184))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             items(colors) { (color, name) ->
-                val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_184) + ": " + name
+                val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_184) + ": " + name
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -103,8 +103,8 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_13, options.textSizeSp.toInt()))
-        val descSize = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_64)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_13, options.textSizeSp.toInt()))
+        val descSize = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_64)
         Slider(
             value = options.textSizeSp,
             onValueChange = { options = options.copy(textSizeSp = it); notifyChange() },
@@ -117,7 +117,7 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val descShadowRadius = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_185)
+        val descShadowRadius = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_185)
         Text(descShadowRadius + ": ${options.shadowRadius.toInt()}")
         Slider(
             value = options.shadowRadius,
@@ -131,7 +131,7 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val descShadowOffsetX = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_186)
+        val descShadowOffsetX = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_186)
         Text(descShadowOffsetX + ": ${options.shadowDx.toInt()}")
         Slider(
             value = options.shadowDx,
@@ -145,7 +145,7 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val descShadowOffsetY = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_187)
+        val descShadowOffsetY = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_187)
         Text(descShadowOffsetY + ": ${options.shadowDy.toInt()}")
         Slider(
             value = options.shadowDy,
@@ -159,9 +159,9 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_129))
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_129))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            listOf(TextRenderer.TextPosition.TOP to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_155), TextRenderer.TextPosition.CENTER to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_158), TextRenderer.TextPosition.BOTTOM to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_157)).forEach { (pos, labelStr) ->
+            listOf(TextRenderer.TextPosition.TOP to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_155), TextRenderer.TextPosition.CENTER to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_158), TextRenderer.TextPosition.BOTTOM to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_157)).forEach { (pos, labelStr) ->
                 FilterChip(
                     selected = options.position == pos,
                     onClick = { options = options.copy(position = pos); notifyChange() },
@@ -172,12 +172,12 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_188))
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_188))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             val aligns = listOf(
-                TextRenderer.TextAlignment.LEFT to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_190),
-                TextRenderer.TextAlignment.CENTER to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_158),
-                TextRenderer.TextAlignment.RIGHT to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_191)
+                TextRenderer.TextAlignment.LEFT to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_190),
+                TextRenderer.TextAlignment.CENTER to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_158),
+                TextRenderer.TextAlignment.RIGHT to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_191)
             )
             aligns.forEach { (align, labelStr) ->
                 FilterChip(
@@ -190,13 +190,13 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_189))
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_189))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             val fonts = listOf(
-                TextRenderer.TextFontFamily.DEFAULT to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_192),
-                TextRenderer.TextFontFamily.SERIF to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_193),
-                TextRenderer.TextFontFamily.SANS_SERIF to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_194),
-                TextRenderer.TextFontFamily.MONOSPACE to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_195)
+                TextRenderer.TextFontFamily.DEFAULT to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_192),
+                TextRenderer.TextFontFamily.SERIF to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_193),
+                TextRenderer.TextFontFamily.SANS_SERIF to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_194),
+                TextRenderer.TextFontFamily.MONOSPACE to com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_195)
             )
             fonts.forEach { (font, labelStr) ->
                 FilterChip(

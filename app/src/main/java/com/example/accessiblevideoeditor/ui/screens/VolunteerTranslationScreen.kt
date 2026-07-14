@@ -20,6 +20,8 @@ import com.example.accessiblevideoeditor.ui.AppStrings
 import org.json.JSONObject
 import java.io.File
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 val SUPPORTED_LANGUAGES_AR = listOf(
     "ar" to "العربية",
@@ -50,7 +52,8 @@ fun TranslationItem(
     keyName: String,
     originalText: String,
     translation: String,
-    onTranslationChanged: (String, String) -> Unit
+    onTranslationChanged: (String, String) -> Unit,
+    context: Context
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -58,10 +61,10 @@ fun TranslationItem(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "النص الأصلي:",
+                text = AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_252),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.semantics { contentDescription = "النص الأصلي" }
+                modifier = Modifier.semantics { contentDescription = AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_252) }
             )
             Text(
                 text = originalText,
@@ -69,7 +72,7 @@ fun TranslationItem(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
-                    .semantics { contentDescription = "النص الأصلي هو: $originalText" }
+                    .semantics { contentDescription = AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_253).replace("%1\$s", originalText) }
             )
             
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
@@ -77,11 +80,11 @@ fun TranslationItem(
                 onValueChange = { 
                     onTranslationChanged(keyName, it)
                 },
-                hint = "الترجمة",
+                hint = AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_255),
                 modifier = Modifier
                     .fillMaxWidth()
                     .semantics { 
-                        contentDescription = "حقل إدخال لترجمة النص: $originalText" 
+                        contentDescription = AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_254).replace("%1\$s", originalText) 
                     }
             )
         }
@@ -95,20 +98,48 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     
     var selectedLangCode by remember { mutableStateOf("en") }
-    var selectedCategory by remember { mutableStateOf("نصوص عامة") }
+    var selectedCategory by remember { mutableStateOf("") }
     var isLangMenuExpanded by remember { mutableStateOf(false) }
     
-    // Original Strings Map (key -> original arabic text)
     val originalStrings = remember { mutableStateMapOf<String, String>() }
-    // Categorized Strings Map (category -> list of keys)
     val categorizedStrings = remember { mutableStateMapOf<String, List<String>>() }
-    // User Translations Map (key -> translation)
     val translations = remember { mutableStateMapOf<String, String>() }
     
     var categories by remember { mutableStateOf(listOf<String>()) }
     var isLoading by remember { mutableStateOf(true) }
 
-    // Load initial data
+    var completionPercentage by remember { mutableStateOf(0f) }
+
+    fun calculateProgress(langCode: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            if (langCode == "ar" || langCode == "en") {
+                withContext(Dispatchers.Main) { completionPercentage = 1f }
+                return@launch
+            }
+            var translatedCount = 0
+            val conf = android.content.res.Configuration(context.resources.configuration)
+            conf.setLocale(java.util.Locale(langCode))
+            val localizedContext = context.createConfigurationContext(conf)
+            
+            originalStrings.keys.forEach { key ->
+                try {
+                    val id = context.resources.getIdentifier(key, "string", context.packageName)
+                    if (id != 0) {
+                        val locStr = localizedContext.getString(id)
+                        val fbStr = context.getString(id) // Get default
+                        if (locStr != fbStr && locStr.isNotBlank()) {
+                            translatedCount++
+                        }
+                    }
+                } catch (e: Exception) {}
+            }
+            val percent = if (originalStrings.isEmpty()) 0f else translatedCount.toFloat() / originalStrings.size.toFloat()
+            withContext(Dispatchers.Main) {
+                completionPercentage = percent
+            }
+        }
+    }
+
     LaunchedEffect(Unit) {
         val file = File(context.filesDir, "custom_lang.json")
         val existingTranslations = mutableMapOf<String, String>()
@@ -123,26 +154,31 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
 
         val catMap = mutableMapOf<String, MutableList<String>>()
         
-        allAppStringIds.forEach { id ->
+        val fields = R.string::class.java.fields
+        fields.forEach { field ->
             try {
-                val keyName = context.resources.getResourceEntryName(id)
-                val arText = context.getString(id) // Get default string which is Arabic
-                originalStrings[keyName] = arText
-                
-                val cat = getCategoryArabic(arText)
-                if (!catMap.containsKey(cat)) catMap[cat] = mutableListOf()
-                catMap[cat]?.add(keyName)
-                
-                translations[keyName] = existingTranslations[keyName] ?: ""
+                if (field.name.startsWith("string_")) {
+                    val id = field.getInt(null)
+                    val keyName = field.name
+                    val arText = context.getString(id)
+                    originalStrings[keyName] = arText
+                    
+                    val cat = getCategoryArabic(arText)
+                    if (!catMap.containsKey(cat)) catMap[cat] = mutableListOf()
+                    catMap[cat]?.add(keyName)
+                    
+                    translations[keyName] = existingTranslations[keyName] ?: ""
+                }
             } catch (e: Exception) { }
         }
         
         catMap.forEach { (cat, list) -> categorizedStrings[cat] = list }
         categories = catMap.keys.toList().sorted()
-        if (categories.isNotEmpty() && selectedCategory !in categories) {
+        if (categories.isNotEmpty()) {
             selectedCategory = categories.first()
         }
         isLoading = false
+        calculateProgress(selectedLangCode)
     }
 
     val saveAndApply: () -> Unit = {
@@ -156,13 +192,13 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
             val file = File(context.filesDir, "custom_lang.json")
             file.writeText(json.toString(4))
             AppStrings.loadCustomStrings(context)
-            Toast.makeText(context, "تم الحفظ والتطبيق بنجاح", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_256), Toast.LENGTH_SHORT).show()
             if (context is android.app.Activity) {
                 context.recreate()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "حدث خطأ أثناء الحفظ", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_257), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -176,10 +212,10 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                 context.contentResolver.openOutputStream(uri)?.use { output ->
                     output.write(json.toString(4).toByteArray(Charsets.UTF_8))
                 }
-                Toast.makeText(context, "تم تصدير الترجمة بنجاح", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_258), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context, "فشل تصدير الترجمة", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_259), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -211,17 +247,17 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                             translations[k] = json.getString(k)
                         }
                         
-                        Toast.makeText(context, "تم استيراد الترجمة وتطبيقها", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_260), Toast.LENGTH_SHORT).show()
                         if (context is android.app.Activity) {
                             context.recreate()
                         }
                     } else {
-                        Toast.makeText(context, "ملف غير صالح. لا يحتوي على نصوص الترجمة.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_261), Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context, "حدث خطأ أثناء الاستيراد", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_262), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -229,26 +265,26 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("ترجمة التطبيق") },
+                title = { Text(AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_245)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "رجوع للخلف" }) {
-                        Text("رجوع")
+                    IconButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_246) }) {
+                        Text("<-")
                     }
                 },
                 actions = {
                     Button(onClick = { importLauncher.launch(arrayOf("application/json", "*/*")) }) {
-                        Text("استيراد")
+                        Text(AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_247))
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     Button(onClick = saveAndApply) {
-                        Text("حفظ وتطبيق")
+                        Text(AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_248))
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     Button(onClick = {
                         val fileName = "translations_${selectedLangCode}.json"
                         exportLauncher.launch(fileName)
                     }) {
-                        Text("تصدير")
+                        Text(AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_249))
                     }
                 }
             )
@@ -266,13 +302,30 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
             ) {
                 // Language Selector
                 Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                    OutlinedButton(
-                        onClick = { isLangMenuExpanded = true },
-                        modifier = Modifier.fillMaxWidth().semantics { contentDescription = "اختيار لغة الترجمة المستهدفة" }
-                    ) {
-                        val langName = SUPPORTED_LANGUAGES_AR.find { it.first == selectedLangCode }?.second ?: selectedLangCode
-                        Text("ترجمة إلى: $langName ▼")
+                    Column {
+                        OutlinedButton(
+                            onClick = { isLangMenuExpanded = true },
+                            modifier = Modifier.fillMaxWidth().semantics { contentDescription = AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_250) }
+                        ) {
+                            val langName = SUPPORTED_LANGUAGES_AR.find { it.first == selectedLangCode }?.second ?: selectedLangCode
+                            Text(AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_251).replace("%1\$s", langName))
+                        }
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        // Progress Bar
+                        val progressPercent = (completionPercentage * 100).toInt()
+                        Text(
+                            text = "نسبة اكتمال الترجمة: $progressPercent%",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        LinearProgressIndicator(
+                            progress = { completionPercentage },
+                            modifier = Modifier.fillMaxWidth().height(8.dp),
+                        )
                     }
+
                     DropdownMenu(
                         expanded = isLangMenuExpanded,
                         onDismissRequest = { isLangMenuExpanded = false }
@@ -283,6 +336,7 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                                 onClick = {
                                     selectedLangCode = code
                                     isLangMenuExpanded = false
+                                    calculateProgress(code)
                                 }
                             )
                         }
@@ -300,7 +354,7 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                                 selected = selectedCategory == cat,
                                 onClick = { selectedCategory = cat },
                                 text = { Text(cat) },
-                                modifier = Modifier.semantics { contentDescription = "قسم $cat" }
+                                modifier = Modifier.semantics { contentDescription = AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_263).replace("%1\$s", cat) }
                             )
                         }
                     }
@@ -325,7 +379,8 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                             translation = initialTrans,
                             onTranslationChanged = { k, newText ->
                                 translations[k] = newText
-                            }
+                            },
+                            context = context
                         )
                     }
                     
@@ -337,4 +392,3 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
         }
     }
 }
-

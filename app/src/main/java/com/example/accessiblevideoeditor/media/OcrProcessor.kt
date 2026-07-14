@@ -46,7 +46,7 @@ class OcrProcessor {
                 ex.printStackTrace()
                 val errorMsg = ex.message ?: ""
                 if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
-                    "عذراً، خوادم الذكاء الاصطناعي تواجه ضغطاً كبيراً حالياً. يرجى المحاولة بعد قليل."
+                    com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_228)
                 } else {
                     "Error processing image: $errorMsg"
                 }

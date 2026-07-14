@@ -41,17 +41,17 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_44), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_44), style = MaterialTheme.typography.titleLarge)
         
         Button(onClick = { picker.launch("video/*") }, modifier = Modifier.fillMaxWidth()) {
-            Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_131))
+            Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_131))
         }
         
         com.example.accessiblevideoeditor.ui.screens.TextCustomizationPanel(onOptionsChanged = { textOptions = it })
         
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(com.example.accessiblevideoeditor.ui.ProcessingManager.statusMessage)
         } else {
@@ -60,7 +60,7 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                     val uri = selectedUri
                     if (uri != null && textOptions.text.isNotBlank()) {
                         isProcessing = true
-                        com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_62))
+                        com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_62))
                         
                         coroutineScope.launch(Dispatchers.IO) {
                                 val inputPath = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, uri)
@@ -81,14 +81,14 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                                 if (com.arthenica.ffmpegkit.ReturnCode.isSuccess(session.returnCode)) {
                                     com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                     withContext(Dispatchers.Main) {
-                                        android.widget.Toast.makeText(context, "تمت العملية بنجاح", android.widget.Toast.LENGTH_SHORT).show()
+                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_240), android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 } else {
                                     val logs = session.failStackTrace ?: session.allLogsAsString ?: "Unknown Error"
                                     val detailedLog = "Command:\n$command\n\nLogs:\n$logs"
                                     withContext(Dispatchers.Main) {
                                         com.example.accessiblevideoeditor.ui.ProcessingManager.showError(detailedLog)
-                                        android.widget.Toast.makeText(context, "حدث خطأ أثناء معالجة الفيديو", android.widget.Toast.LENGTH_LONG).show()
+                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_241), android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
                                 withContext(Dispatchers.Main) {
@@ -104,7 +104,7 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedUri != null && textOptions.text.isNotBlank()
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_62))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_62))
             }
         }
     }

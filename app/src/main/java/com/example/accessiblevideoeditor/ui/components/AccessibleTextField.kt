@@ -37,7 +37,7 @@ fun AccessibleTextField(
             .focusRequester(focusRequester)
             .semantics {
                 contentDescription = hint
-                onClick(label = "تعديل النص") {
+                onClick(label = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_231)) {
                     focusRequester.requestFocus()
                     keyboardController?.show()
                     true

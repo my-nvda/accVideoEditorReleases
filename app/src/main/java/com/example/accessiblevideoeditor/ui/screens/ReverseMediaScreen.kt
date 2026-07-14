@@ -35,18 +35,18 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_65), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_65), style = MaterialTheme.typography.titleLarge)
         
         Button(onClick = { picker.launch("video/*") }, modifier = Modifier.fillMaxWidth()) {
-            Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_131))
+            Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_131))
         }
         
-        AccessibleCheckboxRow(text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_122), checked = reverseVideo, onCheckedChange = { reverseVideo = it })
+        AccessibleCheckboxRow(text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_122), checked = reverseVideo, onCheckedChange = { reverseVideo = it })
         
-        AccessibleCheckboxRow(text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_138), checked = reverseAudio, onCheckedChange = { reverseAudio = it })
+        AccessibleCheckboxRow(text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_138), checked = reverseAudio, onCheckedChange = { reverseAudio = it })
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
         } else {
             Button(
@@ -57,7 +57,7 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                         val input = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, uri)
                         if (input != null) {
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_68))
+                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_68))
                             }
                             val outputPath = context.cacheDir.absolutePath + "/reverse_${System.currentTimeMillis()}.mp4"
                             
@@ -97,7 +97,7 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedUri != null && (reverseVideo || reverseAudio)
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_137))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_137))
             }
         }
     }

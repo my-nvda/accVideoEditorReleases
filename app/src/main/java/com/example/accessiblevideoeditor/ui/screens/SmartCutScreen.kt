@@ -37,10 +37,10 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_42), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_42), style = MaterialTheme.typography.titleLarge)
         
         Button(onClick = { picker.launch("video/*") }, modifier = Modifier.fillMaxWidth()) {
-            Text(if (selectedVideoUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_131))
+            Text(if (selectedVideoUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_70) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_131))
         }
 
         com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
@@ -58,7 +58,7 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
         )
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
         } else {
             Button(
@@ -70,7 +70,7 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
                         val input = tempFile?.absolutePath
                         if (input != null) {
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_42))
+                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_42))
                             }
                             val outputPath = context.cacheDir.absolutePath + "/smartcut_${System.currentTimeMillis()}.mp4"
                             
@@ -85,11 +85,11 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
                             if (success) {
                                 com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    android.widget.Toast.makeText(context, "تمت العملية بنجاح", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_240), android.widget.Toast.LENGTH_SHORT).show()
                                 }
                             } else {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    android.widget.Toast.makeText(context, "حدث خطأ أثناء معالجة الفيديو", android.widget.Toast.LENGTH_LONG).show()
+                                    android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_241), android.widget.Toast.LENGTH_LONG).show()
                                 }
                             }
                             
@@ -105,7 +105,7 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedVideoUri != null
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_81))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_81))
             }
         }
     }

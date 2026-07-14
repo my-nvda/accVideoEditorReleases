@@ -34,10 +34,10 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_101), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_101), style = MaterialTheme.typography.titleLarge)
         
         Button(onClick = { picker.launch("video/*") }, modifier = Modifier.fillMaxWidth()) {
-            Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_88) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_140))
+            Text(if (selectedUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_88) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_140))
         }
         
         var expanded by remember { mutableStateOf(false) }
@@ -46,7 +46,7 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                 onClick = { expanded = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_114)}: $selectedFormat")
+                Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_114)}: $selectedFormat")
             }
             DropdownMenu(
                 expanded = expanded,
@@ -63,12 +63,13 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
         }
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
         } else {
             Button(
                 onClick = {
                     isProcessing = true
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_111), true)
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         selectedUri?.let { uri ->
                             val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_fast_conv_${System.currentTimeMillis()}.mp4")
@@ -99,18 +100,18 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                                         )
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     } else {
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     }
                                 } else {
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                         com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
+                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
@@ -123,7 +124,7 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedUri != null
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_147))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_147))
             }
         }
     }

@@ -87,7 +87,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         .verticalScroll(scrollState)
                 ) {
                     Text(
-                        text = "تم العثور على تحديث جديد (الإصدار ${info.versionName}).\n\nملاحظات الإصدار:\n${info.releaseNotes}\n\nهل تريد التحديث الآن؟",
+                        text = "${AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_232)} (${AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_233)} ${info.versionName}).\n\n${AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_234)}:\n${info.releaseNotes}\n\n${AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_235)}",
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -132,8 +132,8 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                             }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("تم تحميل: %.2f MB من %.2f MB".format(downloadedMB, totalMB))
-                        Text("المتبقي: %.2f MB".format(remainingMB))
+                        Text("${AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_236)}: %.2f MB ${AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_237)} %.2f MB".format(downloadedMB, totalMB))
+                        Text("${AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_238)}: %.2f MB".format(remainingMB))
 
                         if (progress!!.status == android.app.DownloadManager.STATUS_SUCCESSFUL || progress!!.status == android.app.DownloadManager.STATUS_FAILED) {
                             activeDownloadId = null
@@ -259,6 +259,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onBack = { navController.popBackStack() },
                 onProcess = { uri, tempPath ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_111), true)
                     isProcessing = true
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
@@ -308,7 +309,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
             if (showFormatDialog) {
                 androidx.compose.material3.AlertDialog(
                     onDismissRequest = { showFormatDialog = false },
-                    title = { androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_114)) },
+                    title = { androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_114)) },
                     text = {
                         androidx.compose.foundation.layout.Column {
                             val formats = listOf("m4a", "mp3", "wav", "aac")
@@ -320,7 +321,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                         val path = pendingPath
                                         if (uri != null && path != null) {
                                             com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
-                                                com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_41)
+                                                com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_41)
                                             )
                                             coroutineScope.launch(Dispatchers.IO) {
                                                 try {
@@ -373,7 +374,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                     confirmButton = {},
                     dismissButton = {
                         androidx.compose.material3.TextButton(onClick = { showFormatDialog = false }) {
-                            androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_207))
+                            androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_207))
                         }
                     }
                 )
@@ -402,6 +403,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onBack = { navController.popBackStack() },
                 onProcess = { uri, tempPath ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_111), true)
                     isProcessing = true
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
@@ -562,7 +564,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onRemoveAudio = { videoUri ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
                     com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
-                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_25)
+                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_25)
                     )
                     
                     coroutineScope.launch(Dispatchers.IO) {
@@ -597,7 +599,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onReplaceAudio = { videoUri, audioUri ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
                     com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
-                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_7)
+                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_7)
                     )
                     
                     coroutineScope.launch(Dispatchers.IO) {
@@ -633,7 +635,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onMixAudio = { videoUri, audioUri ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
                     com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
-                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_9)
+                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_9)
                     )
                     
                     coroutineScope.launch(Dispatchers.IO) {

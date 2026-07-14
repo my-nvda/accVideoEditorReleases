@@ -65,7 +65,7 @@ fun VideoEditorScreen(
             onClick = { videoPickerLauncher.launch("video/*") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_131))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_131))
         }
 
         if (selectedVideoUri != null) {
@@ -88,14 +88,14 @@ fun VideoEditorScreen(
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                 value = startTimeStr,
                 onValueChange = { startTimeStr = it },
-                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_35),
+                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_35),
                 modifier = Modifier.weight(1f)
             )
 
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                 value = endTimeStr,
                 onValueChange = { endTimeStr = it },
-                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_34),
+                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_34),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -111,7 +111,7 @@ fun VideoEditorScreen(
             modifier = Modifier.fillMaxWidth(),
             enabled = selectedVideoUri != null && textOptions.text.isNotBlank()
         ) {
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_38))
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_38))
         }
     }
 }

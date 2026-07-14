@@ -51,20 +51,20 @@ fun OcrScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_26), style = MaterialTheme.typography.titleLarge)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_26), style = MaterialTheme.typography.titleLarge)
         
         Button(
             onClick = { imagePickerLauncher.launch("image/*") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (selectedImageUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_11) else com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_134))
+            Text(if (selectedImageUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_11) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_134))
         }
 
         if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
+            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
-                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_58),
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_58),
                 modifier = Modifier.semantics {
                     liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
                 }
@@ -83,7 +83,7 @@ fun OcrScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = selectedImageUri != null
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_118))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_118))
             }
         }
 
@@ -91,7 +91,7 @@ fun OcrScreen(
             com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                 value = extractedText,
                 onValueChange = {},
-                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_103),
+                hint = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_103),
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 200.dp),
@@ -103,7 +103,7 @@ fun OcrScreen(
                 onClick = { clipboardManager.setText(AnnotatedString(extractedText)) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_141))
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_141))
             }
         }
     }

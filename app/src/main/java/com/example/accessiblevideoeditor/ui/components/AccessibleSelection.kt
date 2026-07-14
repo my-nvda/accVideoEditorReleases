@@ -22,7 +22,7 @@ fun AccessibleSwitchRow(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    enabledText: String = "مفعل",
+    enabledText: String = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_229),
     disabledText: String = "غير مفعل"
 ) {
     Row(
@@ -55,7 +55,7 @@ fun AccessibleCheckboxRow(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     checkedText: String = "محدد",
-    uncheckedText: String = "غير محدد"
+    uncheckedText: String = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_230)
 ) {
     Row(
         modifier = modifier
@@ -88,7 +88,7 @@ fun AccessibleRadioButtonRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     selectedText: String = "محدد",
-    unselectedText: String = "غير محدد"
+    unselectedText: String = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_230)
 ) {
     Row(
         modifier = modifier
