@@ -130,7 +130,7 @@ fun SettingsScreen(
                         onClick = { expanded = true },
                         modifier = Modifier.fillMaxWidth().height(60.dp)
                     ) {
-                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name))
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_17))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("($currentLanguageName)")
                     }
@@ -170,7 +170,7 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(onClick = onNavigateToTranslation, modifier = Modifier.fillMaxWidth().height(60.dp)) {
-                    Text("Volunteer Translation (ط§ظ„ظ…ط³ط§ظ‡ظ…ط© ظپظٹ ط§ظ„طھط±ط¬ظ…ط©)")
+                    Text("Volunteer Translation (المساهمة في الترجمة)")
                 }
             }
             item {

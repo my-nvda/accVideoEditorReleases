@@ -159,7 +159,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
     if (showShareDialog) {
         androidx.compose.material3.AlertDialog(
             onDismissRequest = { showShareDialog = false },
-            title = { Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_178)) }, // "What do you want to do with these files?"
+            title = { Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_98)) }, // "What do you want to do with these files?"
             text = {
                 androidx.compose.foundation.lazy.LazyColumn {
                     item {
@@ -254,7 +254,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
             val context = androidx.compose.ui.platform.LocalContext.current
             
             com.example.accessiblevideoeditor.ui.screens.SimpleProcessScreen(
-                titleRes = R.string.app_name,
+                titleRes = R.string.string_86,
                 isProcessing = isProcessing,
                 onBack = { navController.popBackStack() },
                 onProcess = { uri, tempPath ->
@@ -285,10 +285,10 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                 }
                                 com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                             } else {
-                                withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show() }
+                                withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_183), Toast.LENGTH_LONG).show() }
                             }
                         } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show() }
+                            withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
                             isProcessing = false
                         }
@@ -427,10 +427,10 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                 }
                                 com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                             } else {
-                                withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show() }
+                                withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_183), Toast.LENGTH_LONG).show() }
                             }
                         } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show() }
+                            withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
                             isProcessing = false
                         }
@@ -588,7 +588,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                 }
                             }
                         } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show() }
+                            withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
                             com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
@@ -624,7 +624,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                 }
                             }
                         } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show() }
+                            withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
                             com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
@@ -660,7 +660,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                 }
                             }
                         } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show() }
+                            withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
                             com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
@@ -731,7 +731,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         } catch (e: Exception) {
                             e.printStackTrace()
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show()
                             }
                         } finally {
                             com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
