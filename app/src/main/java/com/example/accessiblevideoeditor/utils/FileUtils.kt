@@ -13,9 +13,9 @@ object FileUtils {
 
     fun saveToGallery(context: Context, sourceFile: File, mimeType: String): Uri? {
         return when {
-            mimeType.startsWith("video/") -> com.example.accessiblevideoeditor.media.MediaUtils.saveVideoToGallery(context, sourceFile, sourceFile.name)
+            mimeType.startsWith("video/") -> com.example.accessiblevideoeditor.media.MediaUtils.saveVideoToGallery(context, sourceFile, sourceFile.name, mimeType)
             mimeType.startsWith("audio/") -> com.example.accessiblevideoeditor.media.MediaUtils.saveAudioToGallery(context, sourceFile, sourceFile.name, mimeType)
-            mimeType.startsWith("image/") -> com.example.accessiblevideoeditor.media.MediaUtils.saveImageToGallery(context, sourceFile, sourceFile.name)
+            mimeType.startsWith("image/") -> com.example.accessiblevideoeditor.media.MediaUtils.saveImageToGallery(context, sourceFile, sourceFile.name, mimeType)
             else -> null
         }
     }

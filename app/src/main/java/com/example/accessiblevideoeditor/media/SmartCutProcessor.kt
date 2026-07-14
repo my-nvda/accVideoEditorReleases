@@ -11,9 +11,22 @@ object SmartCutProcessor {
 
     suspend fun removeSilence(context: Context, inputPath: String, outputPath: String, thresholdDb: Int = -30, durationSec: Float = 0.5f): Boolean = withContext(Dispatchers.IO) {
         try {
+            val retriever = android.media.MediaMetadataRetriever()
+            val duration = try {
+                retriever.setDataSource(inputPath)
+                val durStr = retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION)
+                (durStr?.toDoubleOrNull() ?: 0.0) / 1000.0
+            } catch (e: Exception) {
+                e.printStackTrace()
+                0.0
+            } finally {
+                try { retriever.release() } catch (e: Exception) {}
+            }
+            
+            if (duration <= 0.0) return@withContext false
+
             val mediaInfo = FFprobeKit.getMediaInformation(inputPath)
             val info = mediaInfo.mediaInformation
-            val duration = info?.duration?.toDoubleOrNull() ?: 36000.0
             
             // Check if there is an audio stream
             val streams = info?.streams ?: emptyList()
@@ -36,18 +49,32 @@ object SmartCutProcessor {
                 }
                 return@withContext false
             }
-            val logs = detectSession.allLogsAsString
+            val logs = detectSession.allLogsAsString ?: ""
             
-            val silenceStarts = mutableListOf<Double>()
-            val silenceEnds = mutableListOf<Double>()
+            val silenceSegments = mutableListOf<Pair<Double, Double>>()
+            var currentStart: Double? = null
             
-            val startRegex = Regex("silence_start: ([\\d.eE+-]+)")
-            val endRegex = Regex("silence_end: ([\\d.eE+-]+)")
+            logs.split("\n").forEach { line ->
+                if (line.contains("silence_start:")) {
+                    val match = Regex("silence_start: ([\\d.eE+-]+)").find(line)
+                    match?.let { currentStart = it.groupValues[1].toDoubleOrNull() }
+                } else if (line.contains("silence_end:")) {
+                    val match = Regex("silence_end: ([\\d.eE+-]+)").find(line)
+                    match?.let {
+                        val endVal = it.groupValues[1].toDoubleOrNull()
+                        if (endVal != null) {
+                            val startVal = currentStart ?: 0.0
+                            silenceSegments.add(Pair(startVal, endVal))
+                            currentStart = null
+                        }
+                    }
+                }
+            }
+            if (currentStart != null) {
+                silenceSegments.add(Pair(currentStart!!, duration))
+            }
             
-            startRegex.findAll(logs).forEach { silenceStarts.add(it.groupValues[1].toDouble()) }
-            endRegex.findAll(logs).forEach { silenceEnds.add(it.groupValues[1].toDouble()) }
-            
-            if (silenceStarts.isEmpty() || silenceEnds.isEmpty()) {
+            if (silenceSegments.isEmpty()) {
                 // No silence found, just copy
                 val copyCmd = arrayOf("-y", "-i", inputPath, "-c", "copy", outputPath)
                 return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath)
@@ -59,9 +86,9 @@ object SmartCutProcessor {
             
             val pad = 0.125 // 0.125s on each side = 0.25s total silence left
             
-            for (i in 0 until min(silenceStarts.size, silenceEnds.size)) {
-                val sStart = silenceStarts[i] + pad
-                val sEnd = silenceEnds[i] - pad
+            for (seg in silenceSegments) {
+                val sStart = seg.first + pad
+                val sEnd = seg.second - pad
                 
                 if (sStart >= sEnd) {
                     continue // silence is too small to cut after padding
@@ -74,7 +101,15 @@ object SmartCutProcessor {
             }
             
             // Use actual video duration
-            keepSegments.add(Pair(lastKeepStart, duration))
+            if (lastKeepStart < duration) {
+                keepSegments.add(Pair(lastKeepStart, duration))
+            }
+            
+            if (keepSegments.isEmpty()) {
+                // If everything is silence but we have to keep something, or it's empty, copy as is
+                val copyCmd = arrayOf("-y", "-i", inputPath, "-c", "copy", outputPath)
+                return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath)
+            }
             
             // Pass 2: Build filter_complex
             val filterBuilder = StringBuilder()

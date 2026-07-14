@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AudioEditorScreen(
-    isProcessing: Boolean = false,
+    isProcessing: Boolean = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing,
     onRemoveAudio: (Uri) -> Unit,
     onReplaceAudio: (Uri, Uri) -> Unit,
     onMixAudio: (Uri, Uri) -> Unit
@@ -94,7 +94,7 @@ fun AudioEditorScreen(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = selectedVideoUri != null && selectedAudioUri != null
                     ) {
-                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_178)) // Replace Audio
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_7)) // Replace Audio
                     }
 
                     Button(
@@ -106,7 +106,7 @@ fun AudioEditorScreen(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = selectedVideoUri != null && selectedAudioUri != null
                     ) {
-                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_179)) // Mix Audio
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_9)) // Mix Audio
                     }
                 }
             }

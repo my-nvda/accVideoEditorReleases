@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     com.example.accessiblevideoeditor.ui.SettingsManager.init(this)
     com.example.accessiblevideoeditor.media.SoundManager.init(this)
     com.example.accessiblevideoeditor.media.SoundManager.playStartup()
+    com.example.accessiblevideoeditor.ui.ProcessingManager.init(this)
     com.example.accessiblevideoeditor.ui.AppStrings.loadCustomStrings(this)
 
     // Disable screen sleep
@@ -41,6 +42,13 @@ class MainActivity : AppCompatActivity() {
         }
     } catch (e: Exception) {
         e.printStackTrace()
+    }
+
+    // Request notification permission if Android 13+
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+        if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
+        }
     }
 
     // Extract Shared Uris

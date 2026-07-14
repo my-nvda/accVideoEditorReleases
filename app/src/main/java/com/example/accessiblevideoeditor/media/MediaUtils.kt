@@ -15,11 +15,11 @@ object MediaUtils {
     /**
      * Copies a local file to the public Movies directory in the MediaStore so the user can see it in their Gallery.
      */
-    fun saveVideoToGallery(context: Context, sourceFile: File, outputFileName: String): Uri? {
+    fun saveVideoToGallery(context: Context, sourceFile: File, outputFileName: String, mimeType: String = "video/mp4"): Uri? {
         val resolver = context.contentResolver
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, outputFileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + "/AccessibleVideoEditor")
                 put(MediaStore.MediaColumns.IS_PENDING, 1)
@@ -91,11 +91,11 @@ object MediaUtils {
     /**
      * Copies a local file to the public Pictures directory in the MediaStore.
      */
-    fun saveImageToGallery(context: Context, sourceFile: File, outputFileName: String): Uri? {
+    fun saveImageToGallery(context: Context, sourceFile: File, outputFileName: String, mimeType: String = "image/jpeg"): Uri? {
         val resolver = context.contentResolver
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, outputFileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/AccessibleVideoEditor")
                 put(MediaStore.MediaColumns.IS_PENDING, 1)

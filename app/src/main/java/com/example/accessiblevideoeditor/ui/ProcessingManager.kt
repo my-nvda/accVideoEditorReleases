@@ -12,6 +12,13 @@ import android.os.Looper
 import com.example.accessiblevideoeditor.R
 
 object ProcessingManager {
+    var appContext: Context? = null
+        private set
+
+    fun init(context: Context) {
+        appContext = context.applicationContext
+    }
+
     var isProcessing by mutableStateOf(false)
         private set
 

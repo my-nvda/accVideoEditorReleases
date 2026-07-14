@@ -14,13 +14,21 @@ object FFmpegProcessor {
     suspend fun executeWithProgress(commandArgs: Array<String>, sourceVideo: String? = null): Boolean = kotlinx.coroutines.suspendCancellableCoroutine { continuation ->
         var durationMs = 1f
         if (sourceVideo != null) {
-            val mediaInfo = com.arthenica.ffmpegkit.FFprobeKit.getMediaInformation(sourceVideo)
-            val durationString = mediaInfo.mediaInformation?.duration
-            val parsedDuration = durationString?.toFloatOrNull() ?: 0f
+            val retriever = android.media.MediaMetadataRetriever()
+            val parsedDuration = try {
+                retriever.setDataSource(sourceVideo)
+                val durStr = retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION)
+                durStr?.toFloatOrNull() ?: 0f
+            } catch (e: Exception) {
+                e.printStackTrace()
+                0f
+            } finally {
+                try { retriever.release() } catch (e: Exception) {}
+            }
             if (parsedDuration > 0) {
-                durationMs = parsedDuration * 1000f
+                durationMs = parsedDuration
             } else {
-                durationMs = 1000000000f // Prevent fast progress if duration is unknown
+                durationMs = 10000000f // Prevent fast progress if duration is unknown
             }
         }
 
@@ -63,7 +71,12 @@ object FFmpegProcessor {
                         if (remainingTime > 0) {
                             val seconds = (remainingTime / 1000) % 60
                             val minutes = (remainingTime / (1000 * 60)) % 60
-                            etaMessage = String.format(java.util.Locale.getDefault(), "الوقت المتبقي: %02d:%02d", minutes, seconds)
+                            val context = ProcessingManager.appContext
+                            etaMessage = if (context != null) {
+                                com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_208, minutes, seconds)
+                            } else {
+                                String.format(java.util.Locale.getDefault(), "الوقت المتبقي: %02d:%02d", minutes, seconds)
+                            }
                         }
                     }
 
@@ -266,7 +279,7 @@ object FFmpegProcessor {
      * Compresses the video by reducing bitrate and re-encoding.
      */
     suspend fun compressVideo(sourceVideo: String, outputPath: String): Boolean = withContext(Dispatchers.IO) {
-        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-c:v", "mpeg4", "-b:v", "1M", "-c:a", "aac", "-b:a", "128k", outputPath)
+        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-map", "0:v", "-map", "0:a?", "-c:v", "mpeg4", "-b:v", "1M", "-c:a", "aac", "-b:a", "128k", outputPath)
         executeWithProgress(commandArgs, sourceVideo)
     }
 
@@ -274,7 +287,7 @@ object FFmpegProcessor {
      * Changes video resolution/quality. 
      */
     suspend fun changeQuality(sourceVideo: String, outputPath: String, width: Int, height: Int): Boolean = withContext(Dispatchers.IO) {
-        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-vf", "scale=$width:$height", "-c:v", "mpeg4", "-c:a", "copy", outputPath)
+        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-vf", "scale=$width:$height", "-map", "0:v", "-map", "0:a?", "-c:v", "mpeg4", "-c:a", "copy", outputPath)
         executeWithProgress(commandArgs, sourceVideo)
     }
 
@@ -330,9 +343,6 @@ object FFmpegProcessor {
         executeWithProgress(commandArgs, sourceVideo)
     }
 
-    /**
-     * Creates a slideshow video from a list of images and an audio file.
-     */
     suspend fun createSlideshow(images: List<String>, audioFile: String?, durationPerImage: Int, outputPath: String): Boolean = withContext(Dispatchers.IO) {
         if (images.isEmpty()) return@withContext false
         
@@ -341,6 +351,23 @@ object FFmpegProcessor {
             writeText(images.joinToString("\n") { "file '$it'\nduration $durationPerImage" })
         }
         
+        // Dynamically get resolution from the first image
+        val options = android.graphics.BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        android.graphics.BitmapFactory.decodeFile(images[0], options)
+        var targetWidth = options.outWidth
+        var targetHeight = options.outHeight
+
+        // Ensure even numbers for x264 encoder
+        if (targetWidth % 2 != 0) targetWidth++
+        if (targetHeight % 2 != 0) targetHeight++
+        
+        // Default fallback if decode fails
+        if (targetWidth <= 0) targetWidth = 720
+        if (targetHeight <= 0) targetHeight = 1280
+
+        val scaleFilter = "scale=$targetWidth:$targetHeight:force_original_aspect_ratio=decrease,pad=$targetWidth:$targetHeight:(ow-iw)/2:(oh-ih)/2"
+
         val commandArgs = if (audioFile != null) {
             arrayOf(
                 "-y",
@@ -348,7 +375,7 @@ object FFmpegProcessor {
                 "-safe", "0",
                 "-i", concatFile,
                 "-i", audioFile,
-                "-vf", "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2",
+                "-vf", scaleFilter,
                 "-c:v", "mpeg4",
                 "-q:v", "2",
                 "-c:a", "aac",
@@ -361,7 +388,7 @@ object FFmpegProcessor {
                 "-f", "concat",
                 "-safe", "0",
                 "-i", concatFile,
-                "-vf", "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2",
+                "-vf", scaleFilter,
                 "-c:v", "mpeg4",
                 "-q:v", "2",
                 outputPath
@@ -432,7 +459,13 @@ object FFmpegProcessor {
             "chorus" -> "chorus=0.5:0.9:50|60|40:0.4|0.32|0.3:0.25|0.4|0.3:2|2.3|1.3"
             else -> "anull"
         }
-        val commandArgs = arrayOf("-y", "-i", sourceAudio, "-af", filter, "-c:a", "aac", "-b:a", "192k", outputPath)
+        val isMp3 = outputPath.endsWith(".mp3", ignoreCase = true)
+        val codecArgs = if (isMp3) {
+            arrayOf("-c:a", "libmp3lame", "-q:a", "2")
+        } else {
+            arrayOf("-c:a", "aac", "-b:a", "192k")
+        }
+        val commandArgs = arrayOf("-y", "-i", sourceAudio, "-af", filter) + codecArgs + arrayOf(outputPath)
         executeWithProgress(commandArgs, sourceAudio)
     }
 

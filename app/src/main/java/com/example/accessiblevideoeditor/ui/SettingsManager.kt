@@ -13,6 +13,7 @@ object SettingsManager {
     private const val KEY_WIT_AI_TOKEN = "wit_ai_token"
     private const val KEY_OPENAI_KEY = "openai_key"
     private const val KEY_GEMINI_API_KEY = "gemini_api_key"
+    private const val KEY_GEMINI_MODEL = "gemini_model"
 
     private lateinit var prefs: SharedPreferences
 
@@ -35,6 +36,8 @@ object SettingsManager {
         private set
     var geminiApiKeyState = androidx.compose.runtime.mutableStateOf("")
         private set
+    var geminiModelState = androidx.compose.runtime.mutableStateOf("gemini-2.5-flash")
+        private set
 
     fun init(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -46,6 +49,7 @@ object SettingsManager {
         witAiTokenState.value = prefs.getString(KEY_WIT_AI_TOKEN, "") ?: ""
         openAiKeyState.value = prefs.getString(KEY_OPENAI_KEY, "") ?: ""
         geminiApiKeyState.value = prefs.getString(KEY_GEMINI_API_KEY, "") ?: ""
+        geminiModelState.value = prefs.getString(KEY_GEMINI_MODEL, "gemini-2.5-flash") ?: "gemini-2.5-flash"
     }
 
     var isStartupSoundEnabled: Boolean
@@ -102,5 +106,12 @@ object SettingsManager {
         set(value) {
             prefs.edit().putString(KEY_GEMINI_API_KEY, value).apply()
             geminiApiKeyState.value = value
+        }
+
+    var geminiModel: String
+        get() = geminiModelState.value
+        set(value) {
+            prefs.edit().putString(KEY_GEMINI_MODEL, value).apply()
+            geminiModelState.value = value
         }
 }

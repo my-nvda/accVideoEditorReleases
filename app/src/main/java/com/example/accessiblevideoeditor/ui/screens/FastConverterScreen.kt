@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -80,9 +80,23 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                                 val commandArgs = arrayOf("-y", "-i", inputPath, outputPath)
                                 val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
                                 if (success) {
-                                    val mimeType = if (selectedFormat == "GIF") "image/gif" else "video/${selectedFormat.lowercase()}"
+                                    val mimeType = when (selectedFormat.uppercase()) {
+                                        "GIF" -> "image/gif"
+                                        "MKV" -> "video/x-matroska"
+                                        "AVI" -> "video/x-msvideo"
+                                        else -> "video/mp4"
+                                    }
                                     val savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), mimeType)
                                     if (savedUri != null) {
+                                        com.example.accessiblevideoeditor.media.HistoryManager.saveToHistory(
+                                            context,
+                                            com.example.accessiblevideoeditor.media.HistoryItem(
+                                                uriString = savedUri.toString(),
+                                                name = "Fast Converted to $selectedFormat",
+                                                timestamp = System.currentTimeMillis(),
+                                                type = if (selectedFormat == "GIF") "image" else "video"
+                                            )
+                                        )
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                                             com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                                             android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_LONG).show()

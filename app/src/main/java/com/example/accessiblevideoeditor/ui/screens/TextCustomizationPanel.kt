@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -85,15 +85,17 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Shadow Color")
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_184))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             items(colors) { (color, name) ->
+                val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_184) + ": " + name
                 Box(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
                         .background(color)
                         .border(if (options.shadowColor == color.toArgb()) 2.dp else 0.dp, Color.Gray, CircleShape)
+                        .semantics { contentDescription = desc }
                         .clickable { options = options.copy(shadowColor = color.toArgb()); notifyChange() }
                 )
             }
@@ -115,39 +117,42 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Shadow Radius: ${options.shadowRadius.toInt()}")
+        val descShadowRadius = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_185)
+        Text(descShadowRadius + ": ${options.shadowRadius.toInt()}")
         Slider(
             value = options.shadowRadius,
             onValueChange = { options = options.copy(shadowRadius = it); notifyChange() },
             valueRange = 0f..50f,
             modifier = Modifier.semantics { 
-                contentDescription = "Shadow Radius Slider"
+                contentDescription = descShadowRadius
                 stateDescription = "${options.shadowRadius.toInt()}" 
             }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Shadow Offset X: ${options.shadowDx.toInt()}")
+        val descShadowOffsetX = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_186)
+        Text(descShadowOffsetX + ": ${options.shadowDx.toInt()}")
         Slider(
             value = options.shadowDx,
             onValueChange = { options = options.copy(shadowDx = it); notifyChange() },
             valueRange = -50f..50f,
             modifier = Modifier.semantics { 
-                contentDescription = "Shadow Offset X Slider"
+                contentDescription = descShadowOffsetX
                 stateDescription = "${options.shadowDx.toInt()}" 
             }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Shadow Offset Y: ${options.shadowDy.toInt()}")
+        val descShadowOffsetY = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_187)
+        Text(descShadowOffsetY + ": ${options.shadowDy.toInt()}")
         Slider(
             value = options.shadowDy,
             onValueChange = { options = options.copy(shadowDy = it); notifyChange() },
             valueRange = -50f..50f,
             modifier = Modifier.semantics { 
-                contentDescription = "Shadow Offset Y Slider"
+                contentDescription = descShadowOffsetY
                 stateDescription = "${options.shadowDy.toInt()}" 
             }
         )
@@ -167,9 +172,14 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Alignment")
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_188))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            listOf(TextRenderer.TextAlignment.LEFT to "Left", TextRenderer.TextAlignment.CENTER to "Center", TextRenderer.TextAlignment.RIGHT to "Right").forEach { (align, labelStr) ->
+            val aligns = listOf(
+                TextRenderer.TextAlignment.LEFT to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_190),
+                TextRenderer.TextAlignment.CENTER to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_158),
+                TextRenderer.TextAlignment.RIGHT to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_191)
+            )
+            aligns.forEach { (align, labelStr) ->
                 FilterChip(
                     selected = options.alignment == align,
                     onClick = { options = options.copy(alignment = align); notifyChange() },
@@ -180,9 +190,15 @@ fun TextCustomizationPanel(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Font Family")
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_189))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            listOf(TextRenderer.TextFontFamily.DEFAULT to "Default", TextRenderer.TextFontFamily.SERIF to "Serif", TextRenderer.TextFontFamily.SANS_SERIF to "Sans Serif", TextRenderer.TextFontFamily.MONOSPACE to "Monospace").forEach { (font, labelStr) ->
+            val fonts = listOf(
+                TextRenderer.TextFontFamily.DEFAULT to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_192),
+                TextRenderer.TextFontFamily.SERIF to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_193),
+                TextRenderer.TextFontFamily.SANS_SERIF to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_194),
+                TextRenderer.TextFontFamily.MONOSPACE to com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_195)
+            )
+            fonts.forEach { (font, labelStr) ->
                 FilterChip(
                     selected = options.fontFamily == font,
                     onClick = { options = options.copy(fontFamily = font); notifyChange() },

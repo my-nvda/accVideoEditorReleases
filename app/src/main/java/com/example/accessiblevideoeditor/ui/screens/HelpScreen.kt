@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -62,8 +62,8 @@ fun HelpGuideContent() {
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_182), style = MaterialTheme.typography.titleMedium)
-        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_183))
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_176), style = MaterialTheme.typography.titleMedium)
+        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_177))
         Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_178))
         Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_179))
         Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_180))

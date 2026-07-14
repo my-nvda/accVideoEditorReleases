@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -81,14 +81,14 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                                 if (com.arthenica.ffmpegkit.ReturnCode.isSuccess(session.returnCode)) {
                                     com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                     withContext(Dispatchers.Main) {
-                                        android.widget.Toast.makeText(context, "طھظ…طھ ط§ظ„ط¹ظ…ظ„ظٹط© ط¨ظ†ط¬ط§ط­", android.widget.Toast.LENGTH_SHORT).show()
+                                        android.widget.Toast.makeText(context, "تمت العملية بنجاح", android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 } else {
                                     val logs = session.failStackTrace ?: session.allLogsAsString ?: "Unknown Error"
                                     val detailedLog = "Command:\n$command\n\nLogs:\n$logs"
                                     withContext(Dispatchers.Main) {
                                         com.example.accessiblevideoeditor.ui.ProcessingManager.showError(detailedLog)
-                                        android.widget.Toast.makeText(context, "ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ظ…ط¹ط§ظ„ط¬ط© ط§ظ„ظپظٹط¯ظٹظˆ", android.widget.Toast.LENGTH_LONG).show()
+                                        android.widget.Toast.makeText(context, "حدث خطأ أثناء معالجة الفيديو", android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
                                 withContext(Dispatchers.Main) {

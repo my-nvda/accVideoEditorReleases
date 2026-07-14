@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -32,8 +33,8 @@ fun AccessibleSwitchRow(
                 role = Role.Switch,
                 onValueChange = onCheckedChange
             )
-            .clearAndSetSemantics {
-                contentDescription = "$text, ${if (checked) enabledText else disabledText}"
+            .semantics {
+                contentDescription = text
             }
             .padding(vertical = 12.dp, horizontal = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -64,8 +65,8 @@ fun AccessibleCheckboxRow(
                 role = Role.Checkbox,
                 onValueChange = onCheckedChange
             )
-            .clearAndSetSemantics {
-                contentDescription = "$text, ${if (checked) checkedText else uncheckedText}"
+            .semantics {
+                contentDescription = text
             }
             .padding(vertical = 8.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -97,8 +98,8 @@ fun AccessibleRadioButtonRow(
                 role = Role.RadioButton,
                 onClick = onClick
             )
-            .clearAndSetSemantics {
-                contentDescription = "$text, ${if (selected) selectedText else unselectedText}"
+            .semantics {
+                contentDescription = text
             }
             .padding(vertical = 8.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically

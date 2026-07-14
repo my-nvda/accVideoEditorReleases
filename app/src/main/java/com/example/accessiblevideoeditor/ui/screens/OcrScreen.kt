@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
 import com.example.accessiblevideoeditor.R
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -61,7 +63,12 @@ fun OcrScreen(
         if (isProcessing) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_58))
+            Text(
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_58),
+                modifier = Modifier.semantics {
+                    liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+                }
+            )
         } else {
             Button(
                 onClick = {

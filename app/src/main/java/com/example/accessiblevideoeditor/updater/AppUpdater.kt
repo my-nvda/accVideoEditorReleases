@@ -10,6 +10,8 @@ import android.os.Build
 import android.os.Environment
 import androidx.core.content.FileProvider
 import com.example.accessiblevideoeditor.BuildConfig
+import com.example.accessiblevideoeditor.R
+import com.example.accessiblevideoeditor.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -55,7 +57,7 @@ object AppUpdater {
                         versionCode = serverVersionCode,
                         versionName = json.getString("versionName"),
                         downloadUrl = json.getString("downloadUrl"),
-                        releaseNotes = json.optString("releaseNotes", "تحديث جديد متوفر!")
+                        releaseNotes = json.optString("releaseNotes", com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_201))
                     )
                 }
             }
@@ -68,9 +70,11 @@ object AppUpdater {
     fun downloadAndInstall(context: Context, updateInfo: UpdateInfo): Long {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(updateInfo.downloadUrl)
+        val title = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_202)
+        val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_203).replace("%s", updateInfo.versionName)
         val request = DownloadManager.Request(uri)
-            .setTitle("تحديث التطبيق")
-            .setDescription("جاري تنزيل التحديث ${updateInfo.versionName}...")
+            .setTitle(title)
+            .setDescription(desc)
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "AccessibleVideoEditor_Update.apk")
 
@@ -149,6 +153,49 @@ object AppUpdater {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
                 context.startActivity(intent)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun showUpdateNotification(context: Context, updateInfo: UpdateInfo) {
+        val channelId = "app_update_channel"
+        val channelName = "App Updates"
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = android.app.NotificationChannel(
+                channelId,
+                channelName,
+                android.app.NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "Notifications for new app updates"
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // Create intent to open MainActivity
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        
+        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+        } else {
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT
+        }
+        val pendingIntent = android.app.PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
+
+        val builder = androidx.core.app.NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(android.R.drawable.stat_sys_download_done) // system icon
+            .setContentTitle("تحديث جديد متوفر!")
+            .setContentText("يتوفر الإصدار ${updateInfo.versionName} للتحميل. اضغط للتحديث الآن.")
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        try {
+            notificationManager.notify(1001, builder.build())
         } catch (e: Exception) {
             e.printStackTrace()
         }

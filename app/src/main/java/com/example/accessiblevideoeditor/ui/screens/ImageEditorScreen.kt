@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import android.widget.Toast
@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import com.example.accessiblevideoeditor.R
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -27,7 +28,7 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var textOptions by remember { mutableStateOf(TextRenderer.TextOptions(text = "")) }
     var isProcessing by remember { mutableStateOf(false) }
-    var progress by remember { mutableStateOf(0) }
+    val progress = (com.example.accessiblevideoeditor.ui.ProcessingManager.progress * 100).toInt()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -53,7 +54,12 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
         if (isProcessing) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_28, progress))
+            Text(
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_28, progress),
+                modifier = Modifier.semantics {
+                    liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+                }
+            )
         } else {
             val successMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_182) // "Saved successfully"
             val errorMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_183) // "An error occurred while saving"

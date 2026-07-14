@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,8 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.progressBarRangeInfo
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import com.example.accessiblevideoeditor.R
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -77,13 +76,13 @@ fun SlideshowMakerScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> 
             modifier = Modifier.fillMaxWidth()
         )
 
-        var progress by remember { mutableStateOf(0) }
+        val progress = (com.example.accessiblevideoeditor.ui.ProcessingManager.progress * 100).toInt()
         val context = androidx.compose.ui.platform.LocalContext.current
 
         if (isProcessing) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
-            CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
+                CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
                 Spacer(modifier = Modifier.height(8.dp))
                 LinearProgressIndicator(
                     progress = { progress / 100f },
@@ -91,13 +90,17 @@ fun SlideshowMakerScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> 
                         progressBarRangeInfo = androidx.compose.ui.semantics.ProgressBarRangeInfo(progress / 100f, 0f..1f)
                     }
                 )
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_10, progress))
+                Text(
+                    text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_10, progress),
+                    modifier = Modifier.semantics {
+                        liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+                    }
+                )
             }
         } else {
             Button(
                 onClick = {
                     isProcessing = true
-                    progress = 0
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         val imagePaths = selectedUris.mapNotNull { 
                             com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, it, "img_${System.currentTimeMillis()}.jpg")?.absolutePath 

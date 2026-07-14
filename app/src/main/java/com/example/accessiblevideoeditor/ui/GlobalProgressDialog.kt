@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.unit.dp
 import com.example.accessiblevideoeditor.R
 import androidx.compose.ui.res.stringResource
@@ -37,10 +38,15 @@ fun GlobalProgressDialog() {
                             }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("${(ProcessingManager.progress * 100).toInt()}%")
+                        Text(
+                            text = "${(ProcessingManager.progress * 100).toInt()}%",
+                            modifier = Modifier.semantics {
+                                liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+                            }
+                        )
                     } else {
                         val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
-            CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
+                        CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
                     }
                     
                     if (ProcessingManager.etaMessage.isNotBlank()) {

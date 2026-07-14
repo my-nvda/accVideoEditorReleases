@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.content.Intent
 import android.net.Uri
@@ -15,96 +15,95 @@ import androidx.compose.ui.semantics.contentDescription
 import com.example.accessiblevideoeditor.R
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
-import java.io.File
+import com.example.accessiblevideoeditor.media.HistoryItem
+import com.example.accessiblevideoeditor.media.HistoryManager
+import com.example.accessiblevideoeditor.media.SoundManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(onBack: () -> Unit) {
     val context = LocalContext.current
-    var files by remember { mutableStateOf<List<File>>(emptyList()) }
+    var historyItems by remember { mutableStateOf<List<HistoryItem>>(emptyList()) }
     
-    var fileToRename by remember { mutableStateOf<File?>(null) }
+    var itemToRename by remember { mutableStateOf<HistoryItem?>(null) }
     var newFileName by remember { mutableStateOf("") }
-    var fileToDelete by remember { mutableStateOf<File?>(null) }
+    var itemToDelete by remember { mutableStateOf<HistoryItem?>(null) }
 
-    fun loadFiles() {
-        val cacheDir = context.cacheDir
-        files = cacheDir.listFiles()?.filter { 
-            it.name.endsWith(".mp4") || it.name.endsWith(".mp3") || it.name.endsWith(".jpg")
-        }?.sortedByDescending { it.lastModified() } ?: emptyList()
+    fun loadHistory() {
+        historyItems = HistoryManager.loadHistory(context)
     }
 
     LaunchedEffect(Unit) {
-        loadFiles()
+        loadHistory()
     }
 
-    if (fileToRename != null) {
+    if (itemToRename != null) {
         AlertDialog(
-            onDismissRequest = { fileToRename = null },
+            onDismissRequest = { itemToRename = null },
             title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_174)) },
             text = {
                 com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
                     value = newFileName,
                     onValueChange = { newFileName = it },
-                    hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_20),
+                    hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_174),
                     modifier = Modifier.fillMaxWidth()
                 )
             },
             confirmButton = {
                 TextButton(onClick = {
-                    fileToRename?.let { oldFile ->
+                    itemToRename?.let { item ->
                         if (newFileName.isNotBlank()) {
-                            val ext = oldFile.extension
-                            val newFile = File(oldFile.parent, "$newFileName.$ext")
-                            if (oldFile.renameTo(newFile)) {
-                                loadFiles()
-                                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
-                            } else {
-                                com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_SHORT).show()
+                            val list = historyItems.map { 
+                                if (it == item) it.copy(name = newFileName) else it
                             }
+                            HistoryManager.saveFullHistory(context, list)
+                            loadHistory()
+                            SoundManager.playSuccess()
+                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
                         }
                     }
-                    fileToRename = null
+                    itemToRename = null
                 }) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_40))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_174))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { fileToRename = null }) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_24))
+                TextButton(onClick = { itemToRename = null }) {
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_207))
                 }
             }
         )
     }
 
-    if (fileToDelete != null) {
+    if (itemToDelete != null) {
         AlertDialog(
-            onDismissRequest = { fileToDelete = null },
-            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_175)) },
-            text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_44)) },
+            onDismissRequest = { itemToDelete = null },
+            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_204)) },
+            text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_205)) },
             confirmButton = {
                 TextButton(onClick = {
-                    fileToDelete?.let { file ->
-                        if (file.delete()) {
-                            loadFiles()
-                            com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
-                        } else {
-                            com.example.accessiblevideoeditor.media.SoundManager.playError()
-                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_183), android.widget.Toast.LENGTH_SHORT).show()
+                    itemToDelete?.let { item ->
+                        val list = historyItems.toMutableList()
+                        list.remove(item)
+                        HistoryManager.saveFullHistory(context, list)
+                        loadHistory()
+                        try {
+                            val uri = Uri.parse(item.uriString)
+                            context.contentResolver.delete(uri, null, null)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
+                        SoundManager.playSuccess()
+                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_182), android.widget.Toast.LENGTH_SHORT).show()
                     }
-                    fileToDelete = null
+                    itemToDelete = null
                 }) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_40))
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_206))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { fileToDelete = null }) {
-                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_24))
+                TextButton(onClick = { itemToDelete = null }) {
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_207))
                 }
             }
         )
@@ -112,33 +111,33 @@ fun HistoryScreen(onBack: () -> Unit) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_43)) })
+            TopAppBar(
+                title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_116)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Text("←", style = MaterialTheme.typography.titleLarge)
+                    }
+                }
+            )
         }
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (files.isEmpty()) {
+            if (historyItems.isEmpty()) {
                 item {
                     Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_29), style = MaterialTheme.typography.bodyLarge)
                 }
             } else {
-                items(files, key = { it.absolutePath }) { file ->
+                items(historyItems, key = { it.uriString }) { item ->
                     Card(
                         modifier = Modifier.fillMaxWidth().clickable {
-                            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
-                            val intent = Intent(Intent.ACTION_VIEW).apply {
-                                val mimeType = when {
-                                    file.name.endsWith(".mp4") -> "video/mp4"
-                                    file.name.endsWith(".mp3") -> "audio/mpeg"
-                                    file.name.endsWith(".jpg") -> "image/jpeg"
-                                    else -> "*/*"
-                                }
-                                setDataAndType(uri, mimeType)
-                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            }
                             try {
+                                val intent = Intent(Intent.ACTION_VIEW).apply {
+                                    setDataAndType(Uri.parse(item.uriString), if (item.type == "video") "video/*" else if (item.type == "audio") "audio/*" else "image/*")
+                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
                                 context.startActivity(intent)
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -152,15 +151,20 @@ fun HistoryScreen(onBack: () -> Unit) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(file.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(item.name, style = MaterialTheme.typography.titleMedium)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                val dateStr = android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", item.timestamp).toString()
+                                Text(dateStr, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                            }
                             
                             var menuExpanded by remember { mutableStateOf(false) }
                             Box {
                                 IconButton(
                                     onClick = { menuExpanded = true },
-                                    modifier = Modifier.semantics { contentDescription = "ط®ظٹط§ط±ط§طھ ط¥ط¶ط§ظپظٹط©" }
+                                    modifier = Modifier.semantics { contentDescription = "خيارات إضافية" }
                                 ) {
-                                    Text("â‹®", style = MaterialTheme.typography.titleLarge)
+                                    Text("⋮", style = MaterialTheme.typography.titleLarge)
                                 }
                                 
                                 DropdownMenu(
@@ -171,19 +175,12 @@ fun HistoryScreen(onBack: () -> Unit) {
                                         text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_172)) },
                                         onClick = {
                                             menuExpanded = false
-                                            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
-                                            val intent = Intent(Intent.ACTION_SEND).apply {
-                                                val mimeType = when {
-                                                    file.name.endsWith(".mp4") -> "video/mp4"
-                                                    file.name.endsWith(".mp3") -> "audio/mpeg"
-                                                    file.name.endsWith(".jpg") -> "image/jpeg"
-                                                    else -> "*/*"
-                                                }
-                                                type = mimeType
-                                                putExtra(Intent.EXTRA_STREAM, uri)
-                                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                            }
                                             try {
+                                                val intent = Intent(Intent.ACTION_SEND).apply {
+                                                    type = if (item.type == "video") "video/*" else if (item.type == "audio") "audio/*" else "image/*"
+                                                    putExtra(Intent.EXTRA_STREAM, Uri.parse(item.uriString))
+                                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                                }
                                                 context.startActivity(Intent.createChooser(intent, com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_172)))
                                             } catch (e: Exception) {
                                                 e.printStackTrace()
@@ -194,15 +191,15 @@ fun HistoryScreen(onBack: () -> Unit) {
                                         text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_174)) },
                                         onClick = {
                                             menuExpanded = false
-                                            fileToRename = file
-                                            newFileName = file.nameWithoutExtension
+                                            itemToRename = item
+                                            newFileName = item.name
                                         }
                                     )
                                     DropdownMenuItem(
                                         text = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_175)) },
                                         onClick = {
                                             menuExpanded = false
-                                            fileToDelete = file
+                                            itemToDelete = item
                                         }
                                     )
                                 }
@@ -214,4 +211,3 @@ fun HistoryScreen(onBack: () -> Unit) {
         }
     }
 }
-

@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -59,7 +61,12 @@ fun SimpleProcessScreen(
         if (isProcessing || isPreparing) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_142)) // "Process"
+            Text(
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_142),
+                modifier = Modifier.semantics {
+                    liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+                }
+            )
         } else {
             Button(
                 onClick = {

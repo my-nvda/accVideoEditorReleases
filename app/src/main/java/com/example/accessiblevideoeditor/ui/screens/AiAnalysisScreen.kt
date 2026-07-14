@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import android.media.MediaMetadataRetriever
@@ -55,7 +55,6 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
     var selectedImage by remember { mutableStateOf<Uri?>(null) }
     var selectedVideo by remember { mutableStateOf<Uri?>(null) }
     var userQuestion by remember { mutableStateOf("") }
-    var apiKey by remember { mutableStateOf(SettingsManager.geminiApiKey) }
     var generatedDescription by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -106,27 +105,18 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
-            value = apiKey,
-            onValueChange = { 
-                apiKey = it
-                SettingsManager.geminiApiKey = it 
-            },
-            hint = "Gemini API Key",
-            modifier = Modifier.fillMaxWidth() // Removed contentDescription to let TalkBack read the label naturally
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         Button(
             onClick = {
                 coroutineScope.launch {
                     ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_91), cancellable = true)
                     ProcessingManager.updateJob(coroutineContext[kotlinx.coroutines.Job])
                     try {
+                        val apiKeyToUse = SettingsManager.geminiApiKey.trim()
+                        val modelToUse = SettingsManager.geminiModel
+                        
                         val model = GenerativeModel(
-                            modelName = "gemini-2.5-flash",
-                            apiKey = apiKey.trim()
+                            modelName = modelToUse,
+                            apiKey = apiKeyToUse
                         )
                         val bitmaps = if (selectedImage != null) {
                             withContext(Dispatchers.IO) {
@@ -149,10 +139,10 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
                         try {
                             response = model.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_66)
                         } catch (e: Exception) {
-                            // Fallback to gemini-2.0-flash
+                            // Fallback to gemini-2.0-flash if the selected one fails
                             val fallbackModel = GenerativeModel(
                                 modelName = "gemini-2.0-flash",
-                                apiKey = apiKey.trim()
+                                apiKey = apiKeyToUse
                             )
                             response = fallbackModel.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_66)
                         }
@@ -161,7 +151,7 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
                     } catch (e: Exception) {
                         val errorMsg = e.message ?: ""
                         if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
-                            generatedDescription = "ط¹ط°ط±ط§ظ‹طŒ ط®ظˆط§ط¯ظ… ط§ظ„ط°ظƒط§ط، ط§ظ„ط§طµط·ظ†ط§ط¹ظٹ طھظˆط§ط¬ظ‡ ط¶ط؛ط·ط§ظ‹ ظƒط¨ظٹط±ط§ظ‹ ط­ط§ظ„ظٹط§ظ‹. ظٹط±ط¬ظ‰ ط§ظ„ظ…ط­ط§ظˆظ„ط© ط¨ط¹ط¯ ظ‚ظ„ظٹظ„."
+                            generatedDescription = "عذراً، خوادم الذكاء الاصطناعي تواجه ضغطاً كبيراً حالياً. يرجى المحاولة بعد قليل."
                         } else {
                             generatedDescription = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_56, errorMsg)
                         }
@@ -170,7 +160,7 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
                     }
                 }
             },
-            enabled = (selectedImage != null || selectedVideo != null) && apiKey.isNotBlank() && !ProcessingManager.isProcessing,
+            enabled = (selectedImage != null || selectedVideo != null) && SettingsManager.geminiApiKey.isNotBlank() && !ProcessingManager.isProcessing,
             modifier = Modifier.fillMaxWidth().height(60.dp)
         ) {
             Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_50))

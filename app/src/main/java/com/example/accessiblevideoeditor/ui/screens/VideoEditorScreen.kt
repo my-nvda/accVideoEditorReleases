@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -26,8 +26,6 @@ import com.example.accessiblevideoeditor.media.TextRenderer
 
 @Composable
 fun VideoEditorScreen(
-    progress: Int = 0,
-    isProcessing: Boolean = false,
     onApplyText: (TextRenderer.TextOptions, String, String, Uri?) -> Unit
 ) {
     var selectedVideoUri by remember { mutableStateOf<Uri?>(null) }
@@ -106,20 +104,14 @@ fun VideoEditorScreen(
             onOptionsChanged = { textOptions = it }
         )
 
-        if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
-            CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_28, progress))
-        } else {
-            Button(
-                onClick = {
-                    onApplyText(textOptions, startTimeStr, endTimeStr, selectedVideoUri)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = selectedVideoUri != null && textOptions.text.isNotBlank()
-            ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_38))
-            }
+        Button(
+            onClick = {
+                onApplyText(textOptions, startTimeStr, endTimeStr, selectedVideoUri)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = selectedVideoUri != null && textOptions.text.isNotBlank()
+        ) {
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_38))
         }
     }
 }

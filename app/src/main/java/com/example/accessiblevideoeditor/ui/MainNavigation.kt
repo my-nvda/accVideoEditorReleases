@@ -30,11 +30,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.material3.Text
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import com.example.accessiblevideoeditor.R
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.progressBarRangeInfo
@@ -57,7 +61,6 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
     val navController = rememberNavController()
     var showShareDialog by remember { mutableStateOf(sharedUris.isNotEmpty()) }
     var selectedSharedUris by remember { mutableStateOf(sharedUris) }
-    
     val context = androidx.compose.ui.platform.LocalContext.current
     val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
     var updateInfoToInstall by remember { mutableStateOf<com.example.accessiblevideoeditor.updater.AppUpdater.UpdateInfo?>(null) }
@@ -67,6 +70,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
         val info = com.example.accessiblevideoeditor.updater.AppUpdater.checkForUpdate(context)
         if (info != null) {
             updateInfoToInstall = info
+            com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(context, info)
         }
     }
     
@@ -74,7 +78,20 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
         AlertDialog(
             onDismissRequest = { updateInfoToInstall = null },
             title = { Text("تحديث جديد") },
-            text = { Text("تم العثور على تحديث جديد (الإصدار ${info.versionName}).\n\nملاحظات الإصدار:\n${info.releaseNotes}\n\nهل تريد التحديث الآن؟") },
+            text = {
+                val scrollState = androidx.compose.foundation.rememberScrollState()
+                androidx.compose.foundation.layout.Column(
+                    modifier = androidx.compose.ui.Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 300.dp)
+                        .verticalScroll(scrollState)
+                ) {
+                    Text(
+                        text = "تم العثور على تحديث جديد (الإصدار ${info.versionName}).\n\nملاحظات الإصدار:\n${info.releaseNotes}\n\nهل تريد التحديث الآن؟",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            },
             confirmButton = {
                 TextButton(onClick = {
                     activeDownloadId = com.example.accessiblevideoeditor.updater.AppUpdater.downloadAndInstall(context, info)
@@ -291,7 +308,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
             if (showFormatDialog) {
                 androidx.compose.material3.AlertDialog(
                     onDismissRequest = { showFormatDialog = false },
-                    title = { androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name)) },
+                    title = { androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_114)) },
                     text = {
                         androidx.compose.foundation.layout.Column {
                             val formats = listOf("m4a", "mp3", "wav", "aac")
@@ -302,7 +319,9 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                         val uri = pendingUri
                                         val path = pendingPath
                                         if (uri != null && path != null) {
-                                            com.example.accessiblevideoeditor.ui.ProcessingManager.updateStatus("جاري استخراج الصوت...")
+                                            com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
+                                                com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_41)
+                                            )
                                             coroutineScope.launch(Dispatchers.IO) {
                                                 try {
                                                     val outputFile = java.io.File(context.cacheDir, "output_extracted_${System.currentTimeMillis()}.$format")
@@ -346,7 +365,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                     },
                                     modifier = androidx.compose.ui.Modifier.fillMaxWidth()
                                 ) {
-                                    androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name, format))
+                                    androidx.compose.material3.Text(format.uppercase())
                                 }
                             }
                         }
@@ -354,14 +373,14 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                     confirmButton = {},
                     dismissButton = {
                         androidx.compose.material3.TextButton(onClick = { showFormatDialog = false }) {
-                            androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name))
+                            androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_207))
                         }
                     }
                 )
             }
 
             com.example.accessiblevideoeditor.ui.screens.SimpleProcessScreen(
-                titleRes = R.string.app_name,
+                titleRes = R.string.string_41,
                 isProcessing = false,
                 onBack = { navController.popBackStack() },
                 onProcess = { uri, tempPath ->
@@ -437,6 +456,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         withContext(Dispatchers.Main) {
                             if (info != null) {
                                 updateInfoToInstall = info
+                                com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(context, info)
                             } else {
                                 Toast.makeText(context, "أنت تستخدم أحدث إصدار بالفعل!", Toast.LENGTH_LONG).show()
                             }
@@ -469,41 +489,37 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
             AiAnalysisScreen(onBack = { navController.popBackStack() }, initialUris = selectedSharedUris)
         }
         composable("video_trimmer") {
-            var progress by androidx.compose.runtime.remember { androidx.compose.runtime.mutableIntStateOf(0) }
-            var isProcessing by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
             val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
             val context = androidx.compose.ui.platform.LocalContext.current
 
             com.example.accessiblevideoeditor.ui.screens.VideoTrimmerScreen(
-                progress = progress,
-                isProcessing = isProcessing,
                 onApplyTrim = { startStr, durationStr, uri ->
                     if (uri == null) return@VideoTrimmerScreen
                     
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
-                    isProcessing = true
-                    progress = 0
+                    val trimMsg = context.getString(R.string.string_46).replace(" %1\$s%%", "")
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(trimMsg)
                     
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         try {
-                            progress = 10
                             // 1. Copy video to temp file
                             val tempVideo = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(
                                 context, uri, "temp_trim_in_${System.currentTimeMillis()}.mp4"
                             )
                             
-                            progress = 30
                             if (tempVideo != null) {
                                 // 2. Process with FFmpeg
                                 val outputFile = java.io.File(context.cacheDir, "output_trim_${System.currentTimeMillis()}.mp4")
                                 
+                                val startSecs = parseTimeToSeconds(startStr).toString()
+                                val durationSecs = parseTimeToSeconds(durationStr).toString()
+                                
                                 val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.trimVideo(
                                     sourceVideo = tempVideo.absolutePath,
-                                    startTimeInSeconds = startStr,
-                                    durationInSeconds = durationStr,
+                                    startTimeInSeconds = startSecs,
+                                    durationInSeconds = durationSecs,
                                     outputPath = outputFile.absolutePath
                                 )
-                                progress = 80
                                 
                                 // 3. Save to Gallery
                                 if (success) {
@@ -512,25 +528,24 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                         outputFile,
                                         "AccessibleEditor_Trim_${System.currentTimeMillis()}.mp4"
                                     )
-                                    progress = 100
                                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                                 } else {
                                     withContext(Dispatchers.Main) {
-                                        Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, context.getString(R.string.string_183), Toast.LENGTH_LONG).show()
                                     }
                                 }
                             } else {
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, context.getString(R.string.string_183), Toast.LENGTH_LONG).show()
                                 }
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
                             }
                         } finally {
-                            isProcessing = false
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
                     }
                 }
@@ -540,15 +555,15 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
             com.example.accessiblevideoeditor.ui.screens.HelpScreen(onBack = { navController.popBackStack() })
         }
         composable("audio_editor") {
-            var isProcessing by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
             val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
             val context = androidx.compose.ui.platform.LocalContext.current
 
             AudioEditorScreen(
-                isProcessing = isProcessing,
                 onRemoveAudio = { videoUri ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
-                    isProcessing = true
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
+                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_25)
+                    )
                     
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
@@ -568,20 +583,22 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                                 } else {
                                     withContext(Dispatchers.Main) {
-                                        Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, context.getString(R.string.string_183), Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) { Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show() }
                         } finally {
-                            isProcessing = false
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
                     }
                 },
                 onReplaceAudio = { videoUri, audioUri ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
-                    isProcessing = true
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
+                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_7)
+                    )
                     
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
@@ -602,20 +619,22 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                                 } else {
                                     withContext(Dispatchers.Main) {
-                                        Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, context.getString(R.string.string_183), Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) { Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show() }
                         } finally {
-                            isProcessing = false
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
                     }
                 },
                 onMixAudio = { videoUri, audioUri ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
-                    isProcessing = true
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
+                        com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_9)
+                    )
                     
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
@@ -636,53 +655,30 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                                 } else {
                                     withContext(Dispatchers.Main) {
-                                        Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, context.getString(R.string.string_183), Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) { Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show() }
                         } finally {
-                            isProcessing = false
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
                     }
                 }
             )
         }
         composable("video_editor") {
-            var progress by androidx.compose.runtime.remember { androidx.compose.runtime.mutableIntStateOf(0) }
-            var isProcessing by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-            var showErrorDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-            var lastErrorMessage by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
             val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
             val context = androidx.compose.ui.platform.LocalContext.current
 
-            if (showErrorDialog) {
-                androidx.compose.material3.AlertDialog(
-                    onDismissRequest = { showErrorDialog = false },
-                    title = { androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name)) },
-                    text = {
-                        androidx.compose.foundation.lazy.LazyColumn {
-                            item { androidx.compose.material3.Text(lastErrorMessage) }
-                        }
-                    },
-                    confirmButton = {
-                        androidx.compose.material3.TextButton(onClick = { showErrorDialog = false }) {
-                            androidx.compose.material3.Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.app_name))
-                        }
-                    }
-                )
-            }
-
             VideoEditorScreen(
-                progress = progress,
-                isProcessing = isProcessing,
                 onApplyText = { textOptions, start, end, uri ->
                     if (uri == null) return@VideoEditorScreen
                     
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
-                    isProcessing = true
-                    progress = 0
+                    val processMsg = context.getString(R.string.string_28).replace(" %1\$s%%", "")
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(processMsg)
                     
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
@@ -713,10 +709,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                     endTimeInSeconds = endSecs,
                                     outputPath = outputFile.absolutePath
                                 ) { currentProgress ->
-                                    progress = currentProgress
-                                    if (currentProgress % 10 == 0) {
-                                        com.example.accessiblevideoeditor.media.SoundManager.playProgressBeep(currentProgress)
-                                    }
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(currentProgress / 100f)
                                 }
                                 
                                 // 6. Save to Gallery
@@ -726,19 +719,13 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                         outputFile,
                                         "AccessibleEditor_Video_${System.currentTimeMillis()}.mp4"
                                     )
-                                    progress = 100
                                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                                 } else {
-                                    val errorFile = java.io.File(context.cacheDir, "ffmpeg_error.log")
-                                    errorFile.writeText(resultLog)
-                                    withContext(Dispatchers.Main) {
-                                        showErrorDialog = true
-                                        lastErrorMessage = resultLog
-                                    }
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.showError(resultLog)
                                 }
                             } else {
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(context, context.getString(R.string.app_name), Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, context.getString(R.string.string_183), Toast.LENGTH_LONG).show()
                                 }
                             }
                         } catch (e: Exception) {
@@ -747,7 +734,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                 Toast.makeText(context, "${context.getString(R.string.app_name)} ${e.message}", Toast.LENGTH_LONG).show()
                             }
                         } finally {
-                            isProcessing = false
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
                     }
                 }

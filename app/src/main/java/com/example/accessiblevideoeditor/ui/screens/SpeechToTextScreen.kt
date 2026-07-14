@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
 import com.example.accessiblevideoeditor.R
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -60,7 +62,12 @@ fun SpeechToTextScreen(
         if (isProcessing) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_30))
+            Text(
+                text = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_30),
+                modifier = Modifier.semantics {
+                    liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+                }
+            )
         } else {
             Button(
                 onClick = {
@@ -92,7 +99,7 @@ fun SpeechToTextScreen(
                                 e.printStackTrace()
                                 val errorMsg = e.message ?: ""
                                 if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
-                                    transcribedText = "ط¹ط°ط±ط§ظ‹طŒ ط®ظˆط§ط¯ظ… ط§ظ„ط°ظƒط§ط، ط§ظ„ط§طµط·ظ†ط§ط¹ظٹ طھظˆط§ط¬ظ‡ ط¶ط؛ط·ط§ظ‹ ظƒط¨ظٹط±ط§ظ‹ ط­ط§ظ„ظٹط§ظ‹. ظٹط±ط¬ظ‰ ط§ظ„ظ…ط­ط§ظˆظ„ط© ط¨ط¹ط¯ ظ‚ظ„ظٹظ„."
+                                    transcribedText = "عذراً، خوادم الذكاء الاصطناعي تواجه ضغطاً كبيراً حالياً. يرجى المحاولة بعد قليل."
                                 } else {
                                     transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_73, errorMsg)
                                 }

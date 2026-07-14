@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.content.Intent
 import android.net.Uri
@@ -64,6 +64,49 @@ fun SettingsScreen(
             item {
                 SettingsSwitchRow(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_136), isErrorSoundEnabled) { 
                     SettingsManager.isErrorSoundEnabled = it 
+                }
+            }
+
+            item { Divider() }
+
+            item {
+                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_196), style = MaterialTheme.typography.titleMedium)
+            }
+            item {
+                com.example.accessiblevideoeditor.ui.components.AccessibleTextField(
+                    value = SettingsManager.geminiApiKey,
+                    onValueChange = { SettingsManager.geminiApiKey = it },
+                    hint = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_197),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item {
+                var expandedModel by remember { mutableStateOf(false) }
+                val currentModel = SettingsManager.geminiModel
+                val models = listOf("gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash")
+                
+                Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                    Button(
+                        onClick = { expandedModel = true },
+                        modifier = Modifier.fillMaxWidth().height(60.dp)
+                    ) {
+                        Text("${com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_198)}: $currentModel")
+                    }
+                    DropdownMenu(
+                        expanded = expandedModel,
+                        onDismissRequest = { expandedModel = false },
+                        modifier = Modifier.fillMaxWidth(0.9f)
+                    ) {
+                        models.forEach { model ->
+                            DropdownMenuItem(
+                                text = { Text(model) },
+                                onClick = {
+                                    SettingsManager.geminiModel = model
+                                    expandedModel = false
+                                }
+                            )
+                        }
+                    }
                 }
             }
 

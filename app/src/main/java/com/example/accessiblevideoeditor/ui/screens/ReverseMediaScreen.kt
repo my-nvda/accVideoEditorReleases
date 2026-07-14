@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -57,7 +57,7 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                         val input = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, uri)
                         if (input != null) {
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_53))
+                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_68))
                             }
                             val outputPath = context.cacheDir.absolutePath + "/reverse_${System.currentTimeMillis()}.mp4"
                             
@@ -77,11 +77,11 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                             if (success) {
                                 com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    android.widget.Toast.makeText(context, "طھظ…طھ ط§ظ„ط¹ظ…ظ„ظٹط© ط¨ظ†ط¬ط§ط­", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, "تمت العملية بنجاح", android.widget.Toast.LENGTH_SHORT).show()
                                 }
                             } else {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    android.widget.Toast.makeText(context, "ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ظ…ط¹ط§ظ„ط¬ط© ط§ظ„ظپظٹط¯ظٹظˆ", android.widget.Toast.LENGTH_LONG).show()
+                                    android.widget.Toast.makeText(context, "حدث خطأ أثناء معالجة الفيديو", android.widget.Toast.LENGTH_LONG).show()
                                 }
                             }
                             

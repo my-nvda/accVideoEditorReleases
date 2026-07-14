@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -25,8 +25,6 @@ import androidx.media3.ui.PlayerView
 
 @Composable
 fun VideoTrimmerScreen(
-    progress: Int = 0,
-    isProcessing: Boolean = false,
     onApplyTrim: (String, String, Uri?) -> Unit
 ) {
     var selectedVideoUri by remember { mutableStateOf<Uri?>(null) }
@@ -102,20 +100,14 @@ fun VideoTrimmerScreen(
             )
         }
 
-        if (isProcessing) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_111)
-            CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_46, progress))
-        } else {
-            Button(
-                onClick = {
-                    onApplyTrim(startTimeStr, durationStr, selectedVideoUri)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = selectedVideoUri != null
-            ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_76))
-            }
+        Button(
+            onClick = {
+                onApplyTrim(startTimeStr, durationStr, selectedVideoUri)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = selectedVideoUri != null
+        ) {
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(R.string.string_76))
         }
     }
 }

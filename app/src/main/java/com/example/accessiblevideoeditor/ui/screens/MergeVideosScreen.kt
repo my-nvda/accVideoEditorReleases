@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.screens
+package com.example.accessiblevideoeditor.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -55,7 +55,7 @@ fun MergeVideosScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                         }
                         if (inputs.size > 1) {
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_53))
+                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_92))
                             }
                             val outputPath = context.cacheDir.absolutePath + "/merged_${System.currentTimeMillis()}.mp4"
                             
