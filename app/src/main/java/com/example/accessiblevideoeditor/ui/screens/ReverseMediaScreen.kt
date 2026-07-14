@@ -77,11 +77,11 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                             if (success) {
                                 com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    android.widget.Toast.makeText(context, "تمت العملية بنجاح", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, context.getString(com.example.accessiblevideoeditor.R.string.string_222), android.widget.Toast.LENGTH_SHORT).show()
                                 }
                             } else {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    android.widget.Toast.makeText(context, "حدث خطأ أثناء معالجة الفيديو", android.widget.Toast.LENGTH_LONG).show()
+                                    android.widget.Toast.makeText(context, context.getString(com.example.accessiblevideoeditor.R.string.string_223), android.widget.Toast.LENGTH_LONG).show()
                                 }
                             }
                             

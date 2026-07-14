@@ -77,7 +77,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
     updateInfoToInstall?.let { info ->
         AlertDialog(
             onDismissRequest = { updateInfoToInstall = null },
-            title = { Text("تحديث جديد") },
+            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_209)) },
             text = {
                 val scrollState = androidx.compose.foundation.rememberScrollState()
                 androidx.compose.foundation.layout.Column(
@@ -97,12 +97,12 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                     activeDownloadId = com.example.accessiblevideoeditor.updater.AppUpdater.downloadAndInstall(context, info)
                     updateInfoToInstall = null
                 }) {
-                    Text("تنزيل وتثبيت")
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_211))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { updateInfoToInstall = null }) {
-                    Text("لاحقاً")
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_212))
                 }
             }
         )
@@ -113,7 +113,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
         
         AlertDialog(
             onDismissRequest = { },
-            title = { Text("جاري تحميل التحديث") },
+            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_213)) },
             text = {
                 Column {
                     if (progress != null) {
@@ -122,7 +122,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         val percent = if (progress!!.totalBytes > 0) ((progress!!.bytesDownloaded * 100) / progress!!.totalBytes).toInt() else 0
                         val remainingMB = totalMB - downloadedMB
 
-                        Text("اكتمل: $percent%")
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_214).replace("%1\$d", percent.toString()))
                         LinearProgressIndicator(
                             progress = { if (progress!!.totalBytes > 0) progress!!.bytesDownloaded.toFloat() / progress!!.totalBytes.toFloat() else 0f },
                             modifier = Modifier.fillMaxWidth().height(8.dp).semantics {
@@ -139,7 +139,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                             activeDownloadId = null
                         }
                     } else {
-                        Text("جاري التهيئة...")
+                        Text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_217))
                         LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                     }
                 }
@@ -150,7 +150,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                     dm.remove(downloadId)
                     activeDownloadId = null
                 }) {
-                    Text("إلغاء التحميل")
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_218))
                 }
             }
         )
@@ -353,7 +353,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                                         }
                                                         com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                                                     } else {
-                                                        withContext(Dispatchers.Main) { Toast.makeText(context, "حدث خطأ أثناء استخراج الصوت", Toast.LENGTH_LONG).show() }
+                                                        withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(com.example.accessiblevideoeditor.R.string.string_221), Toast.LENGTH_LONG).show() }
                                                     }
                                                 } catch (e: Exception) {
                                                     withContext(Dispatchers.Main) { Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show() }
@@ -450,7 +450,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onNavigateToHelp = { navController.navigate("help") },
                 onNavigateToTranslation = { navController.navigate("translation") },
                 onCheckUpdates = {
-                    Toast.makeText(context, "جاري التحقق من التحديثات...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(com.example.accessiblevideoeditor.R.string.string_219), Toast.LENGTH_SHORT).show()
                     coroutineScope.launch {
                         val info = com.example.accessiblevideoeditor.updater.AppUpdater.checkForUpdate(context)
                         withContext(Dispatchers.Main) {
@@ -458,7 +458,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                                 updateInfoToInstall = info
                                 com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(context, info)
                             } else {
-                                Toast.makeText(context, "أنت تستخدم أحدث إصدار بالفعل!", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, context.getString(com.example.accessiblevideoeditor.R.string.string_220), Toast.LENGTH_LONG).show()
                             }
                         }
                     }

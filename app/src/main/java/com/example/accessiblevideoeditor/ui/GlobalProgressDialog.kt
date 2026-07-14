@@ -81,14 +81,14 @@ fun GlobalProgressDialog() {
         AlertDialog(
             properties = androidx.compose.ui.window.DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
             onDismissRequest = { ProcessingManager.dismissError() },
-            title = { Text("حدث خطأ تقني (Error)") },
+            title = { Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.R.string.string_224)) },
             text = {
                 // Use a scrollable column for long logs
                 val scrollState = rememberScrollState()
                 Column(
                     modifier = Modifier.fillMaxWidth().heightIn(max = 400.dp).verticalScroll(scrollState)
                 ) {
-                    Text("تفاصيل الخطأ:", style = MaterialTheme.typography.titleMedium)
+                    Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.R.string.string_225), style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(8.dp))
                     androidx.compose.foundation.text.selection.SelectionContainer {
                         Text(

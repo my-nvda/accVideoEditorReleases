@@ -207,4 +207,22 @@
     <string name="string_206">حذف</string>
     <string name="string_207">إلغاء</string>
     <string name="string_208">الوقت المتبقي: %1$02d:%2$02d</string>
+    <string name="string_209">تحديث جديد</string>
+    <string name="string_210">تم العثور على تحديث جديد...</string>
+    <string name="string_211">تنزيل وتثبيت</string>
+    <string name="string_212">لاحقاً</string>
+    <string name="string_213">جاري تحميل التحديث</string>
+    <string name="string_214">اكتمل: %1$d%%</string>
+    <string name="string_215">تم تحميل...</string>
+    <string name="string_216">المتبقي...</string>
+    <string name="string_217">جاري التهيئة...</string>
+    <string name="string_218">إلغاء التحميل</string>
+    <string name="string_219">جاري التحقق من التحديثات...</string>
+    <string name="string_220">أنت تستخدم أحدث إصدار بالفعل!</string>
+    <string name="string_221">حدث خطأ أثناء استخراج الصوت</string>
+    <string name="string_222">تمت العملية بنجاح</string>
+    <string name="string_223">حدث خطأ أثناء معالجة الفيديو</string>
+    <string name="string_224">حدث خطأ تقني (Error)</string>
+    <string name="string_225">تفاصيل الخطأ:</string>
+    <string name="string_226">خيارات إضافية</string>
 </resources>

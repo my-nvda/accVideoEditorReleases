@@ -162,7 +162,7 @@ fun HistoryScreen(onBack: () -> Unit) {
                             Box {
                                 IconButton(
                                     onClick = { menuExpanded = true },
-                                    modifier = Modifier.semantics { contentDescription = "خيارات إضافية" }
+                                    modifier = Modifier.semantics { contentDescription = context.getString(com.example.accessiblevideoeditor.R.string.string_226) }
                                 ) {
                                     Text("⋮", style = MaterialTheme.typography.titleLarge)
                                 }

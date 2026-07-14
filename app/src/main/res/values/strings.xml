@@ -209,4 +209,22 @@ customization, smart cutting, and more.</string>
     <string name="string_206">Delete</string>
     <string name="string_207">Cancel</string>
     <string name="string_208">Time remaining: %1$02d:%2$02d</string>
+    <string name="string_209">New Update</string>
+    <string name="string_210">New update found...</string>
+    <string name="string_211">Download and install</string>
+    <string name="string_212">Later</string>
+    <string name="string_213">Downloading update</string>
+    <string name="string_214">Completed: %1$d%%</string>
+    <string name="string_215">Downloaded...</string>
+    <string name="string_216">Remaining...</string>
+    <string name="string_217">Initializing...</string>
+    <string name="string_218">Cancel download</string>
+    <string name="string_219">Checking for updates...</string>
+    <string name="string_220">You are already using the latest version!</string>
+    <string name="string_221">An error occurred while extracting audio</string>
+    <string name="string_222">Operation completed successfully</string>
+    <string name="string_223">An error occurred while processing video</string>
+    <string name="string_224">Technical error occurred</string>
+    <string name="string_225">Error details:</string>
+    <string name="string_226">Additional options</string>
 </resources>
