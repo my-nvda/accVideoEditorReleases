@@ -27,10 +27,10 @@ object LanguageManager {
 
     fun getCurrentLanguageCode(): String {
         val currentLocales = AppCompatDelegate.getApplicationLocales()
-        return if (!currentLocales.isEmpty) {
-            currentLocales[0]?.toLanguageTag() ?: "en"
-        } else {
-            "en"
+        if (!currentLocales.isEmpty) {
+            val lang = currentLocales[0]?.language ?: "en"
+            return if (lang == "iw" || lang.startsWith("iw")) "he" else lang
         }
+        return "en"
     }
 }

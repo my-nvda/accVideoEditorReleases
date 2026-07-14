@@ -270,6 +270,8 @@ customization, smart cutting, and more.</string>
     <string name="string_267">Video Player</string>
     <string name="string_268">Help and About</string>
     <string name="string_269">General Dialogs</string>
+    <string name="string_270">Create Blank Image</string>
+    <string name="string_271">Create black image</string>
     <string name="string_rn_title">What\'s New</string>
     <string name="string_rn_v2_4_4">v2.4.4\n- Added full localization support including Hebrew.\n- Introduced \'What\'s New\' screen in the Help section.\n- Revamped Volunteer Translation screen with dynamic strings and progress indicators.\n- Extracted remaining hardcoded strings for complete translation.</string>
     <string name="string_rn_v2_4_3">v2.4.3\n- Fixed sharing screen issues and incorrect titles.\n- Resolved mojibake text corruption in settings.</string>

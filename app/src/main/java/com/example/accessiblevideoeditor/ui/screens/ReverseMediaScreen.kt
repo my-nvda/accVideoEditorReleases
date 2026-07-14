@@ -24,7 +24,7 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
     var selectedUri by remember { mutableStateOf<android.net.Uri?>(initialUris.firstOrNull()) }
     var reverseVideo by remember { mutableStateOf(true) }
     var reverseAudio by remember { mutableStateOf(true) }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -45,13 +45,13 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
         
         AccessibleCheckboxRow(text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_138), checked = reverseAudio, onCheckedChange = { reverseAudio = it })
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
         } else {
             Button(
                 onClick = {
-                    isProcessing = true
+                    /* isProcessing = true */
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         val uri = selectedUri ?: return@launch
                         val input = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, uri)
@@ -86,11 +86,11 @@ fun ReverseMediaScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                             }
                             
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                isProcessing = false
+                                /* isProcessing = false */
                                 com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                             }
                         } else {
-                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { isProcessing = false }
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { /* isProcessing = false */ }
                         }
                     }
                 },

@@ -30,7 +30,7 @@ import kotlinx.coroutines.withContext
 fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = emptyList()) {
     var selectedUri by remember { mutableStateOf<android.net.Uri?>(initialUris.firstOrNull()) }
     var textOptions by remember { mutableStateOf(TextRenderer.TextOptions(text = "")) }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -50,7 +50,7 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
         com.example.accessiblevideoeditor.ui.screens.TextCustomizationPanel(onOptionsChanged = { textOptions = it })
         
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(com.example.accessiblevideoeditor.ui.ProcessingManager.statusMessage)
@@ -59,7 +59,7 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                 onClick = {
                     val uri = selectedUri
                     if (uri != null && textOptions.text.isNotBlank()) {
-                        isProcessing = true
+                        /* isProcessing = true */
                         com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_62))
                         
                         coroutineScope.launch(Dispatchers.IO) {
@@ -92,11 +92,11 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                                     }
                                 }
                                 withContext(Dispatchers.Main) {
-                                    isProcessing = false
+                                    /* isProcessing = false */
                                     com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                                 }
                             } else {
-                                withContext(Dispatchers.Main) { isProcessing = false; com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing() }
+                                withContext(Dispatchers.Main) { /* isProcessing = false */; com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing() }
                             }
                         }
                     }

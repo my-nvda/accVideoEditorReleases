@@ -27,7 +27,7 @@ fun WatermarkScreen(
     var selectedVideoUri by remember { mutableStateOf<Uri?>(initialUris.firstOrNull()) }
     var selectedWatermarkUri by remember { mutableStateOf<Uri?>(null) }
     var selectedPosition by remember { mutableStateOf(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_121)) }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     
     var isTextMode by remember { mutableStateOf(false) }
     var textOptions by remember { mutableStateOf(com.example.accessiblevideoeditor.media.TextRenderer.TextOptions(text = "")) }
@@ -112,14 +112,14 @@ fun WatermarkScreen(
             }
         }
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_18))
         } else {
             Button(
                 onClick = {
-                    isProcessing = true
+                    /* isProcessing = true */
                         coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                             val vUri = selectedVideoUri ?: return@launch
                             
@@ -167,12 +167,12 @@ fun WatermarkScreen(
                                 }
                                 
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    isProcessing = false
+                                    /* isProcessing = false */
                                     com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                                 }
                             } else {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    isProcessing = false
+                                    /* isProcessing = false */
                                 }
                             }
                         }

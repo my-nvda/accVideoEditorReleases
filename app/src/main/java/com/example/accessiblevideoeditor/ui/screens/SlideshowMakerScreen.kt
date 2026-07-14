@@ -35,7 +35,7 @@ import com.example.accessiblevideoeditor.utils.FileUtils
 fun SlideshowMakerScreen(onBack: () -> Unit, initialUris: List<Uri> = emptyList()) {
     var selectedUris by remember { mutableStateOf<List<Uri>>(initialUris) }
     var durationPerImage by remember { mutableStateOf("3") }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -88,7 +88,7 @@ fun SlideshowMakerScreen(onBack: () -> Unit, initialUris: List<Uri> = emptyList(
 
         val progress = (ProcessingManager.progress * 100).toInt()
 
-        if (isProcessing) {
+        if (false) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 val desc = AppStrings.get(context, R.string.string_111)
                 CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
@@ -109,7 +109,7 @@ fun SlideshowMakerScreen(onBack: () -> Unit, initialUris: List<Uri> = emptyList(
         } else {
             Button(
                 onClick = {
-                    isProcessing = true
+                    /* isProcessing = true */
                     ProcessingManager.startProcessing(AppStrings.get(context, R.string.string_111), true)
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
@@ -134,7 +134,7 @@ fun SlideshowMakerScreen(onBack: () -> Unit, initialUris: List<Uri> = emptyList(
                             }
                         } finally {
                             withContext(Dispatchers.Main) {
-                                isProcessing = false
+                                /* isProcessing = false */
                                 ProcessingManager.stopProcessing()
                             }
                         }

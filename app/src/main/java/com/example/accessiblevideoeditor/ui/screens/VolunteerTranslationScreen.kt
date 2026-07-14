@@ -31,7 +31,7 @@ val SUPPORTED_LANGUAGES_AR = listOf(
     "zh-CN" to "الصينية",
     "ru" to "الروسية",
     "ja" to "اليابانية",
-    "iw" to "العبرية",
+    "he" to "العبرية",
     "fa" to "الفارسية",
     "ur" to "الأردية",
     "tr" to "التركية"
@@ -140,8 +140,8 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
         }
     }
 
-    LaunchedEffect(Unit) {
-        val file = File(context.filesDir, "custom_lang.json")
+    LaunchedEffect(selectedLangCode) {
+        val file = File(context.filesDir, "custom_lang_$selectedLangCode.json")
         val existingTranslations = mutableMapOf<String, String>()
         if (file.exists()) {
             try {
@@ -151,6 +151,8 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                 }
             } catch (e: Exception) { e.printStackTrace() }
         }
+
+        translations.clear()
 
         val catMap = mutableMapOf<String, MutableList<String>>()
         
@@ -174,7 +176,7 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
         
         catMap.forEach { (cat, list) -> categorizedStrings[cat] = list }
         categories = catMap.keys.toList().sorted()
-        if (categories.isNotEmpty()) {
+        if (categories.isNotEmpty() && selectedCategory.isBlank()) {
             selectedCategory = categories.first()
         }
         isLoading = false
@@ -189,7 +191,7 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                     json.put(k, v) 
                 }
             }
-            val file = File(context.filesDir, "custom_lang.json")
+            val file = File(context.filesDir, "custom_lang_$selectedLangCode.json")
             file.writeText(json.toString(4))
             AppStrings.loadCustomStrings(context)
             Toast.makeText(context, AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_256), Toast.LENGTH_SHORT).show()
@@ -237,7 +239,7 @@ fun VolunteerTranslationScreen(onBack: () -> Unit) {
                     }
                     
                     if (valid) {
-                        val file = File(context.filesDir, "custom_lang.json")
+                        val file = File(context.filesDir, "custom_lang_$selectedLangCode.json")
                         file.writeText(jsonString)
                         AppStrings.loadCustomStrings(context)
                         

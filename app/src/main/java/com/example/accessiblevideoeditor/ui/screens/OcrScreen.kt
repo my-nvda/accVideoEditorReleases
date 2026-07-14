@@ -28,7 +28,7 @@ fun OcrScreen(
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var extractedText by remember { mutableStateOf("") }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -60,7 +60,7 @@ fun OcrScreen(
             Text(if (selectedImageUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_11) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_134))
         }
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
@@ -73,10 +73,10 @@ fun OcrScreen(
             Button(
                 onClick = {
                     selectedImageUri?.let { uri ->
-                        isProcessing = true
+                        /* isProcessing = true */
                         coroutineScope.launch {
                             extractedText = ocrProcessor.extractTextFromImage(context, uri)
-                            isProcessing = false
+                            /* isProcessing = false */
                         }
                     }
                 },

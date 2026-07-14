@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = emptyList()) {
     var selectedUris by remember { mutableStateOf<List<Uri>>(initialUris) }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -96,7 +96,7 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
             }
         }
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
@@ -114,7 +114,7 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
         } else {
             Button(
                 onClick = {
-                    isProcessing = true
+                    /* isProcessing = true */
                     currentIndex = 0
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
@@ -166,7 +166,7 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                             }
                         }
                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                            isProcessing = false
+                            /* isProcessing = false */
                             com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                             if (successCount > 0) {
                                 com.example.accessiblevideoeditor.media.SoundManager.playSuccess()

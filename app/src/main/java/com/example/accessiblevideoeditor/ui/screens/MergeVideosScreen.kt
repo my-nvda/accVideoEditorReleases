@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MergeVideosScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = emptyList()) {
     var selectedUris by remember { mutableStateOf<List<Uri>>(initialUris) }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -42,13 +42,13 @@ fun MergeVideosScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
             Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_4, selectedUris.size))
         }
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
         } else {
             Button(
                 onClick = {
-                    isProcessing = true
+                    /* isProcessing = true */
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         try {
                             val inputs = selectedUris.mapIndexedNotNull { index, uri ->
@@ -80,17 +80,17 @@ fun MergeVideosScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                                 }
                                 
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    isProcessing = false
+                                    /* isProcessing = false */
                                     com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                                 }
                             } else {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    isProcessing = false
+                                    /* isProcessing = false */
                                 }
                             }
                         } catch (e: Exception) {
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                isProcessing = false
+                                /* isProcessing = false */
                                 com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                                 com.example.accessiblevideoeditor.ui.ProcessingManager.showError(e.message ?: "Unknown error occurred during merge")
                             }

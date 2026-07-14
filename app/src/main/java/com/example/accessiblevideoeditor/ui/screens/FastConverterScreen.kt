@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = emptyList()) {
     var selectedUri by remember { mutableStateOf<android.net.Uri?>(initialUris.firstOrNull()) }
     var selectedFormat by remember { mutableStateOf("MP4") }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val coroutineScope = rememberCoroutineScope()
 
     val formats = listOf("MP4", "MKV", "AVI", "GIF")
@@ -62,13 +62,13 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
             }
         }
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
         } else {
             Button(
                 onClick = {
-                    isProcessing = true
+                    /* isProcessing = true */
                     com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_111), true)
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         selectedUri?.let { uri ->
@@ -117,7 +117,7 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                             }
                         }
                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                            isProcessing = false
+                            /* isProcessing = false */
                         }
                     }
                 },

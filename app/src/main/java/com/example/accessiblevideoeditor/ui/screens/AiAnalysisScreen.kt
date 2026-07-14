@@ -23,32 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-suspend fun extractVideoFrames(context: android.content.Context, videoUri: Uri): List<android.graphics.Bitmap> = withContext(Dispatchers.IO) {
-    val retriever = MediaMetadataRetriever()
-    val frames = mutableListOf<android.graphics.Bitmap>()
-    try {
-        retriever.setDataSource(context, videoUri)
-        val durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        val duration = durationStr?.toLongOrNull() ?: 0L
-        if (duration > 0) {
-            for (i in 1..3) {
-                val timeUs = (duration * 1000 * i) / 4
-                val bitmap = retriever.getFrameAtTime(timeUs, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
-                if (bitmap != null) {
-                    frames.add(bitmap)
-                }
-            }
-        } else {
-            val bitmap = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
-            if (bitmap != null) frames.add(bitmap)
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    } finally {
-        retriever.release()
-    }
-    frames
-}
 
 @Composable
 fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri> = emptyList()) {
@@ -123,14 +97,26 @@ fun AiAnalysisScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri>
                                 val inputStream = context.contentResolver.openInputStream(selectedImage!!)
                                 listOf(android.graphics.BitmapFactory.decodeStream(inputStream))
                             }
-                        } else if (selectedVideo != null) {
-                            extractVideoFrames(context, selectedVideo!!)
                         } else {
                             emptyList()
                         }
                         
+                        val videoBytes = if (selectedVideo != null) {
+                            withContext(Dispatchers.IO) {
+                                context.contentResolver.openInputStream(selectedVideo!!)?.use { it.readBytes() }
+                            }
+                        } else null
+                        
+                        val mimeType = if (selectedVideo != null) {
+                            context.contentResolver.getType(selectedVideo!!) ?: "video/mp4"
+                        } else null
+                        
                         val inputContent = content {
-                            bitmaps.forEach { image(it) }
+                            if (selectedImage != null) {
+                                bitmaps.forEach { image(it) }
+                            } else if (selectedVideo != null && videoBytes != null && mimeType != null) {
+                                blob(mimeType, videoBytes)
+                            }
                             val promptText = if (userQuestion.isNotBlank()) userQuestion else com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_1)
                             text(promptText)
                         }

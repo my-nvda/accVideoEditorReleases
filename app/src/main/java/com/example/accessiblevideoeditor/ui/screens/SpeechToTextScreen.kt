@@ -29,7 +29,7 @@ fun SpeechToTextScreen(
 ) {
     var selectedMediaUri by remember { mutableStateOf<Uri?>(null) }
     var transcribedText by remember { mutableStateOf("") }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
 
     val coroutineScope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
@@ -59,7 +59,7 @@ fun SpeechToTextScreen(
             Text(if (selectedMediaUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_16) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_99))
         }
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
@@ -72,13 +72,13 @@ fun SpeechToTextScreen(
             Button(
                 onClick = {
                     selectedMediaUri?.let { uri ->
-                        isProcessing = true
+                        /* isProcessing = true */
                         coroutineScope.launch {
                             try {
                                 val apiKey = com.example.accessiblevideoeditor.ui.SettingsManager.geminiApiKey
                                 if (apiKey.isBlank()) {
                                     transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_3)
-                                    isProcessing = false
+                                    /* isProcessing = false */
                                     return@launch
                                 }
                                 val model = com.google.ai.client.generativeai.GenerativeModel(
@@ -104,7 +104,7 @@ fun SpeechToTextScreen(
                                     transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_73, errorMsg)
                                 }
                             }
-                            isProcessing = false
+                            /* isProcessing = false */
                         }
                     }
                 },

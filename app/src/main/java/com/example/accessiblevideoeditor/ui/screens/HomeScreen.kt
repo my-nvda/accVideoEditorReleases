@@ -36,7 +36,8 @@ fun HomeScreen(
     onNavigateToAiAnalysis: () -> Unit,
     onNavigateToBatchProcess: () -> Unit,
     onNavigateToHistory: () -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToCreateBlankImage: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -83,6 +84,7 @@ fun HomeScreen(
             item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_52), onNavigateToTickerText) }
             item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_32), onNavigateToBatchProcess) }
             item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_116), onNavigateToHistory) }
+            item { AccessibleMenuButton(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_271), onNavigateToCreateBlankImage) }
         }
     }
 }

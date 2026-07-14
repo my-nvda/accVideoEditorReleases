@@ -24,7 +24,7 @@ import java.io.File
 @Composable
 fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri> = emptyList()) {
     var selectedMediaUri by remember { mutableStateOf<Uri?>(null) }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val progress = (com.example.accessiblevideoeditor.ui.ProcessingManager.progress * 100).toInt()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -44,7 +44,7 @@ fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri
             Text(if (selectedMediaUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_88) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_47))
         }
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
@@ -57,7 +57,7 @@ fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri
             Button(
                 onClick = {
                     selectedMediaUri?.let { uri ->
-                        isProcessing = true
+                        /* isProcessing = true */
                         coroutineScope.launch {
                             val inputPath = FileUtils.getPathFromUri(context, uri)
                             val outputPath = context.cacheDir.absolutePath + "/extracted_audio_${System.currentTimeMillis()}.mp3"
@@ -92,7 +92,7 @@ fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri
                                     }
                                 }
                             }
-                            isProcessing = false
+                            /* isProcessing = false */
                         }
                     }
                 },
@@ -105,7 +105,7 @@ fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri
             Button(
                 onClick = {
                     selectedMediaUri?.let { uri ->
-                        isProcessing = true
+                        /* isProcessing = true */
                         coroutineScope.launch {
                             val inputPath = FileUtils.getPathFromUri(context, uri)
                             val outputPath = context.cacheDir.absolutePath + "/bass_boosted_${System.currentTimeMillis()}.mp3"
@@ -140,7 +140,7 @@ fun AudioStudioScreen(onBack: () -> Unit = {}, initialUris: List<android.net.Uri
                                     }
                                 }
                             }
-                            isProcessing = false
+                            /* isProcessing = false */
                         }
                     }
                 },

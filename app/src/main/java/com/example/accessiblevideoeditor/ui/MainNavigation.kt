@@ -159,39 +159,39 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
     if (showShareDialog) {
         androidx.compose.material3.AlertDialog(
             onDismissRequest = { showShareDialog = false },
-            title = { Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_98)) }, // "What do you want to do with these files?"
+            title = { Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_98)) },
             text = {
                 androidx.compose.foundation.lazy.LazyColumn {
                     item {
                         Button(onClick = { showShareDialog = false; navController.navigate("fast_converter") }, modifier = Modifier.fillMaxWidth()) {
-                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_13))
+                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_101))
                         }
                     }
                     item {
                         Button(onClick = { showShareDialog = false; navController.navigate("batch_process") }, modifier = Modifier.fillMaxWidth()) {
-                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_11))
+                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_32))
                         }
                     }
                     item {
                         Button(onClick = { showShareDialog = false; navController.navigate("slideshow_maker") }, modifier = Modifier.fillMaxWidth()) {
-                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_9))
+                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_80))
                         }
                     }
                     item {
                         Button(onClick = { showShareDialog = false; navController.navigate("video_editor") }, modifier = Modifier.fillMaxWidth()) {
-                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_15))
+                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_112))
                         }
                     }
                     item {
                         Button(onClick = { showShareDialog = false; navController.navigate("audio_studio") }, modifier = Modifier.fillMaxWidth()) {
-                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_17))
+                            Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_106))
                         }
                     }
                 }
             },
             confirmButton = {
                 TextButton(onClick = { showShareDialog = false }) {
-                    Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_36))
+                    Text(AppStrings.get(androidx.compose.ui.platform.LocalContext.current, com.example.accessiblevideoeditor.R.string.string_207))
                 }
             }
         )
@@ -221,7 +221,8 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onNavigateToTickerText = { navController.navigate("ticker_text") },
                 onNavigateToAudioStudio = { navController.navigate("audio_studio") },
                 onNavigateToSmartCut = { navController.navigate("smart_cut") },
-                onNavigateToAiAnalysis = { navController.navigate("ai_analysis") }
+                onNavigateToAiAnalysis = { navController.navigate("ai_analysis") },
+                onNavigateToCreateBlankImage = { navController.navigate("create_blank_image") }
             )
         }
         
@@ -249,7 +250,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
         }
         
         composable("boost_volume") {
-            var isProcessing by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+            val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
             val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
             val context = androidx.compose.ui.platform.LocalContext.current
             
@@ -260,7 +261,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onProcess = { uri, tempPath ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
                     com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_111), true)
-                    isProcessing = true
+                    /* isProcessing = true */
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
                             val outputFile = java.io.File(context.cacheDir, "output_boosted_${System.currentTimeMillis()}.mp4")
@@ -291,7 +292,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
-                            isProcessing = false
+                            /* isProcessing = false */
                         }
                     }
                 }
@@ -382,7 +383,6 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
 
             com.example.accessiblevideoeditor.ui.screens.SimpleProcessScreen(
                 titleRes = R.string.string_41,
-                isProcessing = false,
                 onBack = { navController.popBackStack() },
                 onProcess = { uri, tempPath ->
                     pendingUri = uri
@@ -393,7 +393,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
         }
         
         composable("compress_video") {
-            var isProcessing by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+            val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
             val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
             val context = androidx.compose.ui.platform.LocalContext.current
             
@@ -404,7 +404,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                 onProcess = { uri, tempPath ->
                     com.example.accessiblevideoeditor.media.SoundManager.playProcessing()
                     com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_111), true)
-                    isProcessing = true
+                    /* isProcessing = true */
                     coroutineScope.launch(Dispatchers.IO) {
                         try {
                             val outputFile = java.io.File(context.cacheDir, "output_compressed_${System.currentTimeMillis()}.mp4")
@@ -434,7 +434,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
-                            isProcessing = false
+                            /* isProcessing = false */
                         }
                     }
                 }
@@ -487,8 +487,11 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
         composable("smart_cut") {
             SmartCutScreen(onBack = { navController.popBackStack() }, initialUris = selectedSharedUris)
         }
-                composable("ai_analysis") {
+        composable("ai_analysis") {
             AiAnalysisScreen(onBack = { navController.popBackStack() }, initialUris = selectedSharedUris)
+        }
+        composable("create_blank_image") {
+            com.example.accessiblevideoeditor.ui.screens.CreateBlankImageScreen(onBack = { navController.popBackStack() })
         }
         composable("video_trimmer") {
             val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()

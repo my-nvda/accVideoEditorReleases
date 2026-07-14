@@ -26,7 +26,7 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
     var selectedVideoUri by remember { mutableStateOf<Uri?>(initialUris.firstOrNull()) }
     var silenceThreshold by remember { mutableStateOf("-30") }
     var minSilenceDuration by remember { mutableStateOf("0.5") }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -57,13 +57,13 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
             modifier = Modifier.fillMaxWidth()
         )
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
         } else {
             Button(
                 onClick = {
-                    isProcessing = true
+                    /* isProcessing = true */
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                         val uri = selectedVideoUri ?: return@launch
                         val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_video_${System.currentTimeMillis()}.mp4")
@@ -94,11 +94,11 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
                             }
                             
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                isProcessing = false
+                                /* isProcessing = false */
                                 com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                             }
                         } else {
-                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { isProcessing = false }
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { /* isProcessing = false */ }
                         }
                     }
                 },

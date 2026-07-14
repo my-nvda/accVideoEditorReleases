@@ -27,7 +27,7 @@ import java.io.File
 fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = emptyList()) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var textOptions by remember { mutableStateOf(TextRenderer.TextOptions(text = "")) }
-    var isProcessing by remember { mutableStateOf(false) }
+    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
     val progress = (com.example.accessiblevideoeditor.ui.ProcessingManager.progress * 100).toInt()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -51,7 +51,7 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
             onOptionsChanged = { textOptions = it }
         )
 
-        if (isProcessing) {
+        if (false) {
             val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
             CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
             Text(
@@ -67,7 +67,7 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
             Button(
                 onClick = {
                     selectedImageUri?.let { uri ->
-                        isProcessing = true
+                        /* isProcessing = true */
                         coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                             var success = false
                             try {
@@ -94,7 +94,7 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                             }
                             
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                isProcessing = false
+                                /* isProcessing = false */
                                 if (success) {
                                     Toast.makeText(context, successMessage, Toast.LENGTH_LONG).show()
                                 } else {
