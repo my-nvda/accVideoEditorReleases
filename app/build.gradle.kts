@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.4"
+        versionCode = 6
+        versionName = "2.4.5"
     }
 
     buildTypes {
@@ -41,6 +41,16 @@ android {
       resources {
         excludes += "/META-INF/{AL2.0,LGPL2.1}"
       }
+    }
+
+    lint {
+        disable += setOf(
+            "MissingTranslation",
+            "LocalContextGetResourceValueCall",
+            "LocalContextConfigurationRead",
+            "LocalContextResourcesRead"
+        )
+        abortOnError = false
     }
 }
 

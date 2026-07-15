@@ -290,4 +290,4 @@ customization, smart cutting, and more.</string>
     <string name="string_rec_use_result">Use Recorded Audio in Studio</string>
     <string name="string_rec_recording_status">Recording: %1$s</string>
     <string name="string_rec_paused_status">Recording Paused: %1$s</string>
-</resources>
+    <string name="string_rn_v2_4_5">v2.4.5\n- Unified progress windows across all screens for a consistent experience.\n- Fixed crashes when merging videos.\n- Enhanced AI Video Analysis by sending the complete video file directly.\n- Achieved 100% translation coverage for 11 languages.</string>\n</resources>

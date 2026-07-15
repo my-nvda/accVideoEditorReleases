@@ -270,4 +270,4 @@
     <string name="string_rn_v2_4_3">版本2.4.3\n- 修复了共享屏幕错误和不正确的标题。\n- 修正了设置屏幕中扭曲的文本。</string>
     <string name="string_rn_v2_4_2">版本2.4.2\n- 改进了从后台视频中提取音频的处理。\n- 改进了 Gemini AI 服务器错误处理。</string>
     <string name="string_rn_v1">版本1.0.0\n- 首次发布全面的视频编辑器应用程序，具有基本的视频和音频编辑工具，并针对屏幕阅读器进行了优化。</string>
-</resources>
+    <string name="string_270">创建空白图像</string>\n    <string name="string_271">创建黑色图像</string>\n    <string name="string_rec_title">录音机</string>\n    <string name="string_rec_channels">音频通道</string>\n    <string name="string_rec_mono">单声道</string>\n    <string name="string_rec_stereo">立体声（双声道）</string>\n    <string name="string_rec_format">输出格式</string>\n    <string name="string_rec_start">开始录制</string>\n    <string name="string_rec_pause">暂停录制</string>\n    <string name="string_rec_resume">恢复录制</string>\n    <string name="string_rec_stop">停止并保存</string>\n    <string name="string_rec_cancel">取消录制</string>\n    <string name="string_rec_use_result">在工作室中使用录制的音频</string>\n    <string name="string_rec_recording_status">正在录制：%1$s</string>\n    <string name="string_rec_paused_status">录制已暂停：%1$s</string>\n</resources>
