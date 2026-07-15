@@ -71,36 +71,34 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                     /* isProcessing = true */
                     com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_111), true)
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                        selectedUri?.let { uri ->
-                            val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_fast_conv_${System.currentTimeMillis()}.mp4")
-                            if (tempFile != null) {
-                                val inputPath = tempFile.absolutePath
-                                val fileName = "FastConverted_Video_${System.currentTimeMillis()}"
-                                val outputPath = context.cacheDir.absolutePath + "/" + fileName + "." + selectedFormat.lowercase()
-                                
-                                val commandArgs = arrayOf("-y", "-i", inputPath, outputPath)
-                                val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
-                                if (success) {
-                                    val mimeType = when (selectedFormat.uppercase()) {
-                                        "GIF" -> "image/gif"
-                                        "MKV" -> "video/x-matroska"
-                                        "AVI" -> "video/x-msvideo"
-                                        else -> "video/mp4"
-                                    }
-                                    val savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), mimeType)
-                                    if (savedUri != null) {
-                                        com.example.accessiblevideoeditor.media.HistoryManager.saveToHistory(
-                                            context,
-                                            com.example.accessiblevideoeditor.media.HistoryItem(
-                                                uriString = savedUri.toString(),
-                                                name = "Fast Converted to $selectedFormat",
-                                                timestamp = System.currentTimeMillis(),
-                                                type = if (selectedFormat == "GIF") "image" else "video"
-                                            )
-                                        )
-                                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                            com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182), android.widget.Toast.LENGTH_LONG).show()
+                        try {
+                            selectedUri?.let { uri ->
+                                val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_fast_conv_${System.currentTimeMillis()}.mp4")
+                                if (tempFile != null) {
+                                    val inputPath = tempFile.absolutePath
+                                    val fileName = "FastConverted_Video_${System.currentTimeMillis()}"
+                                    val outputPath = context.cacheDir.absolutePath + "/" + fileName + "." + selectedFormat.lowercase()
+                                    
+                                    val commandArgs = arrayOf("-y", "-i", inputPath, outputPath)
+                                    val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
+                                    if (success) {
+                                        val mimeType = when (selectedFormat.uppercase()) {
+                                            "GIF" -> "image/gif"
+                                            "MKV" -> "video/x-matroska"
+                                            "AVI" -> "video/x-msvideo"
+                                            else -> "video/mp4"
+                                        }
+                                        val savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), mimeType)
+                                        if (savedUri != null) {
+                                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182), android.widget.Toast.LENGTH_LONG).show()
+                                            }
+                                        } else {
+                                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                                com.example.accessiblevideoeditor.media.SoundManager.playError()
+                                                android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
+                                            }
                                         }
                                     } else {
                                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
@@ -108,16 +106,17 @@ fun FastConverterScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> =
                                             android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     }
-                                } else {
-                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                        com.example.accessiblevideoeditor.media.SoundManager.playError()
-                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_183), android.widget.Toast.LENGTH_LONG).show()
-                                    }
                                 }
                             }
-                        }
-                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                            /* isProcessing = false */
+                        } catch (e: Exception) {
+                            if (e is kotlinx.coroutines.CancellationException) throw e
+                            e.printStackTrace()
+                        } finally {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                                }
+                            }
                         }
                     }
                 },

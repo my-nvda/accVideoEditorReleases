@@ -277,4 +277,17 @@ customization, smart cutting, and more.</string>
     <string name="string_rn_v2_4_3">v2.4.3\n- Fixed sharing screen issues and incorrect titles.\n- Resolved mojibake text corruption in settings.</string>
     <string name="string_rn_v2_4_2">v2.4.2\n- Improved background audio extraction and video processing.\n- Enhanced Gemini AI error handling.</string>
     <string name="string_rn_v1">v1.0.0\n- Initial release of Accessible Video Editor with basic video/audio editing tools optimized for screen readers.</string>
+    <string name="string_rec_title">Voice Recorder</string>
+    <string name="string_rec_channels">Audio Channels</string>
+    <string name="string_rec_mono">Mono (Single Channel)</string>
+    <string name="string_rec_stereo">Stereo (Dual Channels)</string>
+    <string name="string_rec_format">Output Format</string>
+    <string name="string_rec_start">Start Recording</string>
+    <string name="string_rec_pause">Pause Recording</string>
+    <string name="string_rec_resume">Resume Recording</string>
+    <string name="string_rec_stop">Stop and Save</string>
+    <string name="string_rec_cancel">Cancel Recording</string>
+    <string name="string_rec_use_result">Use Recorded Audio in Studio</string>
+    <string name="string_rec_recording_status">Recording: %1$s</string>
+    <string name="string_rec_paused_status">Recording Paused: %1$s</string>
 </resources>

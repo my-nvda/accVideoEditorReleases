@@ -117,62 +117,57 @@ fun BatchProcessScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = 
                     /* isProcessing = true */
                     currentIndex = 0
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                            com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_32))
-                        }
-                        var successCount = 0
-                        selectedUris.forEachIndexed { index, uri ->
+                        try {
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                currentIndex = index
+                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_32))
                             }
-                            val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "batch_temp_${System.currentTimeMillis()}_${index}.mp4")
-                            if (tempFile != null) {
-                                val inputPath = tempFile.absolutePath
-                                val isAudioExtraction = (selectedOperationId == R.string.string_22)
-                                val ext = if (isAudioExtraction) "mp3" else "mp4"
-                                val outputPath = context.cacheDir.absolutePath + "/batch_${System.currentTimeMillis()}_${index}.$ext"
-                                
-                                val success = if (isAudioExtraction) {
-                                    com.example.accessiblevideoeditor.media.FFmpegProcessor.extractAudio(inputPath, outputPath, "mp3")
-                                } else if (selectedOperationId == R.string.string_95) {
-                                    // Convert to MP4 with optional audio mapping
-                                    val commandArgs = arrayOf("-y", "-i", inputPath, "-map", "0:v", "-map", "0:a?", "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac", outputPath)
-                                    com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
-                                } else {
-                                    com.example.accessiblevideoeditor.media.FFmpegProcessor.compressVideo(inputPath, outputPath)
+                            var successCount = 0
+                            selectedUris.forEachIndexed { index, uri ->
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    currentIndex = index
                                 }
-
-                                if (success) {
-                                    val mimeType = if (isAudioExtraction) "audio/mpeg" else "video/mp4"
-                                    val savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), mimeType)
-                                    if (savedUri != null) {
-                                        val opName = when (selectedOperationId) {
-                                            R.string.string_22 -> "Extracted Audio (Batch)"
-                                            R.string.string_95 -> "Converted Video (Batch)"
-                                            else -> "Compressed Video (Batch)"
-                                        }
-                                        com.example.accessiblevideoeditor.media.HistoryManager.saveToHistory(
-                                            context,
-                                            com.example.accessiblevideoeditor.media.HistoryItem(
-                                                uriString = savedUri.toString(),
-                                                name = opName,
-                                                timestamp = System.currentTimeMillis(),
-                                                type = if (isAudioExtraction) "audio" else "video"
-                                            )
-                                        )
+                                val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "batch_temp_${System.currentTimeMillis()}_${index}.mp4")
+                                if (tempFile != null) {
+                                    val inputPath = tempFile.absolutePath
+                                    val isAudioExtraction = (selectedOperationId == R.string.string_22)
+                                    val ext = if (isAudioExtraction) "mp3" else "mp4"
+                                    val outputPath = context.cacheDir.absolutePath + "/batch_${System.currentTimeMillis()}_${index}.$ext"
+                                    
+                                    val success = if (isAudioExtraction) {
+                                        com.example.accessiblevideoeditor.media.FFmpegProcessor.extractAudio(inputPath, outputPath, "mp3")
+                                    } else if (selectedOperationId == R.string.string_95) {
+                                        // Convert to MP4 with optional audio mapping
+                                        val commandArgs = arrayOf("-y", "-i", inputPath, "-map", "0:v", "-map", "0:a?", "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac", outputPath)
+                                        com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
+                                    } else {
+                                        com.example.accessiblevideoeditor.media.FFmpegProcessor.compressVideo(inputPath, outputPath)
                                     }
-                                    successCount++
+
+                                    if (success) {
+                                        val mimeType = if (isAudioExtraction) "audio/mpeg" else "video/mp4"
+                                        val savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), mimeType)
+                                        if (savedUri != null) {
+                                            successCount++
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                            /* isProcessing = false */
-                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                            if (successCount > 0) {
-                                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                                android.widget.Toast.makeText(context, "${com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182)} ($successCount/${selectedUris.size})", android.widget.Toast.LENGTH_LONG).show()
-                            } else {
-                                com.example.accessiblevideoeditor.media.SoundManager.playError()
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                if (successCount > 0) {
+                                    com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                                    android.widget.Toast.makeText(context, "${com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_182)} ($successCount/${selectedUris.size})", android.widget.Toast.LENGTH_LONG).show()
+                                } else {
+                                    com.example.accessiblevideoeditor.media.SoundManager.playError()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            if (e is kotlinx.coroutines.CancellationException) throw e
+                            e.printStackTrace()
+                        } finally {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                                }
                             }
                         }
                     }

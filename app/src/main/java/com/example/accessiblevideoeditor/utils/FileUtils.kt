@@ -12,12 +12,29 @@ object FileUtils {
     }
 
     fun saveToGallery(context: Context, sourceFile: File, mimeType: String): Uri? {
-        return when {
+        val uri = when {
             mimeType.startsWith("video/") -> com.example.accessiblevideoeditor.media.MediaUtils.saveVideoToGallery(context, sourceFile, sourceFile.name, mimeType)
             mimeType.startsWith("audio/") -> com.example.accessiblevideoeditor.media.MediaUtils.saveAudioToGallery(context, sourceFile, sourceFile.name, mimeType)
             mimeType.startsWith("image/") -> com.example.accessiblevideoeditor.media.MediaUtils.saveImageToGallery(context, sourceFile, sourceFile.name, mimeType)
             else -> null
         }
+        if (uri != null) {
+            val type = when {
+                mimeType.startsWith("audio/") -> "audio"
+                mimeType.startsWith("image/") -> "image"
+                else -> "video"
+            }
+            com.example.accessiblevideoeditor.media.HistoryManager.saveToHistory(
+                context,
+                com.example.accessiblevideoeditor.media.HistoryItem(
+                    uriString = uri.toString(),
+                    name = sourceFile.name,
+                    timestamp = System.currentTimeMillis(),
+                    type = type
+                )
+            )
+        }
+        return uri
     }
 
     fun copyFontToCache(context: Context): String {

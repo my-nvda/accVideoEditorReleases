@@ -275,4 +275,17 @@
     <string name="string_rn_v2_4_3">الإصدار 2.4.3\n- إصلاح أخطاء الشاشة الخاصة بالمشاركة والعناوين غير الصحيحة.\n- تصحيح النصوص المشوهة في شاشة الإعدادات.</string>
     <string name="string_rn_v2_4_2">الإصدار 2.4.2\n- تحسين معالجة استخراج الصوت من الفيديو في الخلفية.\n- تحسين معالجة أخطاء خوادم Gemini AI.</string>
     <string name="string_rn_v1">الإصدار 1.0.0\n- الإصدار الأولي لتطبيق محرر الفيديو الشامل بأدوات أساسية لتحرير الفيديو والصوت ومحسنة لقارئات الشاشة.</string>
+    <string name="string_rec_title">مسجل الصوت</string>
+    <string name="string_rec_channels">القنوات الصوتية</string>
+    <string name="string_rec_mono">مونو (أحادي القناة)</string>
+    <string name="string_rec_stereo">ستيريو (ثنائي القناة)</string>
+    <string name="string_rec_format">صيغة الملف</string>
+    <string name="string_rec_start">بدء التسجيل</string>
+    <string name="string_rec_pause">إيقاف مؤقت</string>
+    <string name="string_rec_resume">استئناف التسجيل</string>
+    <string name="string_rec_stop">حفظ وإنهاء</string>
+    <string name="string_rec_cancel">إلغاء التسجيل</string>
+    <string name="string_rec_use_result">استخدام الصوت المسجل في الأستوديو</string>
+    <string name="string_rec_recording_status">جاري التسجيل: %1$s</string>
+    <string name="string_rec_paused_status">تم إيقاف التسجيل مؤقتاً: %1$s</string>
 </resources>

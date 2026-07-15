@@ -60,12 +60,11 @@ fun MergeVideosScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                                 }
                                 val outputPath = context.cacheDir.absolutePath + "/merged_${System.currentTimeMillis()}.mp4"
                                 
-                                val inputStr = inputs.joinToString(" ") { "-i \"$it\"" }
                                 val filterParts = java.lang.StringBuilder()
                                 val concatParts = java.lang.StringBuilder()
                                 
                                 inputs.forEachIndexed { index, _ ->
-                                    filterParts.append("[$index:v]scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30[v$index];")
+                                    filterParts.append("[$index:v]scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,fps=30[v$index];")
                                     filterParts.append("[$index:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a$index];")
                                     concatParts.append("[v$index][a$index]")
                                 }
@@ -78,21 +77,17 @@ fun MergeVideosScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                                 if (success) {
                                     com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
                                 }
-                                
-                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    /* isProcessing = false */
-                                    com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                                }
-                            } else {
-                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    /* isProcessing = false */
-                                }
                             }
                         } catch (e: Exception) {
+                            if (e is kotlinx.coroutines.CancellationException) throw e
                             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                /* isProcessing = false */
-                                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                                 com.example.accessiblevideoeditor.ui.ProcessingManager.showError(e.message ?: "Unknown error occurred during merge")
+                            }
+                        } finally {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                                }
                             }
                         }
                     }

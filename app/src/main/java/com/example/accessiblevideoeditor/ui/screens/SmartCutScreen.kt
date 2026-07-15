@@ -65,40 +65,44 @@ fun SmartCutScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = empt
                 onClick = {
                     /* isProcessing = true */
                     coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                        val uri = selectedVideoUri ?: return@launch
-                        val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_video_${System.currentTimeMillis()}.mp4")
-                        val input = tempFile?.absolutePath
-                        if (input != null) {
-                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_42))
-                            }
-                            val outputPath = context.cacheDir.absolutePath + "/smartcut_${System.currentTimeMillis()}.mp4"
-                            
-                            val success = com.example.accessiblevideoeditor.media.SmartCutProcessor.removeSilence(
-                                context = context,
-                                inputPath = input,
-                                outputPath = outputPath,
-                                thresholdDb = silenceThreshold.toIntOrNull() ?: -30,
-                                durationSec = minSilenceDuration.toFloatOrNull() ?: 0.5f
-                            )
-                            
-                            if (success) {
-                                com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
+                        try {
+                            val uri = selectedVideoUri ?: return@launch
+                            val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, uri, "temp_video_${System.currentTimeMillis()}.mp4")
+                            val input = tempFile?.absolutePath
+                            if (input != null) {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_240), android.widget.Toast.LENGTH_SHORT).show()
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_42))
                                 }
-                            } else {
+                                val outputPath = context.cacheDir.absolutePath + "/smartcut_${System.currentTimeMillis()}.mp4"
+                                
+                                val success = com.example.accessiblevideoeditor.media.SmartCutProcessor.removeSilence(
+                                    context = context,
+                                    inputPath = input,
+                                    outputPath = outputPath,
+                                    thresholdDb = silenceThreshold.toIntOrNull() ?: -30,
+                                    durationSec = minSilenceDuration.toFloatOrNull() ?: 0.5f
+                                )
+                                
+                                if (success) {
+                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
+                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_240), android.widget.Toast.LENGTH_SHORT).show()
+                                    }
+                                } else {
+                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_241), android.widget.Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            if (e is kotlinx.coroutines.CancellationException) throw e
+                            e.printStackTrace()
+                        } finally {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_241), android.widget.Toast.LENGTH_LONG).show()
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                                 }
                             }
-                            
-                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                /* isProcessing = false */
-                                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                            }
-                        } else {
-                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { /* isProcessing = false */ }
                         }
                     }
                 },

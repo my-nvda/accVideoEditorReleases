@@ -121,6 +121,7 @@ fun WatermarkScreen(
                 onClick = {
                     /* isProcessing = true */
                         coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                        try {
                             val vUri = selectedVideoUri ?: return@launch
                             
                             val inputVideo = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, vUri)
@@ -165,17 +166,18 @@ fun WatermarkScreen(
                                         android.widget.Toast.makeText(context, errMsg, android.widget.Toast.LENGTH_LONG).show()
                                     }
                                 }
-                                
+                            }
+                        } catch (e: Exception) {
+                            if (e is kotlinx.coroutines.CancellationException) throw e
+                            e.printStackTrace()
+                        } finally {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
                                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    /* isProcessing = false */
                                     com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                                }
-                            } else {
-                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    /* isProcessing = false */
                                 }
                             }
                         }
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = if (isTextMode) selectedVideoUri != null && textOptions.text.isNotBlank() else selectedVideoUri != null && selectedWatermarkUri != null

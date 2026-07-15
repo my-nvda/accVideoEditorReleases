@@ -71,6 +71,9 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                         coroutineScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                             var success = false
                             try {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_127))
+                                }
                                 val bitmap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                                     val source = android.graphics.ImageDecoder.createSource(context.contentResolver, uri)
                                     android.graphics.ImageDecoder.decodeBitmap(source)
@@ -89,16 +92,21 @@ fun ImageEditorScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = e
                                 val savedUri = FileUtils.saveToGallery(context, File(outputPath), "image/jpeg")
                                 if (savedUri != null) success = true
                                 
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    if (success) {
+                                        Toast.makeText(context, successMessage, Toast.LENGTH_LONG).show()
+                                    } else {
+                                        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                                    }
+                                }
                             } catch (e: Exception) {
+                                if (e is kotlinx.coroutines.CancellationException) throw e
                                 e.printStackTrace()
-                            }
-                            
-                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                /* isProcessing = false */
-                                if (success) {
-                                    Toast.makeText(context, successMessage, Toast.LENGTH_LONG).show()
-                                } else {
-                                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                            } finally {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                        com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                                    }
                                 }
                             }
                         }

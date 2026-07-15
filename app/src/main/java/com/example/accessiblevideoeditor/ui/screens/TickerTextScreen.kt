@@ -63,40 +63,45 @@ fun TickerTextScreen(onBack: () -> Unit, initialUris: List<android.net.Uri> = em
                         com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_62))
                         
                         coroutineScope.launch(Dispatchers.IO) {
+                            try {
                                 val inputPath = com.example.accessiblevideoeditor.utils.FileUtils.getPathFromUri(context, uri)
-                            val outputPath = context.cacheDir.absolutePath + "/ticker_${System.currentTimeMillis()}.mp4"
-                            val pngFile = java.io.File(context.cacheDir, "ticker_${System.currentTimeMillis()}.png")
-                            
-                            if (inputPath != null) {
-                                TextRenderer.createTickerPng(textOptions, pngFile)
+                                val outputPath = context.cacheDir.absolutePath + "/ticker_${System.currentTimeMillis()}.mp4"
+                                val pngFile = java.io.File(context.cacheDir, "ticker_${System.currentTimeMillis()}.png")
                                 
-                                val yExpr = when (textOptions.position) {
-                                    TextRenderer.TextPosition.TOP -> "H/10"
-                                    TextRenderer.TextPosition.CENTER -> "(H-h)/2"
-                                    TextRenderer.TextPosition.BOTTOM -> "H-H/10-h"
-                                }
-                                val command = "-y -i \"${inputPath}\" -i \"${pngFile.absolutePath}\" -filter_complex \"[0:v]scale=trunc(iw/2)*2:trunc(ih/2)*2[main];[1:v]format=rgba[img];[main][img]overlay=x='W-mod(t*150,W+w)':y='$yExpr'\" -c:v mpeg4 -q:v 2 -c:a copy \"${outputPath}\""
-                                
-                                val session = FFmpegKit.execute(command)
-                                if (com.arthenica.ffmpegkit.ReturnCode.isSuccess(session.returnCode)) {
-                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
-                                    withContext(Dispatchers.Main) {
-                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_240), android.widget.Toast.LENGTH_SHORT).show()
+                                if (inputPath != null) {
+                                    TextRenderer.createTickerPng(textOptions, pngFile)
+                                    
+                                    val yExpr = when (textOptions.position) {
+                                        TextRenderer.TextPosition.TOP -> "H/10"
+                                        TextRenderer.TextPosition.CENTER -> "(H-h)/2"
+                                        TextRenderer.TextPosition.BOTTOM -> "H-H/10-h"
                                     }
-                                } else {
-                                    val logs = session.failStackTrace ?: session.allLogsAsString ?: "Unknown Error"
-                                    val detailedLog = "Command:\n$command\n\nLogs:\n$logs"
-                                    withContext(Dispatchers.Main) {
-                                        com.example.accessiblevideoeditor.ui.ProcessingManager.showError(detailedLog)
-                                        android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_241), android.widget.Toast.LENGTH_LONG).show()
+                                    val command = "-y -i \"${inputPath}\" -i \"${pngFile.absolutePath}\" -filter_complex \"[0:v]scale=trunc(iw/2)*2:trunc(ih/2)*2[main];[1:v]format=rgba[img];[main][img]overlay=x='W-mod(t*150,W+w)':y='$yExpr'\" -c:v mpeg4 -q:v 2 -c:a copy \"${outputPath}\""
+                                    
+                                    val session = FFmpegKit.execute(command)
+                                    if (com.arthenica.ffmpegkit.ReturnCode.isSuccess(session.returnCode)) {
+                                        com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(context, java.io.File(outputPath), "video/mp4")
+                                        withContext(Dispatchers.Main) {
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_240), android.widget.Toast.LENGTH_SHORT).show()
+                                        }
+                                    } else {
+                                        val logs = session.failStackTrace ?: session.allLogsAsString ?: "Unknown Error"
+                                        val detailedLog = "Command:\n$command\n\nLogs:\n$logs"
+                                        withContext(Dispatchers.Main) {
+                                            com.example.accessiblevideoeditor.ui.ProcessingManager.showError(detailedLog)
+                                            android.widget.Toast.makeText(context, com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_241), android.widget.Toast.LENGTH_LONG).show()
+                                        }
                                     }
                                 }
-                                withContext(Dispatchers.Main) {
-                                    /* isProcessing = false */
-                                    com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                            } catch (e: Exception) {
+                                if (e is kotlinx.coroutines.CancellationException) throw e
+                                e.printStackTrace()
+                            } finally {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                                    withContext(Dispatchers.Main) {
+                                        com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                                    }
                                 }
-                            } else {
-                                withContext(Dispatchers.Main) { /* isProcessing = false */; com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing() }
                             }
                         }
                     }
