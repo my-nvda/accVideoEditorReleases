@@ -292,7 +292,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
-                            /* isProcessing = false */
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
                     }
                 }
@@ -434,7 +434,7 @@ fun MainNavigation(sharedUris: List<android.net.Uri> = emptyList()) {
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
                         } finally {
-                            /* isProcessing = false */
+                            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                         }
                     }
                 }

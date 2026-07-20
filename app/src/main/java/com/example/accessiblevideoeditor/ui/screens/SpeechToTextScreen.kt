@@ -29,10 +29,6 @@ fun SpeechToTextScreen(
 ) {
     var selectedMediaUri by remember { mutableStateOf<Uri?>(null) }
     var transcribedText by remember { mutableStateOf("") }
-    val isProcessing = com.example.accessiblevideoeditor.ui.ProcessingManager.isProcessing
-
-    val coroutineScope = rememberCoroutineScope()
-    val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
     
     val mediaPickerLauncher = rememberLauncherForActivityResult(
@@ -59,60 +55,54 @@ fun SpeechToTextScreen(
             Text(if (selectedMediaUri != null) com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_16) else com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_99))
         }
 
-        if (false) {
-            val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_111)
-            CircularProgressIndicator(modifier = Modifier.semantics { contentDescription = desc })
-            Text(
-                text = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_30),
-                modifier = Modifier.semantics {
-                    liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
-                }
-            )
-        } else {
-            Button(
-                onClick = {
-                    selectedMediaUri?.let { uri ->
-                        /* isProcessing = true */
-                        coroutineScope.launch {
-                            try {
-                                val apiKey = com.example.accessiblevideoeditor.ui.SettingsManager.geminiApiKey
-                                if (apiKey.isBlank()) {
-                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_3)
-                                    /* isProcessing = false */
-                                    return@launch
-                                }
-                                val model = com.google.ai.client.generativeai.GenerativeModel(
-                                    modelName = "gemini-2.5-flash",
-                                    apiKey = apiKey
-                                )
-                                val bytes = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                                    val inputStream = context.contentResolver.openInputStream(uri)
-                                    inputStream?.readBytes() ?: ByteArray(0)
-                                }
-                                val mimeType = context.contentResolver.getType(uri) ?: "audio/mpeg"
-                                val inputContent = com.google.ai.client.generativeai.type.content {
-                                    blob(mimeType, bytes)
-                                    text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_2))
-                                }
-                                transcribedText = model.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_71)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                val errorMsg = e.message ?: ""
-                                if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
-                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_228)
-                                } else {
-                                    transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_73, errorMsg)
+        Button(
+            onClick = {
+                selectedMediaUri?.let { uri ->
+                    coroutineScope.launch {
+                        val processMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_111)
+                        com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(processMsg)
+                        try {
+                            val apiKey = com.example.accessiblevideoeditor.ui.SettingsManager.geminiApiKey
+                            if (apiKey.isBlank()) {
+                                transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_3)
+                                return@launch
+                            }
+                            val model = com.google.ai.client.generativeai.GenerativeModel(
+                                modelName = "gemini-2.5-flash",
+                                apiKey = apiKey
+                            )
+                            val bytes = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                                val inputStream = context.contentResolver.openInputStream(uri)
+                                inputStream?.readBytes() ?: ByteArray(0)
+                            }
+                            val mimeType = context.contentResolver.getType(uri) ?: "audio/mpeg"
+                            val inputContent = com.google.ai.client.generativeai.type.content {
+                                blob(mimeType, bytes)
+                                text(com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_2))
+                            }
+                            transcribedText = model.generateContent(inputContent).text ?: com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_71)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            val errorMsg = e.message ?: ""
+                            if (errorMsg.contains("503") || errorMsg.contains("high demand") || errorMsg.contains("Unexpected Response")) {
+                                transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_228)
+                            } else {
+                                transcribedText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_73, errorMsg)
+                            }
+                        } finally {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
                                 }
                             }
-                            /* isProcessing = false */
                         }
                     }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = selectedMediaUri != null
-            ) {
-                Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_123))
-            }
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = selectedMediaUri != null
+        ) {
+            Text(com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_123))
         }
 
         if (transcribedText.isNotEmpty()) {
