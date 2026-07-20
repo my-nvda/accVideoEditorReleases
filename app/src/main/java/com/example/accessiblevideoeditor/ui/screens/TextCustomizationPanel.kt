@@ -3,6 +3,7 @@ package com.example.accessiblevideoeditor.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -54,6 +55,7 @@ fun <T> DropdownSelector(
             },
             modifier = Modifier
                 .fillMaxWidth()
+                .semantics(mergeDescendants = true) {}
                 .clickable { expanded = true },
             enabled = true,
             colors = OutlinedTextFieldDefaults.colors(
@@ -68,6 +70,7 @@ fun <T> DropdownSelector(
         Box(
             modifier = Modifier
                 .matchParentSize()
+                .semantics(mergeDescendants = true) {}
                 .clickable { expanded = true }
                 .semantics {
                     contentDescription = label
