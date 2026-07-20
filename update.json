@@ -1,6 +1,6 @@
 {
-  "versionCode": 13,
-  "versionName": "2.4.10",
+  "versionCode": 14,
+  "versionName": "2.4.11",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث v2.4.10:\n\n- إصلاح مهم لتوافقية قارئ الشاشة (مثل Jieshuo و TalkBack) للوقوف على أول عنصر بشكل تلقائي عند فتح التطبيق وعند التنقل بين الشاشات المختلفة."
+  "releaseNotes": "تحديث v2.4.11:\n\n- إزالة جميع محاولات التحكم الإجباري في تركيز قارئ الشاشة (Focus) التي تمت إضافتها في التحديثات السابقة، حيث تبين أنها تتعارض بشكل كبير مع Jieshuo وتجعله أسوأ. تم إرجاع التطبيق للحالة الافتراضية للتركيز ليعمل بشكل طبيعي مع نظام الأندرويد."
 }
