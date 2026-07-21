@@ -1,6 +1,6 @@
 {
-  "versionCode": 16,
-  "versionName": "2.4.13",
+  "versionCode": 18,
+  "versionName": "2.4.15",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "🔥 v2.4.13:\n\n- إصلاح مشكلة الإنهيار المفاجئ عند فتح التطبيق.\n- استكمال تحسينات النظام الجديد."
+  "releaseNotes": "🔥 v2.4.15:\n\n- استعادة التصميم الأصلي لشاشة الإعدادات وجميع الأزرار المفقودة.\n- إصلاح مشكلة الرجوع التلقائي للشاشة الرئيسية عند تغيير لغة التطبيق."
 }
