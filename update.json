@@ -1,6 +1,6 @@
 {
-  "versionCode": 15,
-  "versionName": "2.4.12",
+  "versionCode": 16,
+  "versionName": "2.4.13",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "🔥 v2.4.12:\n\n- إزالة تقنية Jetpack Compose بالكامل واستبدالها بنظام XML لضمان التوافق التام مع قارئات الشاشة.\n- حل مشكلة تركيز القارئ (Focus) بشكل جذري حيث يتم التركيز تلقائياً على العنصر الأول في جميع الشاشات عند الفتح.\n- تحسينات عامة في الأداء والتوافق مع Jieshuo و TalkBack."
+  "releaseNotes": "🔥 v2.4.13:\n\n- إصلاح مشكلة الإنهيار المفاجئ عند فتح التطبيق.\n- استكمال تحسينات النظام الجديد."
 }
