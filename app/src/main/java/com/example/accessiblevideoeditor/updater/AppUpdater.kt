@@ -201,4 +201,18 @@ object AppUpdater {
             e.printStackTrace()
         }
     }
+
+    fun showUpdateDialog(context: Context, updateInfo: UpdateInfo) {
+        val builder = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+        builder.setTitle(context.getString(R.string.string_242)) // Update Available
+        builder.setMessage(context.getString(R.string.string_243, updateInfo.versionName) + "\n\n" + updateInfo.releaseNotes)
+        builder.setPositiveButton(context.getString(R.string.string_244)) { dialog, _ -> // Download
+            downloadAndInstall(context, updateInfo)
+            dialog.dismiss()
+        }
+        builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
 }

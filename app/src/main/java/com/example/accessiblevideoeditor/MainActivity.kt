@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         val info = AppUpdater.checkForUpdate(this@MainActivity)
         if (info != null) {
             AppUpdater.showUpdateNotification(this@MainActivity, info)
+            AppUpdater.showUpdateDialog(this@MainActivity, info)
         }
     }
   }

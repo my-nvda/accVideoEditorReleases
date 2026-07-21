@@ -105,8 +105,7 @@ class SettingsFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
                 val info = com.example.accessiblevideoeditor.updater.AppUpdater.checkForUpdate(requireContext())
                 if (info != null) {
-                    com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(requireContext(), info)
-                    android.widget.Toast.makeText(requireContext(), "Update available!", android.widget.Toast.LENGTH_SHORT).show()
+                    com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateDialog(requireContext(), info)
                 } else {
                     android.widget.Toast.makeText(requireContext(), "App is up to date", android.widget.Toast.LENGTH_SHORT).show()
                 }
