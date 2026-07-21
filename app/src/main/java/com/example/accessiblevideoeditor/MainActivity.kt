@@ -126,6 +126,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun setupProcessingOverlay() {
       val overlay = findViewById<View>(R.id.progressOverlay)
+      val navHost = findViewById<View>(R.id.nav_host_fragment)
       val tvTitle = findViewById<TextView>(R.id.tvProgressTitle)
       val tvStatus = findViewById<TextView>(R.id.tvProgressStatus)
       val progressBar = findViewById<ProgressBar>(R.id.progressBar)
@@ -139,6 +140,10 @@ class MainActivity : AppCompatActivity() {
           ProcessingManager.state.collectLatest { state ->
               if (state.isProcessing) {
                   overlay.visibility = View.VISIBLE
+                  // Block screen reader from reaching content behind overlay
+                  navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                  overlay.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+
                   tvTitle.text = state.statusMessage
                   
                   if (state.progress > 0f) {
@@ -156,8 +161,14 @@ class MainActivity : AppCompatActivity() {
                   }
 
                   btnCancel.visibility = if (state.isCancellable) View.VISIBLE else View.GONE
+
+                  // Send accessibility focus to the overlay title
+                  tvTitle.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                  tvTitle.requestFocus()
               } else {
                   overlay.visibility = View.GONE
+                  // Restore screen reader access to content behind overlay
+                  navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
               }
           }
       }
