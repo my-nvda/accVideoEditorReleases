@@ -290,4 +290,10 @@
     <string name="string_rec_paused_status">تم إيقاف التسجيل مؤقتاً: %1$s</string>
     <string name="string_privacy_policy">سياسة الخصوصية</string>
     <string name="string_translation_progress">نسبة اكتمال الترجمة: %1$d%%</string>
+    <string name="string_silence_threshold_hint">عتبة الصمت (مثال: -30)</string>
+    <string name="string_min_silence_duration_hint">الحد الأدنى لمدّة الصمت (مثال: 0.5)</string>
+    <string name="string_format_m4a">M4A</string>
+    <string name="string_format_wav">WAV</string>
+    <string name="string_format_mp3">MP3</string>
+    <string name="string_default_duration">3</string>
 </resources>

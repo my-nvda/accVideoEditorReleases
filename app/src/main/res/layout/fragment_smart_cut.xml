@@ -34,27 +34,29 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:hint="@string/string_silence_threshold_hint">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSilenceThreshold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberSigned"
                     android:text="-30"
-                    android:hint="Silence Threshold (e.g. -30)" />
+                    android:hint="@string/string_silence_threshold_hint" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:hint="@string/string_min_silence_duration_hint">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etMinSilenceDuration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:text="0.5"
-                    android:hint="Min Silence Duration (e.g. 0.5)" />
+                    android:hint="@string/string_min_silence_duration_hint" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

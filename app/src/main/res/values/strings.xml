@@ -293,4 +293,10 @@ customization, smart cutting, and more.</string>
     <string name="string_rn_v2_4_5">v2.4.5\n- Unified progress windows across all screens for a consistent experience.\n- Fixed crashes when merging videos.\n- Enhanced AI Video Analysis by sending the complete video file directly.\n- Achieved 100% translation coverage for 11 languages.</string>
     <string name="string_privacy_policy">Privacy Policy</string>
     <string name="string_translation_progress">Translation progress: %1$d%%</string>
+    <string name="string_silence_threshold_hint">Silence Threshold (e.g. -30)</string>
+    <string name="string_min_silence_duration_hint">Min Silence Duration (e.g. 0.5)</string>
+    <string name="string_format_m4a">M4A</string>
+    <string name="string_format_wav">WAV</string>
+    <string name="string_format_mp3">MP3</string>
+    <string name="string_default_duration">3</string>
 </resources>

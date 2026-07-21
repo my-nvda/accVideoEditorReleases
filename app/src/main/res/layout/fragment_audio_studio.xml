@@ -105,18 +105,18 @@
                                     android:id="@+id/rbM4A"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="M4A"
+                                    android:text="@string/string_format_m4a"
                                     android:checked="true" />
                                 <RadioButton
                                     android:id="@+id/rbWAV"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="WAV" />
+                                    android:text="@string/string_format_wav" />
                                 <RadioButton
                                     android:id="@+id/rbMP3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="MP3" />
+                                    android:text="@string/string_format_mp3" />
                             </RadioGroup>
                         </LinearLayout>
 

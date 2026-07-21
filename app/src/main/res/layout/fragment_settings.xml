@@ -97,6 +97,7 @@
                     android:id="@+id/actGeminiModel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/string_198"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -131,6 +132,7 @@
                     android:id="@+id/actLanguage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/string_17"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
