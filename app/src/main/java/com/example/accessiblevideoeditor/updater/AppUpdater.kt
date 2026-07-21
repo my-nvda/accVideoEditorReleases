@@ -9,9 +9,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.FileProvider
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.accessiblevideoeditor.BuildConfig
 import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.MainActivity
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -207,12 +210,68 @@ object AppUpdater {
         builder.setTitle(context.getString(R.string.string_242)) // Update Available
         builder.setMessage(context.getString(R.string.string_243, updateInfo.versionName) + "\n\n" + updateInfo.releaseNotes)
         builder.setPositiveButton(context.getString(R.string.string_244)) { dialog, _ -> // Download
-            downloadAndInstall(context, updateInfo)
             dialog.dismiss()
+            startDownloadWithProgress(context, updateInfo)
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
             dialog.dismiss()
         }
         builder.show()
+    }
+
+    private fun startDownloadWithProgress(context: Context, updateInfo: UpdateInfo) {
+        val downloadId = downloadAndInstall(context, updateInfo)
+
+        val padding = (16 * context.resources.displayMetrics.density).toInt()
+        val container = android.widget.LinearLayout(context).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(padding, padding, padding, padding)
+        }
+
+        val messageView = android.widget.TextView(context).apply {
+            text = context.getString(R.string.string_214, 0) // Completed: 0%
+            setPadding(0, 0, 0, padding / 2)
+            textSize = 16f
+        }
+
+        val progressBar = android.widget.ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 100
+            progress = 0
+            isIndeterminate = false
+        }
+
+        container.addView(messageView)
+        container.addView(progressBar)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+            .setTitle(context.getString(R.string.string_213)) // Downloading update
+            .setView(container)
+            .setNegativeButton(context.getString(R.string.string_218)) { d, _ -> // Cancel download
+                val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                downloadManager.remove(downloadId)
+                d.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+
+        dialog.show()
+
+        val lifecycleOwner = context as? androidx.lifecycle.LifecycleOwner
+            ?: (context as? android.content.ContextWrapper)?.baseContext as? androidx.lifecycle.LifecycleOwner
+
+        if (lifecycleOwner != null) {
+            lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                observeDownload(context, downloadId).collect { progress ->
+                    if (progress.totalBytes > 0) {
+                        val percent = ((progress.bytesDownloaded.toFloat() / progress.totalBytes.toFloat()) * 100).toInt()
+                        progressBar.progress = percent
+                        messageView.text = context.getString(R.string.string_214, percent)
+                    }
+                    if (progress.status == DownloadManager.STATUS_SUCCESSFUL || progress.status == DownloadManager.STATUS_FAILED) {
+                        dialog.dismiss()
+                    }
+                }
+            }
+        }
     }
 }

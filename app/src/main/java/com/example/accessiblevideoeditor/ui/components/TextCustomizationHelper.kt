@@ -19,7 +19,13 @@ class TextCustomizationHelper(
     private val binding: LayoutTextCustomizationPanelBinding,
     private val onOptionsChanged: (TextRenderer.TextOptions) -> Unit
 ) {
-    private var currentOptions = TextRenderer.TextOptions(text = "")
+    private var currentOptions = TextRenderer.TextOptions(
+        text = "",
+        textSizeSp = binding.slTextSize.value,
+        shadowRadius = binding.slShadowRadius.value,
+        shadowDx = binding.slShadowDx.value,
+        shadowDy = binding.slShadowDy.value
+    )
 
     private val colors = listOf(
         Pair(Color.WHITE, "White"),
@@ -70,6 +76,43 @@ class TextCustomizationHelper(
             currentOptions = currentOptions.copy(textSizeSp = value)
             notifyChange()
         }
+
+        binding.slShadowRadius.addOnChangeListener { slider: Slider, value: Float, fromUser: Boolean ->
+            currentOptions = currentOptions.copy(shadowRadius = value)
+            notifyChange()
+        }
+
+        binding.slShadowDx.addOnChangeListener { slider: Slider, value: Float, fromUser: Boolean ->
+            currentOptions = currentOptions.copy(shadowDx = value)
+            notifyChange()
+        }
+
+        binding.slShadowDy.addOnChangeListener { slider: Slider, value: Float, fromUser: Boolean ->
+            currentOptions = currentOptions.copy(shadowDy = value)
+            notifyChange()
+        }
+
+        binding.rgPosition.setOnCheckedChangeListener { _, checkedId ->
+            val position = when (checkedId) {
+                R.id.rbPosTop -> TextRenderer.TextPosition.TOP
+                R.id.rbPosCenter -> TextRenderer.TextPosition.CENTER
+                R.id.rbPosBottom -> TextRenderer.TextPosition.BOTTOM
+                else -> TextRenderer.TextPosition.BOTTOM
+            }
+            currentOptions = currentOptions.copy(position = position)
+            notifyChange()
+        }
+
+        binding.rgAlignment.setOnCheckedChangeListener { _, checkedId ->
+            val alignment = when (checkedId) {
+                R.id.rbAlignLeft -> TextRenderer.TextAlignment.LEFT
+                R.id.rbAlignCenter -> TextRenderer.TextAlignment.CENTER
+                R.id.rbAlignRight -> TextRenderer.TextAlignment.RIGHT
+                else -> TextRenderer.TextAlignment.CENTER
+            }
+            currentOptions = currentOptions.copy(alignment = alignment)
+            notifyChange()
+        }
     }
 
     private fun setupSpinners() {
@@ -96,6 +139,18 @@ class TextCustomizationHelper(
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         binding.spBgColor.setSelection(0)
+
+        // Shadow Color
+        val shadowColorAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, colors.map { it.second })
+        binding.spShadowColor.adapter = shadowColorAdapter
+        binding.spShadowColor.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                currentOptions = currentOptions.copy(shadowColor = colors[position].first)
+                notifyChange()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        binding.spShadowColor.setSelection(1) // Default to Black
 
         // Font Family
         val fontAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, fonts.map { it.second })
