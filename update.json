@@ -1,6 +1,6 @@
 {
-    "releaseNotes": "تحديث v1.2: إصلاح ترجمات شاشة المشاركة، وتنظيف التخزين المؤقت تلقائياً، وإضافة ميزة إنشاء صورة فارغة.",
-    "versionCode": 3,
-    "versionName": "1.2",
-    "downloadUrl": "https://github.com/my-nvda/AccessibleVideoEditor/releases/download/v1.2/AccessibleVideoEditor-Release.apk"
+    "releaseNotes": "تحديث الإصدار 2.4.16:\n- إصلاح مشكلة التركيز (Focus) لقارئ الشاشة عند الدخول لأي شاشة جديدة.\n- استعادة ميزات تعديل النصوص (الظل، الألوان، أحجام الخط) في شاشات تعديل الفيديو والصور.\n- تعريب كافة الشاشات المتبقية وإصلاح مشاكل النصوص الثابتة.",
+    "versionCode": 19,
+    "versionName": "2.4.16",
+    "downloadUrl": "https://github.com/my-nvda/AccessibleVideoEditor/releases/download/v2.4.16/app-release.apk"
 }

@@ -1,24 +1,21 @@
 package com.example.accessiblevideoeditor
 
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import com.example.accessiblevideoeditor.theme.AccessibleVideoEditorTheme
-import com.example.accessiblevideoeditor.ui.MainNavigation
+import androidx.lifecycle.lifecycleScope
 import com.example.accessiblevideoeditor.media.SoundManager
-import com.example.accessiblevideoeditor.ui.GlobalProgressDialog
-import androidx.compose.runtime.*
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import kotlinx.coroutines.launch
+import com.example.accessiblevideoeditor.ui.ProcessingManager
 import com.example.accessiblevideoeditor.updater.AppUpdater
-
+import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
+import com.example.accessiblevideoeditor.ui.AccessibilityUtils
 
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,9 +23,9 @@ class MainActivity : AppCompatActivity() {
     
     // Initialize Managers
     com.example.accessiblevideoeditor.ui.SettingsManager.init(this)
-    com.example.accessiblevideoeditor.media.SoundManager.init(this)
-    com.example.accessiblevideoeditor.media.SoundManager.playStartup()
-    com.example.accessiblevideoeditor.ui.ProcessingManager.init(this)
+    SoundManager.init(this)
+    SoundManager.playStartup()
+    ProcessingManager.init(this)
     com.example.accessiblevideoeditor.ui.AppStrings.loadCustomStrings(this)
 
     // Disable screen sleep
@@ -51,26 +48,67 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Extract Shared Uris
-    val sharedUris = mutableListOf<android.net.Uri>()
-    if (intent?.action == android.content.Intent.ACTION_SEND) {
-        (intent.getParcelableExtra<android.os.Parcelable>(android.content.Intent.EXTRA_STREAM) as? android.net.Uri)?.let { sharedUris.add(it) }
-    } else if (intent?.action == android.content.Intent.ACTION_SEND_MULTIPLE) {
-        intent.getParcelableArrayListExtra<android.os.Parcelable>(android.content.Intent.EXTRA_STREAM)?.forEach {
-            if (it is android.net.Uri) sharedUris.add(it)
+    enableEdgeToEdge()
+    setContentView(R.layout.activity_main)
+
+    setupProcessingOverlay()
+    
+        // Register global fragment lifecycle callbacks for accessibility focus
+        supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
+                super.onFragmentResumed(fm, f)
+                f.view?.let {
+                    AccessibilityUtils.announceScreenChanged(it)
+                }
+            }
+        }, true)
+    
+    // Launch update checker
+    lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
+        val info = AppUpdater.checkForUpdate(this@MainActivity)
+        if (info != null) {
+            AppUpdater.showUpdateNotification(this@MainActivity, info)
         }
     }
+  }
 
-    enableEdgeToEdge()
-    setContent {
-      val isDarkTheme = com.example.accessiblevideoeditor.ui.SettingsManager.isDarkModeState.value
-      AccessibleVideoEditorTheme(darkTheme = isDarkTheme) { 
-          Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) { 
-              MainNavigation(sharedUris = sharedUris) 
-              GlobalProgressDialog()
-          } 
+  private fun setupProcessingOverlay() {
+      val overlay = findViewById<View>(R.id.progressOverlay)
+      val tvTitle = findViewById<TextView>(R.id.tvProgressTitle)
+      val tvStatus = findViewById<TextView>(R.id.tvProgressStatus)
+      val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+      val btnCancel = findViewById<MaterialButton>(R.id.btnCancelProcess)
+
+      btnCancel.setOnClickListener {
+          ProcessingManager.cancelCurrentProcess(this)
       }
-    }
+
+      lifecycleScope.launch {
+          ProcessingManager.state.collectLatest { state ->
+              if (state.isProcessing) {
+                  overlay.visibility = View.VISIBLE
+                  tvTitle.text = state.statusMessage
+                  
+                  if (state.progress > 0f) {
+                      progressBar.isIndeterminate = false
+                      progressBar.progress = (state.progress * 100).toInt()
+                      val statusText = if (state.etaMessage.isNotEmpty()) {
+                          "${(state.progress * 100).toInt()}% - ${state.etaMessage}"
+                      } else {
+                          "${(state.progress * 100).toInt()}%"
+                      }
+                      tvStatus.text = statusText
+                  } else {
+                      progressBar.isIndeterminate = true
+                      tvStatus.text = getString(R.string.string_142)
+                  }
+
+                  btnCancel.visibility = if (state.isCancellable) View.VISIBLE else View.GONE
+              } else {
+                  overlay.visibility = View.GONE
+              }
+          }
+      }
   }
 
   override fun onDestroy() {

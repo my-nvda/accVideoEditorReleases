@@ -18,100 +18,101 @@ object SettingsManager {
     private lateinit var prefs: SharedPreferences
 
     // Observable states for Compose
-    var isStartupSoundEnabledState = androidx.compose.runtime.mutableStateOf(true)
+    var isStartupSoundEnabledState = true
         private set
-    var isProcessingSoundEnabledState = androidx.compose.runtime.mutableStateOf(true)
+    var isProcessingSoundEnabledState = true
         private set
-    var isSuccessSoundEnabledState = androidx.compose.runtime.mutableStateOf(true)
+    var isSuccessSoundEnabledState = true
         private set
-    var isErrorSoundEnabledState = androidx.compose.runtime.mutableStateOf(true)
+    var isErrorSoundEnabledState = true
         private set
         
-    var isDarkModeState = androidx.compose.runtime.mutableStateOf(true)
+    var isDarkModeState = true
         private set
 
-    var witAiTokenState = androidx.compose.runtime.mutableStateOf("")
+    var witAiTokenState = ""
         private set
-    var openAiKeyState = androidx.compose.runtime.mutableStateOf("")
+    var openAiKeyState = ""
         private set
-    var geminiApiKeyState = androidx.compose.runtime.mutableStateOf("")
+    var geminiApiKeyState = ""
         private set
-    var geminiModelState = androidx.compose.runtime.mutableStateOf("gemini-2.5-flash")
+    var geminiModelState = "gemini-2.5-flash"
         private set
 
     fun init(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        isStartupSoundEnabledState.value = prefs.getBoolean(KEY_SOUND_STARTUP, true)
-        isProcessingSoundEnabledState.value = prefs.getBoolean(KEY_SOUND_PROCESSING, true)
-        isSuccessSoundEnabledState.value = prefs.getBoolean(KEY_SOUND_SUCCESS, true)
-        isErrorSoundEnabledState.value = prefs.getBoolean(KEY_SOUND_ERROR, true)
-        isDarkModeState.value = prefs.getBoolean(KEY_DARK_MODE, true)
-        witAiTokenState.value = prefs.getString(KEY_WIT_AI_TOKEN, "") ?: ""
-        openAiKeyState.value = prefs.getString(KEY_OPENAI_KEY, "") ?: ""
-        geminiApiKeyState.value = prefs.getString(KEY_GEMINI_API_KEY, "") ?: ""
-        geminiModelState.value = prefs.getString(KEY_GEMINI_MODEL, "gemini-2.5-flash") ?: "gemini-2.5-flash"
+        isStartupSoundEnabledState = prefs.getBoolean(KEY_SOUND_STARTUP, true)
+        isProcessingSoundEnabledState = prefs.getBoolean(KEY_SOUND_PROCESSING, true)
+        isSuccessSoundEnabledState = prefs.getBoolean(KEY_SOUND_SUCCESS, true)
+        isErrorSoundEnabledState = prefs.getBoolean(KEY_SOUND_ERROR, true)
+        isDarkModeState = prefs.getBoolean(KEY_DARK_MODE, true)
+        witAiTokenState = prefs.getString(KEY_WIT_AI_TOKEN, "") ?: ""
+        openAiKeyState = prefs.getString(KEY_OPENAI_KEY, "") ?: ""
+        geminiApiKeyState = prefs.getString(KEY_GEMINI_API_KEY, "") ?: ""
+        geminiModelState = prefs.getString(KEY_GEMINI_MODEL, "gemini-2.5-flash") ?: "gemini-2.5-flash"
     }
 
     var isStartupSoundEnabled: Boolean
-        get() = isStartupSoundEnabledState.value
+        get() = isStartupSoundEnabledState
         set(value) {
             prefs.edit().putBoolean(KEY_SOUND_STARTUP, value).apply()
-            isStartupSoundEnabledState.value = value
+            isStartupSoundEnabledState = value
         }
 
     var isProcessingSoundEnabled: Boolean
-        get() = isProcessingSoundEnabledState.value
+        get() = isProcessingSoundEnabledState
         set(value) {
             prefs.edit().putBoolean(KEY_SOUND_PROCESSING, value).apply()
-            isProcessingSoundEnabledState.value = value
+            isProcessingSoundEnabledState = value
         }
 
     var isSuccessSoundEnabled: Boolean
-        get() = isSuccessSoundEnabledState.value
+        get() = isSuccessSoundEnabledState
         set(value) {
             prefs.edit().putBoolean(KEY_SOUND_SUCCESS, value).apply()
-            isSuccessSoundEnabledState.value = value
+            isSuccessSoundEnabledState = value
         }
 
     var isErrorSoundEnabled: Boolean
-        get() = isErrorSoundEnabledState.value
+        get() = isErrorSoundEnabledState
         set(value) {
             prefs.edit().putBoolean(KEY_SOUND_ERROR, value).apply()
-            isErrorSoundEnabledState.value = value
+            isErrorSoundEnabledState = value
         }
 
     var isDarkMode: Boolean
-        get() = isDarkModeState.value
+        get() = isDarkModeState
         set(value) {
             prefs.edit().putBoolean(KEY_DARK_MODE, value).apply()
-            isDarkModeState.value = value
+            isDarkModeState = value
         }
 
     var witAiToken: String
-        get() = witAiTokenState.value
+        get() = witAiTokenState
         set(value) {
             prefs.edit().putString(KEY_WIT_AI_TOKEN, value).apply()
-            witAiTokenState.value = value
+            witAiTokenState = value
         }
 
     var openAiKey: String
-        get() = openAiKeyState.value
+        get() = openAiKeyState
         set(value) {
             prefs.edit().putString(KEY_OPENAI_KEY, value).apply()
-            openAiKeyState.value = value
+            openAiKeyState = value
         }
 
     var geminiApiKey: String
-        get() = geminiApiKeyState.value
+        get() = geminiApiKeyState
         set(value) {
             prefs.edit().putString(KEY_GEMINI_API_KEY, value).apply()
-            geminiApiKeyState.value = value
+            geminiApiKeyState = value
         }
 
     var geminiModel: String
-        get() = geminiModelState.value
+        get() = geminiModelState
         set(value) {
             prefs.edit().putString(KEY_GEMINI_MODEL, value).apply()
-            geminiModelState.value = value
+            geminiModelState = value
         }
 }
+

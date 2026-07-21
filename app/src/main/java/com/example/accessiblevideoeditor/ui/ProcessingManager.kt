@@ -1,15 +1,23 @@
 package com.example.accessiblevideoeditor.ui
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.setValue
-import com.arthenica.ffmpegkit.FFmpegKit
-import kotlinx.coroutines.Job
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import com.arthenica.ffmpegkit.FFmpegKit
 import com.example.accessiblevideoeditor.R
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+data class ProcessingState(
+    val isProcessing: Boolean = false,
+    val progress: Float = 0f,
+    val statusMessage: String = "",
+    val etaMessage: String = "",
+    val isCancellable: Boolean = false,
+    val errorLog: String? = null
+)
 
 object ProcessingManager {
     var appContext: Context? = null
@@ -19,29 +27,17 @@ object ProcessingManager {
         appContext = context.applicationContext
     }
 
-    var isProcessing by mutableStateOf(false)
-        private set
+    private val _state = MutableStateFlow(ProcessingState())
+    val state: StateFlow<ProcessingState> = _state.asStateFlow()
 
-    var progress by mutableFloatStateOf(0f)
-        private set
+    // For backwards compatibility and internal logic
+    val isProcessing: Boolean get() = _state.value.isProcessing
+    val progress: Float get() = _state.value.progress
 
-    var statusMessage by mutableStateOf("")
-        private set
+    private var currentSessionId: Long? = null
+    private var currentJob: Job? = null
 
-    var etaMessage by mutableStateOf("")
-        private set
-
-    var currentSessionId by mutableStateOf<Long?>(null)
-        private set
-
-    var currentJob by mutableStateOf<Job?>(null)
-        private set
-
-    var isCancellable by mutableStateOf(false)
-        private set
-
-    var errorLog by mutableStateOf<String?>(null)
-        private set
+    var lastClickedHomeScreenButton: String? = null
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -55,23 +51,25 @@ object ProcessingManager {
 
     fun showError(log: String) {
         runOnMain {
-            errorLog = log
+            _state.value = _state.value.copy(errorLog = log)
         }
     }
 
     fun dismissError() {
         runOnMain {
-            errorLog = null
+            _state.value = _state.value.copy(errorLog = null)
         }
     }
 
     fun startProcessing(message: String, cancellable: Boolean = false, sessionId: Long? = null, job: Job? = null) {
         runOnMain {
-            isProcessing = true
-            progress = 0f
-            statusMessage = message
-            etaMessage = ""
-            isCancellable = cancellable
+            _state.value = _state.value.copy(
+                isProcessing = true,
+                progress = 0f,
+                statusMessage = message,
+                etaMessage = "",
+                isCancellable = cancellable
+            )
             currentSessionId = sessionId
             currentJob = job
         }
@@ -81,10 +79,10 @@ object ProcessingManager {
 
     fun updateProgress(newProgress: Float, newEta: String = "") {
         runOnMain {
-            progress = newProgress
-            if (newEta.isNotBlank()) {
-                etaMessage = newEta
-            }
+            _state.value = _state.value.copy(
+                progress = newProgress,
+                etaMessage = if (newEta.isNotBlank()) newEta else _state.value.etaMessage
+            )
             
             val currentMs = System.currentTimeMillis()
             if (currentMs - lastSoundPlayTime > 1500) { // play beep every 1.5 seconds
@@ -96,19 +94,21 @@ object ProcessingManager {
 
     fun updateStatus(message: String) {
         runOnMain {
-            statusMessage = message
+            _state.value = _state.value.copy(statusMessage = message)
         }
     }
 
     fun stopProcessing() {
         runOnMain {
-            isProcessing = false
-            progress = 0f
-            statusMessage = ""
-            etaMessage = ""
+            _state.value = _state.value.copy(
+                isProcessing = false,
+                progress = 0f,
+                statusMessage = "",
+                etaMessage = "",
+                isCancellable = false
+            )
             currentSessionId = null
             currentJob = null
-            isCancellable = false
             
             // Cleanup cache files starting with temp_
             appContext?.let { ctx ->
@@ -146,7 +146,7 @@ object ProcessingManager {
     }
 
     fun cancelCurrentProcess(context: Context? = null) {
-        if (isCancellable) {
+        if (_state.value.isCancellable) {
             if (currentSessionId != null) {
                 FFmpegKit.cancel(currentSessionId!!)
             }
@@ -154,7 +154,7 @@ object ProcessingManager {
                 currentJob?.cancel()
             }
             runOnMain {
-                statusMessage = context?.getString(R.string.string_83) ?: "Cancelled"
+                _state.value = _state.value.copy(statusMessage = context?.getString(R.string.string_83) ?: "Cancelled")
                 stopProcessing()
             }
         } else {

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_videoEditorFragment"
+            app:destination="@id/videoEditorFragment" />
+            <action
+            android:id="@+id/action_homeFragment_to_videoTrimmerFragment"
+            app:destination="@id/videoTrimmerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_smartCutFragment"
+            app:destination="@id/smartCutFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mergeVideosFragment"
+            app:destination="@id/mergeVideosFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_reverseMediaFragment"
+            app:destination="@id/reverseMediaFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_audioEditorFragment"
+            app:destination="@id/audioEditorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_audioStudioFragment"
+            app:destination="@id/audioStudioFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_extractAudioFragment"
+            app:destination="@id/extractAudioFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_boostVolumeFragment"
+            app:destination="@id/boostVolumeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_compressVideoFragment"
+            app:destination="@id/compressVideoFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_imageEditorFragment"
+            app:destination="@id/imageEditorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_watermarkFragment"
+            app:destination="@id/watermarkFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_createBlankImageFragment"
+            app:destination="@id/createBlankImageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_slideshowMakerFragment"
+            app:destination="@id/slideshowMakerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_tickerTextFragment"
+            app:destination="@id/tickerTextFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aiAnalysisFragment"
+            app:destination="@id/aiAnalysisFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_sttFragment"
+            app:destination="@id/sttFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ocrFragment"
+            app:destination="@id/ocrFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_batchProcessFragment"
+            app:destination="@id/batchProcessFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_fastConverterFragment"
+            app:destination="@id/fastConverterFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_volunteerTranslationFragment"
+            app:destination="@id/volunteerTranslationFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/videoEditorFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.VideoEditorFragment"
+        android:label="VideoEditorFragment"
+        tools:layout="@layout/fragment_video_editor" />
+    <fragment
+        android:id="@+id/videoTrimmerFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.VideoTrimmerFragment"
+        android:label="VideoTrimmerFragment"
+        tools:layout="@layout/fragment_video_trimmer" />
+    <fragment
+        android:id="@+id/smartCutFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.SmartCutFragment"
+        android:label="SmartCutFragment"
+        tools:layout="@layout/fragment_smart_cut" />
+    <fragment
+        android:id="@+id/mergeVideosFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.MergeVideosFragment"
+        android:label="MergeVideosFragment"
+        tools:layout="@layout/fragment_merge_videos" />
+    <fragment
+        android:id="@+id/reverseMediaFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.ReverseMediaFragment"
+        android:label="ReverseMediaFragment"
+        tools:layout="@layout/fragment_reverse_media" />
+    <fragment
+        android:id="@+id/audioEditorFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AudioEditorFragment"
+        android:label="AudioEditorFragment"
+        tools:layout="@layout/fragment_audio_editor" />
+    <fragment
+        android:id="@+id/audioStudioFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AudioStudioFragment"
+        android:label="AudioStudioFragment"
+        tools:layout="@layout/fragment_audio_studio" />
+    <fragment
+        android:id="@+id/extractAudioFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.ExtractAudioFragment"
+        android:label="ExtractAudioFragment"
+        tools:layout="@layout/fragment_extract_audio" />
+    <fragment
+        android:id="@+id/boostVolumeFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.BoostVolumeFragment"
+        android:label="BoostVolumeFragment"
+        tools:layout="@layout/fragment_boost_volume" />
+    <fragment
+        android:id="@+id/compressVideoFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.CompressVideoFragment"
+        android:label="CompressVideoFragment"
+        tools:layout="@layout/fragment_compress_video" />
+    <fragment
+        android:id="@+id/imageEditorFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.ImageEditorFragment"
+        android:label="ImageEditorFragment"
+        tools:layout="@layout/fragment_image_editor" />
+    <fragment
+        android:id="@+id/watermarkFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.WatermarkFragment"
+        android:label="WatermarkFragment"
+        tools:layout="@layout/fragment_watermark" />
+    <fragment
+        android:id="@+id/createBlankImageFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.CreateBlankImageFragment"
+        android:label="CreateBlankImageFragment"
+        tools:layout="@layout/fragment_create_blank_image" />
+    <fragment
+        android:id="@+id/slideshowMakerFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.SlideshowMakerFragment"
+        android:label="SlideshowMakerFragment"
+        tools:layout="@layout/fragment_slideshow_maker" />
+    <fragment
+        android:id="@+id/tickerTextFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.TickerTextFragment"
+        android:label="TickerTextFragment"
+        tools:layout="@layout/fragment_ticker_text" />
+    <fragment
+        android:id="@+id/aiAnalysisFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AiAnalysisFragment"
+        android:label="AiAnalysisFragment"
+        tools:layout="@layout/fragment_ai_analysis" />
+    <fragment
+        android:id="@+id/sttFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.SpeechToTextFragment"
+        android:label="SpeechToTextFragment"
+        tools:layout="@layout/fragment_speech_to_text" />
+    <fragment
+        android:id="@+id/ocrFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.OcrFragment"
+        android:label="OcrFragment"
+        tools:layout="@layout/fragment_ocr" />
+    <fragment
+        android:id="@+id/batchProcessFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.BatchProcessFragment"
+        android:label="BatchProcessFragment"
+        tools:layout="@layout/fragment_batch_process" />
+    <fragment
+        android:id="@+id/fastConverterFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.FastConverterFragment"
+        android:label="FastConverterFragment"
+        tools:layout="@layout/fragment_fast_converter" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.HistoryFragment"
+        android:label="HistoryFragment"
+        tools:layout="@layout/fragment_history" />
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.HelpFragment"
+        android:label="HelpFragment"
+        tools:layout="@layout/fragment_help" />
+    <fragment
+        android:id="@+id/volunteerTranslationFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.VolunteerTranslationFragment"
+        android:label="VolunteerTranslationFragment"
+        tools:layout="@layout/fragment_volunteer_translation" />
+
+</navigation>
+

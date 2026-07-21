@@ -1,0 +1,66 @@
+        <action
+            android:id="@+id/action_homeFragment_to_videoTrimmerFragment"
+            app:destination="@id/videoTrimmerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_smartCutFragment"
+            app:destination="@id/smartCutFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mergeVideosFragment"
+            app:destination="@id/mergeVideosFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_reverseMediaFragment"
+            app:destination="@id/reverseMediaFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_audioEditorFragment"
+            app:destination="@id/audioEditorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_audioStudioFragment"
+            app:destination="@id/audioStudioFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_extractAudioFragment"
+            app:destination="@id/extractAudioFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_boostVolumeFragment"
+            app:destination="@id/boostVolumeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_compressVideoFragment"
+            app:destination="@id/compressVideoFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_imageEditorFragment"
+            app:destination="@id/imageEditorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_watermarkFragment"
+            app:destination="@id/watermarkFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_createBlankImageFragment"
+            app:destination="@id/createBlankImageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_slideshowMakerFragment"
+            app:destination="@id/slideshowMakerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_tickerTextFragment"
+            app:destination="@id/tickerTextFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aiAnalysisFragment"
+            app:destination="@id/aiAnalysisFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_sttFragment"
+            app:destination="@id/sttFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ocrFragment"
+            app:destination="@id/ocrFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_batchProcessFragment"
+            app:destination="@id/batchProcessFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_fastConverterFragment"
+            app:destination="@id/fastConverterFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_volunteerTranslationFragment"
+            app:destination="@id/volunteerTranslationFragment" />
