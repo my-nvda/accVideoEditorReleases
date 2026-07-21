@@ -1,6 +1,6 @@
 {
-  "versionCode": 26,
-  "versionName": "2.4.23",
+  "versionCode": 27,
+  "versionName": "2.4.24",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.23:\n- إصلاح تصنيفات إمكانية الوصول (Accessibility Labels) لجميع القوائم المنسدلة في شاشات الإعدادات والتحويل السريع.\n- تعريب النصوص الثابتة (Hardcoded) في شاشات القص الذكي واستوديو الصوت وقائمة الإعدادات.\n- إضافة تلميحات (Hints) لجميع حقول الإدخال لتحسين تجربة قارئات الشاشة."
+  "releaseNotes": "تحديث الإصدار 2.4.24:\n- إصلاح مشكلة هروب التركيز من شاشة التحميل عند السحب بقارئ الشاشة. الآن يبقى التركيز محصوراً داخل شاشة التحميل حتى انتهاء العملية."
 }
