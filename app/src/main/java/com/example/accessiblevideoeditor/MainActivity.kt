@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment
 import com.example.accessiblevideoeditor.ui.AccessibilityUtils
 
 class MainActivity : AppCompatActivity() {
+  private val fragmentStack = mutableListOf<String>()
+  private val lastFocusedViewIdMap = mutableMapOf<String, Int>()
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
@@ -55,10 +58,51 @@ class MainActivity : AppCompatActivity() {
     
         // Register global fragment lifecycle callbacks for accessibility focus
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {
+                super.onFragmentPaused(fm, f)
+                val fragmentName = f.javaClass.simpleName
+                f.view?.let { fragmentView ->
+                    val focusedView = AccessibilityUtils.findAccessibilityFocusedView(fragmentView)
+                    if (focusedView != null && focusedView.id != View.NO_ID) {
+                        lastFocusedViewIdMap[fragmentName] = focusedView.id
+                    }
+                }
+            }
+
             override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
                 super.onFragmentResumed(fm, f)
-                f.view?.let {
-                    AccessibilityUtils.announceScreenChanged(it)
+                val fragmentName = f.javaClass.simpleName
+                f.view?.let { fragmentView ->
+                    val isBackward = fragmentStack.size > 1 && fragmentStack[fragmentStack.size - 2] == fragmentName
+                    
+                    if (isBackward) {
+                        // Pop the stack
+                        fragmentStack.removeAt(fragmentStack.size - 1)
+                        
+                        // Try to restore focus to the item clicked before navigating
+                        val savedId = lastFocusedViewIdMap[fragmentName]
+                        if (savedId != null && savedId != View.NO_ID) {
+                            val targetView = fragmentView.findViewById<View>(savedId)
+                            if (targetView != null) {
+                                AccessibilityUtils.focusView(targetView)
+                                return@let
+                            }
+                        }
+                    } else {
+                        // Forward navigation: track it in stack
+                        if (!fragmentStack.contains(fragmentName)) {
+                            fragmentStack.add(fragmentName)
+                        } else {
+                            // Clean up forward trace if it somehow re-entered
+                            val idx = fragmentStack.indexOf(fragmentName)
+                            while (fragmentStack.size > idx + 1) {
+                                fragmentStack.removeAt(fragmentStack.size - 1)
+                            }
+                        }
+                    }
+                    
+                    // Fallback to top toolbar focus
+                    AccessibilityUtils.announceScreenChanged(fragmentView)
                 }
             }
         }, true)

@@ -41,6 +41,31 @@ object AccessibilityUtils {
         }, 500)
     }
 
+    fun focusView(targetView: View) {
+        targetView.postDelayed({
+            targetView.isFocusable = true
+            targetView.isFocusableInTouchMode = true
+            targetView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+
+            targetView.requestFocus()
+            ViewCompat.performAccessibilityAction(targetView, AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS, null)
+            targetView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+        }, 300)
+    }
+
+    fun findAccessibilityFocusedView(view: View): View? {
+        if (view.isAccessibilityFocused) {
+            return view
+        }
+        if (view is ViewGroup) {
+            for (i in 0 until view.childCount) {
+                val focused = findAccessibilityFocusedView(view.getChildAt(i))
+                if (focused != null) return focused
+            }
+        }
+        return null
+    }
+
     private fun findToolbar(view: View): MaterialToolbar? {
         if (view is MaterialToolbar) {
             return view
