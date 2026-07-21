@@ -28,29 +28,29 @@ class TextCustomizationHelper(
     )
 
     private val colors = listOf(
-        Pair(Color.WHITE, "White"),
-        Pair(Color.BLACK, "Black"),
-        Pair(Color.RED, "Red"),
-        Pair(Color.GREEN, "Green"),
-        Pair(Color.BLUE, "Blue"),
-        Pair(Color.YELLOW, "Yellow"),
-        Pair(Color.MAGENTA, "Magenta"),
-        Pair(Color.CYAN, "Cyan")
+        Pair(Color.WHITE, context.getString(R.string.string_color_white)),
+        Pair(Color.BLACK, context.getString(R.string.string_color_black)),
+        Pair(Color.RED, context.getString(R.string.string_color_red)),
+        Pair(Color.GREEN, context.getString(R.string.string_color_green)),
+        Pair(Color.BLUE, context.getString(R.string.string_color_blue)),
+        Pair(Color.YELLOW, context.getString(R.string.string_color_yellow)),
+        Pair(Color.MAGENTA, context.getString(R.string.string_color_magenta)),
+        Pair(Color.CYAN, context.getString(R.string.string_color_cyan))
     )
 
     private val bgColors = colors.map {
         val color = it.first
         val alphaColor = Color.argb(128, Color.red(color), Color.green(color), Color.blue(color))
-        Pair(alphaColor, it.second + " (Transparent)")
+        Pair(alphaColor, it.second + context.getString(R.string.string_color_transparent_suffix))
     }.toMutableList().apply {
-        add(0, Pair(Color.TRANSPARENT, "None"))
+        add(0, Pair(Color.TRANSPARENT, context.getString(R.string.string_color_none)))
     }
 
     private val fonts = listOf(
-        Pair(TextRenderer.TextFontFamily.DEFAULT, "Default"),
-        Pair(TextRenderer.TextFontFamily.SERIF, "Serif"),
-        Pair(TextRenderer.TextFontFamily.SANS_SERIF, "Sans Serif"),
-        Pair(TextRenderer.TextFontFamily.MONOSPACE, "Monospace")
+        Pair(TextRenderer.TextFontFamily.DEFAULT, context.getString(R.string.string_font_default)),
+        Pair(TextRenderer.TextFontFamily.SERIF, context.getString(R.string.string_font_serif)),
+        Pair(TextRenderer.TextFontFamily.SANS_SERIF, context.getString(R.string.string_font_sans_serif)),
+        Pair(TextRenderer.TextFontFamily.MONOSPACE, context.getString(R.string.string_font_monospace))
     )
 
     init {

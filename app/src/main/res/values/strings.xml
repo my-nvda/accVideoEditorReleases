@@ -299,4 +299,22 @@ customization, smart cutting, and more.</string>
     <string name="string_format_wav">WAV</string>
     <string name="string_format_mp3">MP3</string>
     <string name="string_default_duration">3</string>
+    <string name="string_label_text_color">Text Color</string>
+    <string name="string_label_bg_color">Background Color</string>
+    <string name="string_label_shadow_color">Shadow Color</string>
+    <string name="string_label_font_family">Font Family</string>
+    <string name="string_color_white">White</string>
+    <string name="string_color_black">Black</string>
+    <string name="string_color_red">Red</string>
+    <string name="string_color_green">Green</string>
+    <string name="string_color_blue">Blue</string>
+    <string name="string_color_yellow">Yellow</string>
+    <string name="string_color_magenta">Magenta</string>
+    <string name="string_color_cyan">Cyan</string>
+    <string name="string_color_none">None</string>
+    <string name="string_color_transparent_suffix"> (Transparent)</string>
+    <string name="string_font_default">Default</string>
+    <string name="string_font_serif">Serif</string>
+    <string name="string_font_sans_serif">Sans Serif</string>
+    <string name="string_font_monospace">Monospace</string>
 </resources>

@@ -296,4 +296,22 @@
     <string name="string_format_wav">WAV</string>
     <string name="string_format_mp3">MP3</string>
     <string name="string_default_duration">3</string>
+    <string name="string_label_text_color">لون النص</string>
+    <string name="string_label_bg_color">لون الخلفية</string>
+    <string name="string_label_shadow_color">لون الظل</string>
+    <string name="string_label_font_family">نوع الخط</string>
+    <string name="string_color_white">أبيض</string>
+    <string name="string_color_black">أسود</string>
+    <string name="string_color_red">أحمر</string>
+    <string name="string_color_green">أخضر</string>
+    <string name="string_color_blue">أزرق</string>
+    <string name="string_color_yellow">أصفر</string>
+    <string name="string_color_magenta">أرجواني</string>
+    <string name="string_color_cyan">سماوي</string>
+    <string name="string_color_none">بدون</string>
+    <string name="string_color_transparent_suffix"> (شفاف)</string>
+    <string name="string_font_default">الافتراضي</string>
+    <string name="string_font_serif">مذيّل (Serif)</string>
+    <string name="string_font_sans_serif">بدون ذيل (Sans Serif)</string>
+    <string name="string_font_monospace">ثابت العرض (Monospace)</string>
 </resources>

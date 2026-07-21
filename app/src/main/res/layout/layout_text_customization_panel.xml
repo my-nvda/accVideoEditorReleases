@@ -18,23 +18,44 @@
             android:hint="@string/string_104" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/tvLabelTextColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/string_label_text_color"
+        android:labelFor="@id/spTextColor" />
     <Spinner
         android:id="@+id/spTextColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/string_label_text_color" />
 
+    <TextView
+        android:id="@+id/tvLabelBgColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/string_label_bg_color"
+        android:labelFor="@id/spBgColor" />
     <Spinner
         android:id="@+id/spBgColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/string_label_bg_color" />
 
+    <TextView
+        android:id="@+id/tvLabelShadowColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/string_label_shadow_color"
+        android:labelFor="@id/spShadowColor" />
     <Spinner
         android:id="@+id/spShadowColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/string_label_shadow_color" />
         
     <TextView
         android:layout_width="match_parent"
@@ -88,11 +109,18 @@
         android:valueTo="50"
         android:value="5" />
 
+    <TextView
+        android:id="@+id/tvLabelFontFamily"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/string_label_font_family"
+        android:labelFor="@id/spFontFamily" />
     <Spinner
         android:id="@+id/spFontFamily"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/string_label_font_family" />
 
     <TextView
         android:layout_width="match_parent"
