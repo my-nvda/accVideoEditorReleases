@@ -288,4 +288,6 @@
     <string name="string_rec_use_result">استخدام الصوت المسجل في الأستوديو</string>
     <string name="string_rec_recording_status">جاري التسجيل: %1$s</string>
     <string name="string_rec_paused_status">تم إيقاف التسجيل مؤقتاً: %1$s</string>
+    <string name="string_privacy_policy">سياسة الخصوصية</string>
+    <string name="string_translation_progress">نسبة اكتمال الترجمة: %1$d%%</string>
 </resources>

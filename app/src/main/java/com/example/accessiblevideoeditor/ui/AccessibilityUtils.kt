@@ -66,7 +66,7 @@ object AccessibilityUtils {
         return null
     }
 
-    private fun findToolbar(view: View): MaterialToolbar? {
+    fun findToolbar(view: View): MaterialToolbar? {
         if (view is MaterialToolbar) {
             return view
         }

@@ -266,7 +266,7 @@ class VolunteerTranslationFragment : Fragment() {
             if (selectedLangCode == "ar" || selectedLangCode == "en") {
                 withContext(Dispatchers.Main) { 
                     binding.pbCompletion.progress = 100
-                    binding.tvProgressLabel.text = "نسبة اكتمال الترجمة: 100%"
+                    binding.tvProgressLabel.text = AppStrings.get(requireContext(), R.string.string_translation_progress, 100)
                 }
                 return@launch
             }
@@ -293,7 +293,7 @@ class VolunteerTranslationFragment : Fragment() {
             val percent = if (originalStrings.isEmpty()) 0f else (translatedCount.toFloat() / originalStrings.size.toFloat()) * 100
             withContext(Dispatchers.Main) {
                 binding.pbCompletion.progress = percent.toInt()
-                binding.tvProgressLabel.text = "نسبة اكتمال الترجمة: ${percent.toInt()}%"
+                binding.tvProgressLabel.text = AppStrings.get(requireContext(), R.string.string_translation_progress, percent.toInt())
             }
         }
     }

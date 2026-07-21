@@ -167,7 +167,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="8dp"
-                android:text="Volunteer Translation (المساهمة في الترجمة)" />
+                android:text="@string/string_239" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEmail"
@@ -202,7 +202,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="16dp"
-                android:text="Privacy Policy" />
+                android:text="@string/string_privacy_policy" />
 
         </LinearLayout>
     </ScrollView>

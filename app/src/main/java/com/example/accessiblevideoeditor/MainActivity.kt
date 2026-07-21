@@ -73,6 +73,13 @@ class MainActivity : AppCompatActivity() {
                 super.onFragmentResumed(fm, f)
                 val fragmentName = f.javaClass.simpleName
                 f.view?.let { fragmentView ->
+                    // Programmatically set back button description to localized string (string_246)
+                    val toolbar = AccessibilityUtils.findToolbar(fragmentView)
+                    toolbar?.let {
+                        val backDesc = com.example.accessiblevideoeditor.ui.AppStrings.get(this@MainActivity, R.string.string_246)
+                        it.navigationContentDescription = backDesc
+                    }
+
                     val isBackward = fragmentStack.size > 1 && fragmentStack[fragmentStack.size - 2] == fragmentName
                     
                     if (isBackward) {
