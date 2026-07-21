@@ -1,6 +1,6 @@
 {
-  "versionCode": 22,
-  "versionName": "2.4.19",
+  "versionCode": 23,
+  "versionName": "2.4.20",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.19:\n- إصلاح مشكلة التركيز (Focus) لقارئ الشاشة جيشو (Jieshuo/Commentary): تم تمكين قابلية التركيز لشريط العنوان وتعديل إرسال الأحداث المتزامنة لحل مشكلة توقف جيشو عن الانتقال التلقائي."
+  "releaseNotes": "تحديث الإصدار 2.4.20:\n- حل مشكلة حفظ واسترجاع موضع التركيز (Focus Navigation State): الآن عند الضغط على زر والدخول لشاشة ثم العودة منها، سيقوم قارئ الشاشة بالوقوف مجدداً على نفس الزر بدلاً من الانتقال للأعلى."
 }
