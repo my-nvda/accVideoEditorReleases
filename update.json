@@ -1,6 +1,6 @@
 {
-  "versionCode": 14,
-  "versionName": "2.4.11",
+  "versionCode": 15,
+  "versionName": "2.4.12",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث v2.4.11:\n\n- إزالة جميع محاولات التحكم الإجباري في تركيز قارئ الشاشة (Focus) التي تمت إضافتها في التحديثات السابقة، حيث تبين أنها تتعارض بشكل كبير مع Jieshuo وتجعله أسوأ. تم إرجاع التطبيق للحالة الافتراضية للتركيز ليعمل بشكل طبيعي مع نظام الأندرويد."
+  "releaseNotes": "🔥 v2.4.12:\n\n- إزالة تقنية Jetpack Compose بالكامل واستبدالها بنظام XML لضمان التوافق التام مع قارئات الشاشة.\n- حل مشكلة تركيز القارئ (Focus) بشكل جذري حيث يتم التركيز تلقائياً على العنصر الأول في جميع الشاشات عند الفتح.\n- تحسينات عامة في الأداء والتوافق مع Jieshuo و TalkBack."
 }
