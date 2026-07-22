@@ -10,6 +10,8 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
+import java.io.File
+
 data class DynamicFeatureItem(
     val id: String,
     val featureId: String,
@@ -22,6 +24,7 @@ data class DynamicFeatureItem(
 object CloudConfigManager {
 
     private const val CONFIG_URL = "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/cloud_config.json"
+    private const val STRINGS_PATCH_URL = "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/strings_patch.json"
     private const val PREFS_NAME = "CloudConfigPrefs"
     private const val KEY_DISABLED_SET = "disabled_features_set"
     private const val KEY_DOWNLOADED_FEATURES = "downloaded_features_set"
@@ -48,6 +51,31 @@ object CloudConfigManager {
             if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                 val jsonStr = connection.inputStream.bufferedReader().use { it.readText() }
                 val root = JSONObject(jsonStr)
+
+                // Fetch Strings Patch in background
+                try {
+                    val stringsUrl = URL("$STRINGS_PATCH_URL?t=${System.currentTimeMillis()}")
+                    val stringsConn = stringsUrl.openConnection() as HttpURLConnection
+                    stringsConn.useCaches = false
+                    stringsConn.connectTimeout = 4000
+                    stringsConn.readTimeout = 4000
+                    stringsConn.requestMethod = "GET"
+                    if (stringsConn.responseCode == HttpURLConnection.HTTP_OK) {
+                        val stringsJsonStr = stringsConn.inputStream.bufferedReader().use { it.readText() }
+                        val stringsRoot = JSONObject(stringsJsonStr)
+                        if (stringsRoot.has("strings")) {
+                            val stringsObj = stringsRoot.getJSONObject("strings")
+                            val currentLang = LanguageManager.getCurrentLanguageCode()
+                            val file = File(context.filesDir, "custom_lang_$currentLang.json")
+                            file.writeText(stringsObj.toString(), Charsets.UTF_8)
+                            withContext(Dispatchers.Main) {
+                                AppStrings.loadCustomStrings(context)
+                            }
+                        }
+                    }
+                } catch (se: Exception) {
+                    se.printStackTrace()
+                }
 
                 // 1. Process Disabled Features with Fault-Tolerant Regex Fallback
                 val currentDisabled = mutableSetOf<String>()

@@ -27,14 +27,13 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        
-        val context = requireContext()
-        
-        binding.topAppBar.title = "Accessible Video Editor"
-        
-        // Setup Buttons with AppStrings
+    override fun onResume() {
+        super.onResume()
+        checkRemoteCloudConfig()
+    }
+
+    private fun updateButtonTexts() {
+        val context = context ?: return
         binding.btnVideoEditor.text = AppStrings.get(context, R.string.string_112)
         binding.btnImageEditor.text = AppStrings.get(context, R.string.string_128)
         binding.btnWatermark.text = AppStrings.get(context, R.string.string_74)
@@ -61,6 +60,15 @@ class HomeFragment : Fragment() {
         binding.btnAudioNormalization.text = AppStrings.get(context, R.string.btn_audio_normalization)
         binding.btnAiSceneInspector.text = AppStrings.get(context, R.string.btn_ai_scene_inspector)
         binding.btnHistory.text = AppStrings.get(context, R.string.string_116)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        binding.topAppBar.title = "Accessible Video Editor"
+        
+        // Setup Buttons with AppStrings
+        updateButtonTexts()
         
         // Settings menu
         binding.topAppBar.inflateMenu(R.menu.home_menu)
@@ -133,6 +141,9 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+
+            // 1.5 Apply freshly loaded translations from strings_patch.json
+            updateButtonTexts()
 
             // 2. Gentle Notification when a Feature is Re-enabled
             if (result.reEnabledFeatureIds.isNotEmpty()) {
