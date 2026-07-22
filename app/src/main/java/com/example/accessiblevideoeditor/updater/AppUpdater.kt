@@ -45,9 +45,11 @@ object AppUpdater {
             val url = URL("https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/update.json?t=${System.currentTimeMillis()}")
             val connection = url.openConnection() as HttpURLConnection
             connection.useCaches = false
+            connection.instanceFollowRedirects = true
             connection.requestMethod = "GET"
-            connection.connectTimeout = 5000
-            connection.readTimeout = 5000
+            connection.connectTimeout = 8000
+            connection.readTimeout = 8000
+            connection.setRequestProperty("User-Agent", "AccessibleVideoEditorApp")
 
             if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                 val jsonStr = connection.inputStream.bufferedReader().use { it.readText() }

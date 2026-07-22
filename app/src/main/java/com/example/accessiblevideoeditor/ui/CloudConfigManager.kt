@@ -48,9 +48,11 @@ object CloudConfigManager {
             val url = URL("$CONFIG_URL?t=${System.currentTimeMillis()}")
             val connection = url.openConnection() as HttpURLConnection
             connection.useCaches = false
-            connection.connectTimeout = 4000
-            connection.readTimeout = 4000
+            connection.instanceFollowRedirects = true
+            connection.connectTimeout = 8000
+            connection.readTimeout = 8000
             connection.requestMethod = "GET"
+            connection.setRequestProperty("User-Agent", "AccessibleVideoEditorApp")
 
             if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                 val jsonStr = connection.inputStream.bufferedReader().use { it.readText() }
@@ -60,9 +62,11 @@ object CloudConfigManager {
                     val stringsUrl = URL("$STRINGS_PATCH_URL?t=${System.currentTimeMillis()}")
                     val stringsConn = stringsUrl.openConnection() as HttpURLConnection
                     stringsConn.useCaches = false
-                    stringsConn.connectTimeout = 4000
-                    stringsConn.readTimeout = 4000
+                    stringsConn.instanceFollowRedirects = true
+                    stringsConn.connectTimeout = 8000
+                    stringsConn.readTimeout = 8000
                     stringsConn.requestMethod = "GET"
+                    stringsConn.setRequestProperty("User-Agent", "AccessibleVideoEditorApp")
                     if (stringsConn.responseCode == HttpURLConnection.HTTP_OK) {
                         val stringsJsonStr = stringsConn.inputStream.bufferedReader().use { it.readText() }
                         val map = mutableMapOf<String, String>()
