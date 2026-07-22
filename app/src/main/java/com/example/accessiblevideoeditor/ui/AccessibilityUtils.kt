@@ -61,23 +61,39 @@ object AccessibilityUtils {
         }
 
         doFocus()
-        targetView.postDelayed({ doFocus() }, 150)
-        targetView.postDelayed({ doFocus() }, 400)
+        targetView.postDelayed({ doFocus() }, 100)
+        targetView.postDelayed({ doFocus() }, 300)
+        targetView.postDelayed({ doFocus() }, 600)
     }
 
     fun attachAccessibilityFocusTracker(rootView: View, fragmentName: String, focusMap: MutableMap<String, Int>) {
         if (rootView.id != View.NO_ID) {
-            val delegate = object : androidx.core.view.AccessibilityDelegateCompat() {
+            val existingDelegate = ViewCompat.getAccessibilityDelegate(rootView)
+            ViewCompat.setAccessibilityDelegate(rootView, object : androidx.core.view.AccessibilityDelegateCompat() {
+                override fun performAccessibilityAction(host: View, action: Int, args: android.os.Bundle?): Boolean {
+                    if (action == AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS || 
+                        action == android.view.accessibility.AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS ||
+                        action == AccessibilityNodeInfoCompat.ACTION_CLICK ||
+                        action == android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK) {
+                        if (host.id != View.NO_ID) {
+                            focusMap[fragmentName] = host.id
+                        }
+                    }
+                    return existingDelegate?.performAccessibilityAction(host, action, args) 
+                           ?: super.performAccessibilityAction(host, action, args)
+                }
+
                 override fun sendAccessibilityEvent(host: View, eventType: Int) {
-                    super.sendAccessibilityEvent(host, eventType)
-                    if (eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED || eventType == AccessibilityEvent.TYPE_VIEW_FOCUSED) {
+                    existingDelegate?.sendAccessibilityEvent(host, eventType) ?: super.sendAccessibilityEvent(host, eventType)
+                    if (eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED || 
+                        eventType == AccessibilityEvent.TYPE_VIEW_FOCUSED ||
+                        eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
                         if (host.id != View.NO_ID) {
                             focusMap[fragmentName] = host.id
                         }
                     }
                 }
-            }
-            ViewCompat.setAccessibilityDelegate(rootView, delegate)
+            })
         }
         if (rootView is ViewGroup) {
             for (i in 0 until rootView.childCount) {

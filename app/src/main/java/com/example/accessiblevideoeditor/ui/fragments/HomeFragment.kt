@@ -67,30 +67,32 @@ class HomeFragment : Fragment() {
         }
         
         // Navigation clicks
-        binding.btnVideoEditor.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_videoEditorFragment)
-        }
-        
-                binding.btnVideoTrimmer.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_videoTrimmerFragment) }
-        binding.btnSmartCut.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_smartCutFragment) }
-        binding.btnMergeVideos.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_mergeVideosFragment) }
-        binding.btnReverseMedia.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_reverseMediaFragment) }
-        binding.btnAudioEditor.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_audioEditorFragment) }
-        binding.btnAudioStudio.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_audioStudioFragment) }
-        binding.btnExtractAudio.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_extractAudioFragment) }
-        binding.btnBoostVolume.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_boostVolumeFragment) }
-        binding.btnCompressVideo.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_compressVideoFragment) }
-        binding.btnImageEditor.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_imageEditorFragment) }
-        binding.btnWatermark.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_watermarkFragment) }
-        binding.btnCreateBlankImage.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_createBlankImageFragment) }
-        binding.btnSlideshowMaker.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_slideshowMakerFragment) }
-        binding.btnTickerText.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_tickerTextFragment) }
-        binding.btnAiAnalysis.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_aiAnalysisFragment) }
-        binding.btnStt.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_sttFragment) }
-        binding.btnOcr.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_ocrFragment) }
-        binding.btnBatchProcess.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_batchProcessFragment) }
-        binding.btnFastConverter.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_fastConverterFragment) }
-        binding.btnHistory.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_historyFragment) }
+        binding.btnVideoEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoEditorFragment) }
+        binding.btnVideoTrimmer.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoTrimmerFragment) }
+        binding.btnSmartCut.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_smartCutFragment) }
+        binding.btnMergeVideos.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_mergeVideosFragment) }
+        binding.btnReverseMedia.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_reverseMediaFragment) }
+        binding.btnAudioEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioEditorFragment) }
+        binding.btnAudioStudio.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioStudioFragment) }
+        binding.btnExtractAudio.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_extractAudioFragment) }
+        binding.btnBoostVolume.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_boostVolumeFragment) }
+        binding.btnCompressVideo.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_compressVideoFragment) }
+        binding.btnImageEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_imageEditorFragment) }
+        binding.btnWatermark.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_watermarkFragment) }
+        binding.btnCreateBlankImage.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_createBlankImageFragment) }
+        binding.btnSlideshowMaker.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_slideshowMakerFragment) }
+        binding.btnTickerText.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_tickerTextFragment) }
+        binding.btnAiAnalysis.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiAnalysisFragment) }
+        binding.btnStt.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_sttFragment) }
+        binding.btnOcr.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_ocrFragment) }
+        binding.btnBatchProcess.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_batchProcessFragment) }
+        binding.btnFastConverter.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_fastConverterFragment) }
+        binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
+    }
+
+    private fun navigateWithFocus(v: View, actionId: Int) {
+        (activity as? com.example.accessiblevideoeditor.MainActivity)?.saveLastFocusedViewId("HomeFragment", v.id)
+        findNavController().navigate(actionId)
     }
 
     override fun onDestroyView() {

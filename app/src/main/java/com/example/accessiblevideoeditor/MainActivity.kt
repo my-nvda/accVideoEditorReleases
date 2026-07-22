@@ -22,6 +22,12 @@ class MainActivity : AppCompatActivity() {
   private val lastFocusedViewIdMap = mutableMapOf<String, Int>()
   private var isAppReturningFromBackground = false
 
+  fun saveLastFocusedViewId(fragmentName: String, viewId: Int) {
+      if (viewId != View.NO_ID) {
+          lastFocusedViewIdMap[fragmentName] = viewId
+      }
+  }
+
   override fun onStop() {
       super.onStop()
       isAppReturningFromBackground = true
