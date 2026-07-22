@@ -76,6 +76,7 @@
                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -87,19 +88,21 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <TextView
+                android:id="@+id/tvLabelGeminiModel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/string_198"
+                android:labelFor="@id/spGeminiModel"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:layout_marginBottom="4dp" />
+            <Spinner
+                android:id="@+id/spGeminiModel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="@string/string_198">
-                <AutoCompleteTextView
-                    android:id="@+id/actGeminiModel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/string_198"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:minHeight="48dp"
+                android:contentDescription="@string/string_198" />
 
             <View
                 android:layout_width="match_parent"
@@ -122,19 +125,21 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/string_109" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <TextView
+                android:id="@+id/tvLabelLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/string_17"
+                android:labelFor="@id/spLanguage"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:layout_marginBottom="4dp" />
+            <Spinner
+                android:id="@+id/spLanguage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="@string/string_17">
-                <AutoCompleteTextView
-                    android:id="@+id/actLanguage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/string_17"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:minHeight="48dp"
+                android:contentDescription="@string/string_17" />
 
             <View
                 android:layout_width="match_parent"

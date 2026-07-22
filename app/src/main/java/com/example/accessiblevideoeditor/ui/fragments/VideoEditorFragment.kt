@@ -99,7 +99,7 @@ class VideoEditorFragment : Fragment() {
 
     private fun processVideo(uri: Uri, startStr: String, endStr: String) {
         SoundManager.playProcessing()
-        val processMsg = requireContext().getString(R.string.string_28).replace(" %1\$s%%", "")
+        val processMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_28).replace(" %1\$s%%", "")
         ProcessingManager.startProcessing(processMsg)
         
         lifecycleScope.launch(Dispatchers.IO) {
@@ -147,13 +147,13 @@ class VideoEditorFragment : Fragment() {
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), requireContext().getString(R.string.string_183), Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), requireContext().getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_LONG).show()
                 }
             } finally {
                 ProcessingManager.stopProcessing()

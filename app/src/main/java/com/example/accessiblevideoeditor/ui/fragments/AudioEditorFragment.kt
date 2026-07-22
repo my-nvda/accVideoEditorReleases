@@ -120,12 +120,12 @@ class AudioEditorFragment : Fragment() {
                         SoundManager.playSuccess()
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), getString(R.string.string_183), Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()
                         }
                     }
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
+                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_LONG).show() }
             } finally {
                 ProcessingManager.stopProcessing()
             }
@@ -154,11 +154,11 @@ class AudioEditorFragment : Fragment() {
                         )
                         SoundManager.playSuccess()
                     } else {
-                        withContext(Dispatchers.Main) { Toast.makeText(requireContext(), getString(R.string.string_183), Toast.LENGTH_LONG).show() }
+                        withContext(Dispatchers.Main) { Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show() }
                     }
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
+                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_LONG).show() }
             } finally {
                 ProcessingManager.stopProcessing()
             }
@@ -187,11 +187,11 @@ class AudioEditorFragment : Fragment() {
                         )
                         SoundManager.playSuccess()
                     } else {
-                        withContext(Dispatchers.Main) { Toast.makeText(requireContext(), getString(R.string.string_183), Toast.LENGTH_LONG).show() }
+                        withContext(Dispatchers.Main) { Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show() }
                     }
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show() }
+                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_LONG).show() }
             } finally {
                 ProcessingManager.stopProcessing()
             }

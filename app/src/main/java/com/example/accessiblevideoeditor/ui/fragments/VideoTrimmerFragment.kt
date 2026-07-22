@@ -88,7 +88,7 @@ class VideoTrimmerFragment : Fragment() {
 
     private fun processVideo(uri: Uri, startStr: String, durationStr: String) {
         SoundManager.playProcessing()
-        val trimMsg = requireContext().getString(R.string.string_46).replace(" %1\$s%%", "")
+        val trimMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_46).replace(" %1\$s%%", "")
         ProcessingManager.startProcessing(trimMsg)
         
         lifecycleScope.launch(Dispatchers.IO) {
@@ -122,18 +122,18 @@ class VideoTrimmerFragment : Fragment() {
                         SoundManager.playSuccess()
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), requireContext().getString(R.string.string_183), Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()
                         }
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), requireContext().getString(R.string.string_183), Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), requireContext().getString(R.string.string_73, e.message), Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_LONG).show()
                 }
             } finally {
                 ProcessingManager.stopProcessing()

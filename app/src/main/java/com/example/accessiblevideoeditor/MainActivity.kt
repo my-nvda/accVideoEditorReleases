@@ -209,83 +209,8 @@ class MainActivity : AppCompatActivity() {
       }
   }
 
-  private var wrappedResources: Resources? = null
-
-  override fun getResources(): Resources {
-      val base = super.getResources()
-      if (wrappedResources == null) {
-          wrappedResources = DynamicResources(base, this)
-      }
-      return wrappedResources!!
-  }
-
   override fun onDestroy() {
       super.onDestroy()
       SoundManager.release()
   }
-}
-
-class DynamicResources(
-    private val base: Resources,
-    private val context: android.content.Context
-) : Resources(base.assets, base.displayMetrics, base.configuration) {
-
-    override fun getText(id: Int): CharSequence {
-        return try {
-            com.example.accessiblevideoeditor.ui.AppStrings.get(context, id)
-        } catch (e: Exception) {
-            base.getText(id)
-        }
-    }
-
-    override fun getText(id: Int, def: CharSequence?): CharSequence {
-        return try {
-            com.example.accessiblevideoeditor.ui.AppStrings.get(context, id)
-        } catch (e: Exception) {
-            base.getText(id, def)
-        }
-    }
-
-    override fun getString(id: Int): String {
-        return try {
-            com.example.accessiblevideoeditor.ui.AppStrings.get(context, id)
-        } catch (e: Exception) {
-            base.getString(id)
-        }
-    }
-
-    override fun getString(id: Int, vararg formatArgs: Any?): String {
-        return try {
-            val nonNullArgs = formatArgs.filterNotNull().toTypedArray()
-            com.example.accessiblevideoeditor.ui.AppStrings.get(context, id, *nonNullArgs)
-        } catch (e: Exception) {
-            try {
-                @Suppress("SpreadOperator")
-                base.getString(id, *formatArgs)
-            } catch (ex: Exception) {
-                base.getString(id)
-            }
-        }
-    }
-
-    override fun getQuantityText(id: Int, quantity: Int): CharSequence {
-        return base.getQuantityText(id, quantity)
-    }
-
-    override fun getQuantityString(id: Int, quantity: Int, vararg formatArgs: Any?): String {
-        @Suppress("SpreadOperator")
-        return base.getQuantityString(id, quantity, *formatArgs)
-    }
-
-    override fun getQuantityString(id: Int, quantity: Int): String {
-        return base.getQuantityString(id, quantity)
-    }
-
-    override fun getStringArray(id: Int): Array<String> {
-        return base.getStringArray(id)
-    }
-
-    override fun getTextArray(id: Int): Array<CharSequence> {
-        return base.getTextArray(id)
-    }
 }

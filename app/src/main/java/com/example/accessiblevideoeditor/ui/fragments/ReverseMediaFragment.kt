@@ -96,11 +96,11 @@ class ReverseMediaFragment : Fragment() {
                     if (success) {
                         FileUtils.saveToGallery(requireContext(), File(outputPath), "video/mp4")
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), requireContext().getString(R.string.string_222), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_222), Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), requireContext().getString(R.string.string_223), Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_223), Toast.LENGTH_LONG).show()
                         }
                     }
                 }

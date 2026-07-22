@@ -47,18 +47,21 @@ class SettingsFragment : Fragment() {
 
         binding.etGeminiApiKey.setText(SettingsManager.geminiApiKey)
 
-        // Setup AI Model Dropdown
+        // Setup AI Model Spinner
         val models = listOf("gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash")
-        val modelAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, models)
-        binding.actGeminiModel.setAdapter(modelAdapter)
-        binding.actGeminiModel.setText(SettingsManager.geminiModel, false)
+        val modelAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, models)
+        modelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spGeminiModel.adapter = modelAdapter
+        val modelIndex = models.indexOf(SettingsManager.geminiModel)
+        if (modelIndex >= 0) binding.spGeminiModel.setSelection(modelIndex)
 
-        // Setup Language Dropdown
+        // Setup Language Spinner
         val languages = LanguageManager.supportedLanguages.map { it.second }
-        val langAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, languages)
-        binding.actLanguage.setAdapter(langAdapter)
-        val currentLanguageName = LanguageManager.supportedLanguages.find { it.first == LanguageManager.getCurrentLanguageCode() }?.second ?: "English"
-        binding.actLanguage.setText(currentLanguageName, false)
+        val langAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, languages)
+        langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spLanguage.adapter = langAdapter
+        val currentLangIndex = LanguageManager.supportedLanguages.indexOfFirst { it.first == LanguageManager.getCurrentLanguageCode() }
+        if (currentLangIndex >= 0) binding.spLanguage.setSelection(currentLangIndex)
 
         // Setup Listeners
         binding.switchStartupSound.setOnCheckedChangeListener { _, isChecked -> SettingsManager.isStartupSoundEnabled = isChecked }
@@ -83,14 +86,21 @@ class SettingsFragment : Fragment() {
             }
         })
 
-        binding.actGeminiModel.setOnItemClickListener { _, _, position, _ ->
-            SettingsManager.geminiModel = models[position]
+        binding.spGeminiModel.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                SettingsManager.geminiModel = models[position]
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
 
-        binding.actLanguage.setOnItemClickListener { _, _, position, _ ->
-            val selectedCode = LanguageManager.supportedLanguages[position].first
-            LanguageManager.setLanguage(selectedCode)
-            // Removed requireActivity().recreate() so the user isn't kicked out
+        binding.spLanguage.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedCode = LanguageManager.supportedLanguages[position].first
+                if (selectedCode != LanguageManager.getCurrentLanguageCode()) {
+                    LanguageManager.setLanguage(selectedCode)
+                }
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
 
         binding.btnHelp.setOnClickListener {

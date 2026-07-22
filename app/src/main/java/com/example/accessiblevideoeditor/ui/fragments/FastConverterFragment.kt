@@ -59,13 +59,13 @@ class FastConverterFragment : Fragment() {
             pickerLauncher.launch("video/*")
         }
 
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, formats)
-        binding.actFormat.setAdapter(adapter)
-        binding.actFormat.setText(formats[0], false)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, formats)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spFormat.adapter = adapter
 
         binding.btnProcess.setOnClickListener {
             selectedUri?.let { uri ->
-                val format = binding.actFormat.text.toString()
+                val format = binding.spFormat.selectedItem.toString()
                 processVideo(uri, format)
             }
         }
