@@ -109,11 +109,28 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             val result = com.example.accessiblevideoeditor.ui.CloudConfigManager.checkCloudConfig(requireContext())
             
-            // 1. Dynamic Silent Hide for ANY Disabled Feature (ALL 25+ buttons supported)
-            for (disabledId in result.currentlyDisabledIds) {
-                val resId = resources.getIdentifier(disabledId, "id", requireContext().packageName)
+            // 1. Universal Two-Way Dynamic Toggle for ALL 25+ Features (VISIBLE when enabled, GONE when disabled)
+            val allFeatures = listOf(
+                "btnVideoEditor", "btnImageEditor", "btnWatermark", "btnCreateBlankImage",
+                "btnVideoTrimmer", "btnSmartCut", "btnAudioEditor", "btnAudioStudio",
+                "btnAiAnalysis", "btnStt", "btnOcr", "btnFastConverter",
+                "btnBoostVolume", "btnExtractAudio", "btnCompressVideo", "btnMergeVideos",
+                "btnReverseMedia", "btnSlideshowMaker", "btnTickerText", "btnBatchProcess",
+                "btnSpeedControl", "btnNoiseReduction", "btnBackgroundMusic", "btnAudioNormalization",
+                "btnAiSceneInspector"
+            )
+
+            for (featureId in allFeatures) {
+                val resId = resources.getIdentifier(featureId, "id", requireContext().packageName)
                 if (resId != 0) {
-                    binding.root.findViewById<View>(resId)?.visibility = View.GONE
+                    val view = binding.root.findViewById<View>(resId)
+                    if (view != null) {
+                        if (result.currentlyDisabledIds.contains(featureId)) {
+                            view.visibility = View.GONE
+                        } else {
+                            view.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
 
