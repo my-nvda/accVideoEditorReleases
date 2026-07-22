@@ -1,6 +1,6 @@
 {
-  "versionCode": 31,
-  "versionName": "2.4.28",
+  "versionCode": 32,
+  "versionName": "2.4.29",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.28:\n- إصلاح جذر مشكلة التركيز وملاحقة مؤشر قارئ الشاشة (Accessibility Delegate Tracker) لإلزام مؤشر جيشو/TalkBack بالعودة بدقة للزر المحدد سواء عند الرجوع للخلف أو عند فتح التطبيقات الحديثة (Recent Apps).\n- إصلاح شاشة دمج الفيديوهات لمعالجة الفيديوهات التي لا تحتوي على مسار صوتي بدون مشاكل وبسرعة."
+  "releaseNotes": "تحديث الإصدار 2.4.29:\n- حظر شامل لفقدان التركيز وحفظ معرف الزر المنقور فوراً قبل الانتقال لضمان عودة مؤشر قارئ الشاشة (TalkBack / Jieshuo) لنفس الزر بدقة.\n- تفعيل النطق المتكرر متعدد المراحل (0ms, 100ms, 300ms, 600ms) لإلزام قارئ الشاشة باستعادة التركيز حتى بعد انتهاء حركة الشاشة."
 }
