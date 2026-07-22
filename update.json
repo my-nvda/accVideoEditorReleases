@@ -1,6 +1,6 @@
 {
-  "versionCode": 67,
-  "versionName": "2.4.64",
+  "versionCode": 68,
+  "versionName": "2.4.65",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.64:\n- اعتراض شامل 100% لكافة معالجات النصوص وموارد النظام المكتوبة في XML وKotlin وتطبيق الترجمات السحابية عليها فورياً."
+  "releaseNotes": "تحديث الإصدار 2.4.65:\n- إظهار قسم 'الملحقات والميزات المضافة' ورؤية الملحقات المثبتة مباشرة في الشاشة الرئيسية مع زر فتح متجر الملحقات."
 }
