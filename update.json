@@ -1,6 +1,6 @@
 {
-  "versionCode": 37,
-  "versionName": "2.4.34",
+  "versionCode": 38,
+  "versionName": "2.4.35",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.34:\n- تفعيل محرك الفحص اللحظي المباشر للسحابة وإلغاء كاش السيرفر (Zero-Delay Real-time Cloud Config Check) لإخفاء وتفعيل الميزات فوراً بمجرد التعديل على السيرفر."
+  "releaseNotes": "تحديث الإصدار 2.4.35:\n- دعم الإخفاء الديناميكي الشامل لجميع أزرار وميزات التطبيق الـ 25 بالكامل دون استثناء بنقرة واحدة من السحابة."
 }
