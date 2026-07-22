@@ -2,7 +2,7 @@ package com.example.accessiblevideoeditor
 
 import android.content.Context
 import android.os.Bundle
-import android.content.res.Resources
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -13,6 +13,7 @@ import com.example.accessiblevideoeditor.media.SoundManager
 import com.example.accessiblevideoeditor.ui.AppStringContext
 import com.example.accessiblevideoeditor.ui.AppStrings
 import com.example.accessiblevideoeditor.ui.ProcessingManager
+import com.example.accessiblevideoeditor.ui.TranslationInflaterFactory
 import com.example.accessiblevideoeditor.updater.AppUpdater
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.flow.collectLatest
@@ -38,12 +39,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Wrap the base context with AppStringContext so that ALL getString() calls
-   * — including those from XML-inflated views — pass through our translation filter.
+   * Wraps the base context so programmatic getString() calls also benefit from
+   * cloud translations. XML-defined strings are handled by TranslationInflaterFactory.
    */
   override fun attachBaseContext(newBase: Context) {
-      // Load local translations synchronously before wrapping, so they are ready
-      // at view inflation time without needing a recreate().
       AppStrings.loadCustomStrings(newBase)
       super.attachBaseContext(AppStringContext(newBase))
   }
@@ -56,6 +55,11 @@ class MainActivity : AppCompatActivity() {
     SoundManager.init(this)
     SoundManager.playStartup()
     ProcessingManager.init(this)
+
+    // Install TranslationInflaterFactory BEFORE setContentView so every view
+    // inflated in this activity (including all fragments) gets translations applied.
+    // We use reflection because AppCompat has already set its own factory in super.onCreate().
+    installTranslationFactory()
 
     // Disable screen sleep
     window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -219,6 +223,19 @@ class MainActivity : AppCompatActivity() {
                   navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
               }
           }
+      }
+  }
+
+  private fun installTranslationFactory() {
+      try {
+          val inflater = layoutInflater
+          val field = LayoutInflater::class.java.getDeclaredField("mFactory2")
+          field.isAccessible = true
+          val currentFactory = field.get(inflater) as? LayoutInflater.Factory2
+          val customFactory = TranslationInflaterFactory(currentFactory, inflater)
+          field.set(inflater, customFactory)
+      } catch (e: Exception) {
+          e.printStackTrace()
       }
   }
 
