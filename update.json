@@ -1,6 +1,6 @@
 {
-  "versionCode": 59,
-  "versionName": "2.4.56",
+  "versionCode": 61,
+  "versionName": "2.4.58",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.56:\n- تحديث مستقر وموثوق لجهازك مع دعم كامل لكافة الميزات والترجمات وحماية من الانهيار."
+  "releaseNotes": "تحديث الإصدار 2.4.58:\n- إضافة ترويسة User-Agent وتحسين الاتصال المباشر بخوادم GitHub لضمان قراءة التحديثات والترجمات بنجاح 100%."
 }
