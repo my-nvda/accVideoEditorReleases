@@ -168,10 +168,14 @@ class MainActivity : AppCompatActivity() {
     
     // Launch update checker
     lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
-        val info = AppUpdater.checkForUpdate(this@MainActivity)
-        if (info != null) {
-            AppUpdater.showUpdateNotification(this@MainActivity, info)
-            AppUpdater.showUpdateDialog(this@MainActivity, info)
+        try {
+            val info = AppUpdater.checkForUpdate(this@MainActivity)
+            if (info != null && !isFinishing && !isDestroyed) {
+                AppUpdater.showUpdateNotification(this@MainActivity, info)
+                AppUpdater.showUpdateDialog(this@MainActivity, info)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
   }

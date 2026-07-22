@@ -163,42 +163,43 @@ object AppUpdater {
     }
 
     fun showUpdateNotification(context: Context, updateInfo: UpdateInfo) {
-        val channelId = "app_update_channel"
-        val channelName = "App Updates"
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = android.app.NotificationChannel(
-                channelId,
-                channelName,
-                android.app.NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "Notifications for new app updates"
-            }
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        // Create intent to open MainActivity
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        
-        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
-        } else {
-            android.app.PendingIntent.FLAG_UPDATE_CURRENT
-        }
-        val pendingIntent = android.app.PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
-
-        val builder = androidx.core.app.NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(android.R.drawable.stat_sys_download_done) // system icon
-            .setContentTitle(context.getString(R.string.string_242))
-            .setContentText(context.getString(R.string.string_243, updateInfo.versionName) + " " + context.getString(R.string.string_244))
-            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-
         try {
+            val channelId = "app_update_channel"
+            val channelName = "App Updates"
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? android.app.NotificationManager
+                ?: return
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = android.app.NotificationChannel(
+                    channelId,
+                    channelName,
+                    android.app.NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description = "Notifications for new app updates"
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            // Create intent to open MainActivity
+            val intent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            
+            val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+            } else {
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT
+            }
+            val pendingIntent = android.app.PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
+
+            val builder = androidx.core.app.NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done) // system icon
+                .setContentTitle(context.getString(R.string.string_242))
+                .setContentText(context.getString(R.string.string_243, updateInfo.versionName) + " " + context.getString(R.string.string_244))
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+
             notificationManager.notify(1001, builder.build())
         } catch (e: Exception) {
             e.printStackTrace()
@@ -206,72 +207,92 @@ object AppUpdater {
     }
 
     fun showUpdateDialog(context: Context, updateInfo: UpdateInfo) {
-        val builder = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
-        builder.setTitle(context.getString(R.string.string_242)) // Update Available
-        builder.setMessage(context.getString(R.string.string_243, updateInfo.versionName) + "\n\n" + updateInfo.releaseNotes)
-        builder.setPositiveButton(context.getString(R.string.string_244)) { dialog, _ -> // Download
-            dialog.dismiss()
-            startDownloadWithProgress(context, updateInfo)
+        val activity = context as? android.app.Activity 
+            ?: (context as? android.content.ContextWrapper)?.baseContext as? android.app.Activity
+        if (activity != null && (activity.isFinishing || activity.isDestroyed)) {
+            return
         }
-        builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
-            dialog.dismiss()
+
+        try {
+            val builder = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+            builder.setTitle(context.getString(R.string.string_242)) // Update Available
+            builder.setMessage(context.getString(R.string.string_243, updateInfo.versionName) + "\n\n" + updateInfo.releaseNotes)
+            builder.setPositiveButton(context.getString(R.string.string_244)) { dialog, _ -> // Download
+                dialog.dismiss()
+                startDownloadWithProgress(context, updateInfo)
+            }
+            builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            builder.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        builder.show()
     }
 
     private fun startDownloadWithProgress(context: Context, updateInfo: UpdateInfo) {
-        val downloadId = downloadAndInstall(context, updateInfo)
-
-        val padding = (16 * context.resources.displayMetrics.density).toInt()
-        val container = android.widget.LinearLayout(context).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(padding, padding, padding, padding)
+        val activity = context as? android.app.Activity 
+            ?: (context as? android.content.ContextWrapper)?.baseContext as? android.app.Activity
+        if (activity != null && (activity.isFinishing || activity.isDestroyed)) {
+            return
         }
 
-        val messageView = android.widget.TextView(context).apply {
-            text = context.getString(R.string.string_214, 0) // Completed: 0%
-            setPadding(0, 0, 0, padding / 2)
-            textSize = 16f
-        }
+        try {
+            val downloadId = downloadAndInstall(context, updateInfo)
 
-        val progressBar = android.widget.ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal).apply {
-            max = 100
-            progress = 0
-            isIndeterminate = false
-        }
-
-        container.addView(messageView)
-        container.addView(progressBar)
-
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
-            .setTitle(context.getString(R.string.string_213)) // Downloading update
-            .setView(container)
-            .setNegativeButton(context.getString(R.string.string_218)) { d, _ -> // Cancel download
-                val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                downloadManager.remove(downloadId)
-                d.dismiss()
+            val padding = (16 * context.resources.displayMetrics.density).toInt()
+            val container = android.widget.LinearLayout(context).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                setPadding(padding, padding, padding, padding)
             }
-            .setCancelable(false)
-            .create()
 
-        dialog.show()
+            val messageView = android.widget.TextView(context).apply {
+                text = context.getString(R.string.string_214, 0) // Completed: 0%
+                setPadding(0, 0, 0, padding / 2)
+                textSize = 16f
+            }
 
-        val lifecycleOwner = context as? androidx.lifecycle.LifecycleOwner
-            ?: (context as? android.content.ContextWrapper)?.baseContext as? androidx.lifecycle.LifecycleOwner
+            val progressBar = android.widget.ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal).apply {
+                max = 100
+                progress = 0
+                isIndeterminate = false
+            }
 
-        if (lifecycleOwner != null) {
-            lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                observeDownload(context, downloadId).collect { progress ->
-                    if (progress.totalBytes > 0) {
-                        val percent = ((progress.bytesDownloaded.toFloat() / progress.totalBytes.toFloat()) * 100).toInt()
-                        progressBar.progress = percent
-                        messageView.text = context.getString(R.string.string_214, percent)
-                    }
-                    if (progress.status == DownloadManager.STATUS_SUCCESSFUL || progress.status == DownloadManager.STATUS_FAILED) {
-                        dialog.dismiss()
+            container.addView(messageView)
+            container.addView(progressBar)
+
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                .setTitle(context.getString(R.string.string_213)) // Downloading update
+                .setView(container)
+                .setNegativeButton(context.getString(R.string.string_218)) { d, _ -> // Cancel download
+                    val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                    downloadManager.remove(downloadId)
+                    d.dismiss()
+                }
+                .setCancelable(false)
+                .create()
+
+            dialog.show()
+
+            val lifecycleOwner = context as? androidx.lifecycle.LifecycleOwner
+                ?: (context as? android.content.ContextWrapper)?.baseContext as? androidx.lifecycle.LifecycleOwner
+
+            if (lifecycleOwner != null) {
+                lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                    observeDownload(context, downloadId).collect { progress ->
+                        if (progress.totalBytes > 0) {
+                            val percent = ((progress.bytesDownloaded.toFloat() / progress.totalBytes.toFloat()) * 100).toInt()
+                            progressBar.progress = percent
+                            messageView.text = context.getString(R.string.string_214, percent)
+                        }
+                        if (progress.status == DownloadManager.STATUS_SUCCESSFUL || progress.status == DownloadManager.STATUS_FAILED) {
+                            try { dialog.dismiss() } catch (_: Exception) {}
+                        }
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
