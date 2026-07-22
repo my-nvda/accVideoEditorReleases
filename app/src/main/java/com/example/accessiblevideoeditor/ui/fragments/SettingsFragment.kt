@@ -107,6 +107,10 @@ class SettingsFragment : Fragment() {
             findNavController().navigate(com.example.accessiblevideoeditor.R.id.helpFragment)
         }
         
+        binding.btnPluginsStore.setOnClickListener {
+            findNavController().navigate(com.example.accessiblevideoeditor.R.id.pluginsFragment)
+        }
+
         binding.btnVolunteerTranslation.setOnClickListener {
             findNavController().navigate(com.example.accessiblevideoeditor.R.id.volunteerTranslationFragment)
         }
