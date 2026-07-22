@@ -139,7 +139,7 @@ object AppUpdater {
                     val progress = ((bytesDownloaded.toFloat() / bytesTotal.toFloat()) * 100).toInt()
                     if (progress >= lastBeepPercent + 5 && progress < 100) {
                         lastBeepPercent = progress
-                        BeepUtils.playProgressBeep(progress)
+                        try { BeepUtils.playProgressBeep(progress) } catch (_: Exception) {}
                     }
                 }
 
@@ -222,14 +222,14 @@ object AppUpdater {
             val btnText = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_244) } catch (_: Exception) { "تنزيل الآن" }
 
             val builder = androidx.core.app.NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(if (title.isNotBlank()) title else "تحديث جديد متوفر")
                 .setContentText("الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل.")
                 .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(androidx.core.app.NotificationCompat.DEFAULT_ALL)
                 .setContentIntent(contentPendingIntent)
                 .addAction(
-                    android.R.drawable.stat_sys_download,
+                    android.R.drawable.ic_menu_save,
                     if (btnText.isNotBlank()) btnText else "تنزيل الآن",
                     downloadPendingIntent
                 )
@@ -247,35 +247,35 @@ object AppUpdater {
             return
         }
 
-        val title = try {
-            com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_242)
-        } catch (_: Exception) { "تحديث جديد متوفر" }
+        try {
+            val title = try {
+                com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_242)
+            } catch (_: Exception) { "تحديث جديد متوفر" }
 
-        val msgTemplate = try {
-            com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_243)
-        } catch (_: Exception) { "" }
+            val msgTemplate = try {
+                com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_243)
+            } catch (_: Exception) { "" }
 
-        val btnText = try {
-            com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_244)
-        } catch (_: Exception) { "تنزيل الآن" }
+            val btnText = try {
+                com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_244)
+            } catch (_: Exception) { "تنزيل الآن" }
 
-        val body = try {
-            if (msgTemplate.contains("%")) {
-                String.format(msgTemplate, updateInfo.versionName)
-            } else {
+            val body = try {
+                if (msgTemplate.contains("%")) {
+                    String.format(msgTemplate, updateInfo.versionName)
+                } else {
+                    "الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل."
+                }
+            } catch (_: Exception) {
                 "الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل."
             }
-        } catch (_: Exception) {
-            "الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل."
-        }
 
-        val fullMessage = if (updateInfo.releaseNotes.isNotBlank()) {
-            "$body\n\n${updateInfo.releaseNotes}"
-        } else {
-            body
-        }
+            val fullMessage = if (updateInfo.releaseNotes.isNotBlank()) {
+                "$body\n\n${updateInfo.releaseNotes}"
+            } else {
+                body
+            }
 
-        try {
             val builder = androidx.appcompat.app.AlertDialog.Builder(activity)
             builder.setTitle(if (title.isNotBlank()) title else "تحديث جديد متوفر")
             builder.setMessage(fullMessage)
