@@ -1,7 +1,11 @@
 {
-  "disabledFeatures": [],
-      "btnVideoEditor":
+  
+"disabledFeatures": [
+"btnVideoEditor": "محرر الفيديو الشامل",  
+  
+]
 
+  
   "newFeatures": [],
   "featurePatches": [],
   "allAvailableFeatureIds": {
