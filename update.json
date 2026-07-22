@@ -1,6 +1,6 @@
 {
-  "versionCode": 43,
-  "versionName": "2.4.40",
+  "versionCode": 44,
+  "versionName": "2.4.41",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.40:\n- معالجة رسائل الفحص التشخيصية لمنع ظهور رسائل اتصال خداعة في حال عدم وجود اتصال بالإنترنت."
+  "releaseNotes": "تحديث الإصدار 2.4.41:\n- تفعيل المرونة القصوى في معالجة ميزات الإغلاق وميزات التنزيل بشكل منفصل تماماً دون تأثر أحدهما بالآخر."
 }
