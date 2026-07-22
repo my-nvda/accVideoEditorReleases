@@ -61,9 +61,33 @@ object CloudConfigManager {
                     stringsConn.requestMethod = "GET"
                     if (stringsConn.responseCode == HttpURLConnection.HTTP_OK) {
                         val stringsJsonStr = stringsConn.inputStream.bufferedReader().use { it.readText() }
-                        val stringsRoot = JSONObject(stringsJsonStr)
-                        if (stringsRoot.has("strings")) {
-                            val stringsObj = stringsRoot.getJSONObject("strings")
+                        val map = mutableMapOf<String, String>()
+                        
+                        try {
+                            val stringsRoot = JSONObject(stringsJsonStr)
+                            if (stringsRoot.has("strings")) {
+                                val stringsObj = stringsRoot.getJSONObject("strings")
+                                for (key in stringsObj.keys()) {
+                                    map[key] = stringsObj.getString(key)
+                                }
+                            }
+                        } catch (je: Exception) {
+                            val regex = """"strings"\s*:\s*\{([\s\S]*?)\}""".toRegex()
+                            val match = regex.find(stringsJsonStr)
+                            if (match != null) {
+                                val content = match.groupValues[1]
+                                val itemRegex = """"([^"]+)"\s*:\s*"([^"]*)"""".toRegex()
+                                itemRegex.findAll(content).forEach { m ->
+                                    map[m.groupValues[1]] = m.groupValues[2]
+                                }
+                            }
+                        }
+                        
+                        if (map.isNotEmpty()) {
+                            val stringsObj = JSONObject()
+                            for ((k, v) in map) {
+                                stringsObj.put(k, v)
+                            }
                             val currentLang = LanguageManager.getCurrentLanguageCode()
                             val file = File(context.filesDir, "custom_lang_$currentLang.json")
                             file.writeText(stringsObj.toString(), Charsets.UTF_8)
