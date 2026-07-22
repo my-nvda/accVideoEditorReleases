@@ -1,6 +1,6 @@
 {
-  "versionCode": 39,
-  "versionName": "2.4.36",
+  "versionCode": 40,
+  "versionName": "2.4.37",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.36:\n- تفعيل الفحص الذكي للـ JSON لضمان قراءة وإخفاء الأزرار والمعالم في حال وجود خطأ في الفاصلة أو الترتيب."
+  "releaseNotes": "تحديث الإصدار 2.4.37:\n- تفعيل الإظهار اللحظي والتنشيط المزدوج (Two-Way Real-time Toggle) لإظهار الميزات فور إزالة اسمها من قائمة الميزات المعطلة في السحابة."
 }
