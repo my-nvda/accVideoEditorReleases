@@ -1,6 +1,7 @@
 {
   "disabledFeatures": [
-    
+    "btnVideoEditor"
+
   ],
   "newFeatures": [],
   "featurePatches": [
