@@ -1,5 +1,8 @@
 {
-  "disabledFeatures": [],
+  "disabledFeatures": [
+"btnVideoEditor": "محرر الفيديو الشامل",
+    
+  ],
   "newFeatures": [
     {
       "id": "test_dynamic_feature_02",
