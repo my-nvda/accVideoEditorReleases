@@ -214,6 +214,11 @@ object CloudConfigManager {
         return@withContext result
     }
 
+    fun isFeatureDownloaded(featureIdKey: String): Boolean {
+        val downloaded = prefs?.getStringSet(KEY_DOWNLOADED_FEATURES, emptySet()) ?: emptySet()
+        return downloaded.contains(featureIdKey)
+    }
+
     fun markFeatureAsDownloaded(featureIdKey: String) {
         val downloaded = (prefs?.getStringSet(KEY_DOWNLOADED_FEATURES, emptySet()) ?: emptySet()).toMutableSet()
         downloaded.add(featureIdKey)

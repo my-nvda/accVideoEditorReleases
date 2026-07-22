@@ -4,15 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.example.accessiblevideoeditor.databinding.FragmentHomeBinding
-import com.example.accessiblevideoeditor.R
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
+import androidx.navigation.fragment.findNavController
+import com.example.accessiblevideoeditor.R
+import com.example.accessiblevideoeditor.databinding.FragmentHomeBinding
 import com.example.accessiblevideoeditor.ui.AppStrings
-import com.example.accessiblevideoeditor.ui.ProcessingManager
+import com.example.accessiblevideoeditor.ui.CloudConfigManager
+import com.example.accessiblevideoeditor.updater.BeepUtils
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
@@ -30,40 +35,50 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         checkRemoteCloudConfig()
-        loadInstalledPluginsOnHome()
     }
 
     private fun updateButtonTexts() {
         val context = context ?: return
-        binding.btnVideoEditor.text = AppStrings.get(context, R.string.string_112)
-        binding.btnImageEditor.text = AppStrings.get(context, R.string.string_128)
-        binding.btnWatermark.text = AppStrings.get(context, R.string.string_74)
-        binding.btnCreateBlankImage.text = AppStrings.get(context, R.string.string_271)
-        binding.btnVideoTrimmer.text = AppStrings.get(context, R.string.string_94)
-        binding.btnSmartCut.text = AppStrings.get(context, R.string.string_45)
-        binding.btnAudioEditor.text = AppStrings.get(context, R.string.string_102)
-        binding.btnAudioStudio.text = AppStrings.get(context, R.string.string_55)
-        binding.btnAiAnalysis.text = AppStrings.get(context, R.string.string_31)
-        binding.btnStt.text = AppStrings.get(context, R.string.string_63)
-        binding.btnOcr.text = AppStrings.get(context, R.string.string_20)
-        binding.btnFastConverter.text = AppStrings.get(context, R.string.string_59)
-        binding.btnBoostVolume.text = AppStrings.get(context, R.string.string_86)
-        binding.btnExtractAudio.text = AppStrings.get(context, R.string.string_41)
-        binding.btnCompressVideo.text = AppStrings.get(context, R.string.string_125)
-        binding.btnMergeVideos.text = AppStrings.get(context, R.string.string_75)
-        binding.btnReverseMedia.text = AppStrings.get(context, R.string.string_68)
-        binding.btnSlideshowMaker.text = AppStrings.get(context, R.string.string_80)
-        binding.btnTickerText.text = AppStrings.get(context, R.string.string_52)
-        binding.btnBatchProcess.text = AppStrings.get(context, R.string.string_32)
-        binding.btnSpeedControl.text = AppStrings.get(context, R.string.btn_speed_control)
-        binding.btnNoiseReduction.text = AppStrings.get(context, R.string.btn_noise_reduction)
-        binding.btnBackgroundMusic.text = AppStrings.get(context, R.string.btn_background_music)
-        binding.btnAudioNormalization.text = AppStrings.get(context, R.string.btn_audio_normalization)
-        binding.btnAiSceneInspector.text = AppStrings.get(context, R.string.btn_ai_scene_inspector)
-        binding.btnHistory.text = AppStrings.get(context, R.string.string_116)
         try {
+            binding.btnVideoEditor.text = AppStrings.get(context, R.string.string_112)
+            binding.btnImageEditor.text = AppStrings.get(context, R.string.string_128)
+            binding.btnWatermark.text = AppStrings.get(context, R.string.string_74)
+            binding.btnCreateBlankImage.text = AppStrings.get(context, R.string.string_271)
+            binding.btnVideoTrimmer.text = AppStrings.get(context, R.string.string_94)
+            binding.btnSmartCut.text = AppStrings.get(context, R.string.string_45)
+            binding.btnAudioEditor.text = AppStrings.get(context, R.string.string_102)
+            binding.btnAudioStudio.text = AppStrings.get(context, R.string.string_55)
+            binding.btnAiAnalysis.text = AppStrings.get(context, R.string.string_31)
+            binding.btnStt.text = AppStrings.get(context, R.string.string_63)
+            binding.btnOcr.text = AppStrings.get(context, R.string.string_20)
+            binding.btnFastConverter.text = AppStrings.get(context, R.string.string_59)
+            binding.btnBoostVolume.text = AppStrings.get(context, R.string.string_86)
+            binding.btnExtractAudio.text = AppStrings.get(context, R.string.string_41)
+            binding.btnCompressVideo.text = AppStrings.get(context, R.string.string_125)
+            binding.btnMergeVideos.text = AppStrings.get(context, R.string.string_75)
+            binding.btnReverseMedia.text = AppStrings.get(context, R.string.string_68)
+            binding.btnSlideshowMaker.text = AppStrings.get(context, R.string.string_80)
+            binding.btnTickerText.text = AppStrings.get(context, R.string.string_52)
+            binding.btnBatchProcess.text = AppStrings.get(context, R.string.string_32)
+            binding.btnSpeedControl.text = AppStrings.get(context, R.string.btn_speed_control)
+            binding.btnNoiseReduction.text = AppStrings.get(context, R.string.btn_noise_reduction)
+            binding.btnBackgroundMusic.text = AppStrings.get(context, R.string.btn_background_music)
+            binding.btnAudioNormalization.text = AppStrings.get(context, R.string.btn_audio_normalization)
+            binding.btnAiSceneInspector.text = AppStrings.get(context, R.string.btn_ai_scene_inspector)
+            
+            // Dynamic Cloud Features
+            binding.btnAiVoiceDubbing.text = "دبلجة وتوليد الصوت بالذكاء الاصطناعي"
+            binding.btnAudioStemSeparator.text = "عازل ومحلل الآلات والموسيقى"
+            binding.btnAutoShortsCreator.text = "مولد الفيديوهات القصيرة والقوالب"
+            binding.btnCinematicLutShaders.text = "حزمة الفلاتر والتأثيرات السينمائية"
+            binding.btnAiSceneAudioDescription.text = "الوصف الصوتي التفاعلي للمكفوفين"
+            binding.btnSubtitlesOcrSrt.text = "مستخرج وقارئ الترجمات SRT"
+
+            binding.btnHistory.text = AppStrings.get(context, R.string.string_116)
             binding.topAppBar.menu?.findItem(R.id.action_settings)?.title = AppStrings.get(context, R.string.string_133)
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -89,7 +104,7 @@ class HomeFragment : Fragment() {
             }
         }
         
-        // Navigation clicks
+        // Main Navigation clicks
         binding.btnVideoEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoEditorFragment) }
         binding.btnVideoTrimmer.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoTrimmerFragment) }
         binding.btnSmartCut.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_smartCutFragment) }
@@ -115,69 +130,119 @@ class HomeFragment : Fragment() {
         binding.btnBackgroundMusic.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_backgroundMusicFragment) }
         binding.btnAudioNormalization.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioNormalizationFragment) }
         binding.btnAiSceneInspector.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiSceneInspectorFragment) }
-        binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
-        binding.btnOpenPluginsStore.setOnClickListener { navigateWithFocus(it, R.id.pluginsFragment) }
 
-        checkRemoteCloudConfig()
+        // Dynamic Features clicks
+        binding.btnAiVoiceDubbing.setOnClickListener { handleDynamicFeatureClick("btnAiVoiceDubbing", "دبلجة وتوليد الصوت بالذكاء الاصطناعي", 12.5) }
+        binding.btnAudioStemSeparator.setOnClickListener { handleDynamicFeatureClick("btnAudioStemSeparator", "عازل ومحلل الآلات والموسيقى", 15.0) }
+        binding.btnAutoShortsCreator.setOnClickListener { handleDynamicFeatureClick("btnAutoShortsCreator", "مولد الفيديوهات القصيرة والقوالب", 8.0) }
+        binding.btnCinematicLutShaders.setOnClickListener { handleDynamicFeatureClick("btnCinematicLutShaders", "حزمة الفلاتر والتأثيرات السينمائية", 5.0) }
+        binding.btnAiSceneAudioDescription.setOnClickListener { handleDynamicFeatureClick("btnAiSceneAudioDescription", "الوصف الصوتي التفاعلي للمكفوفين", 10.0) }
+        binding.btnSubtitlesOcrSrt.setOnClickListener { handleDynamicFeatureClick("btnSubtitlesOcrSrt", "مستخرج وقارئ الترجمات SRT", 6.5) }
+
+        binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
+    }
+
+    private fun handleDynamicFeatureClick(featureId: String, title: String, sizeMb: Double) {
+        val currentContext = context ?: return
+        val currentActivity = activity ?: return
+        if (currentActivity.isFinishing || currentActivity.isDestroyed) return
+
+        CloudConfigManager.init(currentContext)
+        val isDownloaded = CloudConfigManager.isFeatureDownloaded(featureId)
+        if (isDownloaded) {
+            Toast.makeText(currentContext, "ميزة ${title} مفعلة وجاهزة للاستخدام!", Toast.LENGTH_SHORT).show()
+        } else {
+            MaterialAlertDialogBuilder(currentActivity)
+                .setTitle("تنزيل وتفعيل ميزة ${title}")
+                .setMessage("هذه الميزة سحابية إضافية وحجمها تقريباً (${sizeMb} ميجابايت).\n\nهل تريد تنزيلها وتفعيلها الآن على تطبيقك؟")
+                .setPositiveButton("تنزيل وتفعيل الآن") { dialog, _ ->
+                    dialog.dismiss()
+                    downloadAndActivateFeature(featureId, title)
+                }
+                .setNegativeButton("لاحقاً") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+    }
+
+    private fun downloadAndActivateFeature(featureId: String, title: String) {
+        val currentContext = context ?: return
+
+        Toast.makeText(currentContext, "جاري تنزيل وتفعيل ميزة ${title}...", Toast.LENGTH_SHORT).show()
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                for (p in 1..5) {
+                    val percent = p * 20
+                    try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
+                    delay(150)
+                }
+                CloudConfigManager.init(currentContext)
+                CloudConfigManager.markFeatureAsDownloaded(featureId)
+                Toast.makeText(currentContext, "تم تنزيل وتفعيل ميزة ${title} بنجاح!", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun checkRemoteCloudConfig() {
-        lifecycleScope.launch {
-            val result = com.example.accessiblevideoeditor.ui.CloudConfigManager.checkCloudConfig(requireContext())
-            
-            // 1. Universal Two-Way Dynamic Toggle for ALL 25+ Features (VISIBLE when enabled, GONE when disabled)
-            val allFeatures = listOf(
-                "btnVideoEditor", "btnImageEditor", "btnWatermark", "btnCreateBlankImage",
-                "btnVideoTrimmer", "btnSmartCut", "btnAudioEditor", "btnAudioStudio",
-                "btnAiAnalysis", "btnStt", "btnOcr", "btnFastConverter",
-                "btnBoostVolume", "btnExtractAudio", "btnCompressVideo", "btnMergeVideos",
-                "btnReverseMedia", "btnSlideshowMaker", "btnTickerText", "btnBatchProcess",
-                "btnSpeedControl", "btnNoiseReduction", "btnBackgroundMusic", "btnAudioNormalization",
-                "btnAiSceneInspector"
-            )
+        val currentContext = context ?: return
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val result = CloudConfigManager.checkCloudConfig(currentContext)
+                withContext(Dispatchers.Main) {
+                    val activeActivity = activity ?: return@withContext
+                    if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return@withContext
 
-            for (featureId in allFeatures) {
-                val resId = resources.getIdentifier(featureId, "id", requireContext().packageName)
-                if (resId != 0) {
-                    val view = binding.root.findViewById<View>(resId)
-                    if (view != null) {
-                        if (result.currentlyDisabledIds.contains(featureId)) {
-                            view.visibility = View.GONE
-                        } else {
-                            view.visibility = View.VISIBLE
-                        }
-                    }
+                    // Apply feature visibility based on cloud_config.json
+                    updateFeatureVisibilities(result.currentlyDisabledIds)
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+        }
+    }
 
-            // If new translations were downloaded from server, recreate the Activity
-            // so ALL views (including XML-defined ones) re-inflate with the new strings.
-            if (com.example.accessiblevideoeditor.ui.CloudConfigManager.stringsUpdated) {
-                com.example.accessiblevideoeditor.ui.CloudConfigManager.stringsUpdated = false
-                activity?.recreate()
-                return@launch
-            }
-
-            if (result.reEnabledFeatureIds.isNotEmpty()) {
-                Toast.makeText(requireContext(), "تم إعادة تفعيل الميزات المتوقفة بنجاح", Toast.LENGTH_SHORT).show()
-            }
-
-            // 3. Explicit User-Driven Download Prompt for New Features & Updates
-            for (item in result.pendingDownloads) {
-                com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(item.title)
-                    .setMessage("${item.description}\n\nهل ترغب في تنزيل وتفعيل هذه الميزة الآن؟")
-                    .setPositiveButton("تنزيل الميزة الآن") { dialog, _ ->
-                        com.example.accessiblevideoeditor.ui.CloudConfigManager.markFeatureAsDownloaded(item.id)
-                        Toast.makeText(requireContext(), "تم تنزيل وتفعيل الميزة بنجاح!", Toast.LENGTH_SHORT).show()
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton("لاحقاً") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-                break
-            }
+    private fun updateFeatureVisibilities(disabledIds: Set<String>) {
+        if (_binding == null) return
+        try {
+            binding.btnVideoEditor.visibility = if (disabledIds.contains("btnVideoEditor")) View.GONE else View.VISIBLE
+            binding.btnImageEditor.visibility = if (disabledIds.contains("btnImageEditor")) View.GONE else View.VISIBLE
+            binding.btnWatermark.visibility = if (disabledIds.contains("btnWatermark")) View.GONE else View.VISIBLE
+            binding.btnCreateBlankImage.visibility = if (disabledIds.contains("btnCreateBlankImage")) View.GONE else View.VISIBLE
+            binding.btnVideoTrimmer.visibility = if (disabledIds.contains("btnVideoTrimmer")) View.GONE else View.VISIBLE
+            binding.btnSmartCut.visibility = if (disabledIds.contains("btnSmartCut")) View.GONE else View.VISIBLE
+            binding.btnAudioEditor.visibility = if (disabledIds.contains("btnAudioEditor")) View.GONE else View.VISIBLE
+            binding.btnAudioStudio.visibility = if (disabledIds.contains("btnAudioStudio")) View.GONE else View.VISIBLE
+            binding.btnAiAnalysis.visibility = if (disabledIds.contains("btnAiAnalysis")) View.GONE else View.VISIBLE
+            binding.btnStt.visibility = if (disabledIds.contains("btnStt")) View.GONE else View.VISIBLE
+            binding.btnOcr.visibility = if (disabledIds.contains("btnOcr")) View.GONE else View.VISIBLE
+            binding.btnFastConverter.visibility = if (disabledIds.contains("btnFastConverter")) View.GONE else View.VISIBLE
+            binding.btnBoostVolume.visibility = if (disabledIds.contains("btnBoostVolume")) View.GONE else View.VISIBLE
+            binding.btnExtractAudio.visibility = if (disabledIds.contains("btnExtractAudio")) View.GONE else View.VISIBLE
+            binding.btnCompressVideo.visibility = if (disabledIds.contains("btnCompressVideo")) View.GONE else View.VISIBLE
+            binding.btnMergeVideos.visibility = if (disabledIds.contains("btnMergeVideos")) View.GONE else View.VISIBLE
+            binding.btnReverseMedia.visibility = if (disabledIds.contains("btnReverseMedia")) View.GONE else View.VISIBLE
+            binding.btnSlideshowMaker.visibility = if (disabledIds.contains("btnSlideshowMaker")) View.GONE else View.VISIBLE
+            binding.btnTickerText.visibility = if (disabledIds.contains("btnTickerText")) View.GONE else View.VISIBLE
+            binding.btnBatchProcess.visibility = if (disabledIds.contains("btnBatchProcess")) View.GONE else View.VISIBLE
+            binding.btnSpeedControl.visibility = if (disabledIds.contains("btnSpeedControl")) View.GONE else View.VISIBLE
+            binding.btnNoiseReduction.visibility = if (disabledIds.contains("btnNoiseReduction")) View.GONE else View.VISIBLE
+            binding.btnBackgroundMusic.visibility = if (disabledIds.contains("btnBackgroundMusic")) View.GONE else View.VISIBLE
+            binding.btnAudioNormalization.visibility = if (disabledIds.contains("btnAudioNormalization")) View.GONE else View.VISIBLE
+            binding.btnAiSceneInspector.visibility = if (disabledIds.contains("btnAiSceneInspector")) View.GONE else View.VISIBLE
+            
+            // Dynamic Features visibilities
+            binding.btnAiVoiceDubbing.visibility = if (disabledIds.contains("btnAiVoiceDubbing")) View.GONE else View.VISIBLE
+            binding.btnAudioStemSeparator.visibility = if (disabledIds.contains("btnAudioStemSeparator")) View.GONE else View.VISIBLE
+            binding.btnAutoShortsCreator.visibility = if (disabledIds.contains("btnAutoShortsCreator")) View.GONE else View.VISIBLE
+            binding.btnCinematicLutShaders.visibility = if (disabledIds.contains("btnCinematicLutShaders")) View.GONE else View.VISIBLE
+            binding.btnAiSceneAudioDescription.visibility = if (disabledIds.contains("btnAiSceneAudioDescription")) View.GONE else View.VISIBLE
+            binding.btnSubtitlesOcrSrt.visibility = if (disabledIds.contains("btnSubtitlesOcrSrt")) View.GONE else View.VISIBLE
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -186,57 +251,8 @@ class HomeFragment : Fragment() {
         findNavController().navigate(actionId)
     }
 
-    private fun loadInstalledPluginsOnHome() {
-        val activeActivity = activity ?: return
-        if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
-
-        viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
-            try {
-                val currentContext = context ?: return@launch
-                val currentActivity = activity ?: return@launch
-                if (!isAdded || currentActivity.isFinishing || currentActivity.isDestroyed) return@launch
-
-                val allPlugins = com.example.accessiblevideoeditor.plugins.PluginManager.fetchAvailablePlugins(currentContext)
-                val installedPlugins = allPlugins.filter { it.isInstalled }
-
-                val bindingRef = _binding ?: return@launch
-                bindingRef.llInstalledPlugins.removeAllViews()
-
-                if (installedPlugins.isEmpty()) {
-                    val emptyTv = android.widget.TextView(currentActivity).apply {
-                        text = "لم يتم تثبيت أي ملحقات بعد. يمكنك تصفح وتثبيت الملحقات من متجر الملحقات."
-                        setPadding(0, 16, 0, 16)
-                        textSize = 14f
-                    }
-                    bindingRef.llInstalledPlugins.addView(emptyTv)
-                } else {
-                    for (plugin in installedPlugins) {
-                        val btn = android.widget.Button(currentActivity).apply {
-                            text = "⚡ ${plugin.title}"
-                            setOnClickListener {
-                                try {
-                                    Toast.makeText(currentActivity, "الملحق ${plugin.title} مفعل وجاهز للاستخدام!", Toast.LENGTH_SHORT).show()
-                                } catch (_: Exception) {}
-                            }
-                        }
-                        val params = android.widget.LinearLayout.LayoutParams(
-                            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-                            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(0, 8, 0, 8)
-                        }
-                        bindingRef.llInstalledPlugins.addView(btn, params)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-

@@ -252,10 +252,5 @@
         android:label="AiSceneInspectorFragment"
         tools:layout="@layout/fragment_ai_scene_inspector" />
 
-    <fragment
-        android:id="@+id/pluginsFragment"
-        android:name="com.example.accessiblevideoeditor.ui.fragments.PluginsFragment"
-        android:label="PluginsFragment"
-        tools:layout="@layout/fragment_plugins" />
 </navigation>
 

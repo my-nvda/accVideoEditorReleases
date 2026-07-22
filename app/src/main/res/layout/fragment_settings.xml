@@ -170,15 +170,6 @@
                 android:text="@string/string_105" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPluginsStore"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="متجر الملحقات والميزات الإضافية"
-                app:icon="@android:drawable/ic_menu_add" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnVolunteerTranslation"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
