@@ -187,37 +187,49 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadInstalledPluginsOnHome() {
-        val currentContext = context ?: return
-        viewLifecycleOwner.lifecycleScope.launch {
-            val allPlugins = com.example.accessiblevideoeditor.plugins.PluginManager.fetchAvailablePlugins(currentContext)
-            val installedPlugins = allPlugins.filter { it.isInstalled }
+        val activeActivity = activity ?: return
+        if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
 
-            if (_binding == null) return@launch
-            binding.llInstalledPlugins.removeAllViews()
+        viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
+            try {
+                val currentContext = context ?: return@launch
+                val currentActivity = activity ?: return@launch
+                if (!isAdded || currentActivity.isFinishing || currentActivity.isDestroyed) return@launch
 
-            if (installedPlugins.isEmpty()) {
-                val emptyTv = android.widget.TextView(currentContext).apply {
-                    text = "لم يتم تثبيت أي ملحقات بعد. يمكنك تصفح وتثبيت الملحقات من متجر الملحقات."
-                    setPadding(0, 8, 0, 8)
-                    textSize = 14f
-                }
-                binding.llInstalledPlugins.addView(emptyTv)
-            } else {
-                for (plugin in installedPlugins) {
-                    val btn = com.google.android.material.button.MaterialButton(currentContext).apply {
-                        text = "⚡ ${plugin.title}"
-                        setOnClickListener {
-                            Toast.makeText(currentContext, "الملحق ${plugin.title} مفعل وجاهز للاستخدام!", Toast.LENGTH_SHORT).show()
+                val allPlugins = com.example.accessiblevideoeditor.plugins.PluginManager.fetchAvailablePlugins(currentContext)
+                val installedPlugins = allPlugins.filter { it.isInstalled }
+
+                val bindingRef = _binding ?: return@launch
+                bindingRef.llInstalledPlugins.removeAllViews()
+
+                if (installedPlugins.isEmpty()) {
+                    val emptyTv = android.widget.TextView(currentActivity).apply {
+                        text = "لم يتم تثبيت أي ملحقات بعد. يمكنك تصفح وتثبيت الملحقات من متجر الملحقات."
+                        setPadding(0, 16, 0, 16)
+                        textSize = 14f
+                    }
+                    bindingRef.llInstalledPlugins.addView(emptyTv)
+                } else {
+                    for (plugin in installedPlugins) {
+                        val btn = android.widget.Button(currentActivity).apply {
+                            text = "⚡ ${plugin.title}"
+                            setOnClickListener {
+                                try {
+                                    Toast.makeText(currentActivity, "الملحق ${plugin.title} مفعل وجاهز للاستخدام!", Toast.LENGTH_SHORT).show()
+                                } catch (_: Exception) {}
+                            }
                         }
+                        val params = android.widget.LinearLayout.LayoutParams(
+                            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            setMargins(0, 8, 0, 8)
+                        }
+                        bindingRef.llInstalledPlugins.addView(btn, params)
                     }
-                    val params = android.widget.LinearLayout.LayoutParams(
-                        android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-                    ).apply {
-                        setMargins(0, 8, 0, 8)
-                    }
-                    binding.llInstalledPlugins.addView(btn, params)
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

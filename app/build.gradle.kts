@@ -10,8 +10,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 68
-        versionName = "2.4.65"
+        versionCode = 69
+        versionName = "2.4.66"
     }
 
     buildTypes {
