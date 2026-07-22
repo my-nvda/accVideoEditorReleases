@@ -60,6 +60,9 @@ class HomeFragment : Fragment() {
         binding.btnAudioNormalization.text = AppStrings.get(context, R.string.btn_audio_normalization)
         binding.btnAiSceneInspector.text = AppStrings.get(context, R.string.btn_ai_scene_inspector)
         binding.btnHistory.text = AppStrings.get(context, R.string.string_116)
+        try {
+            binding.topAppBar.menu?.findItem(R.id.action_settings)?.title = AppStrings.get(context, R.string.string_133)
+        } catch (e: Exception) {}
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,6 +75,9 @@ class HomeFragment : Fragment() {
         
         // Settings menu
         binding.topAppBar.inflateMenu(R.menu.home_menu)
+        try {
+            binding.topAppBar.menu?.findItem(R.id.action_settings)?.title = AppStrings.get(requireContext(), R.string.string_133)
+        } catch (e: Exception) {}
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_settings -> {
