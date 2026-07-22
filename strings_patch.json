@@ -1,4 +1,4 @@
-"version": 14"
+
 
 "strings": {
 
@@ -362,5 +362,6 @@
     "btnAudioNormalization": "موازنة مستوى الصوت التلقائي",
     "btnAiSceneInspector": "مستكشف ومشرح مشاهد الفيديو الذكي"
     "app_name": "عابر",
+    "version": 14"
   }
 }
