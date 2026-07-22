@@ -13,32 +13,8 @@ object AccessibilityUtils {
         val toolbar = findToolbar(view)
         val title = toolbar?.title?.toString() ?: "Screen"
         
-        // Set native pane title
+        // Set native pane title so screen readers announce screen name naturally without jumping focus
         ViewCompat.setAccessibilityPaneTitle(view, title)
-
-        view.postDelayed({
-            val targetView = toolbar ?: view
-            
-            // Make sure the view is focusable for both standard focus and accessibility
-            targetView.isFocusable = true
-            targetView.isFocusableInTouchMode = true
-            targetView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
-
-            // Request standard focus so Jieshuo/Talkback follow it naturally
-            targetView.requestFocus()
-
-            // Perform accessibility focus action
-            ViewCompat.performAccessibilityAction(targetView, AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS, null)
-
-            // Send standard accessibility events to notify the screen reader
-            val eventState = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
-            eventState.className = targetView.javaClass.name
-            eventState.packageName = targetView.context.packageName
-            eventState.text.add(title)
-            targetView.sendAccessibilityEventUnchecked(eventState)
-
-            targetView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-        }, 500)
     }
 
     fun focusView(targetView: View) {
