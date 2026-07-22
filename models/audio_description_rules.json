@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "silenceThresholdDb": -35.0,
+  "minGapDurationMs": 1800,
+  "narrationSpeed": 1.1,
+  "accessibilityRules": [
+    "الوصف الصوتي في الفراغات فقط بدون التداخل مع الحوار الأصلي",
+    "وصف الحركة والتنقل بين الشخصيات بإيجاز شديد"
+  ]
+}

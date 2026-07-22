@@ -1,0 +1,7 @@
+{
+  "engine": "Arabic_OCR_Tesseract_MobileNet",
+  "lang": "ara",
+  "version": "4.0",
+  "confidenceThreshold": 0.75,
+  "srtFormat": true
+}

@@ -6,7 +6,7 @@
       "featureId": "btnAiVoiceDubbing",
       "title": "دبلجة وتوليد الصوت بالذكاء الاصطناعي",
       "description": "توليد تعليق صوتي ودبلجة مخصصة باللغة العربية مع التحكم برنة الصوت والسرعة.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/features/ai_voice_dubbing.json",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing_config.json",
       "sizeMb": 12.5,
       "version": 1
     },
@@ -15,7 +15,7 @@
       "featureId": "btnAudioStemSeparator",
       "title": "عازل ومحلل الآلات والموسيقى",
       "description": "فصل الصوت البشري النقائي عن الموسيقى التصويرية والآلات الموسيقية.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/features/stem_separator.json",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/vocal_separator.onnx",
       "sizeMb": 15.0,
       "version": 1
     },
@@ -24,7 +24,7 @@
       "featureId": "btnAutoShortsCreator",
       "title": "مولد الفيديوهات القصيرة والقوالب الذكية",
       "description": "تحويل الصور والفيديوهات تلقائياً لمقاطع Shorts وReels مع نصوص وموسيقى.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/features/shorts_creator.json",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/shorts_templates.json",
       "sizeMb": 8.0,
       "version": 1
     },
@@ -33,7 +33,7 @@
       "featureId": "btnCinematicLutShaders",
       "title": "حزمة الفلاتر والتأثيرات السينمائية",
       "description": "تأثيرات سينمائية وانتقالية واحترافية وتعديل درجات الألوان والإضاءة.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/features/lut_shaders.json",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/cinematic_luts.json",
       "sizeMb": 5.0,
       "version": 1
     },
@@ -42,7 +42,7 @@
       "featureId": "btnAiSceneAudioDescription",
       "title": "الوصف الصوتي التفاعلي للمكفوفين",
       "description": "تحليل مشاهد الفيديو وتوليد تعليق ووصف صوتي تفاعلي للحدث والبيئة.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/features/audio_description.json",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/audio_description_rules.json",
       "sizeMb": 10.0,
       "version": 1
     },
@@ -51,7 +51,7 @@
       "featureId": "btnSubtitlesOcrSrt",
       "title": "مستخرج وقارئ الترجمات الشاشاتية SRT",
       "description": "استخراج الترجمات المدمجة بصرية من الفيديو إلى ملفات SRT أو قراءتها صوتياً.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/features/ocr_srt.json",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/arabic_ocr.traineddata",
       "sizeMb": 6.5,
       "version": 1
     }

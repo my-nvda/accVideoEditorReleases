@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "reels_vertical_9_16",
+      "name": "قالب Shorts العمودي 9:16",
+      "aspectRatio": "9:16",
+      "autoSubtitles": true,
+      "zoomEffect": "KenBurns",
+      "transition": "FadeZoom"
+    },
+    {
+      "id": "tiktok_trending_split",
+      "name": "قالب الشاشة المزدوجة TikTok",
+      "aspectRatio": "9:16",
+      "autoSubtitles": true,
+      "splitScreen": true,
+      "transition": "SlideLeft"
+    }
+  ]
+}

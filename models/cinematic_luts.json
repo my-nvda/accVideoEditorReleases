@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "shaders": [
+    { "id": "teal_orange", "name": "سينمائي برتقالي وأزرق (Teal & Orange)", "contrast": 1.25, "saturation": 1.15, "hueShift": -10 },
+    { "id": "vintage_sepia", "name": "كلاسيكي دافئ (Vintage Sepia)", "contrast": 1.10, "saturation": 0.85, "sepia": 0.35 },
+    { "id": "cyberpunk_neon", "name": "نيون ليلي (Cyberpunk Neon)", "contrast": 1.35, "saturation": 1.40, "blueBoost": 1.2 }
+  ]
+}
