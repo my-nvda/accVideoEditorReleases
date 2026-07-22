@@ -1,6 +1,6 @@
 {
-  "versionCode": 51,
-  "versionName": "2.4.48",
+  "versionCode": 52,
+  "versionName": "2.4.49",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.48:\n- حل مشكلة الانهيار تماماً وبشكل مستقر.\n- استبدال مربعات كتابة اللغة ونموذج Gemini بقوائم منسدلة (Spinners) متوافقة 100% مع قارئ الشاشة.\n- توحيد كافة مربعات الكتابة في التطبيق لتطابق نمط الكتابة على الفيديو."
+  "releaseNotes": "تحديث الإصدار 2.4.49:\n- إزالة كافة التنبيهات المزعجة وغير المستقرة أثناء بدء التشغيل لضمان استقرار تام 100%."
 }
