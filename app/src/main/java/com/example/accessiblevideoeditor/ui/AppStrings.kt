@@ -20,12 +20,15 @@ object AppStrings {
                 }
                 customStrings = map
                 customStringsVersion++
+                android.widget.Toast.makeText(context, "تم تحميل ${map.size} نص مخصص للغة: $currentLang", android.widget.Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
+                android.widget.Toast.makeText(context, "خطأ في قراءة ملف الترجمات لـ $currentLang", android.widget.Toast.LENGTH_SHORT).show()
             }
         } else {
             customStrings = null
             customStringsVersion++
+            android.widget.Toast.makeText(context, "ملف الترجمات لـ $currentLang غير موجود محلياً", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
