@@ -79,13 +79,13 @@ object CloudConfigManager {
                                 }
                             }
                         } catch (je: Exception) {
-                            val regex = """"strings"\s*:\s*\{([\s\S]*?)\}""".toRegex()
-                            val match = regex.find(stringsJsonStr)
-                            if (match != null) {
-                                val content = match.groupValues[1]
-                                val itemRegex = """"([^"]+)"\s*:\s*"([^"]*)"""".toRegex()
-                                itemRegex.findAll(content).forEach { m ->
-                                    map[m.groupValues[1]] = m.groupValues[2]
+                            // Robust line/pair level fallback if JSON has syntax errors like missing commas
+                            val itemRegex = """"([^"\\]+)"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"""".toRegex()
+                            itemRegex.findAll(stringsJsonStr).forEach { m ->
+                                val k = m.groupValues[1]
+                                val v = m.groupValues[2]
+                                if (k != "strings" && k != "version") {
+                                    map[k] = v
                                 }
                             }
                         }
