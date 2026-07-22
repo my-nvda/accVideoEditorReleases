@@ -1,6 +1,6 @@
 {
-  "versionCode": 58,
-  "versionName": "2.4.55",
+  "versionCode": 59,
+  "versionName": "2.4.56",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.55:\n- حل شامل ونهائي لعدم تطبيق الترجمات: قراءة اللغة الافتراضية للجهاز، تحصين محرك الـ Inflaters لقراءة أسماء المعرفات والموارد، وتحميل الترجمات في الذاكرة فوراً."
+  "releaseNotes": "تحديث الإصدار 2.4.56:\n- تحديث مستقر وموثوق لجهازك مع دعم كامل لكافة الميزات والترجمات وحماية من الانهيار."
 }
