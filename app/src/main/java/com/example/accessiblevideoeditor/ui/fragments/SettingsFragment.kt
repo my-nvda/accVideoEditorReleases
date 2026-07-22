@@ -112,18 +112,35 @@ class SettingsFragment : Fragment() {
         }
 
         binding.btnCheckUpdates.setOnClickListener {
-            android.widget.Toast.makeText(requireContext(), "جاري التحقق من وجود تحديثات...", android.widget.Toast.LENGTH_SHORT).show()
+            val safeCtx = context ?: return@setOnClickListener
+            try {
+                android.widget.Toast.makeText(safeCtx, "جاري التحقق من وجود تحديثات...", android.widget.Toast.LENGTH_SHORT).show()
+            } catch (_: Exception) {}
+
             viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
-                val info = com.example.accessiblevideoeditor.updater.AppUpdater.checkForUpdate(requireContext())
-                if (info != null) {
-                    com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateDialog(requireActivity(), info)
-                    com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(requireContext(), info)
-                } else {
-                    com.google.android.material.dialog.MaterialAlertDialogBuilder(requireActivity())
-                        .setTitle("التحقق من التحديثات")
-                        .setMessage("تطبيقاتك محدثة لأحدث إصدار أصلي (${com.example.accessiblevideoeditor.BuildConfig.VERSION_NAME}). لا توجد تحديثات جديدة حالياً.")
-                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
-                        .show()
+                try {
+                    val currentContext = context ?: return@launch
+                    val currentActivity = activity ?: return@launch
+                    if (!isAdded || currentActivity.isFinishing || currentActivity.isDestroyed) return@launch
+
+                    val info = com.example.accessiblevideoeditor.updater.AppUpdater.checkForUpdate(currentContext)
+
+                    val activeContext = context ?: return@launch
+                    val activeActivity = activity ?: return@launch
+                    if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return@launch
+
+                    if (info != null) {
+                        com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateDialog(activeActivity, info)
+                        com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(activeContext, info)
+                    } else {
+                        com.google.android.material.dialog.MaterialAlertDialogBuilder(activeActivity)
+                            .setTitle("التحقق من التحديثات")
+                            .setMessage("تطبيقك محدث لأحدث إصدار أصلي (${com.example.accessiblevideoeditor.BuildConfig.VERSION_NAME}). لا توجد تحديثات جديدة حالياً.")
+                            .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                            .show()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }
