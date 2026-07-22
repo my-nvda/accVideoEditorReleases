@@ -1,8 +1,10 @@
 package com.example.accessiblevideoeditor.updater
 
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
@@ -40,6 +42,17 @@ object AppUpdater {
         val status: Int
     )
 
+    private fun getActivity(context: Context): Activity? {
+        var ctx = context
+        while (ctx is ContextWrapper) {
+            if (ctx is Activity) {
+                return ctx
+            }
+            ctx = ctx.baseContext ?: break
+        }
+        return null
+    }
+
     suspend fun checkForUpdate(context: Context): UpdateInfo? = withContext(Dispatchers.IO) {
         try {
             val url = URL("https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/update.json?t=${System.currentTimeMillis()}")
@@ -62,7 +75,7 @@ object AppUpdater {
                         versionCode = serverVersionCode,
                         versionName = json.getString("versionName"),
                         downloadUrl = json.getString("downloadUrl"),
-                        releaseNotes = json.optString("releaseNotes", com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_201))
+                        releaseNotes = json.optString("releaseNotes", com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_201))
                     )
                 }
             }
@@ -75,11 +88,11 @@ object AppUpdater {
     fun downloadAndInstall(context: Context, updateInfo: UpdateInfo): Long {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(updateInfo.downloadUrl)
-        val title = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_202)
-        val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_203).replace("%s", updateInfo.versionName)
+        val title = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_202)
+        val desc = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_203).replace("%s", updateInfo.versionName)
         val request = DownloadManager.Request(uri)
-            .setTitle(title)
-            .setDescription(desc)
+            .setTitle(if (title.isNotEmpty()) title else "جاري تنزيل التحديث")
+            .setDescription(if (desc.isNotEmpty()) desc else "الإصدار ${updateInfo.versionName}")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "AccessibleVideoEditor_Update.apk")
 
@@ -90,17 +103,20 @@ object AppUpdater {
                 val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 if (id == downloadId) {
                     installApk(context, downloadId)
-                    context.unregisterReceiver(this)
+                    try { context.unregisterReceiver(this) } catch (_: Exception) {}
                 }
             }
         }
 
-        androidx.core.content.ContextCompat.registerReceiver(
-            context,
-            receiver,
-            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-            androidx.core.content.ContextCompat.RECEIVER_EXPORTED
-        )
+        try {
+            androidx.core.content.ContextCompat.registerReceiver(
+                context,
+                receiver,
+                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+                androidx.core.content.ContextCompat.RECEIVER_EXPORTED
+            )
+        } catch (_: Exception) {}
+
         return downloadId
     }
 
@@ -175,16 +191,22 @@ object AppUpdater {
                 val channel = android.app.NotificationChannel(
                     channelId,
                     channelName,
-                    android.app.NotificationManager.IMPORTANCE_DEFAULT
+                    android.app.NotificationManager.IMPORTANCE_HIGH
                 ).apply {
                     description = "Notifications for new app updates"
                 }
                 notificationManager.createNotificationChannel(channel)
             }
 
-            // Create intent to open MainActivity
-            val intent = Intent(context, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            val activityIntent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+
+            val downloadIntent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("start_download_update", true)
+                putExtra("download_url", updateInfo.downloadUrl)
+                putExtra("download_version", updateInfo.versionName)
             }
             
             val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -192,14 +214,24 @@ object AppUpdater {
             } else {
                 android.app.PendingIntent.FLAG_UPDATE_CURRENT
             }
-            val pendingIntent = android.app.PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
+            val contentPendingIntent = android.app.PendingIntent.getActivity(context, 0, activityIntent, pendingIntentFlags)
+            val downloadPendingIntent = android.app.PendingIntent.getActivity(context, 1, downloadIntent, pendingIntentFlags)
+
+            val title = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_242)
+            val btnText = com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_244)
 
             val builder = androidx.core.app.NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(android.R.drawable.stat_sys_download_done) // system icon
-                .setContentTitle(context.getString(R.string.string_242))
-                .setContentText(context.getString(R.string.string_243, updateInfo.versionName) + " " + context.getString(R.string.string_244))
-                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setContentTitle(if (title.isNotEmpty()) title else "تحديث جديد متوفر")
+                .setContentText("الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل.")
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(androidx.core.app.NotificationCompat.DEFAULT_ALL)
+                .setContentIntent(contentPendingIntent)
+                .addAction(
+                    android.R.drawable.stat_sys_download,
+                    if (btnText.isNotEmpty()) btnText else "تنزيل الآن",
+                    downloadPendingIntent
+                )
                 .setAutoCancel(true)
 
             notificationManager.notify(1001, builder.build())
@@ -209,52 +241,60 @@ object AppUpdater {
     }
 
     fun showUpdateDialog(context: Context, updateInfo: UpdateInfo) {
-        val activity = context as? android.app.Activity 
-            ?: (context as? android.content.ContextWrapper)?.baseContext as? android.app.Activity
-        if (activity != null && (activity.isFinishing || activity.isDestroyed)) {
+        val activity = getActivity(context) ?: return
+        if (activity.isFinishing || activity.isDestroyed) {
             return
         }
 
         try {
-            val builder = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
-            builder.setTitle(context.getString(R.string.string_242)) // Update Available
-            builder.setMessage(context.getString(R.string.string_243, updateInfo.versionName) + "\n\n" + updateInfo.releaseNotes)
-            builder.setPositiveButton(context.getString(R.string.string_244)) { dialog, _ -> // Download
+            val title = com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_242)
+            val msgTemplate = com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_243)
+            val btnText = com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_244)
+
+            val message = (if (msgTemplate.contains("%")) {
+                String.format(msgTemplate, updateInfo.versionName)
+            } else {
+                "الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل."
+            }) + "\n\n" + updateInfo.releaseNotes
+
+            val builder = com.google.android.material.dialog.MaterialAlertDialogBuilder(activity)
+            builder.setTitle(if (title.isNotEmpty()) title else "تحديث جديد متوفر")
+            builder.setMessage(message)
+            builder.setPositiveButton(if (btnText.isNotEmpty()) btnText else "تنزيل الآن") { dialog, _ ->
                 dialog.dismiss()
-                startDownloadWithProgress(context, updateInfo)
+                startDownloadWithProgress(activity, updateInfo)
             }
             builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
             }
-            builder.show()
+            builder.create().show()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun startDownloadWithProgress(context: Context, updateInfo: UpdateInfo) {
-        val activity = context as? android.app.Activity 
-            ?: (context as? android.content.ContextWrapper)?.baseContext as? android.app.Activity
-        if (activity != null && (activity.isFinishing || activity.isDestroyed)) {
+    fun startDownloadWithProgress(context: Context, updateInfo: UpdateInfo) {
+        val activity = getActivity(context) ?: return
+        if (activity.isFinishing || activity.isDestroyed) {
             return
         }
 
         try {
-            val downloadId = downloadAndInstall(context, updateInfo)
+            val downloadId = downloadAndInstall(activity, updateInfo)
 
-            val padding = (16 * context.resources.displayMetrics.density).toInt()
-            val container = android.widget.LinearLayout(context).apply {
+            val padding = (16 * activity.resources.displayMetrics.density).toInt()
+            val container = android.widget.LinearLayout(activity).apply {
                 orientation = android.widget.LinearLayout.VERTICAL
                 setPadding(padding, padding, padding, padding)
             }
 
-            val messageView = android.widget.TextView(context).apply {
-                text = context.getString(R.string.string_214, 0) // Completed: 0%
+            val messageView = android.widget.TextView(activity).apply {
+                text = activity.getString(R.string.string_214, 0)
                 setPadding(0, 0, 0, padding / 2)
                 textSize = 16f
             }
 
-            val progressBar = android.widget.ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal).apply {
+            val progressBar = android.widget.ProgressBar(activity, null, android.R.attr.progressBarStyleHorizontal).apply {
                 max = 100
                 progress = 0
                 isIndeterminate = false
@@ -263,11 +303,11 @@ object AppUpdater {
             container.addView(messageView)
             container.addView(progressBar)
 
-            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
-                .setTitle(context.getString(R.string.string_213)) // Downloading update
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(activity)
+                .setTitle(activity.getString(R.string.string_213))
                 .setView(container)
-                .setNegativeButton(context.getString(R.string.string_218)) { d, _ -> // Cancel download
-                    val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                .setNegativeButton(activity.getString(R.string.string_218)) { d, _ ->
+                    val downloadManager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                     downloadManager.remove(downloadId)
                     d.dismiss()
                 }
@@ -276,16 +316,14 @@ object AppUpdater {
 
             dialog.show()
 
-            val lifecycleOwner = context as? androidx.lifecycle.LifecycleOwner
-                ?: (context as? android.content.ContextWrapper)?.baseContext as? androidx.lifecycle.LifecycleOwner
-
+            val lifecycleOwner = activity as? LifecycleOwner
             if (lifecycleOwner != null) {
                 lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                    observeDownload(context, downloadId).collect { progress ->
+                    observeDownload(activity, downloadId).collect { progress ->
                         if (progress.totalBytes > 0) {
                             val percent = ((progress.bytesDownloaded.toFloat() / progress.totalBytes.toFloat()) * 100).toInt()
                             progressBar.progress = percent
-                            messageView.text = context.getString(R.string.string_214, percent)
+                            messageView.text = activity.getString(R.string.string_214, percent)
                         }
                         if (progress.status == DownloadManager.STATUS_SUCCESSFUL || progress.status == DownloadManager.STATUS_FAILED) {
                             try { dialog.dismiss() } catch (_: Exception) {}

@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    handleUpdateIntent(intent)
+
     // Initialize Managers
     com.example.accessiblevideoeditor.ui.SettingsManager.init(this)
     SoundManager.init(this)
@@ -240,6 +242,26 @@ class MainActivity : AppCompatActivity() {
           field.set(inflater, customFactory)
       } catch (e: Exception) {
           e.printStackTrace()
+      }
+  }
+
+  override fun onNewIntent(intent: android.content.Intent) {
+      super.onNewIntent(intent)
+      setIntent(intent)
+      handleUpdateIntent(intent)
+  }
+
+  private fun handleUpdateIntent(intent: android.content.Intent?) {
+      if (intent?.getBooleanExtra("start_download_update", false) == true) {
+          val url = intent.getStringExtra("download_url") ?: return
+          val version = intent.getStringExtra("download_version") ?: ""
+          val info = com.example.accessiblevideoeditor.updater.AppUpdater.UpdateInfo(
+              versionCode = 999,
+              versionName = version,
+              downloadUrl = url,
+              releaseNotes = ""
+          )
+          com.example.accessiblevideoeditor.updater.AppUpdater.startDownloadWithProgress(this, info)
       }
   }
 
