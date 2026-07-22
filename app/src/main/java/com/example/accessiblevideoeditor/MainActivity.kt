@@ -174,7 +174,10 @@ class MainActivity : AppCompatActivity() {
             val info = AppUpdater.checkForUpdate(this@MainActivity)
             if (info != null && !isFinishing && !isDestroyed) {
                 AppUpdater.showUpdateNotification(this@MainActivity, info)
-                AppUpdater.showUpdateDialog(this@MainActivity, info)
+                kotlinx.coroutines.delay(600)
+                if (!isFinishing && !isDestroyed) {
+                    AppUpdater.showUpdateDialog(this@MainActivity, info)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
