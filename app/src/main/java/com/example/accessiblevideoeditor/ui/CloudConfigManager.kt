@@ -91,17 +91,24 @@ object CloudConfigManager {
                         }
 
                         if (map.isNotEmpty()) {
-                            val cachedVersion = prefs?.getInt(KEY_STRINGS_VERSION, -1) ?: -1
-                            val isNewVersion = serverVersion == -1 || serverVersion > cachedVersion
+                            val stringsObj = JSONObject()
+                            for ((k, v) in map) {
+                                stringsObj.put(k, v)
+                            }
+                            val newContent = stringsObj.toString()
+                            val currentLang = LanguageManager.getCurrentLanguageCode()
+                            val file = File(context.filesDir, "custom_lang_$currentLang.json")
 
-                            if (isNewVersion) {
-                                val stringsObj = JSONObject()
-                                for ((k, v) in map) {
-                                    stringsObj.put(k, v)
-                                }
-                                val currentLang = LanguageManager.getCurrentLanguageCode()
-                                val file = File(context.filesDir, "custom_lang_$currentLang.json")
-                                file.writeText(stringsObj.toString(), Charsets.UTF_8)
+                            // Compare with cached content to avoid unnecessary recreate()
+                            val cachedContent = if (file.exists()) file.readText(Charsets.UTF_8) else ""
+                            val cachedVersion = prefs?.getInt(KEY_STRINGS_VERSION, -1) ?: -1
+
+                            // Content changed OR version explicitly bumped
+                            val hasChanged = newContent != cachedContent ||
+                                (serverVersion != -1 && serverVersion > cachedVersion)
+
+                            if (hasChanged) {
+                                file.writeText(newContent, Charsets.UTF_8)
                                 if (serverVersion != -1) {
                                     prefs?.edit()?.putInt(KEY_STRINGS_VERSION, serverVersion)?.apply()
                                 }
