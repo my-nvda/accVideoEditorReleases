@@ -28,9 +28,10 @@ object LanguageManager {
     fun getCurrentLanguageCode(): String {
         val currentLocales = AppCompatDelegate.getApplicationLocales()
         if (!currentLocales.isEmpty) {
-            val lang = currentLocales[0]?.language ?: "en"
+            val lang = currentLocales[0]?.language ?: java.util.Locale.getDefault().language
             return if (lang == "iw" || lang.startsWith("iw")) "he" else lang
         }
-        return "en"
+        val sysLang = java.util.Locale.getDefault().language ?: "en"
+        return if (sysLang == "iw" || sysLang.startsWith("iw")) "he" else sysLang
     }
 }

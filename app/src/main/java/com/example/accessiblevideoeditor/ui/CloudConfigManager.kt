@@ -99,24 +99,23 @@ object CloudConfigManager {
                             val currentLang = LanguageManager.getCurrentLanguageCode()
                             val file = File(context.filesDir, "custom_lang_$currentLang.json")
 
-                            // Compare with cached content to avoid unnecessary recreate()
                             val cachedContent = if (file.exists()) file.readText(Charsets.UTF_8) else ""
                             val cachedVersion = prefs?.getInt(KEY_STRINGS_VERSION, -1) ?: -1
 
-                            // Content changed OR version explicitly bumped
                             val hasChanged = newContent != cachedContent ||
                                 (serverVersion != -1 && serverVersion > cachedVersion)
 
-                            if (hasChanged) {
+                            if (hasChanged || !file.exists()) {
                                 file.writeText(newContent, Charsets.UTF_8)
                                 if (serverVersion != -1) {
                                     prefs?.edit()?.putInt(KEY_STRINGS_VERSION, serverVersion)?.apply()
                                 }
-                                withContext(Dispatchers.Main) {
-                                    AppStrings.loadCustomStrings(context)
-                                }
-                                // Signal to HomeFragment that a recreate() is needed
                                 stringsUpdated = true
+                            }
+
+                            // ALWAYS reload AppStrings into memory cache so customStrings is populated
+                            withContext(Dispatchers.Main) {
+                                AppStrings.loadCustomStrings(context)
                             }
                         }
                     }

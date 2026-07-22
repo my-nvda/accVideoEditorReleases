@@ -10,9 +10,8 @@ import android.widget.TextView
  * A LayoutInflater.Factory2 that intercepts every view at creation time and
  * applies cloud translations to text/hint/contentDescription attributes.
  *
- * This is necessary because Android's TypedArray reads XML-defined strings
- * directly from the compiled APK resource table via native code, bypassing
- * any Resources.getString() override entirely.
+ * Checks both string resource entry names (e.g. "string_112") and
+ * view entry names (e.g. "btnVideoEditor") for maximum flexibility.
  */
 class TranslationInflaterFactory(
     private val delegate: LayoutInflater.Factory2?,
@@ -20,7 +19,6 @@ class TranslationInflaterFactory(
 ) : LayoutInflater.Factory2 {
 
     companion object {
-        private const val NS_ANDROID = "http://schemas.android.com/apk/res/android"
         private val CLASS_PREFIXES = arrayOf(
             "android.widget.",
             "android.view.",
@@ -70,19 +68,34 @@ class TranslationInflaterFactory(
         val strings = AppStrings.customStrings ?: return
         if (strings.isEmpty()) return
 
-        fun translateAttr(attrName: String): String? {
-            val resId = attrs.getAttributeResourceValue(NS_ANDROID, attrName, 0)
-            if (resId == 0) return null
-            return try {
-                val entryName = context.resources.getResourceEntryName(resId)
-                strings[entryName]
-            } catch (_: Exception) { null }
+        // 1. Check matching by View ID name (e.g. "btnVideoEditor")
+        if (view.id != View.NO_ID) {
+            try {
+                val viewIdName = context.resources.getResourceEntryName(view.id)
+                strings[viewIdName]?.let { translated ->
+                    if (view is TextView) {
+                        view.text = translated
+                    }
+                }
+            } catch (_: Exception) {}
         }
 
-        if (view is TextView) {
-            translateAttr("text")?.let { view.text = it }
-            translateAttr("hint")?.let { view.hint = it }
+        // 2. Check matching by String Resource ID name (e.g. "string_112")
+        for (i in 0 until attrs.attributeCount) {
+            val attrName = attrs.getAttributeName(i)
+            val resId = attrs.getAttributeResourceValue(i, 0)
+            if (resId != 0) {
+                try {
+                    val entryName = context.resources.getResourceEntryName(resId)
+                    strings[entryName]?.let { translated ->
+                        when (attrName) {
+                            "text" -> if (view is TextView) view.text = translated
+                            "hint" -> if (view is TextView) view.hint = translated
+                            "contentDescription" -> view.contentDescription = translated
+                        }
+                    }
+                } catch (_: Exception) {}
+            }
         }
-        translateAttr("contentDescription")?.let { view.contentDescription = it }
     }
 }
