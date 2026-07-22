@@ -109,13 +109,13 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             val result = com.example.accessiblevideoeditor.ui.CloudConfigManager.checkCloudConfig(requireContext())
             
-            // 1. Silent Hide for Disabled Features (NO POPUP NOTIFICATION SHOWN)
-            if (result.currentlyDisabledIds.contains("btnNoiseReduction")) binding.btnNoiseReduction.visibility = View.GONE
-            if (result.currentlyDisabledIds.contains("btnSpeedControl")) binding.btnSpeedControl.visibility = View.GONE
-            if (result.currentlyDisabledIds.contains("btnBackgroundMusic")) binding.btnBackgroundMusic.visibility = View.GONE
-            if (result.currentlyDisabledIds.contains("btnAudioNormalization")) binding.btnAudioNormalization.visibility = View.GONE
-            if (result.currentlyDisabledIds.contains("btnAiSceneInspector")) binding.btnAiSceneInspector.visibility = View.GONE
-            if (result.currentlyDisabledIds.contains("btnMergeVideos")) binding.btnMergeVideos.visibility = View.GONE
+            // 1. Dynamic Silent Hide for ANY Disabled Feature (ALL 25+ buttons supported)
+            for (disabledId in result.currentlyDisabledIds) {
+                val resId = resources.getIdentifier(disabledId, "id", requireContext().packageName)
+                if (resId != 0) {
+                    binding.root.findViewById<View>(resId)?.visibility = View.GONE
+                }
+            }
 
             // 2. Gentle Notification when a Feature is Re-enabled
             if (result.reEnabledFeatureIds.isNotEmpty()) {
