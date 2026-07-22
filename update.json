@@ -1,6 +1,6 @@
 {
-  "versionCode": 68,
-  "versionName": "2.4.65",
+  "versionCode": 69,
+  "versionName": "2.4.66",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.65:\n- إظهار قسم 'الملحقات والميزات المضافة' ورؤية الملحقات المثبتة مباشرة في الشاشة الرئيسية مع زر فتح متجر الملحقات."
+  "releaseNotes": "تحديث الإصدار 2.4.66:\n- إصلاح حرج لمنع أي انهيار عند فتح الشاشة الرئيسية وتأمين إنشاء أزرار الملحقات الديناميكية بنسبة 100%."
 }
