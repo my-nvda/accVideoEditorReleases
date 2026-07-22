@@ -1,6 +1,6 @@
 {
-  "versionCode": 45,
-  "versionName": "2.4.42",
+  "versionCode": 46,
+  "versionName": "2.4.43",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.42:\n- تفعيل المعالجة فائقة التسامح مع أخطاء ملفات الترجمة (strings_patch.json) لتجاوز أي فواصل مفقودة أو أخطاء كتابة من المتصفح."
+  "releaseNotes": "تحديث الإصدار 2.4.43:\n- إضافة رسالة تشخيصية لتأكيد لغة ونوع وحالة ملفات الترجمة المحملة من السيرفر لحظة التشغيل."
 }
