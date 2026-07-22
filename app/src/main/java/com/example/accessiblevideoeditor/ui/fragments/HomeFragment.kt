@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.accessiblevideoeditor.databinding.FragmentHomeBinding
 import com.example.accessiblevideoeditor.R
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import com.example.accessiblevideoeditor.ui.AppStrings
 import com.example.accessiblevideoeditor.ui.ProcessingManager
 
@@ -98,6 +101,44 @@ class HomeFragment : Fragment() {
         binding.btnAudioNormalization.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioNormalizationFragment) }
         binding.btnAiSceneInspector.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiSceneInspectorFragment) }
         binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
+
+        checkRemoteCloudConfig()
+    }
+
+    private fun checkRemoteCloudConfig() {
+        lifecycleScope.launch {
+            val result = com.example.accessiblevideoeditor.ui.CloudConfigManager.checkCloudConfig(requireContext())
+            
+            // 1. Silent Hide for Disabled Features (NO POPUP NOTIFICATION SHOWN)
+            if (result.currentlyDisabledIds.contains("btnNoiseReduction")) binding.btnNoiseReduction.visibility = View.GONE
+            if (result.currentlyDisabledIds.contains("btnSpeedControl")) binding.btnSpeedControl.visibility = View.GONE
+            if (result.currentlyDisabledIds.contains("btnBackgroundMusic")) binding.btnBackgroundMusic.visibility = View.GONE
+            if (result.currentlyDisabledIds.contains("btnAudioNormalization")) binding.btnAudioNormalization.visibility = View.GONE
+            if (result.currentlyDisabledIds.contains("btnAiSceneInspector")) binding.btnAiSceneInspector.visibility = View.GONE
+            if (result.currentlyDisabledIds.contains("btnMergeVideos")) binding.btnMergeVideos.visibility = View.GONE
+
+            // 2. Gentle Notification when a Feature is Re-enabled
+            if (result.reEnabledFeatureIds.isNotEmpty()) {
+                Toast.makeText(requireContext(), "تم إعادة تفعيل الميزات المتوقفة بنجاح", Toast.LENGTH_SHORT).show()
+            }
+
+            // 3. Explicit User-Driven Download Prompt for New Features & Updates
+            for (item in result.pendingDownloads) {
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(item.title)
+                    .setMessage("${item.description}\n\nهل ترغب في تنزيل وتفعيل هذه الميزة الآن؟")
+                    .setPositiveButton("تنزيل الميزة الآن") { dialog, _ ->
+                        com.example.accessiblevideoeditor.ui.CloudConfigManager.markFeatureAsDownloaded(item.id)
+                        Toast.makeText(requireContext(), "تم تنزيل وتفعيل الميزة بنجاح!", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("لاحقاً") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+                break
+            }
+        }
     }
 
     private fun navigateWithFocus(v: View, actionId: Int) {
