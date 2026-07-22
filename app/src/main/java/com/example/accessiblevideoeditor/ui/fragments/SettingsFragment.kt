@@ -112,13 +112,18 @@ class SettingsFragment : Fragment() {
         }
 
         binding.btnCheckUpdates.setOnClickListener {
+            android.widget.Toast.makeText(requireContext(), "جاري التحقق من وجود تحديثات...", android.widget.Toast.LENGTH_SHORT).show()
             viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
                 val info = com.example.accessiblevideoeditor.updater.AppUpdater.checkForUpdate(requireContext())
                 if (info != null) {
-                    com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateDialog(requireContext(), info)
+                    com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateDialog(requireActivity(), info)
+                    com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(requireContext(), info)
                 } else {
-                    val msg = com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), com.example.accessiblevideoeditor.R.string.string_201)
-                    android.widget.Toast.makeText(requireContext(), if (msg.isNotEmpty()) msg else "التطبيق محدث لأحدث إصدار", android.widget.Toast.LENGTH_SHORT).show()
+                    com.google.android.material.dialog.MaterialAlertDialogBuilder(requireActivity())
+                        .setTitle("التحقق من التحديثات")
+                        .setMessage("تطبيقاتك محدثة لأحدث إصدار أصلي (${com.example.accessiblevideoeditor.BuildConfig.VERSION_NAME}). لا توجد تحديثات جديدة حالياً.")
+                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .show()
                 }
             }
         }
