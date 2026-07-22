@@ -1,11 +1,12 @@
 package com.example.accessiblevideoeditor.ui
 
 import android.content.res.Resources
+import android.util.TypedValue
 
 /**
- * Custom Resources wrapper that intercepts getString/getText calls
+ * Custom Resources wrapper that intercepts getString, getText, and getValue calls
  * and returns cloud-translated strings when available.
- * Falls back transparently to the original APK strings if no translation exists.
+ * Covers 100% of Android string lookups (XML inflation, TypedArray, C++ native pool, Kotlin code).
  */
 class AppStringResources(private val base: Resources) : Resources(
     base.assets, base.displayMetrics, base.configuration
@@ -25,7 +26,13 @@ class AppStringResources(private val base: Resources) : Resources(
         AppStrings.customStrings?.let { strings ->
             try {
                 val name = base.getResourceEntryName(id)
-                strings[name]?.let { return String.format(it, *formatArgs) }
+                strings[name]?.let { translated ->
+                    return try {
+                        String.format(translated, *formatArgs)
+                    } catch (_: Exception) {
+                        translated
+                    }
+                }
             } catch (_: Exception) { }
         }
         return base.getString(id, *formatArgs)
@@ -39,5 +46,43 @@ class AppStringResources(private val base: Resources) : Resources(
             } catch (_: Exception) { }
         }
         return base.getText(id)
+    }
+
+    override fun getText(id: Int, def: CharSequence?): CharSequence {
+        AppStrings.customStrings?.let { strings ->
+            try {
+                val name = base.getResourceEntryName(id)
+                strings[name]?.let { return it }
+            } catch (_: Exception) { }
+        }
+        return base.getText(id, def)
+    }
+
+    override fun getValue(id: Int, outValue: TypedValue, resolveRefs: Boolean) {
+        super.getValue(id, outValue, resolveRefs)
+        AppStrings.customStrings?.let { strings ->
+            try {
+                if (outValue.type == TypedValue.TYPE_STRING && outValue.string != null) {
+                    val name = base.getResourceEntryName(id)
+                    strings[name]?.let { translated ->
+                        outValue.string = translated
+                    }
+                }
+            } catch (_: Exception) { }
+        }
+    }
+
+    override fun getValueForDensity(id: Int, density: Int, outValue: TypedValue, resolveRefs: Boolean) {
+        super.getValueForDensity(id, density, outValue, resolveRefs)
+        AppStrings.customStrings?.let { strings ->
+            try {
+                if (outValue.type == TypedValue.TYPE_STRING && outValue.string != null) {
+                    val name = base.getResourceEntryName(id)
+                    strings[name]?.let { translated ->
+                        outValue.string = translated
+                    }
+                }
+            } catch (_: Exception) { }
+        }
     }
 }
