@@ -38,8 +38,9 @@ object CloudConfigManager {
         init(context)
         val result = CloudConfigResult()
         try {
-            val url = URL(CONFIG_URL)
+            val url = URL("$CONFIG_URL?t=${System.currentTimeMillis()}")
             val connection = url.openConnection() as HttpURLConnection
+            connection.useCaches = false
             connection.connectTimeout = 4000
             connection.readTimeout = 4000
             connection.requestMethod = "GET"
