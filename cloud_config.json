@@ -1,9 +1,7 @@
 {
-  
-"disabledFeatures": [
-"btnVideoEditor"]
-
-  
+  "disabledFeatures": [
+    "btnVideoEditor"
+  ],
   "newFeatures": [],
   "featurePatches": [],
   "allAvailableFeatureIds": {
