@@ -49,9 +49,7 @@ object CloudConfigManager {
             connection.requestMethod = "GET"
 
             if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-                result.isSuccess = true
                 val jsonStr = connection.inputStream.bufferedReader().use { it.readText() }
-                val root = JSONObject(jsonStr)
 
                 // Fetch Strings Patch in background
                 try {
@@ -110,28 +108,54 @@ object CloudConfigManager {
                 prefs?.edit()?.putStringSet(KEY_DISABLED_SET, currentDisabled)?.apply()
                 result.currentlyDisabledIds = currentDisabled
 
-                // 2. Process New Features & Updates requiring user download
+                // 2. Process New Features & Updates requiring user download with Fault-Tolerant Regex Fallback
                 val downloaded = prefs?.getStringSet(KEY_DOWNLOADED_FEATURES, emptySet()) ?: emptySet()
-
-                if (root.has("newFeatures")) {
-                    val arr = root.getJSONArray("newFeatures")
-                    for (i in 0 until arr.length()) {
-                        val obj = arr.getJSONObject(i)
-                        val id = obj.getString("id")
-                        if (!downloaded.contains(id)) {
-                            result.pendingDownloads.add(
-                                DynamicFeatureItem(
-                                    id = id,
-                                    featureId = obj.optString("featureId"),
-                                    title = obj.optString("title"),
-                                    description = obj.optString("description"),
-                                    downloadUrl = obj.optString("downloadUrl"),
-                                    version = obj.optInt("version", 1)
+                try {
+                    val root = JSONObject(jsonStr)
+                    if (root.has("newFeatures")) {
+                        val arr = root.getJSONArray("newFeatures")
+                        for (i in 0 until arr.length()) {
+                            val obj = arr.getJSONObject(i)
+                            val id = obj.getString("id")
+                            if (!downloaded.contains(id)) {
+                                result.pendingDownloads.add(
+                                    DynamicFeatureItem(
+                                        id = id,
+                                        featureId = obj.optString("featureId"),
+                                        title = obj.optString("title"),
+                                        description = obj.optString("description"),
+                                        downloadUrl = obj.optString("downloadUrl"),
+                                        version = obj.optInt("version", 1)
+                                    )
                                 )
-                            )
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    val regex = """"newFeatures"\s*:\s*\[([\s\S]*?)\]""".toRegex()
+                    val match = regex.find(jsonStr)
+                    if (match != null) {
+                        val content = match.groupValues[1]
+                        val objRegex = """\{\s*"id"\s*:\s*"([^"]+)"\s*,\s*"featureId"\s*:\s*"([^"]+)"\s*,\s*"title"\s*:\s*"([^"]+)"\s*,\s*"description"\s*:\s*"([^"]+)"\s*,\s*"downloadUrl"\s*:\s*"([^"]+)"[^}]*\}""".toRegex()
+                        objRegex.findAll(content).forEach { m ->
+                            val id = m.groupValues[1]
+                            if (!downloaded.contains(id)) {
+                                result.pendingDownloads.add(
+                                    DynamicFeatureItem(
+                                        id = id,
+                                        featureId = m.groupValues[2],
+                                        title = m.groupValues[3],
+                                        description = m.groupValues[4],
+                                        downloadUrl = m.groupValues[5],
+                                        version = 1
+                                    )
+                                )
+                            }
                         }
                     }
                 }
+                
+                result.isSuccess = true
             }
         } catch (e: Exception) {
             e.printStackTrace()
