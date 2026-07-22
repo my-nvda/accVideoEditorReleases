@@ -146,7 +146,11 @@ class HomeFragment : Fragment() {
             updateButtonTexts()
 
             // 2. Gentle Notification when a Feature is Re-enabled
-            Toast.makeText(requireContext(), "تم الاتصال بنجاح. الميزات المعطلة: ${result.currentlyDisabledIds.size}، المعلقة: ${result.pendingDownloads.size}", Toast.LENGTH_SHORT).show()
+            if (result.isSuccess) {
+                Toast.makeText(requireContext(), "تم الاتصال بنجاح. الميزات المعطلة: ${result.currentlyDisabledIds.size}، المعلقة: ${result.pendingDownloads.size}", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "فشل الاتصال بالسحابة. يرجى التحقق من الاتصال بالإنترنت.", Toast.LENGTH_SHORT).show()
+            }
             if (result.reEnabledFeatureIds.isNotEmpty()) {
                 Toast.makeText(requireContext(), "تم إعادة تفعيل الميزات المتوقفة بنجاح", Toast.LENGTH_SHORT).show()
             }

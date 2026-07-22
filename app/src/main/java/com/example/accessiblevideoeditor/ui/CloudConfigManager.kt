@@ -49,6 +49,7 @@ object CloudConfigManager {
             connection.requestMethod = "GET"
 
             if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                result.isSuccess = true
                 val jsonStr = connection.inputStream.bufferedReader().use { it.readText() }
                 val root = JSONObject(jsonStr)
 
@@ -146,6 +147,7 @@ object CloudConfigManager {
 }
 
 class CloudConfigResult {
+    var isSuccess: Boolean = false
     var currentlyDisabledIds: Set<String> = emptySet()
     var reEnabledFeatureIds: List<String> = emptyList()
     val pendingDownloads: MutableList<DynamicFeatureItem> = mutableListOf()
