@@ -1,13 +1,16 @@
 {
-  "disabledFeatures": [
-    
-
+  "disabledFeatures": [],
+  "newFeatures": [
+    {
+      "id": "test_dynamic_feature_01",
+      "featureId": "btnAiSceneInspector",
+      "title": "ميزة الفحص والتحليل التجريبي أونلاين",
+      "description": "هذه ميزة تجريبية لاختبار محرك الإطلاق الديناميكي السحابي للتطبيق دون الحاجة لتحديث ملف الـ APK.",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/strings_patch.json",
+      "version": 1
+    }
   ],
-  "newFeatures": [],
-  "featurePatches": [
-      
-  ],
-  
+  "featurePatches": [],
   "allAvailableFeatureIds": {
     "btnVideoEditor": "محرر الفيديو الشامل",
     "btnImageEditor": "محرر الصور",
