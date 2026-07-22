@@ -1,6 +1,6 @@
 {
-  "versionCode": 42,
-  "versionName": "2.4.39",
+  "versionCode": 43,
+  "versionName": "2.4.40",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.39:\n- إضافة رسالة فحص تشخيصية لمعرفة سبب تأخر التحديث السحابي التفاعلي بالملي ثانية."
+  "releaseNotes": "تحديث الإصدار 2.4.40:\n- معالجة رسائل الفحص التشخيصية لمنع ظهور رسائل اتصال خداعة في حال عدم وجود اتصال بالإنترنت."
 }
