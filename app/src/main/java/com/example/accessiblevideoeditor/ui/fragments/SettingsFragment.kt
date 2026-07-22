@@ -117,7 +117,8 @@ class SettingsFragment : Fragment() {
                 if (info != null) {
                     com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateDialog(requireContext(), info)
                 } else {
-                    android.widget.Toast.makeText(requireContext(), "App is up to date", android.widget.Toast.LENGTH_SHORT).show()
+                    val msg = com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), com.example.accessiblevideoeditor.R.string.string_201)
+                    android.widget.Toast.makeText(requireContext(), if (msg.isNotEmpty()) msg else "التطبيق محدث لأحدث إصدار", android.widget.Toast.LENGTH_SHORT).show()
                 }
             }
         }
