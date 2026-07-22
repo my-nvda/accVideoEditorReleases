@@ -1,6 +1,6 @@
 {
-  "versionCode": 64,
-  "versionName": "2.4.61",
+  "versionCode": 67,
+  "versionName": "2.4.64",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.61:\n- إصلاح حرج لمنع أي انهيار عند الضغط على زر التحقق من التحديثات في الإعدادات وحماية كاملة للـ Fragment lifecycle."
+  "releaseNotes": "تحديث الإصدار 2.4.64:\n- حل خاف وأكيد لرمز الإشعارات الداخلي واستبداله برمز التطبيق الرسمي لمنع أي انهيار نهائياً."
 }
