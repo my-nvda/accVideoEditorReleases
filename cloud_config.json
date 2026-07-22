@@ -1,12 +1,6 @@
 {
-  "disabledFeatures": [
-
-    
-  ],
-  "newFeatures": [
-    {
-      
-      ],
+  "disabledFeatures": [],
+  "newFeatures": [],
   "featurePatches": [],
   "allAvailableFeatureIds": {
     "btnVideoEditor": "محرر الفيديو الشامل",
@@ -33,6 +27,12 @@
     "btnNoiseReduction": "إزالة الضوضاء وتصفية التشويش",
     "btnBackgroundMusic": "دمج موسيقى خلفية",
     "btnAudioNormalization": "موازنة مستوى الصوت التلقائي",
-    "btnAiSceneInspector": "مستكشف ومشرح مشاهد الفيديو الذكي"
+    "btnAiSceneInspector": "مستكشف ومشرح مشاهد الفيديو الذكي",
+    "plugin_ai_voice_dubbing": "ملحق: دبلجة وتوليد الصوت بالذكاء الاصطناعي",
+    "plugin_audio_stem_separator": "ملحق: عازل ومحلل الآلات والموسيقى",
+    "plugin_auto_shorts_creator": "ملحق: مولد الفيديوهات القصيرة والقوالب الذكية",
+    "plugin_cinematic_lut_shaders": "ملحق: حزمة الفلاتر والتأثيرات السينمائية",
+    "plugin_ai_scene_audio_description": "ملحق: الوصف الصوتي التفاعلي للمكفوفين",
+    "plugin_subtitles_ocr_srt": "ملحق: مستخرج وقارئ الترجمات الشاشاتية SRT"
   }
 }

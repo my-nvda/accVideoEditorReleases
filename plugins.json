@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "plugins": [
+    {
+      "id": "plugin_ai_voice_dubbing",
+      "title": "دبلجة وتوليد الصوت بالذكاء الاصطناعي",
+      "description": "توليد تعليق صوتي ودبلجة مخصصة باللغة العربية مع إمكانية تحويل النص لصوت وتعديل السرعة ورنة الصوت.",
+      "category": "صوتيات والذكاء الاصطناعي",
+      "sizeMb": 12.5,
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/plugins/plugin_ai_voice_dubbing.json"
+    },
+    {
+      "id": "plugin_audio_stem_separator",
+      "title": "عازل ومحلل الآلات والموسيقى",
+      "description": "فصل الصوت البشري النقائي عن الموسيقى التصويرية والآلات في الفيديوهات والمقاطع الصوتية.",
+      "category": "استوديو الصوت",
+      "sizeMb": 15.0,
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/plugins/plugin_audio_stem_separator.json"
+    },
+    {
+      "id": "plugin_auto_shorts_creator",
+      "title": "مولد الفيديوهات القصيرة والقوالب الذكية",
+      "description": "تحويل الفيديوهات الطويلة والصور تلقائياً لمقاطع Shorts وReels مع نصوص متحركة ومؤثرات صوتية.",
+      "category": "صناعة الميديا",
+      "sizeMb": 8.0,
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/plugins/plugin_auto_shorts_creator.json"
+    },
+    {
+      "id": "plugin_cinematic_lut_shaders",
+      "title": "حزمة الفلاتر والتأثيرات السينمائية",
+      "description": "تأثيرات سينمائية وانتقالية واحترافية وتعديل درجات الألوان والإضاءة في أندرويد.",
+      "category": "فلاتر ومؤثرات",
+      "sizeMb": 5.0,
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/plugins/plugin_cinematic_lut_shaders.json"
+    },
+    {
+      "id": "plugin_ai_scene_audio_description",
+      "title": "الوصف الصوتي التفاعلي للمكفوفين",
+      "description": "تحليل مشاهد الفيديو وتوليد تعليق ووصف صوتي تفاعلي للحدث والبيئة في الفراغات الصوتية.",
+      "category": "إتاحة ودعم إبصار",
+      "sizeMb": 10.0,
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/plugins/plugin_ai_scene_audio_description.json"
+    },
+    {
+      "id": "plugin_subtitles_ocr_srt",
+      "title": "مستخرج وقارئ الترجمات الشاشاتية SRT",
+      "description": "استخراج الترجمات المدمجة بصرية من الفيديو المطبوعة على الشاشة إلى ملفات SRT أو قراءتها بصوت ناطق الشاشة.",
+      "category": "ترجمة ونصوص",
+      "sizeMb": 6.5,
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/plugins/plugin_subtitles_ocr_srt.json"
+    }
+  ]
+}
