@@ -1,5 +1,32 @@
 {
   "disabledFeatures": [],
   "newFeatures": [],
-  "featurePatches": []
+  "featurePatches": [],
+  "allAvailableFeatureIds": {
+    "btnVideoEditor": "محرر الفيديو الشامل",
+    "btnImageEditor": "محرر الصور",
+    "btnWatermark": "إضافة علامة مائية ونصوص",
+    "btnCreateBlankImage": "إنشاء صورة ملونة فارغة",
+    "btnVideoTrimmer": "قص الفيديو المحدد",
+    "btnSmartCut": "القص الذكي للصمت والهدوء",
+    "btnAudioEditor": "محرر الصوتيات والتأثيرات",
+    "btnAudioStudio": "استوديو الهندسة الصوتية",
+    "btnAiAnalysis": "تحليل الصور والفيديوهات بالذكاء الاصطناعي",
+    "btnStt": "التفريغ التلقائي للصوت إلى نص",
+    "btnOcr": "قراءة وتفريغ النصوص من الصور OCR",
+    "btnFastConverter": "المحول السريع لصيغ الفيديو والصوت",
+    "btnBoostVolume": "تضخيم ورفع مستوى الصوت",
+    "btnExtractAudio": "استخراج الصوت من الفيديو",
+    "btnCompressVideo": "تقليل وحجم وضغط الفيديو",
+    "btnMergeVideos": "دمج الفيديوهات وتأثيرات الانتقال",
+    "btnReverseMedia": "عكس اتجاه تشغيل الفيديو والصوت",
+    "btnSlideshowMaker": "صانع العروض والشرائح من الصور",
+    "btnTickerText": "شريط الأخبار المتحرك على الفيديو",
+    "btnBatchProcess": "المعالجة الجماعية للملفات",
+    "btnSpeedControl": "تغيير سرعة التشغيل",
+    "btnNoiseReduction": "إزالة الضوضاء وتصفية التشويش",
+    "btnBackgroundMusic": "دمج موسيقى خلفية",
+    "btnAudioNormalization": "موازنة مستوى الصوت التلقائي",
+    "btnAiSceneInspector": "مستكشف ومشرح مشاهد الفيديو الذكي"
+  }
 }
