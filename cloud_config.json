@@ -3,7 +3,10 @@
     
   ],
   "newFeatures": [],
-  "featurePatches": [],
+  "featurePatches": [
+      "btnVideoEditor": "محرر الفيديو الشامل",  
+  ],
+  
   "allAvailableFeatureIds": {
     "btnVideoEditor": "محرر الفيديو الشامل",
     "btnImageEditor": "محرر الصور",
