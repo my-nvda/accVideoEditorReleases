@@ -133,7 +133,7 @@ class SettingsFragment : Fragment() {
                         com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateDialog(activeActivity, info)
                         com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(activeContext, info)
                     } else {
-                        com.google.android.material.dialog.MaterialAlertDialogBuilder(activeActivity)
+                        androidx.appcompat.app.AlertDialog.Builder(activeActivity)
                             .setTitle("التحقق من التحديثات")
                             .setMessage("تطبيقك محدث لأحدث إصدار أصلي (${com.example.accessiblevideoeditor.BuildConfig.VERSION_NAME}). لا توجد تحديثات جديدة حالياً.")
                             .setPositiveButton("موافق") { d, _ -> d.dismiss() }
