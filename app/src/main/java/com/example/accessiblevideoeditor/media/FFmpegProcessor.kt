@@ -11,28 +11,46 @@ import com.example.accessiblevideoeditor.ui.ProcessingManager
  */
 object FFmpegProcessor {
 
-    suspend fun executeWithProgress(commandArgs: Array<String>, sourceVideo: String? = null): Boolean = kotlinx.coroutines.suspendCancellableCoroutine { continuation ->
-        var durationMs = 1f
-        if (sourceVideo != null) {
-            val retriever = android.media.MediaMetadataRetriever()
-            val parsedDuration = try {
-                retriever.setDataSource(sourceVideo)
-                val durStr = retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION)
-                durStr?.toFloatOrNull() ?: 0f
-            } catch (e: Exception) {
-                e.printStackTrace()
-                0f
-            } finally {
-                try { retriever.release() } catch (e: Exception) {}
+    fun getMediaDurationMs(sourceMedia: String?): Float {
+        if (sourceMedia.isNullOrBlank()) return 0f
+        
+        // 1. Try FFprobeKit (accurate for almost all media)
+        try {
+            val mediaInfo = com.arthenica.ffmpegkit.FFprobeKit.getMediaInformation(sourceMedia)
+            val durSecStr = mediaInfo.mediaInformation?.duration
+            val durSec = durSecStr?.toFloatOrNull() ?: 0f
+            if (durSec > 0f) {
+                return durSec * 1000f
             }
-            if (parsedDuration > 0) {
-                durationMs = parsedDuration
-            } else {
-                durationMs = 10000000f // Prevent fast progress if duration is unknown
-            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
-        var startTime = System.currentTimeMillis()
+        // 2. Fallback: MediaMetadataRetriever
+        try {
+            val retriever = android.media.MediaMetadataRetriever()
+            retriever.setDataSource(sourceMedia)
+            val durStr = retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION)
+            val durMs = durStr?.toFloatOrNull() ?: 0f
+            retriever.release()
+            if (durMs > 0f) return durMs
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return 0f
+    }
+
+    suspend fun executeWithProgress(
+        commandArgs: Array<String>,
+        sourceVideo: String? = null,
+        totalDurationMs: Float? = null,
+        progressOffset: Float = 0f,
+        progressScale: Float = 1.0f,
+        logCollector: ((String) -> Unit)? = null
+    ): Boolean = kotlinx.coroutines.suspendCancellableCoroutine { continuation ->
+        var durationMs = totalDurationMs ?: getMediaDurationMs(sourceVideo)
+        val startTime = System.currentTimeMillis()
         var maxPercentage = 0f
 
         val session = FFmpegKit.executeWithArgumentsAsync(
@@ -40,6 +58,10 @@ object FFmpegProcessor {
             { session ->
                 if (continuation.isActive) {
                     val isSuccess = ReturnCode.isSuccess(session.returnCode)
+                    if (isSuccess) {
+                        val finalPercent = (progressOffset + (100f * progressScale)).coerceIn(0f, 100f)
+                        ProcessingManager.updateProgress(finalPercent / 100f, "")
+                    }
                     try {
                         if (continuation.isActive) {
                             continuation.resumeWith(Result.success(isSuccess))
@@ -49,43 +71,52 @@ object FFmpegProcessor {
                     }
                 }
             },
-            { log -> },
+            { log ->
+                if (logCollector != null && log?.message != null) {
+                    logCollector(log.message)
+                }
+            },
             { statistics ->
-                if (durationMs > 1f) {
-                    val timeProcessedMs = statistics.time
-                    var percentage = ((timeProcessedMs.toFloat() / durationMs) * 100f)
-                    if (percentage < 0f) percentage = 0f
-                    if (percentage > 100f) percentage = 100f
+                val timeProcessedMs = statistics.time
+                val elapsedTimeMs = System.currentTimeMillis() - startTime
+                
+                var percentage = 0f
+                if (durationMs > 0f) {
+                    var rawPercent = (timeProcessedMs.toFloat() / durationMs) * 100f
+                    if (rawPercent < 0f) rawPercent = 0f
+                    if (rawPercent > 99f) rawPercent = 99f
+                    percentage = progressOffset + (rawPercent * progressScale)
+                } else {
+                    // Smooth logarithmic curve when duration is unknown
+                    val pseudoPercent = (1f - Math.exp(-elapsedTimeMs / 10000.0).toFloat()) * 90f
+                    percentage = progressOffset + (pseudoPercent * progressScale)
+                }
 
-                    if (percentage < maxPercentage) {
-                        percentage = maxPercentage
-                    } else {
-                        maxPercentage = percentage
-                    }
+                percentage = percentage.coerceIn(0f, 99.9f)
+                if (percentage < maxPercentage) {
+                    percentage = maxPercentage
+                } else {
+                    maxPercentage = percentage
+                }
 
-                    val elapsedTime = System.currentTimeMillis() - startTime
-                    var etaMessage = ""
-                    if (percentage > 0) {
-                        val estimatedTotalTime = (elapsedTime / (percentage / 100f)).toLong()
-                        val remainingTime = estimatedTotalTime - elapsedTime
-                        if (remainingTime > 0) {
-                            val seconds = (remainingTime / 1000) % 60
-                            val minutes = (remainingTime / (1000 * 60)) % 60
-                            val context = ProcessingManager.appContext
-                            etaMessage = if (context != null) {
-                                com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_208, minutes, seconds)
-                            } else {
-                                String.format(java.util.Locale.getDefault(), String.format(java.util.Locale.getDefault(), "%s: %02d:%02d", com.example.accessiblevideoeditor.ui.AppStrings.get(com.example.accessiblevideoeditor.ui.ProcessingManager.appContext!!, com.example.accessiblevideoeditor.R.string.string_227), "%02d", "%02d").replace("%02d", "%02d"), minutes, seconds) // Fallback if no context
-                            }
+                var etaMessage = ""
+                if (durationMs > 0f && percentage > 0f) {
+                    val estimatedTotalTime = (elapsedTimeMs / (percentage / 100f)).toLong()
+                    val remainingTime = estimatedTotalTime - elapsedTimeMs
+                    if (remainingTime > 0) {
+                        val seconds = (remainingTime / 1000) % 60
+                        val minutes = (remainingTime / (1000 * 60)) % 60
+                        val context = ProcessingManager.appContext
+                        if (context != null) {
+                            etaMessage = com.example.accessiblevideoeditor.ui.AppStrings.get(context, com.example.accessiblevideoeditor.R.string.string_208, minutes, seconds)
                         }
                     }
-
-                    ProcessingManager.updateProgress(percentage / 100f, etaMessage)
                 }
+
+                ProcessingManager.updateProgress(percentage / 100f, etaMessage)
             }
         )
         
-        // This is important: updating the UI with the session ID so it can be canceled manually
         ProcessingManager.updateSessionId(session.sessionId)
 
         continuation.invokeOnCancellation {
@@ -312,8 +343,24 @@ object FFmpegProcessor {
      * Requires writing a txt file with 'file path' lines for the concat demuxer.
      */
     suspend fun mergeVideos(concatListFile: String, outputPath: String): Boolean = withContext(Dispatchers.IO) {
+        var totalMs = 0f
+        try {
+            val file = java.io.File(concatListFile)
+            if (file.exists()) {
+                val lines = file.readLines()
+                for (line in lines) {
+                    if (line.startsWith("file ")) {
+                        val path = line.removePrefix("file ").trim('\'', '"', ' ')
+                        val dur = getMediaDurationMs(path)
+                        totalMs += dur
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         val commandArgs = arrayOf("-y", "-f", "concat", "-safe", "0", "-i", concatListFile, "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac", outputPath)
-        executeWithProgress(commandArgs) // no sourceVideo for ETA
+        executeWithProgress(commandArgs, totalDurationMs = if (totalMs > 0f) totalMs else null)
     }
 
     /**
@@ -351,6 +398,8 @@ object FFmpegProcessor {
             writeText(images.joinToString("\n") { "file '$it'\nduration $durationPerImage" })
         }
         
+        val totalDurationMs = images.size * durationPerImage * 1000f
+
         // Dynamically get resolution from the first image
         val options = android.graphics.BitmapFactory.Options()
         options.inJustDecodeBounds = true
@@ -394,7 +443,7 @@ object FFmpegProcessor {
                 outputPath
             )
         }
-        val result = executeWithProgress(commandArgs)
+        val result = executeWithProgress(commandArgs, totalDurationMs = totalDurationMs)
         java.io.File(concatFile).delete()
         result
     }

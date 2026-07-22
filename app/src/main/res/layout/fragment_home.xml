@@ -47,8 +47,6 @@
             <Button android:id="@+id/btnTickerText" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
             <Button android:id="@+id/btnBatchProcess" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
             <Button android:id="@+id/btnHistory" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnHelp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnVolunteerTranslation" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
 
         </GridLayout>
     </ScrollView>

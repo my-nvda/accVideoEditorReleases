@@ -38,18 +38,26 @@ object SmartCutProcessor {
                 return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath)
             }
 
-            // Pass 1: Detect silence
+            // Pass 1: Detect silence (0% to 40% progress)
             val detectCommandArgs = arrayOf("-i", inputPath, "-af", "silencedetect=noise=${thresholdDb}dB:d=$durationSec", "-f", "null", "-")
-            val detectSession = FFmpegKit.executeWithArguments(detectCommandArgs)
-            if (!com.arthenica.ffmpegkit.ReturnCode.isSuccess(detectSession.returnCode)) {
-                val logs = detectSession.failStackTrace ?: detectSession.allLogsAsString ?: "Unknown FFmpeg Error"
+            val logsBuilder = StringBuilder()
+            val pass1Success = FFmpegProcessor.executeWithProgress(
+                detectCommandArgs,
+                sourceVideo = inputPath,
+                progressOffset = 0f,
+                progressScale = 0.4f,
+                logCollector = { line -> logsBuilder.append(line).append("\n") }
+            )
+
+            if (!pass1Success) {
+                val logs = logsBuilder.toString()
                 val detailedLog = "Command:\n${detectCommandArgs.joinToString(" ")}\n\nLogs:\n$logs"
                 withContext(Dispatchers.Main) {
                     com.example.accessiblevideoeditor.ui.ProcessingManager.showError(detailedLog)
                 }
                 return@withContext false
             }
-            val logs = detectSession.allLogsAsString ?: ""
+            val logs = logsBuilder.toString()
             
             val silenceSegments = mutableListOf<Pair<Double, Double>>()
             var currentStart: Double? = null
@@ -77,7 +85,7 @@ object SmartCutProcessor {
             if (silenceSegments.isEmpty()) {
                 // No silence found, just copy
                 val copyCmd = arrayOf("-y", "-i", inputPath, "-c", "copy", outputPath)
-                return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath)
+                return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath, progressOffset = 40f, progressScale = 0.6f)
             }
             
             // Generate non-silent segments with padding
@@ -108,10 +116,10 @@ object SmartCutProcessor {
             if (keepSegments.isEmpty()) {
                 // If everything is silence but we have to keep something, or it's empty, copy as is
                 val copyCmd = arrayOf("-y", "-i", inputPath, "-c", "copy", outputPath)
-                return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath)
+                return@withContext FFmpegProcessor.executeWithProgress(copyCmd, inputPath, progressOffset = 40f, progressScale = 0.6f)
             }
             
-            // Pass 2: Build filter_complex
+            // Pass 2: Build filter_complex (40% to 100% progress)
             val filterBuilder = StringBuilder()
             var concatStr = ""
             
@@ -132,7 +140,7 @@ object SmartCutProcessor {
                 outputPath
             )
             
-            return@withContext FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
+            return@withContext FFmpegProcessor.executeWithProgress(commandArgs, inputPath, progressOffset = 40f, progressScale = 0.6f)
         } catch (e: Exception) {
             e.printStackTrace()
             return@withContext false

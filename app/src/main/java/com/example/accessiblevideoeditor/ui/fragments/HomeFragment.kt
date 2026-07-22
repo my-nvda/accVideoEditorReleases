@@ -91,9 +91,6 @@ class HomeFragment : Fragment() {
         binding.btnBatchProcess.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_batchProcessFragment) }
         binding.btnFastConverter.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_fastConverterFragment) }
         binding.btnHistory.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_historyFragment) }
-        binding.btnHelp.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_helpFragment) }
-        binding.btnVolunteerTranslation.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_volunteerTranslationFragment) }
-
     }
 
     override fun onDestroyView() {

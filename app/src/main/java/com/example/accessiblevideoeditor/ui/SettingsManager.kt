@@ -17,7 +17,7 @@ object SettingsManager {
 
     private lateinit var prefs: SharedPreferences
 
-    // Observable states for Compose
+    // App configuration states
     var isStartupSoundEnabledState = true
         private set
     var isProcessingSoundEnabledState = true

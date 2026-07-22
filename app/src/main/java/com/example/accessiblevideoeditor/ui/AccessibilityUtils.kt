@@ -42,7 +42,7 @@ object AccessibilityUtils {
     }
 
     fun focusView(targetView: View) {
-        targetView.postDelayed({
+        val doFocus = {
             targetView.isFocusable = true
             targetView.isFocusableInTouchMode = true
             targetView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
@@ -50,7 +50,10 @@ object AccessibilityUtils {
             targetView.requestFocus()
             ViewCompat.performAccessibilityAction(targetView, AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS, null)
             targetView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-        }, 300)
+        }
+
+        doFocus()
+        targetView.postDelayed({ doFocus() }, 200)
     }
 
     fun findAccessibilityFocusedView(view: View): View? {

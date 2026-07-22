@@ -14,6 +14,7 @@ import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.ReturnCode
 import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.databinding.FragmentTickerTextBinding
+import com.example.accessiblevideoeditor.media.FFmpegProcessor
 import com.example.accessiblevideoeditor.media.TextRenderer
 import com.example.accessiblevideoeditor.ui.AppStrings
 import com.example.accessiblevideoeditor.ui.ProcessingManager
@@ -105,19 +106,26 @@ class TickerTextFragment : Fragment() {
                         TextRenderer.TextPosition.CENTER -> "(H-h)/2"
                         TextRenderer.TextPosition.BOTTOM -> "H-H/10-h"
                     }
-                    val command = "-y -i \"${inputPath}\" -i \"${pngFile.absolutePath}\" -filter_complex \"[0:v]scale=trunc(iw/2)*2:trunc(ih/2)*2[main];[1:v]format=rgba[img];[main][img]overlay=x='W-mod(t*150,W+w)':y='$yExpr'\" -c:v mpeg4 -q:v 2 -c:a copy \"${outputPath}\""
+                    val filterComplex = "[0:v]scale=trunc(iw/2)*2:trunc(ih/2)*2[main];[1:v]format=rgba[img];[main][img]overlay=x='W-mod(t*150,W+w)':y='$yExpr'"
+                    val commandArgs = arrayOf(
+                        "-y",
+                        "-i", inputPath,
+                        "-i", pngFile.absolutePath,
+                        "-filter_complex", filterComplex,
+                        "-c:v", "mpeg4",
+                        "-q:v", "2",
+                        "-c:a", "copy",
+                        outputPath
+                    )
                     
-                    val session = FFmpegKit.execute(command)
-                    if (ReturnCode.isSuccess(session.returnCode)) {
+                    val isSuccess = FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
+                    if (isSuccess) {
                         FileUtils.saveToGallery(requireContext(), File(outputPath), "video/mp4")
                         withContext(Dispatchers.Main) {
                             Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_240), Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        val logs = session.failStackTrace ?: session.allLogsAsString ?: "Unknown Error"
-                        val detailedLog = "Command:\n$command\n\nLogs:\n$logs"
                         withContext(Dispatchers.Main) {
-                            ProcessingManager.showError(detailedLog)
                             Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_241), Toast.LENGTH_LONG).show()
                         }
                     }
