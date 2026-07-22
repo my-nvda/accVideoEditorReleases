@@ -1,5 +1,12 @@
 {
-  "disabledFeatures": [],
+  "disabledFeatures": [    
+    "btnVideoEditor"
+    ,
+    "btnImageEditor": "محرر الصور",
+
+    
+  ],
+  
   "newFeatures": [
     {
       "id": "test_dynamic_feature_01",
