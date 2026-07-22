@@ -1,6 +1,6 @@
 {
-  "versionCode": 67,
-  "versionName": "2.4.64",
+  "versionCode": 66,
+  "versionName": "2.4.63",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.64:\n- حل خاف وأكيد لرمز الإشعارات الداخلي واستبداله برمز التطبيق الرسمي لمنع أي انهيار نهائياً."
+  "releaseNotes": "الإصدار الحالي 2.4.63 مستقر ومحدث كاملاً."
 }
