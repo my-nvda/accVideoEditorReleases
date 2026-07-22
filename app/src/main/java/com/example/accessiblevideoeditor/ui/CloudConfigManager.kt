@@ -49,12 +49,25 @@ object CloudConfigManager {
                 val jsonStr = connection.inputStream.bufferedReader().use { it.readText() }
                 val root = JSONObject(jsonStr)
 
-                // 1. Process Disabled Features
+                // 1. Process Disabled Features with Fault-Tolerant Regex Fallback
                 val currentDisabled = mutableSetOf<String>()
-                if (root.has("disabledFeatures")) {
-                    val arr = root.getJSONArray("disabledFeatures")
-                    for (i in 0 until arr.length()) {
-                        currentDisabled.add(arr.getString(i))
+                try {
+                    val root = JSONObject(jsonStr)
+                    if (root.has("disabledFeatures")) {
+                        val arr = root.getJSONArray("disabledFeatures")
+                        for (i in 0 until arr.length()) {
+                            currentDisabled.add(arr.getString(i))
+                        }
+                    }
+                } catch (e: Exception) {
+                    val regex = """"disabledFeatures"\s*:\s*\[([^\]]*)\]""".toRegex()
+                    val match = regex.find(jsonStr)
+                    if (match != null) {
+                        val content = match.groupValues[1]
+                        val itemRegex = """"([^"]+)"""".toRegex()
+                        itemRegex.findAll(content).forEach { m ->
+                            currentDisabled.add(m.groupValues[1])
+                        }
                     }
                 }
 
