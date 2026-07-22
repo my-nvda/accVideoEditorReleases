@@ -1,6 +1,6 @@
 {
-  "versionCode": 47,
-  "versionName": "2.4.44",
+  "versionCode": 48,
+  "versionName": "2.4.45",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.44:\n- تفعيل التحديث التلقائي الديناميكي لعنوان قائمة الإعدادات ومفاتيح الواجهة الإضافية فوراً."
+  "releaseNotes": "تحديث الإصدار 2.4.45:\n- توجيه مفتاح فحص التحديثات مباشرة لـ raw.githubusercontent لتجنب مشاكل التحويل والتحميل."
 }
