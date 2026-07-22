@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:title="@string/string_92"
+        app:title="@string/title_background_music"
         app:titleTextColor="?attr/colorOnPrimary"
         app:navigationIcon="@android:drawable/ic_menu_revert" />
 
@@ -26,31 +26,43 @@
             android:padding="16dp">
 
             <Button
-                android:id="@+id/btnSelectVideos"
+                android:id="@+id/btnSelectMainMedia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/string_54" />
+                android:text="@string/string_47" />
 
             <TextView
-                android:id="@+id/tvSelectedCount"
+                android:id="@+id/tvMainMediaFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnSelectBgMusic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text=""
+                android:text="@string/string_19" />
+
+            <TextView
+                android:id="@+id/tvBgMusicFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:visibility="gone" />
 
             <TextView
-                android:id="@+id/lblTransition"
+                android:id="@+id/lblBgVolume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/label_transition"
+                android:text="@string/label_bg_volume"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/spinnerTransition"
+                android:id="@+id/spinnerBgVolume"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp" />
@@ -59,7 +71,7 @@
                 android:id="@+id/btnApply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="28dp"
                 android:text="@string/string_81" />
 
         </LinearLayout>

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:title="@string/string_92"
+        app:title="@string/title_ai_scene_inspector"
         app:titleTextColor="?attr/colorOnPrimary"
         app:navigationIcon="@android:drawable/ic_menu_revert" />
 
@@ -26,41 +26,53 @@
             android:padding="16dp">
 
             <Button
-                android:id="@+id/btnSelectVideos"
+                android:id="@+id/btnSelectVideo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/string_54" />
+                android:minHeight="56dp"
+                android:text="@string/string_47" />
 
             <TextView
-                android:id="@+id/tvSelectedCount"
+                android:id="@+id/tvSelectedFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnAnalyze"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text=""
-                android:visibility="gone" />
+                android:minHeight="56dp"
+                android:enabled="false"
+                android:text="@string/btn_analyze_scenes" />
 
-            <TextView
-                android:id="@+id/lblTransition"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilResultText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/label_transition"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:visibility="gone">
 
-            <Spinner
-                android:id="@+id/spinnerTransition"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etResultText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="وصف المشاهد المكتشفة"
+                    android:inputType="none"
+                    android:minLines="8"
+                    android:textIsSelectable="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/btnApply"
+                android:id="@+id/btnCopyResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/string_81" />
+                android:layout_marginTop="16dp"
+                android:minHeight="56dp"
+                android:visibility="gone"
+                android:text="@string/string_141" />
 
         </LinearLayout>
     </ScrollView>

@@ -82,6 +82,21 @@
         <action
             android:id="@+id/action_homeFragment_to_volunteerTranslationFragment"
             app:destination="@id/volunteerTranslationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_speedControlFragment"
+            app:destination="@id/speedControlFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_noiseReductionFragment"
+            app:destination="@id/noiseReductionFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_backgroundMusicFragment"
+            app:destination="@id/backgroundMusicFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_audioNormalizationFragment"
+            app:destination="@id/audioNormalizationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aiSceneInspectorFragment"
+            app:destination="@id/aiSceneInspectorFragment" />
 
     </fragment>
 
@@ -206,6 +221,36 @@
         android:name="com.example.accessiblevideoeditor.ui.fragments.VolunteerTranslationFragment"
         android:label="VolunteerTranslationFragment"
         tools:layout="@layout/fragment_volunteer_translation" />
+
+    <fragment
+        android:id="@+id/speedControlFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.SpeedControlFragment"
+        android:label="SpeedControlFragment"
+        tools:layout="@layout/fragment_speed_control" />
+
+    <fragment
+        android:id="@+id/noiseReductionFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.NoiseReductionFragment"
+        android:label="NoiseReductionFragment"
+        tools:layout="@layout/fragment_noise_reduction" />
+
+    <fragment
+        android:id="@+id/backgroundMusicFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.BackgroundMusicFragment"
+        android:label="BackgroundMusicFragment"
+        tools:layout="@layout/fragment_background_music" />
+
+    <fragment
+        android:id="@+id/audioNormalizationFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AudioNormalizationFragment"
+        android:label="AudioNormalizationFragment"
+        tools:layout="@layout/fragment_audio_normalization" />
+
+    <fragment
+        android:id="@+id/aiSceneInspectorFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AiSceneInspectorFragment"
+        android:label="AiSceneInspectorFragment"
+        tools:layout="@layout/fragment_ai_scene_inspector" />
 
 </navigation>
 

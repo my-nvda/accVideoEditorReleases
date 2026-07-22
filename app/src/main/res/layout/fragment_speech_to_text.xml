@@ -69,5 +69,17 @@
             android:visibility="gone"
             android:text="@string/string_141" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <Button
+            android:id="@+id/btnBurnSubtitles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:visibility="gone"
+            android:text="@string/btn_burn_subtitles" />
+
     </LinearLayout>
 </ScrollView>

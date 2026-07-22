@@ -165,10 +165,16 @@ object MediaUtils {
         } catch (e: Exception) {
             e.printStackTrace()
             return 0L
-        } finally {
             try {
                 retriever.release()
             } catch (e: Exception) {}
         }
+    }
+
+    fun isVideoFile(context: Context, uri: Uri): Boolean {
+        val mime = context.contentResolver.getType(uri)
+        if (mime != null && mime.startsWith("video")) return true
+        val path = uri.path?.lowercase() ?: ""
+        return path.endsWith(".mp4") || path.endsWith(".mkv") || path.endsWith(".avi") || path.endsWith(".mov") || path.endsWith(".webm") || path.endsWith(".3gp")
     }
 }

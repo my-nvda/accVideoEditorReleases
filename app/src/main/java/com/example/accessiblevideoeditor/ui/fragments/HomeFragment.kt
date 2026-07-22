@@ -52,6 +52,11 @@ class HomeFragment : Fragment() {
         binding.btnSlideshowMaker.text = AppStrings.get(context, R.string.string_80)
         binding.btnTickerText.text = AppStrings.get(context, R.string.string_52)
         binding.btnBatchProcess.text = AppStrings.get(context, R.string.string_32)
+        binding.btnSpeedControl.text = AppStrings.get(context, R.string.btn_speed_control)
+        binding.btnNoiseReduction.text = AppStrings.get(context, R.string.btn_noise_reduction)
+        binding.btnBackgroundMusic.text = AppStrings.get(context, R.string.btn_background_music)
+        binding.btnAudioNormalization.text = AppStrings.get(context, R.string.btn_audio_normalization)
+        binding.btnAiSceneInspector.text = AppStrings.get(context, R.string.btn_ai_scene_inspector)
         binding.btnHistory.text = AppStrings.get(context, R.string.string_116)
         
         // Settings menu
@@ -87,6 +92,11 @@ class HomeFragment : Fragment() {
         binding.btnOcr.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_ocrFragment) }
         binding.btnBatchProcess.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_batchProcessFragment) }
         binding.btnFastConverter.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_fastConverterFragment) }
+        binding.btnSpeedControl.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_speedControlFragment) }
+        binding.btnNoiseReduction.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_noiseReductionFragment) }
+        binding.btnBackgroundMusic.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_backgroundMusicFragment) }
+        binding.btnAudioNormalization.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioNormalizationFragment) }
+        binding.btnAiSceneInspector.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiSceneInspectorFragment) }
         binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
     }
 

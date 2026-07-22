@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -56,6 +57,15 @@ class MergeVideosFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        val transitionOptions = listOf(
+            AppStrings.get(requireContext(), R.string.transition_none),
+            AppStrings.get(requireContext(), R.string.transition_fade),
+            AppStrings.get(requireContext(), R.string.transition_dissolve)
+        )
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, transitionOptions)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerTransition.adapter = adapter
+
         binding.btnSelectVideos.setOnClickListener {
             videoPickerLauncher.launch("video/*")
         }
@@ -65,12 +75,12 @@ class MergeVideosFragment : Fragment() {
                 Toast.makeText(requireContext(), "Please select at least two videos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            
-            processVideos(selectedUris)
+            val transitionType = binding.spinnerTransition.selectedItemPosition
+            processVideos(selectedUris, transitionType)
         }
     }
 
-    private fun processVideos(uris: List<Uri>) {
+    private fun processVideos(uris: List<Uri>, transitionType: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val inputs = uris.mapIndexedNotNull { index, uri ->
@@ -89,8 +99,10 @@ class MergeVideosFragment : Fragment() {
                     }
 
                     var totalMs = 0f
-                    inputs.forEach { path ->
-                        totalMs += FFmpegProcessor.getMediaDurationMs(path)
+                    val durationsSec = inputs.map { path ->
+                        val durMs = FFmpegProcessor.getMediaDurationMs(path)
+                        totalMs += durMs
+                        if (durMs > 0f) durMs / 1000f else 5f
                     }
 
                     val filterParts = StringBuilder()
@@ -98,13 +110,16 @@ class MergeVideosFragment : Fragment() {
                     
                     inputs.forEachIndexed { index, path ->
                         val hasAudio = hasAudioList[index]
-                        filterParts.append("[$index:v]scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,fps=30[v$index];")
+                        val segDur = durationsSec[index]
+                        val fadeFilter = if (transitionType > 0 && segDur > 1f) {
+                            ",fade=t=in:st=0:d=0.5,fade=t=out:st=${segDur - 0.5f}:d=0.5"
+                        } else ""
+
+                        filterParts.append("[$index:v]scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,fps=30$fadeFilter[v$index];")
                         if (hasAudio) {
                             filterParts.append("[$index:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a$index];")
                         } else {
-                            val durSec = FFmpegProcessor.getMediaDurationMs(path) / 1000f
-                            val validDur = if (durSec > 0f) durSec else 5f
-                            filterParts.append("anullsrc=r=44100:cl=stereo:d=$validDur[a$index];")
+                            filterParts.append("anullsrc=r=44100:cl=stereo:d=$segDur[a$index];")
                         }
                         concatParts.append("[v$index][a$index]")
                     }
