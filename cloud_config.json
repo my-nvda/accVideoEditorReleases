@@ -1,11 +1,8 @@
 {
-  "disabledFeatures": [    
-    "btnVideoEditor"
-  ]  
-  
+  "disabledFeatures": [],
   "newFeatures": [
     {
-      "id": "test_dynamic_feature_01",
+      "id": "test_dynamic_feature_02",
       "featureId": "btnAiSceneInspector",
       "title": "ميزة الفحص والتحليل التجريبي أونلاين",
       "description": "هذه ميزة تجريبية لاختبار محرك الإطلاق الديناميكي السحابي للتطبيق دون الحاجة لتحديث ملف الـ APK.",
