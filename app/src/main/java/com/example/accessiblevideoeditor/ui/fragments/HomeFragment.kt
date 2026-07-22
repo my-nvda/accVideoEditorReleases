@@ -30,6 +30,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         checkRemoteCloudConfig()
+        loadInstalledPluginsOnHome()
     }
 
     private fun updateButtonTexts() {
@@ -115,6 +116,7 @@ class HomeFragment : Fragment() {
         binding.btnAudioNormalization.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioNormalizationFragment) }
         binding.btnAiSceneInspector.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiSceneInspectorFragment) }
         binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
+        binding.btnOpenPluginsStore.setOnClickListener { navigateWithFocus(it, R.id.pluginsFragment) }
 
         checkRemoteCloudConfig()
     }
@@ -182,6 +184,42 @@ class HomeFragment : Fragment() {
     private fun navigateWithFocus(v: View, actionId: Int) {
         (activity as? com.example.accessiblevideoeditor.MainActivity)?.saveLastFocusedViewId("HomeFragment", v.id)
         findNavController().navigate(actionId)
+    }
+
+    private fun loadInstalledPluginsOnHome() {
+        val currentContext = context ?: return
+        viewLifecycleOwner.lifecycleScope.launch {
+            val allPlugins = com.example.accessiblevideoeditor.plugins.PluginManager.fetchAvailablePlugins(currentContext)
+            val installedPlugins = allPlugins.filter { it.isInstalled }
+
+            if (_binding == null) return@launch
+            binding.llInstalledPlugins.removeAllViews()
+
+            if (installedPlugins.isEmpty()) {
+                val emptyTv = android.widget.TextView(currentContext).apply {
+                    text = "لم يتم تثبيت أي ملحقات بعد. يمكنك تصفح وتثبيت الملحقات من متجر الملحقات."
+                    setPadding(0, 8, 0, 8)
+                    textSize = 14f
+                }
+                binding.llInstalledPlugins.addView(emptyTv)
+            } else {
+                for (plugin in installedPlugins) {
+                    val btn = com.google.android.material.button.MaterialButton(currentContext).apply {
+                        text = "⚡ ${plugin.title}"
+                        setOnClickListener {
+                            Toast.makeText(currentContext, "الملحق ${plugin.title} مفعل وجاهز للاستخدام!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    val params = android.widget.LinearLayout.LayoutParams(
+                        android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(0, 8, 0, 8)
+                    }
+                    binding.llInstalledPlugins.addView(btn, params)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
