@@ -1,6 +1,6 @@
 {
-  "versionCode": 32,
-  "versionName": "2.4.29",
+  "versionCode": 33,
+  "versionName": "2.4.30",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.29:\n- حظر شامل لفقدان التركيز وحفظ معرف الزر المنقور فوراً قبل الانتقال لضمان عودة مؤشر قارئ الشاشة (TalkBack / Jieshuo) لنفس الزر بدقة.\n- تفعيل النطق المتكرر متعدد المراحل (0ms, 100ms, 300ms, 600ms) لإلزام قارئ الشاشة باستعادة التركيز حتى بعد انتهاء حركة الشاشة."
+  "releaseNotes": "تحديث الإصدار 2.4.30:\n- إلغاء القفز القسري التلقائي لمؤشر قارئ الشاشة (TalkBack / Jieshuo) إلى أعلى الشاشة بالكامل في جميع حالات الرجوع أو التنقل، لمنع أي تعارض في الفوكس نهائياً."
 }
