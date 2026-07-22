@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                         lastFocusedViewIdMap[fragmentName] = newFocus.id
                     }
                 }
+                AccessibilityUtils.attachAccessibilityFocusTracker(v, fragmentName, lastFocusedViewIdMap)
             }
 
             override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {

@@ -83,26 +83,48 @@ class MergeVideosFragment : Fragment() {
                     }
                     val outputPath = requireContext().cacheDir.absolutePath + "/merged_${System.currentTimeMillis()}.mp4"
                     
+                    val hasAudioList = inputs.map { path ->
+                        val info = com.arthenica.ffmpegkit.FFprobeKit.getMediaInformation(path)
+                        info.mediaInformation?.streams?.any { it.type == "audio" } ?: false
+                    }
+
+                    var totalMs = 0f
+                    inputs.forEach { path ->
+                        totalMs += FFmpegProcessor.getMediaDurationMs(path)
+                    }
+
                     val filterParts = StringBuilder()
                     val concatParts = StringBuilder()
                     
-                    inputs.forEachIndexed { index, _ ->
+                    inputs.forEachIndexed { index, path ->
+                        val hasAudio = hasAudioList[index]
                         filterParts.append("[$index:v]scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,fps=30[v$index];")
-                        filterParts.append("[$index:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a$index];")
+                        if (hasAudio) {
+                            filterParts.append("[$index:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a$index];")
+                        } else {
+                            val durSec = FFmpegProcessor.getMediaDurationMs(path) / 1000f
+                            val validDur = if (durSec > 0f) durSec else 5f
+                            filterParts.append("anullsrc=r=44100:cl=stereo:d=$validDur[a$index];")
+                        }
                         concatParts.append("[v$index][a$index]")
                     }
                     
+                    filterParts.append("${concatParts.toString()}concat=n=${inputs.size}:v=1:a=1[outv][outa]")
+
                     val commandArgs = mutableListOf<String>()
+                    commandArgs.add("-y")
                     inputs.forEach { commandArgs.addAll(listOf("-i", it)) }
                     commandArgs.addAll(
                         listOf(
-                            "-filter_complex", "${filterParts.toString()}${concatParts.toString()}concat=n=${inputs.size}:v=1:a=1[outv][outa]",
+                            "-filter_complex", filterParts.toString(),
                             "-map", "[outv]", "-map", "[outa]",
-                            "-c:v", "mpeg4", "-q:v", "2", outputPath
+                            "-c:v", "mpeg4", "-q:v", "2",
+                            "-c:a", "aac", "-b:a", "192k",
+                            outputPath
                         )
                     )
                     
-                    val success = FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray())
+                    val success = FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray(), totalDurationMs = if (totalMs > 0f) totalMs else null)
                     if (success) {
                         FileUtils.saveToGallery(requireContext(), File(outputPath), "video/mp4")
                         withContext(Dispatchers.Main) {

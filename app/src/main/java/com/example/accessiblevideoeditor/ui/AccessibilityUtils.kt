@@ -47,13 +47,43 @@ object AccessibilityUtils {
             targetView.isFocusableInTouchMode = true
             targetView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
 
+            targetView.requestRectangleOnScreen(android.graphics.Rect(0, 0, targetView.width, targetView.height), true)
             targetView.requestFocus()
+            
             ViewCompat.performAccessibilityAction(targetView, AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS, null)
+            
+            val eventState = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED)
+            eventState.className = targetView.javaClass.name
+            eventState.packageName = targetView.context.packageName
+            targetView.sendAccessibilityEventUnchecked(eventState)
+
             targetView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
         }
 
         doFocus()
-        targetView.postDelayed({ doFocus() }, 200)
+        targetView.postDelayed({ doFocus() }, 150)
+        targetView.postDelayed({ doFocus() }, 400)
+    }
+
+    fun attachAccessibilityFocusTracker(rootView: View, fragmentName: String, focusMap: MutableMap<String, Int>) {
+        if (rootView.id != View.NO_ID) {
+            val delegate = object : androidx.core.view.AccessibilityDelegateCompat() {
+                override fun sendAccessibilityEvent(host: View, eventType: Int) {
+                    super.sendAccessibilityEvent(host, eventType)
+                    if (eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED || eventType == AccessibilityEvent.TYPE_VIEW_FOCUSED) {
+                        if (host.id != View.NO_ID) {
+                            focusMap[fragmentName] = host.id
+                        }
+                    }
+                }
+            }
+            ViewCompat.setAccessibilityDelegate(rootView, delegate)
+        }
+        if (rootView is ViewGroup) {
+            for (i in 0 until rootView.childCount) {
+                attachAccessibilityFocusTracker(rootView.getChildAt(i), fragmentName, focusMap)
+            }
+        }
     }
 
     fun findAccessibilityFocusedView(view: View): View? {
