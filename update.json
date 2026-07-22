@@ -1,6 +1,6 @@
 {
-  "versionCode": 56,
-  "versionName": "2.4.53",
+  "versionCode": 57,
+  "versionName": "2.4.54",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.53:\n- إصلاح خطأ التنسيق (JSON Syntax Error) في ملف الترجمات على السيرفر، وجعل محرك قراءة الترجمات فائق المرونة ليعمل حتى لو احتوى الملف على أخطاء كتابية مستقبلاً."
+  "releaseNotes": "تحديث الإصدار 2.4.54:\n- حماية كاملة ومنع انهيار التطبيق (BadTokenException) عند ظهور نافذة الإشعارات أو التحديثات."
 }
