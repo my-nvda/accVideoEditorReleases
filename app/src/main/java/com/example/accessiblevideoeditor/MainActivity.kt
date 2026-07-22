@@ -1,5 +1,6 @@
 package com.example.accessiblevideoeditor
 
+import android.content.Context
 import android.os.Bundle
 import android.content.res.Resources
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.example.accessiblevideoeditor.media.SoundManager
+import com.example.accessiblevideoeditor.ui.AppStringContext
+import com.example.accessiblevideoeditor.ui.AppStrings
 import com.example.accessiblevideoeditor.ui.ProcessingManager
 import com.example.accessiblevideoeditor.updater.AppUpdater
 import com.google.android.material.button.MaterialButton
@@ -34,15 +37,25 @@ class MainActivity : AppCompatActivity() {
       isAppReturningFromBackground = true
   }
 
+  /**
+   * Wrap the base context with AppStringContext so that ALL getString() calls
+   * — including those from XML-inflated views — pass through our translation filter.
+   */
+  override fun attachBaseContext(newBase: Context) {
+      // Load local translations synchronously before wrapping, so they are ready
+      // at view inflation time without needing a recreate().
+      AppStrings.loadCustomStrings(newBase)
+      super.attachBaseContext(AppStringContext(newBase))
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    
+
     // Initialize Managers
     com.example.accessiblevideoeditor.ui.SettingsManager.init(this)
     SoundManager.init(this)
     SoundManager.playStartup()
     ProcessingManager.init(this)
-    com.example.accessiblevideoeditor.ui.AppStrings.loadCustomStrings(this)
 
     // Disable screen sleep
     window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

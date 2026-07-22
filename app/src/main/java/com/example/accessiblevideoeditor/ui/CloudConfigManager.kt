@@ -28,6 +28,10 @@ object CloudConfigManager {
     private const val PREFS_NAME = "CloudConfigPrefs"
     private const val KEY_DISABLED_SET = "disabled_features_set"
     private const val KEY_DOWNLOADED_FEATURES = "downloaded_features_set"
+    private const val KEY_STRINGS_VERSION = "strings_patch_version"
+
+    // Set to true by checkCloudConfig when new translations were saved — read by HomeFragment to call recreate()
+    @Volatile var stringsUpdated = false
 
     private var prefs: SharedPreferences? = null
 
@@ -62,9 +66,12 @@ object CloudConfigManager {
                     if (stringsConn.responseCode == HttpURLConnection.HTTP_OK) {
                         val stringsJsonStr = stringsConn.inputStream.bufferedReader().use { it.readText() }
                         val map = mutableMapOf<String, String>()
-                        
+                        var serverVersion = -1
+
                         try {
                             val stringsRoot = JSONObject(stringsJsonStr)
+                            // Read version field for comparison
+                            serverVersion = stringsRoot.optInt("version", -1)
                             if (stringsRoot.has("strings")) {
                                 val stringsObj = stringsRoot.getJSONObject("strings")
                                 for (key in stringsObj.keys()) {
@@ -82,17 +89,27 @@ object CloudConfigManager {
                                 }
                             }
                         }
-                        
+
                         if (map.isNotEmpty()) {
-                            val stringsObj = JSONObject()
-                            for ((k, v) in map) {
-                                stringsObj.put(k, v)
-                            }
-                            val currentLang = LanguageManager.getCurrentLanguageCode()
-                            val file = File(context.filesDir, "custom_lang_$currentLang.json")
-                            file.writeText(stringsObj.toString(), Charsets.UTF_8)
-                            withContext(Dispatchers.Main) {
-                                AppStrings.loadCustomStrings(context)
+                            val cachedVersion = prefs?.getInt(KEY_STRINGS_VERSION, -1) ?: -1
+                            val isNewVersion = serverVersion == -1 || serverVersion > cachedVersion
+
+                            if (isNewVersion) {
+                                val stringsObj = JSONObject()
+                                for ((k, v) in map) {
+                                    stringsObj.put(k, v)
+                                }
+                                val currentLang = LanguageManager.getCurrentLanguageCode()
+                                val file = File(context.filesDir, "custom_lang_$currentLang.json")
+                                file.writeText(stringsObj.toString(), Charsets.UTF_8)
+                                if (serverVersion != -1) {
+                                    prefs?.edit()?.putInt(KEY_STRINGS_VERSION, serverVersion)?.apply()
+                                }
+                                withContext(Dispatchers.Main) {
+                                    AppStrings.loadCustomStrings(context)
+                                }
+                                // Signal to HomeFragment that a recreate() is needed
+                                stringsUpdated = true
                             }
                         }
                     }
