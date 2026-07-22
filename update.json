@@ -1,6 +1,6 @@
 {
-  "versionCode": 55,
-  "versionName": "2.4.52",
+  "versionCode": 56,
+  "versionName": "2.4.53",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.52:\n- تطبيق نظام TranslationInflaterFactory لاعتراض وتطبيق ترجمات السيرفر فوراً على كافة عناصر XML الواجهة بدون استثناء."
+  "releaseNotes": "تحديث الإصدار 2.4.53:\n- إصلاح خطأ التنسيق (JSON Syntax Error) في ملف الترجمات على السيرفر، وجعل محرك قراءة الترجمات فائق المرونة ليعمل حتى لو احتوى الملف على أخطاء كتابية مستقبلاً."
 }
