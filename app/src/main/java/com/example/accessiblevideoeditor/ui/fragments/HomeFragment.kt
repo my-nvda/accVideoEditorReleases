@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,7 +14,6 @@ import com.example.accessiblevideoeditor.databinding.FragmentHomeBinding
 import com.example.accessiblevideoeditor.ui.AppStrings
 import com.example.accessiblevideoeditor.ui.CloudConfigManager
 import com.example.accessiblevideoeditor.updater.BeepUtils
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -84,92 +84,105 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        binding.topAppBar.title = "Accessible Video Editor"
-        
-        // Setup Buttons with AppStrings
-        updateButtonTexts()
-        
-        // Settings menu
-        binding.topAppBar.inflateMenu(R.menu.home_menu)
         try {
-            binding.topAppBar.menu?.findItem(R.id.action_settings)?.title = AppStrings.get(requireContext(), R.string.string_133)
-        } catch (e: Exception) {}
-        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_settings -> {
-                    findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
-                    true
+            binding.topAppBar.title = "Accessible Video Editor"
+            
+            // Setup Buttons with AppStrings
+            updateButtonTexts()
+            
+            // Settings menu
+            binding.topAppBar.inflateMenu(R.menu.home_menu)
+            try {
+                binding.topAppBar.menu?.findItem(R.id.action_settings)?.title = AppStrings.get(requireContext(), R.string.string_133)
+            } catch (e: Exception) {}
+            binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.action_settings -> {
+                        navigateWithFocus(binding.topAppBar, R.id.action_homeFragment_to_settingsFragment)
+                        true
+                    }
+                    else -> false
                 }
-                else -> false
             }
+            
+            // Main Navigation clicks
+            binding.btnVideoEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoEditorFragment) }
+            binding.btnVideoTrimmer.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoTrimmerFragment) }
+            binding.btnSmartCut.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_smartCutFragment) }
+            binding.btnMergeVideos.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_mergeVideosFragment) }
+            binding.btnReverseMedia.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_reverseMediaFragment) }
+            binding.btnAudioEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioEditorFragment) }
+            binding.btnAudioStudio.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioStudioFragment) }
+            binding.btnExtractAudio.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_extractAudioFragment) }
+            binding.btnBoostVolume.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_boostVolumeFragment) }
+            binding.btnCompressVideo.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_compressVideoFragment) }
+            binding.btnImageEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_imageEditorFragment) }
+            binding.btnWatermark.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_watermarkFragment) }
+            binding.btnCreateBlankImage.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_createBlankImageFragment) }
+            binding.btnSlideshowMaker.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_slideshowMakerFragment) }
+            binding.btnTickerText.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_tickerTextFragment) }
+            binding.btnAiAnalysis.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiAnalysisFragment) }
+            binding.btnStt.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_sttFragment) }
+            binding.btnOcr.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_ocrFragment) }
+            binding.btnBatchProcess.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_batchProcessFragment) }
+            binding.btnFastConverter.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_fastConverterFragment) }
+            binding.btnSpeedControl.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_speedControlFragment) }
+            binding.btnNoiseReduction.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_noiseReductionFragment) }
+            binding.btnBackgroundMusic.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_backgroundMusicFragment) }
+            binding.btnAudioNormalization.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioNormalizationFragment) }
+            binding.btnAiSceneInspector.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiSceneInspectorFragment) }
+
+            // Dynamic Features clicks
+            binding.btnAiVoiceDubbing.setOnClickListener { handleDynamicFeatureClick("btnAiVoiceDubbing", "دبلجة وتوليد الصوت بالذكاء الاصطناعي", 63.2) }
+            binding.btnAudioStemSeparator.setOnClickListener { handleDynamicFeatureClick("btnAudioStemSeparator", "عازل ومحلل الآلات والموسيقى", 48.6) }
+            binding.btnAutoShortsCreator.setOnClickListener { handleDynamicFeatureClick("btnAutoShortsCreator", "مولد الفيديوهات القصيرة والقوالب", 8.0) }
+            binding.btnCinematicLutShaders.setOnClickListener { handleDynamicFeatureClick("btnCinematicLutShaders", "حزمة الفلاتر والتأثيرات السينمائية", 5.0) }
+            binding.btnAiSceneAudioDescription.setOnClickListener { handleDynamicFeatureClick("btnAiSceneAudioDescription", "الوصف الصوتي التفاعلي للمكفوفين", 10.0) }
+            binding.btnSubtitlesOcrSrt.setOnClickListener { handleDynamicFeatureClick("btnSubtitlesOcrSrt", "مستخرج وقارئ الترجمات SRT", 1.43) }
+
+            binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        
-        // Main Navigation clicks
-        binding.btnVideoEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoEditorFragment) }
-        binding.btnVideoTrimmer.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoTrimmerFragment) }
-        binding.btnSmartCut.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_smartCutFragment) }
-        binding.btnMergeVideos.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_mergeVideosFragment) }
-        binding.btnReverseMedia.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_reverseMediaFragment) }
-        binding.btnAudioEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioEditorFragment) }
-        binding.btnAudioStudio.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioStudioFragment) }
-        binding.btnExtractAudio.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_extractAudioFragment) }
-        binding.btnBoostVolume.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_boostVolumeFragment) }
-        binding.btnCompressVideo.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_compressVideoFragment) }
-        binding.btnImageEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_imageEditorFragment) }
-        binding.btnWatermark.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_watermarkFragment) }
-        binding.btnCreateBlankImage.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_createBlankImageFragment) }
-        binding.btnSlideshowMaker.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_slideshowMakerFragment) }
-        binding.btnTickerText.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_tickerTextFragment) }
-        binding.btnAiAnalysis.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiAnalysisFragment) }
-        binding.btnStt.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_sttFragment) }
-        binding.btnOcr.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_ocrFragment) }
-        binding.btnBatchProcess.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_batchProcessFragment) }
-        binding.btnFastConverter.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_fastConverterFragment) }
-        binding.btnSpeedControl.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_speedControlFragment) }
-        binding.btnNoiseReduction.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_noiseReductionFragment) }
-        binding.btnBackgroundMusic.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_backgroundMusicFragment) }
-        binding.btnAudioNormalization.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioNormalizationFragment) }
-        binding.btnAiSceneInspector.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiSceneInspectorFragment) }
-
-        // Dynamic Features clicks
-        binding.btnAiVoiceDubbing.setOnClickListener { handleDynamicFeatureClick("btnAiVoiceDubbing", "دبلجة وتوليد الصوت بالذكاء الاصطناعي", 12.5) }
-        binding.btnAudioStemSeparator.setOnClickListener { handleDynamicFeatureClick("btnAudioStemSeparator", "عازل ومحلل الآلات والموسيقى", 15.0) }
-        binding.btnAutoShortsCreator.setOnClickListener { handleDynamicFeatureClick("btnAutoShortsCreator", "مولد الفيديوهات القصيرة والقوالب", 8.0) }
-        binding.btnCinematicLutShaders.setOnClickListener { handleDynamicFeatureClick("btnCinematicLutShaders", "حزمة الفلاتر والتأثيرات السينمائية", 5.0) }
-        binding.btnAiSceneAudioDescription.setOnClickListener { handleDynamicFeatureClick("btnAiSceneAudioDescription", "الوصف الصوتي التفاعلي للمكفوفين", 10.0) }
-        binding.btnSubtitlesOcrSrt.setOnClickListener { handleDynamicFeatureClick("btnSubtitlesOcrSrt", "مستخرج وقارئ الترجمات SRT", 6.5) }
-
-        binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
     }
 
     private fun handleDynamicFeatureClick(featureId: String, title: String, sizeMb: Double) {
-        val currentContext = context ?: return
-        val currentActivity = activity ?: return
-        if (currentActivity.isFinishing || currentActivity.isDestroyed) return
+        try {
+            val activeActivity = activity ?: return
+            if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
 
-        CloudConfigManager.init(currentContext)
-        val isDownloaded = CloudConfigManager.isFeatureDownloaded(featureId)
-        if (isDownloaded) {
-            Toast.makeText(currentContext, "ميزة ${title} مفعلة وجاهزة للاستخدام!", Toast.LENGTH_SHORT).show()
-        } else {
-            MaterialAlertDialogBuilder(currentActivity)
-                .setTitle("تنزيل وتفعيل ميزة ${title}")
-                .setMessage("هذه الميزة سحابية إضافية وحجمها تقريباً (${sizeMb} ميجابايت).\n\nهل تريد تنزيلها وتفعيلها الآن على تطبيقك؟")
-                .setPositiveButton("تنزيل وتفعيل الآن") { dialog, _ ->
-                    dialog.dismiss()
-                    downloadAndActivateFeature(featureId, title)
-                }
-                .setNegativeButton("لاحقاً") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
+            CloudConfigManager.init(activeActivity)
+            val isDownloaded = CloudConfigManager.isFeatureDownloaded(featureId)
+
+            if (isDownloaded) {
+                try {
+                    Toast.makeText(activeActivity, "ميزة $title مفعلة وجاهزة للاستخدام!", Toast.LENGTH_SHORT).show()
+                } catch (_: Exception) {}
+            } else {
+                AlertDialog.Builder(activeActivity)
+                    .setTitle("تنزيل وتفعيل ميزة $title")
+                    .setMessage("هذه الميزة سحابية وحجمها تقريباً ($sizeMb ميجابايت).\n\nهل تريد تنزيلها وتفعيلها الآن على تطبيقك؟")
+                    .setPositiveButton("تنزيل وتفعيل الآن") { dialog, _ ->
+                        dialog.dismiss()
+                        downloadAndActivateFeature(featureId, title)
+                    }
+                    .setNegativeButton("لاحقاً") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     private fun downloadAndActivateFeature(featureId: String, title: String) {
-        val currentContext = context ?: return
+        val activeActivity = activity ?: return
+        if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
 
-        Toast.makeText(currentContext, "جاري تنزيل وتفعيل ميزة ${title}...", Toast.LENGTH_SHORT).show()
+        try {
+            Toast.makeText(activeActivity, "جاري تنزيل وتفعيل ميزة $title...", Toast.LENGTH_SHORT).show()
+        } catch (_: Exception) {}
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             try {
@@ -178,9 +191,15 @@ class HomeFragment : Fragment() {
                     try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     delay(150)
                 }
-                CloudConfigManager.init(currentContext)
+                val currentAct = activity ?: return@launch
+                if (!isAdded || currentAct.isFinishing || currentAct.isDestroyed) return@launch
+
+                CloudConfigManager.init(currentAct)
                 CloudConfigManager.markFeatureAsDownloaded(featureId)
-                Toast.makeText(currentContext, "تم تنزيل وتفعيل ميزة ${title} بنجاح!", Toast.LENGTH_LONG).show()
+                
+                try {
+                    Toast.makeText(currentAct, "تم تنزيل وتفعيل ميزة $title بنجاح!", Toast.LENGTH_LONG).show()
+                } catch (_: Exception) {}
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -247,8 +266,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateWithFocus(v: View, actionId: Int) {
-        (activity as? com.example.accessiblevideoeditor.MainActivity)?.saveLastFocusedViewId("HomeFragment", v.id)
-        findNavController().navigate(actionId)
+        try {
+            val activeActivity = activity ?: return
+            if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
+            (activeActivity as? com.example.accessiblevideoeditor.MainActivity)?.saveLastFocusedViewId("HomeFragment", v.id)
+            val navController = findNavController()
+            if (navController.currentDestination?.id == R.id.homeFragment) {
+                navController.navigate(actionId)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onDestroyView() {
