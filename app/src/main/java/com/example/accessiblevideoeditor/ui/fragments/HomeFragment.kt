@@ -213,18 +213,11 @@ class HomeFragment : Fragment() {
         }
 
         var progressDialog: AlertDialog? = null
-        var progressTv: android.widget.TextView? = null
 
         try {
-            progressTv = android.widget.TextView(activeActivity).apply {
-                text = "جاري الاتصال بالسيرفر وتنزيل نموذج ميزة $title..."
-                setPadding(40, 30, 40, 30)
-                textSize = 15f
-            }
-
             progressDialog = AlertDialog.Builder(activeActivity)
                 .setTitle("تنزيل الموديل السحابي الحقيقي")
-                .setView(progressTv)
+                .setMessage("جاري الاتصال بالسيرفر وتنزيل نموذج ميزة $title...")
                 .setCancelable(false)
                 .create()
 
@@ -241,7 +234,7 @@ class HomeFragment : Fragment() {
                     downloadUrl
                 ) { percent ->
                     try {
-                        progressTv?.text = "جاري تنزيل نموذج ميزة $title...\nالتقدم: $percent%"
+                        progressDialog?.setMessage("جاري تنزيل نموذج ميزة $title...\nالتقدم: $percent%")
                         if (percent % 20 == 0) {
                             try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                         }
