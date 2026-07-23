@@ -158,7 +158,8 @@ class HomeFragment : Fragment() {
             if (isDownloaded) {
                 launchDynamicFeature(featureId)
             } else {
-                MaterialAlertDialogBuilder(activeActivity)
+                val dialogContext = android.view.ContextThemeWrapper(activeActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
+                AlertDialog.Builder(dialogContext)
                     .setTitle("تنزيل وتفعيل ميزة $title")
                     .setMessage("هذه الميزة سحابية وحجمها تقريباً ($sizeMb ميجابايت).\n\nهل تريد تنزيلها وتفعيلها الآن على تطبيقك؟")
                     .setPositiveButton("تنزيل وتفعيل الآن") { dialog, _ ->
@@ -201,7 +202,8 @@ class HomeFragment : Fragment() {
                 else -> R.id.action_homeFragment_to_videoEditorFragment
             }
 
-            navigateWithFocus(viewRef, actionId)
+            (activeActivity as? com.example.accessiblevideoeditor.MainActivity)?.saveLastFocusedViewId("HomeFragment", viewRef.id)
+            findNavController().navigate(actionId)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -222,10 +224,11 @@ class HomeFragment : Fragment() {
                 else -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
             }
 
-            var progressDialog: androidx.appcompat.app.AlertDialog? = null
+            var progressDialog: AlertDialog? = null
 
             try {
-                progressDialog = MaterialAlertDialogBuilder(activeActivity)
+                val dialogContext = android.view.ContextThemeWrapper(activeActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
+                progressDialog = AlertDialog.Builder(dialogContext)
                     .setTitle("تنزيل الموديل السحابي الحقيقي")
                     .setMessage("جاري الاتصال بالسيرفر وتنزيل نموذج ميزة $title...")
                     .setCancelable(false)
