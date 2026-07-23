@@ -1,6 +1,6 @@
 {
-  "versionCode": 72,
-  "versionName": "2.4.69",
+  "versionCode": 73,
+  "versionName": "2.4.70",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.69:\n- ربط وتشغيل واجهات المعالجة والأدوات مباشرة فور اكتمال التنزيل أو عند الضغط على أي ميزة مفعلة."
+  "releaseNotes": "تحديث الإصدار 2.4.70:\n- تنزيل الموديلات الثنائية الحقيقية عبر شبكة HTTP وعرض نسبة التقدم الحقيقية مع تخصيص 6 شاشات مستقلة وجديدة كلياً للميزات السحابية."
 }
