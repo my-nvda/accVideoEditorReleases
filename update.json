@@ -1,6 +1,6 @@
 {
-  "versionCode": 82,
-  "versionName": "2.5.3",
+  "versionCode": 83,
+  "versionName": "2.5.4",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.5.3 - الإصلاح الجذري النهائي:\n- حذف كلاسات AppStringResources وAppStringContext وTranslationInflaterFactory كلياً\n- كانت AppStringResources ترث من Resources() بـ constructor مهمل ومكسور على Android 7+ مما يُفسد نظام الموارد ويُسبب انهيار كل الشاشات\n- الترجمة تعمل الآن فقط عبر AppStrings.get() بدون أي تدخل في نظام الموارد"
+  "releaseNotes": "إصدار 2.5.4 - حل مشكلة انهيار الـ 6 ميزات الجديدة:\n- حل مشكلة استخدام attribute المسمى colorContainer الخاص بـ Material 3 في الـ 6 layouts الجديدة والذي كان يسبب انهياراً تاماً عند تضخيم الواجهات (Layout Inflation).\n- تصحيح وحل مشاكل ترميز اللغة العربية في ملفات الواجهات."
 }
