@@ -1,6 +1,6 @@
 {
-  "versionCode": 74,
-  "versionName": "2.4.71",
+  "versionCode": 75,
+  "versionName": "2.4.72",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.71:\n- تأمين التنزيل المباشر بالكامل ضد أي انهيار وتصفية استدعاءات الصوت والـ Dialog لمنع أي إغلاق مفاجئ."
+  "releaseNotes": "تحديث الإصدار 2.4.72:\n- إصلاح حرج للنموذج الشاشاتي وإلغاء الخاصية المتعارضة لمنع الإغلاق والانهيار عند فتح الميزات المضافة بنسبة 100%."
 }
