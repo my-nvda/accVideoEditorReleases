@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert"
         app:title="الوصف الصوتي التفاعلي للمكفوفين"
         app:titleTextColor="?attr/colorOnPrimary" />
 
@@ -51,8 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="تنزيل حزمة محرك الوصف الصوتي (10 MB)"
-                        android:visibility="gone"
-                        app:icon="@android:drawable/stat_sys_download" />
+                        android:visibility="gone" />
 
                     <ProgressBar
                         android:id="@+id/pbModelDownload"
@@ -71,8 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار فيديو لإضافة وصف صوتي مشاهد"
-                app:icon="@android:drawable/ic_menu_gallery" />
+                android:text="اختيار فيديو لإضافة وصف صوتي مشاهد" />
 
             <TextView
                 android:id="@+id/tvSelectedVideo"
@@ -86,8 +83,7 @@
                 android:id="@+id/btnGenerateAudioDescription"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="توليد الوصف الصوتي وسرد مشاهد المشاهدين"
-                app:icon="@android:drawable/ic_media_play" />
+                android:text="توليد الوصف الصوتي وسرد مشاهد المشاهدين" />
 
         </LinearLayout>
     </ScrollView>

@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert"
         app:title="مستخرج وقارئ الترجمات الشاشاتية SRT"
         app:titleTextColor="?attr/colorOnPrimary" />
 
@@ -51,8 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="تنزيل نموذج Tesseract Arabic OCR (1.4 MB)"
-                        android:visibility="gone"
-                        app:icon="@android:drawable/stat_sys_download" />
+                        android:visibility="gone" />
 
                     <ProgressBar
                         android:id="@+id/pbModelDownload"
@@ -71,8 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار فيديو يحتوي ترجمة مطبوعة"
-                app:icon="@android:drawable/ic_menu_gallery" />
+                android:text="اختيار فيديو يحتوي ترجمة مطبوعة" />
 
             <TextView
                 android:id="@+id/tvSelectedVideo"
@@ -87,8 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="16dp"
-                android:text="استخراج الترجمات وحفظها في ملف .SRT"
-                app:icon="@android:drawable/ic_media_play" />
+                android:text="استخراج الترجمات وحفظها في ملف .SRT" />
 
             <TextView
                 android:id="@+id/tvSrtResult"

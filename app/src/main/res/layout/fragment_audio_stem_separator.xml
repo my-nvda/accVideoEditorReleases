@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert"
         app:title="عازل ومحلل الآلات والموسيقى"
         app:titleTextColor="?attr/colorOnPrimary" />
 
@@ -51,8 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="تنزيل نموذج عزل الموسيقى (Spleeter ONNX - 48 MB)"
-                        android:visibility="gone"
-                        app:icon="@android:drawable/stat_sys_download" />
+                        android:visibility="gone" />
 
                     <ProgressBar
                         android:id="@+id/pbModelDownload"
@@ -71,8 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار ملف الصوت أو الفيديو"
-                app:icon="@android:drawable/ic_menu_search" />
+                android:text="اختيار ملف الصوت أو الفيديو" />
 
             <TextView
                 android:id="@+id/tvSelectedAudio"
@@ -111,8 +108,7 @@
                 android:id="@+id/btnProcessSeparation"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="بدء عملية فصل وعزل المسارات"
-                app:icon="@android:drawable/ic_media_play" />
+                android:text="بدء عملية فصل وعزل المسارات" />
 
         </LinearLayout>
     </ScrollView>

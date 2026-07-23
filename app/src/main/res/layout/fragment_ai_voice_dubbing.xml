@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert"
         app:title="دبلجة وتوليد الصوت بالذكاء الاصطناعي"
         app:titleTextColor="?attr/colorOnPrimary" />
 
@@ -51,8 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="تنزيل نموذج الصوت العربي (Piper ONNX - 63 MB)"
-                        android:visibility="gone"
-                        app:icon="@android:drawable/stat_sys_download" />
+                        android:visibility="gone" />
 
                     <ProgressBar
                         android:id="@+id/pbModelDownload"
@@ -108,8 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار ملف فيديو/صوت لدمج الدبلجة عليه"
-                app:icon="@android:drawable/ic_menu_save" />
+                android:text="اختيار ملف فيديو/صوت لدمج الدبلجة عليه" />
 
             <TextView
                 android:id="@+id/tvSelectedFile"
@@ -123,8 +120,7 @@
                 android:id="@+id/btnGenerateVoice"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="توليد ودبلجة الصوت بالذكاء الاصطناعي"
-                app:icon="@android:drawable/ic_media_play" />
+                android:text="توليد ودبلجة الصوت بالذكاء الاصطناعي" />
 
         </LinearLayout>
     </ScrollView>
