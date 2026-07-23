@@ -155,9 +155,7 @@ class HomeFragment : Fragment() {
             val isDownloaded = CloudConfigManager.isFeatureDownloaded(featureId)
 
             if (isDownloaded) {
-                try {
-                    Toast.makeText(activeActivity, "ميزة $title مفعلة وجاهزة للاستخدام!", Toast.LENGTH_SHORT).show()
-                } catch (_: Exception) {}
+                launchDynamicFeature(featureId)
             } else {
                 AlertDialog.Builder(activeActivity)
                     .setTitle("تنزيل وتفعيل ميزة $title")
@@ -174,6 +172,30 @@ class HomeFragment : Fragment() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun launchDynamicFeature(featureId: String) {
+        val viewRef = when (featureId) {
+            "btnAiVoiceDubbing" -> binding.btnAiVoiceDubbing
+            "btnAudioStemSeparator" -> binding.btnAudioStemSeparator
+            "btnAutoShortsCreator" -> binding.btnAutoShortsCreator
+            "btnCinematicLutShaders" -> binding.btnCinematicLutShaders
+            "btnAiSceneAudioDescription" -> binding.btnAiSceneAudioDescription
+            "btnSubtitlesOcrSrt" -> binding.btnSubtitlesOcrSrt
+            else -> binding.btnVideoEditor
+        }
+
+        val actionId = when (featureId) {
+            "btnAiVoiceDubbing" -> R.id.action_homeFragment_to_sttFragment
+            "btnAudioStemSeparator" -> R.id.action_homeFragment_to_audioStudioFragment
+            "btnAutoShortsCreator" -> R.id.action_homeFragment_to_smartCutFragment
+            "btnCinematicLutShaders" -> R.id.action_homeFragment_to_videoEditorFragment
+            "btnAiSceneAudioDescription" -> R.id.action_homeFragment_to_aiSceneInspectorFragment
+            "btnSubtitlesOcrSrt" -> R.id.action_homeFragment_to_ocrFragment
+            else -> R.id.action_homeFragment_to_videoEditorFragment
+        }
+
+        navigateWithFocus(viewRef, actionId)
     }
 
     private fun downloadAndActivateFeature(featureId: String, title: String) {
@@ -200,6 +222,8 @@ class HomeFragment : Fragment() {
                 try {
                     Toast.makeText(currentAct, "تم تنزيل وتفعيل ميزة $title بنجاح!", Toast.LENGTH_LONG).show()
                 } catch (_: Exception) {}
+
+                launchDynamicFeature(featureId)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
