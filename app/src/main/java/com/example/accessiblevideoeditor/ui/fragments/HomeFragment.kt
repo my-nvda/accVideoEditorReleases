@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -157,15 +158,15 @@ class HomeFragment : Fragment() {
             if (isDownloaded) {
                 launchDynamicFeature(featureId)
             } else {
-                AlertDialog.Builder(activeActivity)
+                MaterialAlertDialogBuilder(activeActivity)
                     .setTitle("تنزيل وتفعيل ميزة $title")
                     .setMessage("هذه الميزة سحابية وحجمها تقريباً ($sizeMb ميجابايت).\n\nهل تريد تنزيلها وتفعيلها الآن على تطبيقك؟")
                     .setPositiveButton("تنزيل وتفعيل الآن") { dialog, _ ->
-                        dialog.dismiss()
+                        try { dialog.dismiss() } catch (_: Exception) {}
                         downloadAndActivateFeature(featureId, title)
                     }
                     .setNegativeButton("لاحقاً") { dialog, _ ->
-                        dialog.dismiss()
+                        try { dialog.dismiss() } catch (_: Exception) {}
                     }
                     .show()
             }
@@ -175,98 +176,111 @@ class HomeFragment : Fragment() {
     }
 
     private fun launchDynamicFeature(featureId: String) {
-        val viewRef = when (featureId) {
-            "btnAiVoiceDubbing" -> binding.btnAiVoiceDubbing
-            "btnAudioStemSeparator" -> binding.btnAudioStemSeparator
-            "btnAutoShortsCreator" -> binding.btnAutoShortsCreator
-            "btnCinematicLutShaders" -> binding.btnCinematicLutShaders
-            "btnAiSceneAudioDescription" -> binding.btnAiSceneAudioDescription
-            "btnSubtitlesOcrSrt" -> binding.btnSubtitlesOcrSrt
-            else -> binding.btnVideoEditor
-        }
-
-        val actionId = when (featureId) {
-            "btnAiVoiceDubbing" -> R.id.action_homeFragment_to_aiVoiceDubbingFragment
-            "btnAudioStemSeparator" -> R.id.action_homeFragment_to_audioStemSeparatorFragment
-            "btnAutoShortsCreator" -> R.id.action_homeFragment_to_autoShortsCreatorFragment
-            "btnCinematicLutShaders" -> R.id.action_homeFragment_to_cinematicLutShadersFragment
-            "btnAiSceneAudioDescription" -> R.id.action_homeFragment_to_aiSceneAudioDescriptionFragment
-            "btnSubtitlesOcrSrt" -> R.id.action_homeFragment_to_subtitlesOcrSrtFragment
-            else -> R.id.action_homeFragment_to_videoEditorFragment
-        }
-
-        navigateWithFocus(viewRef, actionId)
-    }
-
-    private fun downloadAndActivateFeature(featureId: String, title: String) {
-        val activeActivity = activity ?: return
-        if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
-
-        val downloadUrl = when (featureId) {
-            "btnAiVoiceDubbing" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
-            "btnAudioStemSeparator" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/vocal_separator_model.tar.bz2"
-            "btnSubtitlesOcrSrt" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/ara.traineddata"
-            "btnAutoShortsCreator" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/shorts_templates.json"
-            "btnCinematicLutShaders" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/cinematic_luts.json"
-            "btnAiSceneAudioDescription" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/audio_description_rules.json"
-            else -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
-        }
-
-        var progressDialog: AlertDialog? = null
-
         try {
-            progressDialog = AlertDialog.Builder(activeActivity)
-                .setTitle("تنزيل الموديل السحابي الحقيقي")
-                .setMessage("جاري الاتصال بالسيرفر وتنزيل نموذج ميزة $title...")
-                .setCancelable(false)
-                .create()
+            val currentBinding = _binding ?: return
+            val activeActivity = activity ?: return
+            if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
 
-            progressDialog.show()
+            val viewRef = when (featureId) {
+                "btnAiVoiceDubbing" -> currentBinding.btnAiVoiceDubbing
+                "btnAudioStemSeparator" -> currentBinding.btnAudioStemSeparator
+                "btnAutoShortsCreator" -> currentBinding.btnAutoShortsCreator
+                "btnCinematicLutShaders" -> currentBinding.btnCinematicLutShaders
+                "btnAiSceneAudioDescription" -> currentBinding.btnAiSceneAudioDescription
+                "btnSubtitlesOcrSrt" -> currentBinding.btnSubtitlesOcrSrt
+                else -> currentBinding.btnVideoEditor
+            }
+
+            val actionId = when (featureId) {
+                "btnAiVoiceDubbing" -> R.id.action_homeFragment_to_aiVoiceDubbingFragment
+                "btnAudioStemSeparator" -> R.id.action_homeFragment_to_audioStemSeparatorFragment
+                "btnAutoShortsCreator" -> R.id.action_homeFragment_to_autoShortsCreatorFragment
+                "btnCinematicLutShaders" -> R.id.action_homeFragment_to_cinematicLutShadersFragment
+                "btnAiSceneAudioDescription" -> R.id.action_homeFragment_to_aiSceneAudioDescriptionFragment
+                "btnSubtitlesOcrSrt" -> R.id.action_homeFragment_to_subtitlesOcrSrtFragment
+                else -> R.id.action_homeFragment_to_videoEditorFragment
+            }
+
+            navigateWithFocus(viewRef, actionId)
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
 
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+    private fun downloadAndActivateFeature(featureId: String, title: String) {
+        try {
+            val activeActivity = activity ?: return
+            if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
+
+            val downloadUrl = when (featureId) {
+                "btnAiVoiceDubbing" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
+                "btnAudioStemSeparator" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/vocal_separator_model.tar.bz2"
+                "btnSubtitlesOcrSrt" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/ara.traineddata"
+                "btnAutoShortsCreator" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/shorts_templates.json"
+                "btnCinematicLutShaders" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/cinematic_luts.json"
+                "btnAiSceneAudioDescription" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/audio_description_rules.json"
+                else -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
+            }
+
+            var progressDialog: androidx.appcompat.app.AlertDialog? = null
+
             try {
-                val success = CloudConfigManager.downloadFeatureModel(
-                    activeActivity.applicationContext,
-                    featureId,
-                    downloadUrl
-                ) { percent ->
-                    try {
-                        progressDialog?.setMessage("جاري تنزيل نموذج ميزة $title...\nالتقدم: $percent%")
-                        if (percent % 20 == 0) {
-                            try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
-                        }
-                    } catch (_: Exception) {}
-                }
-
-                try {
-                    if (progressDialog != null && progressDialog.isShowing) {
-                        progressDialog.dismiss()
-                    }
-                } catch (_: Exception) {}
-
-                val currentAct = activity ?: return@launch
-                if (!isAdded || currentAct.isFinishing || currentAct.isDestroyed) return@launch
-
-                CloudConfigManager.markFeatureAsDownloaded(featureId)
-                Toast.makeText(currentAct, "تم تنزيل وتفعيل ميزة $title بنجاح!", Toast.LENGTH_SHORT).show()
-                launchDynamicFeature(featureId)
+                progressDialog = MaterialAlertDialogBuilder(activeActivity)
+                    .setTitle("تنزيل الموديل السحابي الحقيقي")
+                    .setMessage("جاري الاتصال بالسيرفر وتنزيل نموذج ميزة $title...")
+                    .setCancelable(false)
+                    .show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                try {
-                    if (progressDialog != null && progressDialog.isShowing) {
-                        progressDialog.dismiss()
-                    }
-                } catch (_: Exception) {}
+            }
 
-                val currentAct = activity ?: return@launch
-                if (isAdded && !currentAct.isFinishing && !currentAct.isDestroyed) {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    CloudConfigManager.downloadFeatureModel(
+                        activeActivity.applicationContext,
+                        featureId,
+                        downloadUrl
+                    ) { percent ->
+                        try {
+                            progressDialog?.setMessage("جاري تنزيل نموذج ميزة $title...\nالتقدم: $percent%")
+                            if (percent % 20 == 0) {
+                                try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
+                            }
+                        } catch (_: Exception) {}
+                    }
+
+                    try {
+                        if (progressDialog != null && progressDialog.isShowing) {
+                            progressDialog.dismiss()
+                        }
+                    } catch (_: Exception) {}
+
+                    val currentAct = activity ?: return@launch
+                    if (!isAdded || currentAct.isFinishing || currentAct.isDestroyed) return@launch
+
                     CloudConfigManager.markFeatureAsDownloaded(featureId)
+                    try {
+                        Toast.makeText(currentAct, "تم تنزيل وتفعيل ميزة $title بنجاح!", Toast.LENGTH_SHORT).show()
+                    } catch (_: Exception) {}
+
                     launchDynamicFeature(featureId)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    try {
+                        if (progressDialog != null && progressDialog.isShowing) {
+                            progressDialog.dismiss()
+                        }
+                    } catch (_: Exception) {}
+
+                    val currentAct = activity ?: return@launch
+                    if (isAdded && !currentAct.isFinishing && !currentAct.isDestroyed) {
+                        CloudConfigManager.markFeatureAsDownloaded(featureId)
+                        launchDynamicFeature(featureId)
+                    }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
