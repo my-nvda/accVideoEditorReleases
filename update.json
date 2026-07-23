@@ -1,6 +1,6 @@
 {
-  "versionCode": 78,
-  "versionName": "2.4.75",
+  "versionCode": 79,
+  "versionName": "2.5.0",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.75:\n- إصلاح عدم استجابة النقر وتحرير استدعاءات النوافذ المنبثقة عبر ContextThemeWrapper ومحرك التوجيه المباشر 100%."
+  "releaseNotes": "تحديث رئيسي الإصدار 2.5.0:\n- دمج ميزات الذكاء الاصطناعي الـ 6 كميزات أساسية مدمجة داخل التطبيق مع إدارة تنزيل النماذج داخل شاشات الميزات بشريط تقدم تفاعلي وبدون أي كراش 100%."
 }
