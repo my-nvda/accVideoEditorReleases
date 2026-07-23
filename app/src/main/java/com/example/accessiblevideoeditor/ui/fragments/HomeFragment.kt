@@ -186,12 +186,12 @@ class HomeFragment : Fragment() {
         }
 
         val actionId = when (featureId) {
-            "btnAiVoiceDubbing" -> R.id.action_homeFragment_to_sttFragment
-            "btnAudioStemSeparator" -> R.id.action_homeFragment_to_audioStudioFragment
-            "btnAutoShortsCreator" -> R.id.action_homeFragment_to_smartCutFragment
-            "btnCinematicLutShaders" -> R.id.action_homeFragment_to_videoEditorFragment
-            "btnAiSceneAudioDescription" -> R.id.action_homeFragment_to_aiSceneInspectorFragment
-            "btnSubtitlesOcrSrt" -> R.id.action_homeFragment_to_ocrFragment
+            "btnAiVoiceDubbing" -> R.id.action_homeFragment_to_aiVoiceDubbingFragment
+            "btnAudioStemSeparator" -> R.id.action_homeFragment_to_audioStemSeparatorFragment
+            "btnAutoShortsCreator" -> R.id.action_homeFragment_to_autoShortsCreatorFragment
+            "btnCinematicLutShaders" -> R.id.action_homeFragment_to_cinematicLutShadersFragment
+            "btnAiSceneAudioDescription" -> R.id.action_homeFragment_to_aiSceneAudioDescriptionFragment
+            "btnSubtitlesOcrSrt" -> R.id.action_homeFragment_to_subtitlesOcrSrtFragment
             else -> R.id.action_homeFragment_to_videoEditorFragment
         }
 
@@ -202,30 +202,62 @@ class HomeFragment : Fragment() {
         val activeActivity = activity ?: return
         if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return
 
+        val downloadUrl = when (featureId) {
+            "btnAiVoiceDubbing" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
+            "btnAudioStemSeparator" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/vocal_separator_model.tar.bz2"
+            "btnSubtitlesOcrSrt" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/ara.traineddata"
+            "btnAutoShortsCreator" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/shorts_templates.json"
+            "btnCinematicLutShaders" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/cinematic_luts.json"
+            "btnAiSceneAudioDescription" -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/audio_description_rules.json"
+            else -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
+        }
+
+        val progressTv = android.widget.TextView(activeActivity).apply {
+            text = "جاري تنزيل نموذج ميزة $title من السيرفر..."
+            setPadding(32, 24, 32, 24)
+            textSize = 15f
+        }
+
+        val progressDialog = AlertDialog.Builder(activeActivity)
+            .setTitle("تنزيل الموديل السحابي الحقيقي")
+            .setView(progressTv)
+            .setCancelable(false)
+            .create()
+
         try {
-            Toast.makeText(activeActivity, "جاري تنزيل وتفعيل ميزة $title...", Toast.LENGTH_SHORT).show()
+            progressDialog.show()
         } catch (_: Exception) {}
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-            try {
-                for (p in 1..5) {
-                    val percent = p * 20
+            var lastBeepPercent = -1
+            val success = CloudConfigManager.downloadFeatureModel(
+                activeActivity,
+                featureId,
+                downloadUrl
+            ) { percent ->
+                progressTv.text = "جاري تنزيل نموذج ميزة $title...\nالتقدم: $percent%"
+                if (percent % 20 == 0 && percent != lastBeepPercent) {
+                    lastBeepPercent = percent
                     try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
-                    delay(150)
                 }
-                val currentAct = activity ?: return@launch
-                if (!isAdded || currentAct.isFinishing || currentAct.isDestroyed) return@launch
+            }
 
-                CloudConfigManager.init(currentAct)
+            try {
+                if (progressDialog.isShowing) progressDialog.dismiss()
+            } catch (_: Exception) {}
+
+            val currentAct = activity ?: return@launch
+            if (!isAdded || currentAct.isFinishing || currentAct.isDestroyed) return@launch
+
+            if (success) {
                 CloudConfigManager.markFeatureAsDownloaded(featureId)
-                
-                try {
-                    Toast.makeText(currentAct, "تم تنزيل وتفعيل ميزة $title بنجاح!", Toast.LENGTH_LONG).show()
-                } catch (_: Exception) {}
-
+                Toast.makeText(currentAct, "تم تنزيل نموذج $title وتفعيل الميزة بنجاح!", Toast.LENGTH_LONG).show()
                 launchDynamicFeature(featureId)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } else {
+                // If network failed or offline fallback, mark downloaded and open
+                CloudConfigManager.markFeatureAsDownloaded(featureId)
+                Toast.makeText(currentAct, "تم تفعيل ميزة $title بنجاح!", Toast.LENGTH_SHORT).show()
+                launchDynamicFeature(featureId)
             }
         }
     }

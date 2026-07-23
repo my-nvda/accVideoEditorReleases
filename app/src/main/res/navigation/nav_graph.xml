@@ -97,6 +97,24 @@
         <action
             android:id="@+id/action_homeFragment_to_aiSceneInspectorFragment"
             app:destination="@id/aiSceneInspectorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aiVoiceDubbingFragment"
+            app:destination="@id/aiVoiceDubbingFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_audioStemSeparatorFragment"
+            app:destination="@id/audioStemSeparatorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_autoShortsCreatorFragment"
+            app:destination="@id/autoShortsCreatorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cinematicLutShadersFragment"
+            app:destination="@id/cinematicLutShadersFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aiSceneAudioDescriptionFragment"
+            app:destination="@id/aiSceneAudioDescriptionFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_subtitlesOcrSrtFragment"
+            app:destination="@id/subtitlesOcrSrtFragment" />
 
     </fragment>
 
@@ -251,6 +269,42 @@
         android:name="com.example.accessiblevideoeditor.ui.fragments.AiSceneInspectorFragment"
         android:label="AiSceneInspectorFragment"
         tools:layout="@layout/fragment_ai_scene_inspector" />
+
+    <fragment
+        android:id="@+id/aiVoiceDubbingFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AiVoiceDubbingFragment"
+        android:label="AiVoiceDubbingFragment"
+        tools:layout="@layout/fragment_ai_voice_dubbing" />
+
+    <fragment
+        android:id="@+id/audioStemSeparatorFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AudioStemSeparatorFragment"
+        android:label="AudioStemSeparatorFragment"
+        tools:layout="@layout/fragment_audio_stem_separator" />
+
+    <fragment
+        android:id="@+id/autoShortsCreatorFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AutoShortsCreatorFragment"
+        android:label="AutoShortsCreatorFragment"
+        tools:layout="@layout/fragment_auto_shorts_creator" />
+
+    <fragment
+        android:id="@+id/cinematicLutShadersFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.CinematicLutShadersFragment"
+        android:label="CinematicLutShadersFragment"
+        tools:layout="@layout/fragment_cinematic_lut_shaders" />
+
+    <fragment
+        android:id="@+id/aiSceneAudioDescriptionFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AiSceneAudioDescriptionFragment"
+        android:label="AiSceneAudioDescriptionFragment"
+        tools:layout="@layout/fragment_ai_scene_audio_description" />
+
+    <fragment
+        android:id="@+id/subtitlesOcrSrtFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.SubtitlesOcrSrtFragment"
+        android:label="SubtitlesOcrSrtFragment"
+        tools:layout="@layout/fragment_subtitles_ocr_srt" />
 
 </navigation>
 

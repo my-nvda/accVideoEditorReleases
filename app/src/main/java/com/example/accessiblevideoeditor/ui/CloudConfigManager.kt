@@ -224,6 +224,73 @@ object CloudConfigManager {
         downloaded.add(featureIdKey)
         prefs?.edit()?.putStringSet(KEY_DOWNLOADED_FEATURES, downloaded)?.apply()
     }
+
+    suspend fun downloadFeatureModel(
+        context: Context,
+        featureId: String,
+        downloadUrl: String,
+        onProgress: (Int) -> Unit
+    ): Boolean = withContext(Dispatchers.IO) {
+        init(context)
+        try {
+            val modelsDir = File(context.filesDir, "models")
+            if (!modelsDir.exists()) modelsDir.mkdirs()
+
+            val ext = if (downloadUrl.contains(".onnx")) ".onnx" else if (downloadUrl.contains(".tar.bz2")) ".tar.bz2" else if (downloadUrl.contains(".traineddata")) ".traineddata" else ".json"
+            val targetFile = File(modelsDir, "${featureId}_model$ext")
+
+            val url = URL(downloadUrl)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.useCaches = false
+            connection.instanceFollowRedirects = true
+            connection.connectTimeout = 20000
+            connection.readTimeout = 20000
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("User-Agent", "AccessibleVideoEditorApp")
+
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                val totalLength = connection.contentLength
+                var downloadedBytes = 0L
+
+                connection.inputStream.use { input ->
+                    targetFile.outputStream().use { output ->
+                        val buffer = ByteArray(16384)
+                        var bytesRead: Int
+                        var lastReportedProgress = -1
+
+                        while (input.read(buffer).also { bytesRead = it } != -1) {
+                            output.write(buffer, 0, bytesRead)
+                            downloadedBytes += bytesRead
+
+                            if (totalLength > 0) {
+                                val progress = ((downloadedBytes * 100) / totalLength).toInt()
+                                if (progress != lastReportedProgress && progress % 5 == 0) {
+                                    lastReportedProgress = progress
+                                    withContext(Dispatchers.Main) {
+                                        onProgress(progress)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                markFeatureAsDownloaded(featureId)
+                return@withContext true
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return@withContext false
+    }
+
+    fun getDownloadedModelFile(context: Context, featureId: String): File? {
+        val modelsDir = File(context.filesDir, "models")
+        if (!modelsDir.exists()) return null
+        val files = modelsDir.listFiles { _, name -> name.startsWith("${featureId}_model") }
+        val file = files?.firstOrNull()
+        return if (file != null && file.exists() && file.length() > 0) file else null
+    }
 }
 
 class CloudConfigResult {
