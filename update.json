@@ -1,6 +1,6 @@
 {
-  "versionCode": 80,
-  "versionName": "2.5.1",
+  "versionCode": 81,
+  "versionName": "2.5.2",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.5.1:\n- إصلاح حاسِم لخطأ تضخيم العروض وإزالة رموز النظام غير الرسمية لمنع الكراش والانهيار عند فتح الميزات 100%."
+  "releaseNotes": "تحديث هائل الإصدار 2.5.2:\n- إلغاء كامل للتعكيس والتأثيرات الناتجة عن التفاف الموارد المخصصة AppStringContext واستعادة تضخيم واجهات نظام أندرويد الأصيلة لمنع أي انهيار 100%."
 }
