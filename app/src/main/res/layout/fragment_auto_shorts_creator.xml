@@ -28,7 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorContainer"
                 app:cardCornerRadius="12dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,8 +39,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="حالة النموذج: جاري الفحص..."
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.button.MaterialButton
@@ -76,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="الفيديو المختار: لم يتم اختيار فيديو"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textSize="14sp"
                 android:layout_marginBottom="16dp" />
 
             <com.google.android.material.button.MaterialButton

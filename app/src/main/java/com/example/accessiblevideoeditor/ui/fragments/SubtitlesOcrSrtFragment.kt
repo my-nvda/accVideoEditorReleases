@@ -28,7 +28,7 @@ class SubtitlesOcrSrtFragment : Fragment() {
     private val selectVideoLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedVideoUri = uri
-            binding.tvSelectedVideo.text = "الفيديو المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            binding.tvSelectedVideoOcr.text = "الفيديو المختار: ${uri.lastPathSegment ?: uri.toString()}"
         }
     }
 
@@ -53,11 +53,11 @@ class SubtitlesOcrSrtFragment : Fragment() {
             promptDownloadModel()
         }
 
-        binding.btnSelectVideo.setOnClickListener {
+        binding.btnSelectVideoForOcr.setOnClickListener {
             selectVideoLauncher.launch("video/*")
         }
 
-        binding.btnExtractSrt.setOnClickListener {
+        binding.btnExtractSubtitles.setOnClickListener {
             val currentContext = context ?: return@setOnClickListener
             val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
             if (modelFile == null || !modelFile.exists()) {
@@ -70,8 +70,7 @@ class SubtitlesOcrSrtFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            binding.tvSrtResult.text = "جاري مسح إطارات الفيديو ضوئياً وتوليد ملف SRT بالذكاء الاصطناعي..."
-            Toast.makeText(currentContext, "بدء عملية تحليل واستخراج الترجمة المطبوعة...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(currentContext, "بدء عملية مسح إطارات الفيديو ضوئياً واستخراج الترجمة المطبوعة...", Toast.LENGTH_SHORT).show()
         }
     }
 

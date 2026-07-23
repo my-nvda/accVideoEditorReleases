@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:title="مستخرج وقارئ الترجمات الشاشاتية SRT"
+        app:title="مستخرج وقارئ الترجمات SRT"
         app:titleTextColor="?attr/colorOnPrimary" />
 
     <ScrollView
@@ -23,12 +23,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Model Status & Download Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorContainer"
                 app:cardCornerRadius="12dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,8 +38,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="حالة النموذج: جاري الفحص..."
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.button.MaterialButton
@@ -49,7 +46,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="تنزيل نموذج Tesseract Arabic OCR (1.4 MB)"
+                        android:text="تنزيل نموذج OCR العربي Tesseract (15 MB)"
                         android:visibility="gone" />
 
                     <ProgressBar
@@ -64,35 +61,26 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSelectVideo"
+                android:id="@+id/btnSelectVideoForOcr"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار فيديو يحتوي ترجمة مطبوعة" />
+                android:text="اختيار فيديو أو صورة لاستخراج الترجمات" />
 
             <TextView
-                android:id="@+id/tvSelectedVideo"
+                android:id="@+id/tvSelectedVideoOcr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="الفيديو المختار: لم يتم اختيار فيديو"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:text="الملف المختار: لم يتم اختيار ملف"
+                android:textSize="12sp"
                 android:layout_marginBottom="16dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnExtractSrt"
+                android:id="@+id/btnExtractSubtitles"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginBottom="16dp"
-                android:text="استخراج الترجمات وحفظها في ملف .SRT" />
-
-            <TextView
-                android:id="@+id/tvSrtResult"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="3dp"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:text="استخراج الترجمات وتحويلها لملف SRT" />
 
         </LinearLayout>
     </ScrollView>

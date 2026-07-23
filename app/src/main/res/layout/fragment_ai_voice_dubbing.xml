@@ -23,12 +23,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Model Status & Download Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorContainer"
                 app:cardCornerRadius="12dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,8 +38,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="حالة النموذج: جاري الفحص..."
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.button.MaterialButton
@@ -67,7 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="أدخل النص المراد دبلجته وتوليده صوتاً:"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -88,7 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="سرعة الصوت والرنة:"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textSize="14sp"
                 android:layout_marginBottom="4dp" />
 
             <SeekBar
@@ -113,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="الملحوق المختار: لم يتم اختيار ملف بعد"
-                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="12sp"
                 android:layout_marginBottom="16dp" />
 
             <com.google.android.material.button.MaterialButton
