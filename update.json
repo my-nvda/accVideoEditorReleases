@@ -1,6 +1,6 @@
 {
-  "versionCode": 70,
-  "versionName": "2.4.67",
+  "versionCode": 71,
+  "versionName": "2.4.68",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث الإصدار 2.4.67:\n- تحويل كل الإضافات إلى ميزات أساسية مباشرة في الشاشة الرئيسية مع طلب التنزيل التلقائي من السيرفر عند الضغط عليها وإلغاء نظام الملحقات القديم نهائياً."
+  "releaseNotes": "تحديث الإصدار 2.4.68:\n- حماية جميع أزرار الواجهة الرئيسية ضد أي انهيار وتأمين التنقل عبر Navigation Controller بنسبة 100%."
 }
