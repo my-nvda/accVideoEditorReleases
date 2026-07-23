@@ -1,6 +1,6 @@
 {
-  "versionCode": 81,
-  "versionName": "2.5.2",
+  "versionCode": 82,
+  "versionName": "2.5.3",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "تحديث هائل الإصدار 2.5.2:\n- إلغاء كامل للتعكيس والتأثيرات الناتجة عن التفاف الموارد المخصصة AppStringContext واستعادة تضخيم واجهات نظام أندرويد الأصيلة لمنع أي انهيار 100%."
+  "releaseNotes": "إصدار 2.5.3 - الإصلاح الجذري النهائي:\n- حذف كلاسات AppStringResources وAppStringContext وTranslationInflaterFactory كلياً\n- كانت AppStringResources ترث من Resources() بـ constructor مهمل ومكسور على Android 7+ مما يُفسد نظام الموارد ويُسبب انهيار كل الشاشات\n- الترجمة تعمل الآن فقط عبر AppStrings.get() بدون أي تدخل في نظام الموارد"
 }
