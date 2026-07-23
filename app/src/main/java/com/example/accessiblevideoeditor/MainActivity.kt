@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
    */
   override fun attachBaseContext(newBase: Context) {
       AppStrings.loadCustomStrings(newBase)
-      super.attachBaseContext(AppStringContext(newBase))
+      super.attachBaseContext(newBase)
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,11 +57,6 @@ class MainActivity : AppCompatActivity() {
     SoundManager.init(this)
     SoundManager.playStartup()
     ProcessingManager.init(this)
-
-    // Install TranslationInflaterFactory BEFORE setContentView so every view
-    // inflated in this activity (including all fragments) gets translations applied.
-    // We use reflection because AppCompat has already set its own factory in super.onCreate().
-    installTranslationFactory()
 
     // Disable screen sleep
     window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -232,19 +227,6 @@ class MainActivity : AppCompatActivity() {
                   navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
               }
           }
-      }
-  }
-
-  private fun installTranslationFactory() {
-      try {
-          val inflater = layoutInflater
-          val field = LayoutInflater::class.java.getDeclaredField("mFactory2")
-          field.isAccessible = true
-          val currentFactory = field.get(inflater) as? LayoutInflater.Factory2
-          val customFactory = TranslationInflaterFactory(currentFactory, inflater)
-          field.set(inflater, customFactory)
-      } catch (e: Exception) {
-          e.printStackTrace()
       }
   }
 
