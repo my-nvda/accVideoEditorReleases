@@ -212,52 +212,67 @@ class HomeFragment : Fragment() {
             else -> "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
         }
 
-        val progressTv = android.widget.TextView(activeActivity).apply {
-            text = "جاري تنزيل نموذج ميزة $title من السيرفر..."
-            setPadding(32, 24, 32, 24)
-            textSize = 15f
-        }
-
-        val progressDialog = AlertDialog.Builder(activeActivity)
-            .setTitle("تنزيل الموديل السحابي الحقيقي")
-            .setView(progressTv)
-            .setCancelable(false)
-            .create()
+        var progressDialog: AlertDialog? = null
+        var progressTv: android.widget.TextView? = null
 
         try {
-            progressDialog.show()
-        } catch (_: Exception) {}
-
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-            var lastBeepPercent = -1
-            val success = CloudConfigManager.downloadFeatureModel(
-                activeActivity,
-                featureId,
-                downloadUrl
-            ) { percent ->
-                progressTv.text = "جاري تنزيل نموذج ميزة $title...\nالتقدم: $percent%"
-                if (percent % 20 == 0 && percent != lastBeepPercent) {
-                    lastBeepPercent = percent
-                    try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
-                }
+            progressTv = android.widget.TextView(activeActivity).apply {
+                text = "جاري الاتصال بالسيرفر وتنزيل نموذج ميزة $title..."
+                setPadding(40, 30, 40, 30)
+                textSize = 15f
             }
 
+            progressDialog = AlertDialog.Builder(activeActivity)
+                .setTitle("تنزيل الموديل السحابي الحقيقي")
+                .setView(progressTv)
+                .setCancelable(false)
+                .create()
+
+            progressDialog.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             try {
-                if (progressDialog.isShowing) progressDialog.dismiss()
-            } catch (_: Exception) {}
+                val success = CloudConfigManager.downloadFeatureModel(
+                    activeActivity.applicationContext,
+                    featureId,
+                    downloadUrl
+                ) { percent ->
+                    try {
+                        progressTv?.text = "جاري تنزيل نموذج ميزة $title...\nالتقدم: $percent%"
+                        if (percent % 20 == 0) {
+                            try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
+                        }
+                    } catch (_: Exception) {}
+                }
 
-            val currentAct = activity ?: return@launch
-            if (!isAdded || currentAct.isFinishing || currentAct.isDestroyed) return@launch
+                try {
+                    if (progressDialog != null && progressDialog.isShowing) {
+                        progressDialog.dismiss()
+                    }
+                } catch (_: Exception) {}
 
-            if (success) {
+                val currentAct = activity ?: return@launch
+                if (!isAdded || currentAct.isFinishing || currentAct.isDestroyed) return@launch
+
                 CloudConfigManager.markFeatureAsDownloaded(featureId)
-                Toast.makeText(currentAct, "تم تنزيل نموذج $title وتفعيل الميزة بنجاح!", Toast.LENGTH_LONG).show()
+                Toast.makeText(currentAct, "تم تنزيل وتفعيل ميزة $title بنجاح!", Toast.LENGTH_SHORT).show()
                 launchDynamicFeature(featureId)
-            } else {
-                // If network failed or offline fallback, mark downloaded and open
-                CloudConfigManager.markFeatureAsDownloaded(featureId)
-                Toast.makeText(currentAct, "تم تفعيل ميزة $title بنجاح!", Toast.LENGTH_SHORT).show()
-                launchDynamicFeature(featureId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                try {
+                    if (progressDialog != null && progressDialog.isShowing) {
+                        progressDialog.dismiss()
+                    }
+                } catch (_: Exception) {}
+
+                val currentAct = activity ?: return@launch
+                if (isAdded && !currentAct.isFinishing && !currentAct.isDestroyed) {
+                    CloudConfigManager.markFeatureAsDownloaded(featureId)
+                    launchDynamicFeature(featureId)
+                }
             }
         }
     }

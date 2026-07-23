@@ -239,20 +239,38 @@ object CloudConfigManager {
             val ext = if (downloadUrl.contains(".onnx")) ".onnx" else if (downloadUrl.contains(".tar.bz2")) ".tar.bz2" else if (downloadUrl.contains(".traineddata")) ".traineddata" else ".json"
             val targetFile = File(modelsDir, "${featureId}_model$ext")
 
-            val url = URL(downloadUrl)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.useCaches = false
-            connection.instanceFollowRedirects = true
-            connection.connectTimeout = 20000
-            connection.readTimeout = 20000
-            connection.requestMethod = "GET"
-            connection.setRequestProperty("User-Agent", "AccessibleVideoEditorApp")
+            var currentUrl = downloadUrl
+            var connection: HttpURLConnection? = null
+            var redirectCount = 0
 
-            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-                val totalLength = connection.contentLength
+            while (redirectCount < 5) {
+                val url = URL(currentUrl)
+                connection = url.openConnection() as HttpURLConnection
+                connection.useCaches = false
+                connection.instanceFollowRedirects = true
+                connection.connectTimeout = 20000
+                connection.readTimeout = 20000
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+
+                val status = connection.responseCode
+                if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == 307 || status == 308) {
+                    val newUrl = connection.getHeaderField("Location")
+                    if (!newUrl.isNullOrEmpty()) {
+                        currentUrl = newUrl
+                        redirectCount++
+                        continue
+                    }
+                }
+                break
+            }
+
+            val conn = connection ?: return@withContext false
+            if (conn.responseCode == HttpURLConnection.HTTP_OK) {
+                val totalLength = conn.contentLength
                 var downloadedBytes = 0L
 
-                connection.inputStream.use { input ->
+                conn.inputStream.use { input ->
                     targetFile.outputStream().use { output ->
                         val buffer = ByteArray(16384)
                         var bytesRead: Int
@@ -264,11 +282,13 @@ object CloudConfigManager {
 
                             if (totalLength > 0) {
                                 val progress = ((downloadedBytes * 100) / totalLength).toInt()
-                                if (progress != lastReportedProgress && progress % 5 == 0) {
+                                if (progress != lastReportedProgress && progress % 10 == 0) {
                                     lastReportedProgress = progress
-                                    withContext(Dispatchers.Main) {
-                                        onProgress(progress)
-                                    }
+                                    try {
+                                        withContext(Dispatchers.Main) {
+                                            onProgress(progress)
+                                        }
+                                    } catch (_: Exception) {}
                                 }
                             }
                         }
@@ -278,7 +298,7 @@ object CloudConfigManager {
                 markFeatureAsDownloaded(featureId)
                 return@withContext true
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             e.printStackTrace()
         }
         return@withContext false
