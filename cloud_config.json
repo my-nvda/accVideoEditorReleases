@@ -5,27 +5,27 @@
       "id": "btnAiVoiceDubbing",
       "featureId": "btnAiVoiceDubbing",
       "title": "دبلجة وتوليد الصوت بالذكاء الاصطناعي",
-      "description": "توليد تعليق صوتي ودبلجة مخصصة باللغة العربية مع التحكم برنة الصوت والسرعة عبر نموذج Piper ONNX.",
+      "description": "توليد تعليق صوتي ودبلجة مخصصة باللغة العربية مع التحكم برنة الصوت والسرعة عبر نموذج Piper Arabic ONNX Model (63.2MB).",
       "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx",
       "sizeMb": 63.2,
-      "version": 1
-    },
-    {
-      "id": "btnSubtitlesOcrSrt",
-      "featureId": "btnSubtitlesOcrSrt",
-      "title": "مستخرج وقارئ الترجمات الشاشاتية SRT",
-      "description": "استخراج الترجمات المدمجة بصرية من الفيديو إلى ملفات SRT أو قراءتها صوتياً باستخدام نموذج Tesseract Arabic OCR.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/ara.traineddata",
-      "sizeMb": 1.43,
       "version": 1
     },
     {
       "id": "btnAudioStemSeparator",
       "featureId": "btnAudioStemSeparator",
       "title": "عازل ومحلل الآلات والموسيقى",
-      "description": "فصل الصوت البشري النقائي عن الموسيقى التصويرية والآلات الموسيقية عبر نموذج Demucs ONNX.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/vocal_separator.onnx",
-      "sizeMb": 15.0,
+      "description": "فصل الصوت البشري النقائي عن الموسيقى التصويرية والآلات الموسيقية عبر نموذج Spleeter 2Stems ONNX Model (48.6MB).",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/vocal_separator_model.tar.bz2",
+      "sizeMb": 48.6,
+      "version": 1
+    },
+    {
+      "id": "btnSubtitlesOcrSrt",
+      "featureId": "btnSubtitlesOcrSrt",
+      "title": "مستخرج وقارئ الترجمات الشاشاتية SRT",
+      "description": "استخراج الترجمات المدمجة بصرية من الفيديو إلى ملفات SRT أو قراءتها صوتياً باستخدام نموذج Tesseract Arabic OCR (1.43MB).",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/ara.traineddata",
+      "sizeMb": 1.43,
       "version": 1
     },
     {
