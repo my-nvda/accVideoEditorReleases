@@ -10,10 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.example.accessiblevideoeditor.media.SoundManager
-import com.example.accessiblevideoeditor.ui.AppStringContext
 import com.example.accessiblevideoeditor.ui.AppStrings
 import com.example.accessiblevideoeditor.ui.ProcessingManager
-import com.example.accessiblevideoeditor.ui.TranslationInflaterFactory
 import com.example.accessiblevideoeditor.updater.AppUpdater
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.flow.collectLatest
@@ -39,8 +37,9 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Wraps the base context so programmatic getString() calls also benefit from
-   * cloud translations. XML-defined strings are handled by TranslationInflaterFactory.
+   * Preloads cached cloud translations before the Activity inflates any views.
+   * All translation lookups go through AppStrings.get(context, resId) — no
+   * Resources subclassing or LayoutInflater reflection is used.
    */
   override fun attachBaseContext(newBase: Context) {
       AppStrings.loadCustomStrings(newBase)
