@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -132,7 +132,7 @@ class WatermarkFragment : Fragment() {
     }
 
     private fun processWatermark(vUri: Uri) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val inputVideo = FileUtils.getPathFromUri(requireContext(), vUri)
                 val outputPath = requireContext().cacheDir.absolutePath + "/watermark_${System.currentTimeMillis()}.mp4"
@@ -206,3 +206,4 @@ class WatermarkFragment : Fragment() {
         _binding = null
     }
 }
+

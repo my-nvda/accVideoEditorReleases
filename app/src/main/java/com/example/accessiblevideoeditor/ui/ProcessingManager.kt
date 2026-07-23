@@ -23,6 +23,8 @@ object ProcessingManager {
     var appContext: Context? = null
         private set
 
+    var sharedMediaUri: android.net.Uri? = null
+
     fun init(context: Context) {
         appContext = context.applicationContext
     }

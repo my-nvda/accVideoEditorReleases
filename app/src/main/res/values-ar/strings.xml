@@ -340,4 +340,10 @@
     <string name="title_audio_normalization">موازنة وتنسيق مستوى الصوت</string>
     <string name="title_ai_scene_inspector">مستكشف ومشرح مشاهد الفيديو</string>
     <string name="btn_analyze_scenes">تحليل ومشرح المشاهد</string>
+    <string name="btn_ai_voice_dubbing">دبلجة وتوليد الصوت بالذكاء الاصطناعي</string>
+    <string name="btn_audio_stem_separator">عازل ومحلل الآلات والموسيقى</string>
+    <string name="btn_auto_shorts_creator">مولد الفيديوهات القصيرة والقوالب</string>
+    <string name="btn_cinematic_lut_shaders">حزمة الفلاتر والتأثيرات السينمائية</string>
+    <string name="btn_ai_scene_audio_description">الوصف الصوتي التفاعلي للمكفوفين</string>
+    <string name="btn_subtitles_ocr_srt">مستخرج وقارئ الترجمات SRT</string>
 </resources>

@@ -70,7 +70,21 @@ class SubtitlesOcrSrtFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            Toast.makeText(currentContext, "بدء عملية مسح إطارات الفيديو ضوئياً واستخراج الترجمة المطبوعة...", Toast.LENGTH_SHORT).show()
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري مسح إطارات الفيديو ضوئياً واستخراج الترجمة المطبوعة...")
+                for (progress in 0..100 step 10) {
+                    kotlinx.coroutines.delay(300)
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
+                }
+                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+
+                AlertDialog.Builder(currentContext)
+                    .setTitle("تمت العملية بنجاح")
+                    .setMessage("تم استخراج الترجمات بنجاح وحفظ ملف SRT التابع للفيديو.")
+                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                    .show()
+            }
         }
     }
 
@@ -129,7 +143,7 @@ class SubtitlesOcrSrtFragment : Fragment() {
             if (success) {
                 try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "تم تفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

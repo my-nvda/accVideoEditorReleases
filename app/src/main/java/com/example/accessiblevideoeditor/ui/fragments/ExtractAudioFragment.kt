@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -82,7 +82,7 @@ class ExtractAudioFragment : Fragment() {
     }
 
     private fun processAudioExtraction(uri: Uri, format: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val tempFile = MediaUtils.copyUriToTempFile(requireContext(), uri, "temp_extract_${System.currentTimeMillis()}.mp4")
             if (tempFile != null) {
                 withContext(Dispatchers.Main) {
@@ -136,3 +136,4 @@ class ExtractAudioFragment : Fragment() {
         _binding = null
     }
 }
+

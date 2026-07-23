@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -102,7 +102,7 @@ class AudioEditorFragment : Fragment() {
         SoundManager.playProcessing()
         ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_25))
         
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val tempVideo = MediaUtils.copyUriToTempFile(
                     requireContext(), videoUri, "temp_video_audio_${System.currentTimeMillis()}.mp4"
@@ -136,7 +136,7 @@ class AudioEditorFragment : Fragment() {
         SoundManager.playProcessing()
         ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_7))
         
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val tempVideo = MediaUtils.copyUriToTempFile(requireContext(), videoUri, "temp_video_audio_${System.currentTimeMillis()}.mp4")
                 val tempAudio = MediaUtils.copyUriToTempFile(requireContext(), audioUri, "temp_audio_only_${System.currentTimeMillis()}.mp3")
@@ -169,7 +169,7 @@ class AudioEditorFragment : Fragment() {
         SoundManager.playProcessing()
         ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_9))
         
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val tempVideo = MediaUtils.copyUriToTempFile(requireContext(), videoUri, "temp_video_audio_${System.currentTimeMillis()}.mp4")
                 val tempAudio = MediaUtils.copyUriToTempFile(requireContext(), audioUri, "temp_audio_only_${System.currentTimeMillis()}.mp3")
@@ -203,3 +203,4 @@ class AudioEditorFragment : Fragment() {
         _binding = null
     }
 }
+

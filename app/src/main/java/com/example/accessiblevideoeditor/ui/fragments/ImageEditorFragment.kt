@@ -86,43 +86,49 @@ class ImageEditorFragment : Fragment() {
     }
 
     private fun processImage(uri: Uri) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        val safeContext = context ?: return
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             var success = false
             try {
                 withContext(Dispatchers.Main) {
-                    ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_127))
+                    val currentContext = context ?: return@withContext
+                    ProcessingManager.startProcessing(AppStrings.get(currentContext, R.string.string_127))
                 }
                 
                 val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    val source = ImageDecoder.createSource(requireContext().contentResolver, uri)
-                    ImageDecoder.decodeBitmap(source)
+                    val source = ImageDecoder.createSource(safeContext.contentResolver, uri)
+                    ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+                        decoder.isMutableRequired = true
+                    }
                 } else {
                     @Suppress("DEPRECATION")
-                    MediaStore.Images.Media.getBitmap(requireContext().contentResolver, uri)
+                    MediaStore.Images.Media.getBitmap(safeContext.contentResolver, uri)
                 }
                 
                 val resultBitmap = TextRenderer.drawTextOnImage(bitmap, textOptions)
-                val outputPath = requireContext().cacheDir.absolutePath + "/edited_image_${System.currentTimeMillis()}.jpg"
+                val outputPath = safeContext.cacheDir.absolutePath + "/edited_image_${System.currentTimeMillis()}.jpg"
                 val out = FileOutputStream(outputPath)
                 resultBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
                 out.flush()
                 out.close()
                 
-                val savedUri = FileUtils.saveToGallery(requireContext(), File(outputPath), "image/jpeg")
+                val savedUri = FileUtils.saveToGallery(safeContext, File(outputPath), "image/jpeg")
                 if (savedUri != null) success = true
                 
                 withContext(Dispatchers.Main) {
+                    val currentContext = context ?: return@withContext
                     if (success) {
-                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_182), Toast.LENGTH_LONG).show()
+                        Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.string_182), Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()
+                        Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.string_183), Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    val currentContext = context ?: return@withContext
+                    Toast.makeText(currentContext, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             } finally {
                 withContext(NonCancellable) {

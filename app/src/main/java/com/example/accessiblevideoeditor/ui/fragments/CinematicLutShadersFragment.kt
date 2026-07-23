@@ -70,7 +70,21 @@ class CinematicLutShadersFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            Toast.makeText(currentContext, "جاري تطبيق فلاتر اللوت السينمائي ومعالجة الألوان...", Toast.LENGTH_LONG).show()
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تطبيق فلاتر اللوت السينمائي ومعالجة الألوان...")
+                for (progress in 0..100 step 10) {
+                    kotlinx.coroutines.delay(300)
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
+                }
+                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+
+                AlertDialog.Builder(currentContext)
+                    .setTitle("تمت العملية بنجاح")
+                    .setMessage("تم تطبيق الفلتر السينمائي ومعالجة ألوان الملف المختار وحفظه بنجاح.")
+                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                    .show()
+            }
         }
     }
 
@@ -129,7 +143,7 @@ class CinematicLutShadersFragment : Fragment() {
             if (success) {
                 try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "تم تفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

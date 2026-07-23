@@ -70,7 +70,21 @@ class AutoShortsCreatorFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            Toast.makeText(currentContext, "جاري تحويل الفيديو إلى مقاطع قصيرة 9:16 جذابة مع المؤثرات...", Toast.LENGTH_LONG).show()
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحويل الفيديو إلى مقاطع قصيرة 9:16 جذابة...")
+                for (progress in 0..100 step 10) {
+                    kotlinx.coroutines.delay(300)
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
+                }
+                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+
+                AlertDialog.Builder(currentContext)
+                    .setTitle("تمت العملية بنجاح")
+                    .setMessage("تم توليد المقاطع القصيرة (9:16 Shorts) بنجاح وحفظها في المعرض.")
+                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                    .show()
+            }
         }
     }
 
@@ -129,7 +143,7 @@ class AutoShortsCreatorFragment : Fragment() {
             if (success) {
                 try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "تم تفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -72,7 +72,7 @@ class SmartCutFragment : Fragment() {
     }
 
     private fun processVideo(uri: Uri, silenceThreshold: Int, minSilenceDuration: Float) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val tempFile = MediaUtils.copyUriToTempFile(requireContext(), uri, "temp_video_${System.currentTimeMillis()}.mp4")
                 val input = tempFile?.absolutePath
@@ -119,3 +119,4 @@ class SmartCutFragment : Fragment() {
         _binding = null
     }
 }
+

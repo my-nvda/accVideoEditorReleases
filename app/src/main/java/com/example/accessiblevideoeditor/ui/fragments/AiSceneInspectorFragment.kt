@@ -86,18 +86,20 @@ class AiSceneInspectorFragment : Fragment() {
             var resultText = ""
             try {
                 val apiKey = SettingsManager.geminiApiKey
+                val currentContext = context
                 if (apiKey.isBlank()) {
-                    resultText = AppStrings.get(requireContext(), R.string.string_3)
-                } else {
+                    resultText = if (currentContext != null) AppStrings.get(currentContext, R.string.string_3) else "Gemini API key is missing."
+                } else if (currentContext != null) {
+                    val userModel = SettingsManager.geminiModel
                     val model = GenerativeModel(
-                        modelName = "gemini-2.5-flash",
+                        modelName = if (userModel.isNotBlank()) userModel else "gemini-2.5-flash",
                         apiKey = apiKey
                     )
                     val bytes = withContext(Dispatchers.IO) {
-                        val inputStream = requireContext().contentResolver.openInputStream(uri)
+                        val inputStream = currentContext.contentResolver.openInputStream(uri)
                         inputStream?.readBytes() ?: ByteArray(0)
                     }
-                    val mimeType = requireContext().contentResolver.getType(uri) ?: "video/mp4"
+                    val mimeType = currentContext.contentResolver.getType(uri) ?: "video/mp4"
 
                     val promptText = "قم بتحليل هذا الفيديو وتفكيكه إلى مشاهد زمنيّة مفصلة موجهة لشخص كفيف. اذكر كل مشهد بتوقيته الزمني التقديري مع شرح دقيق للأحداث البصرية والأشخاص والحركات والخلفيات باللغة العربية."
 

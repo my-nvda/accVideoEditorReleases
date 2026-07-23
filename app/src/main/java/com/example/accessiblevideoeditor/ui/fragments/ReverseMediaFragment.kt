@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -71,7 +71,7 @@ class ReverseMediaFragment : Fragment() {
     }
 
     private fun processVideo(uri: Uri, reverseVideo: Boolean, reverseAudio: Boolean) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val input = FileUtils.getPathFromUri(requireContext(), uri)
                 if (input != null) {
@@ -122,3 +122,4 @@ class ReverseMediaFragment : Fragment() {
         _binding = null
     }
 }
+

@@ -122,7 +122,14 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.accessiblevideoeditor.ui.fragments.SettingsFragment"
         android:label="SettingsFragment"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_volunteerTranslationFragment"
+            app:destination="@id/volunteerTranslationFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/videoEditorFragment"

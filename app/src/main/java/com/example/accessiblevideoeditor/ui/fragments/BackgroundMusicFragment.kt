@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -102,7 +102,7 @@ class BackgroundMusicFragment : Fragment() {
     }
 
     private fun processMixBackgroundMusic(main: Uri, bg: Uri, volume: Float) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val tempMain = MediaUtils.copyUriToTempFile(requireContext(), main, "main_media_${System.currentTimeMillis()}")
                 val tempBg = MediaUtils.copyUriToTempFile(requireContext(), bg, "bg_music_${System.currentTimeMillis()}")
@@ -172,3 +172,4 @@ class BackgroundMusicFragment : Fragment() {
         _binding = null
     }
 }
+

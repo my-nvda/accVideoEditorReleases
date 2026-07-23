@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import com.example.accessiblevideoeditor.databinding.FragmentSettingsBinding
+import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.ui.LanguageManager
 import com.example.accessiblevideoeditor.ui.SettingsManager
 
@@ -104,11 +105,11 @@ class SettingsFragment : Fragment() {
         }
 
         binding.btnHelp.setOnClickListener {
-            findNavController().navigate(com.example.accessiblevideoeditor.R.id.helpFragment)
+            findNavController().navigate(R.id.action_settingsFragment_to_helpFragment)
         }
         
         binding.btnVolunteerTranslation.setOnClickListener {
-            findNavController().navigate(com.example.accessiblevideoeditor.R.id.volunteerTranslationFragment)
+            findNavController().navigate(R.id.action_settingsFragment_to_volunteerTranslationFragment)
         }
 
         binding.btnCheckUpdates.setOnClickListener {

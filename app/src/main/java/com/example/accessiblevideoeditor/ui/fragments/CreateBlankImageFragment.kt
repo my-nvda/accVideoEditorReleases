@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -69,7 +69,7 @@ class CreateBlankImageFragment : Fragment() {
     }
 
     private fun processImage() {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             var success = false
             try {
                 withContext(Dispatchers.Main) {
@@ -120,3 +120,4 @@ class CreateBlankImageFragment : Fragment() {
         _binding = null
     }
 }
+

@@ -68,12 +68,12 @@ class HomeFragment : Fragment() {
             binding.btnAiSceneInspector.text = AppStrings.get(context, R.string.btn_ai_scene_inspector)
             
             // Dynamic Cloud Features
-            binding.btnAiVoiceDubbing.text = "دبلجة وتوليد الصوت بالذكاء الاصطناعي"
-            binding.btnAudioStemSeparator.text = "عازل ومحلل الآلات والموسيقى"
-            binding.btnAutoShortsCreator.text = "مولد الفيديوهات القصيرة والقوالب"
-            binding.btnCinematicLutShaders.text = "حزمة الفلاتر والتأثيرات السينمائية"
-            binding.btnAiSceneAudioDescription.text = "الوصف الصوتي التفاعلي للمكفوفين"
-            binding.btnSubtitlesOcrSrt.text = "مستخرج وقارئ الترجمات SRT"
+            binding.btnAiVoiceDubbing.text = AppStrings.get(context, R.string.btn_ai_voice_dubbing)
+            binding.btnAudioStemSeparator.text = AppStrings.get(context, R.string.btn_audio_stem_separator)
+            binding.btnAutoShortsCreator.text = AppStrings.get(context, R.string.btn_auto_shorts_creator)
+            binding.btnCinematicLutShaders.text = AppStrings.get(context, R.string.btn_cinematic_lut_shaders)
+            binding.btnAiSceneAudioDescription.text = AppStrings.get(context, R.string.btn_ai_scene_audio_description)
+            binding.btnSubtitlesOcrSrt.text = AppStrings.get(context, R.string.btn_subtitles_ocr_srt)
 
             binding.btnHistory.text = AppStrings.get(context, R.string.string_116)
             binding.topAppBar.menu?.findItem(R.id.action_settings)?.title = AppStrings.get(context, R.string.string_133)
@@ -155,6 +155,16 @@ class HomeFragment : Fragment() {
                 withContext(Dispatchers.Main) {
                     val activeActivity = activity ?: return@withContext
                     if (!isAdded || activeActivity.isFinishing || activeActivity.isDestroyed) return@withContext
+
+                    if (CloudConfigManager.stringsUpdated) {
+                        CloudConfigManager.stringsUpdated = false
+                        activeActivity.recreate()
+                        return@withContext
+                    }
+
+                    if (result.pendingDownloads.isNotEmpty()) {
+                        Toast.makeText(currentContext, "هناك ميزات إضافية جديدة متوفرة للتنزيل!", Toast.LENGTH_LONG).show()
+                    }
 
                     // Apply feature visibility based on cloud_config.json
                     updateFeatureVisibilities(result.currentlyDisabledIds)

@@ -19,6 +19,8 @@ import com.example.accessiblevideoeditor.ui.AppStrings
 import com.example.accessiblevideoeditor.ui.ProcessingManager
 import kotlinx.coroutines.launch
 
+import androidx.navigation.fragment.findNavController
+
 class OcrFragment : Fragment() {
 
     private var _binding: FragmentOcrBinding? = null
@@ -47,6 +49,10 @@ class OcrFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.topAppBar.setNavigationOnClickListener {
+            try { findNavController().navigateUp() } catch (_: Exception) {}
+        }
 
         binding.btnSelectImage.setOnClickListener {
             imagePickerLauncher.launch("image/*")

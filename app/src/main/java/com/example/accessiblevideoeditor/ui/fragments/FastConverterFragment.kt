@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -72,7 +72,7 @@ class FastConverterFragment : Fragment() {
     }
 
     private fun processVideo(uri: Uri, format: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val tempFile = MediaUtils.copyUriToTempFile(requireContext(), uri, "temp_convert_${System.currentTimeMillis()}.${format.lowercase()}")
             if (tempFile != null) {
                 withContext(Dispatchers.Main) {
@@ -113,3 +113,4 @@ class FastConverterFragment : Fragment() {
         _binding = null
     }
 }
+

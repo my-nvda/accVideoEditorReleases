@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -97,7 +97,7 @@ class SlideshowMakerFragment : Fragment() {
         val durationStr = binding.etDuration.text.toString()
         val duration = durationStr.toIntOrNull() ?: 3
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
                     ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_111), true)
@@ -150,3 +150,4 @@ class SlideshowMakerFragment : Fragment() {
         _binding = null
     }
 }
+

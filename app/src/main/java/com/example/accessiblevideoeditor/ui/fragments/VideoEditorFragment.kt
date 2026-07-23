@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -102,7 +102,7 @@ class VideoEditorFragment : Fragment() {
         val processMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_28).replace(" %1\$s%%", "")
         ProcessingManager.startProcessing(processMsg)
         
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 // 1. Copy video to temp file
                 val tempVideo = MediaUtils.copyUriToTempFile(
@@ -168,3 +168,4 @@ class VideoEditorFragment : Fragment() {
         _binding = null
     }
 }
+

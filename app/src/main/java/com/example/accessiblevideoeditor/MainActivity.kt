@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
 
     handleUpdateIntent(intent)
+    handleShareIntent(intent)
 
     // Initialize Managers
     com.example.accessiblevideoeditor.ui.SettingsManager.init(this)
@@ -191,40 +192,92 @@ class MainActivity : AppCompatActivity() {
           ProcessingManager.cancelCurrentProcess(this)
       }
 
-      lifecycleScope.launch {
-          ProcessingManager.state.collectLatest { state ->
-              if (state.isProcessing) {
-                  overlay.visibility = View.VISIBLE
-                  // Block screen reader from reaching content behind overlay
-                  navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
-                  overlay.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+    lifecycleScope.launch {
+        ProcessingManager.state.collectLatest { state ->
+            if (state.isProcessing) {
+                overlay.visibility = View.VISIBLE
+                // Block screen reader from reaching content behind overlay
+                navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                overlay.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
 
-                  tvTitle.text = state.statusMessage
-                  
-                  if (state.progress > 0f) {
-                      progressBar.isIndeterminate = false
-                      progressBar.progress = (state.progress * 100).toInt()
-                      val statusText = if (state.etaMessage.isNotEmpty()) {
-                          "${(state.progress * 100).toInt()}% - ${state.etaMessage}"
-                      } else {
-                          "${(state.progress * 100).toInt()}%"
-                      }
-                      tvStatus.text = statusText
-                  } else {
-                      progressBar.isIndeterminate = true
-                      tvStatus.text = getString(R.string.string_142)
-                  }
+                tvTitle.text = state.statusMessage
+                
+                if (state.progress > 0f) {
+                    progressBar.isIndeterminate = false
+                    progressBar.progress = (state.progress * 100).toInt()
+                    val statusText = if (state.etaMessage.isNotEmpty()) {
+                        "${(state.progress * 100).toInt()}% - ${state.etaMessage}"
+                    } else {
+                        "${(state.progress * 100).toInt()}%"
+                    }
+                    tvStatus.text = statusText
+                } else {
+                    progressBar.isIndeterminate = true
+                    tvStatus.text = getString(R.string.string_142)
+                }
 
-                  btnCancel.visibility = if (state.isCancellable) View.VISIBLE else View.GONE
+                btnCancel.visibility = if (state.isCancellable) View.VISIBLE else View.GONE
 
-                  // Send accessibility focus to the overlay title
-                  tvTitle.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_VIEW_FOCUSED)
-                  tvTitle.requestFocus()
-              } else {
-                  overlay.visibility = View.GONE
-                  // Restore screen reader access to content behind overlay
-                  navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+                // Send accessibility focus to the overlay title
+                tvTitle.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                tvTitle.requestFocus()
+            } else {
+                overlay.visibility = View.GONE
+                // Restore screen reader access to content behind overlay
+                navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+            }
+
+            // Show error dialog when errorLog is not null
+            state.errorLog?.let { error ->
+                SoundManager.playError()
+                androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
+                    .setTitle(com.example.accessiblevideoeditor.ui.AppStrings.get(this@MainActivity, R.string.string_84)) // Error
+                    .setMessage(error)
+                    .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                        dialog.dismiss()
+                        ProcessingManager.dismissError()
+                    }
+                    .setOnCancelListener {
+                        ProcessingManager.dismissError()
+                    }
+                    .show()
+            }
+        }
+    }
+  }
+
+  private fun handleShareIntent(intent: android.content.Intent?) {
+      if (intent == null) return
+      val action = intent.action
+      val type = intent.type
+      if (android.content.Intent.ACTION_SEND == action && type != null) {
+          val uri = intent.getParcelableExtra<android.os.Parcelable>(android.content.Intent.EXTRA_STREAM) as? android.net.Uri
+          if (uri != null) {
+              navigateToSharedMedia(uri, type)
+          }
+      } else if (android.content.Intent.ACTION_SEND_MULTIPLE == action && type != null) {
+          val uris = intent.getParcelableArrayListExtra<android.net.Uri>(android.content.Intent.EXTRA_STREAM)
+          if (!uris.isNullOrEmpty()) {
+              navigateToSharedMedia(uris[0], type)
+          }
+      }
+  }
+
+  private fun navigateToSharedMedia(uri: android.net.Uri, mimeType: String) {
+      ProcessingManager.sharedMediaUri = uri
+      val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+      val navController = navHostFragment?.let { androidx.navigation.fragment.NavHostFragment.findNavController(it) }
+      if (navController != null) {
+          try {
+              if (mimeType.startsWith("video/")) {
+                  navController.navigate(R.id.videoEditorFragment)
+              } else if (mimeType.startsWith("audio/")) {
+                  navController.navigate(R.id.audioEditorFragment)
+              } else if (mimeType.startsWith("image/")) {
+                  navController.navigate(R.id.imageEditorFragment)
               }
+          } catch (e: Exception) {
+              e.printStackTrace()
           }
       }
   }
@@ -233,6 +286,7 @@ class MainActivity : AppCompatActivity() {
       super.onNewIntent(intent)
       setIntent(intent)
       handleUpdateIntent(intent)
+      handleShareIntent(intent)
   }
 
   private fun handleUpdateIntent(intent: android.content.Intent?) {

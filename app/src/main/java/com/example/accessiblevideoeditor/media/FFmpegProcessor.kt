@@ -215,7 +215,10 @@ object FFmpegProcessor {
             }
         )
         
-        latch.await()
+        val finished = latch.await(30, java.util.concurrent.TimeUnit.SECONDS)
+        if (!finished) {
+            resultLog = "FFmpeg timed out after 30 seconds"
+        }
         return@withContext resultLog
     }
 
@@ -541,6 +544,7 @@ object FFmpegProcessor {
         
         if (keepSegments.isEmpty()) return@withContext false
         
+        val hasAudio = hasAudioTrack(sourceVideo)
         val filterComplex = java.lang.StringBuilder()
         val concatStr = java.lang.StringBuilder()
         
@@ -548,19 +552,54 @@ object FFmpegProcessor {
             val start = keepSegments[i].first
             val end = keepSegments[i].second
             filterComplex.append("[0:v]trim=start=$start:end=$end,setpts=PTS-STARTPTS[v$i];")
-            filterComplex.append("[0:a]atrim=start=$start:end=$end,asetpts=PTS-STARTPTS[a$i];")
-            concatStr.append("[v$i][a$i]")
+            if (hasAudio) {
+                filterComplex.append("[0:a]atrim=start=$start:end=$end,asetpts=PTS-STARTPTS[a$i];")
+                concatStr.append("[v$i][a$i]")
+            } else {
+                concatStr.append("[v$i]")
+            }
         }
-        filterComplex.append(concatStr).append("concat=n=${keepSegments.size}:v=1:a=1[outv][outa]")
+        if (hasAudio) {
+            filterComplex.append(concatStr).append("concat=n=${keepSegments.size}:v=1:a=1[outv][outa]")
+        } else {
+            filterComplex.append(concatStr).append("concat=n=${keepSegments.size}:v=1:a=0[outv]")
+        }
         
-        val commandArgs = arrayOf(
-            "-y", "-i", sourceVideo, 
-            "-filter_complex", filterComplex.toString(),
-            "-map", "[outv]", "-map", "[outa]",
-            "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac",
-            outputPath
-        )
+        val commandArgs = if (hasAudio) {
+            arrayOf(
+                "-y", "-i", sourceVideo, 
+                "-filter_complex", filterComplex.toString(),
+                "-map", "[outv]", "-map", "[outa]",
+                "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac",
+                outputPath
+            )
+        } else {
+            arrayOf(
+                "-y", "-i", sourceVideo, 
+                "-filter_complex", filterComplex.toString(),
+                "-map", "[outv]",
+                "-c:v", "mpeg4", "-q:v", "2",
+                outputPath
+            )
+        }
         
         executeWithProgress(commandArgs, sourceVideo)
+    }
+
+    fun hasAudioTrack(sourcePath: String): Boolean {
+        try {
+            val mediaInfo = com.arthenica.ffmpegkit.FFprobeKit.getMediaInformation(sourcePath)
+            val streams = mediaInfo.mediaInformation?.streams
+            if (streams != null) {
+                for (stream in streams) {
+                    if (stream.type == "audio") {
+                        return true
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
     }
 }

@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -88,7 +88,7 @@ class TickerTextFragment : Fragment() {
     }
 
     private fun processTickerText(vUri: Uri) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
                     ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_62))
@@ -151,3 +151,4 @@ class TickerTextFragment : Fragment() {
         _binding = null
     }
 }
+

@@ -78,16 +78,18 @@ class SpeedControlFragment : Fragment() {
     }
 
     private fun processSpeed(uri: Uri, factor: Float) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        val safeContext = context ?: return
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val tempInput = MediaUtils.copyUriToTempFile(requireContext(), uri, "speed_input_${System.currentTimeMillis()}")
+                val tempInput = MediaUtils.copyUriToTempFile(safeContext, uri, "speed_input_${System.currentTimeMillis()}")
                 if (tempInput != null && tempInput.exists()) {
                     withContext(Dispatchers.Main) {
+                        val currentContext = context ?: return@withContext
                         ProcessingManager.startProcessing("Processing speed change...")
                     }
-                    val isVideo = MediaUtils.isVideoFile(requireContext(), uri)
+                    val isVideo = MediaUtils.isVideoFile(safeContext, uri)
                     val ext = if (isVideo) "mp4" else "mp3"
-                    val outputPath = requireContext().cacheDir.absolutePath + "/speed_out_${System.currentTimeMillis()}.$ext"
+                    val outputPath = safeContext.cacheDir.absolutePath + "/speed_out_${System.currentTimeMillis()}.$ext"
 
                     val audioFilter = when (factor) {
                         0.25f -> "atempo=0.5,atempo=0.5"
@@ -107,15 +109,26 @@ class SpeedControlFragment : Fragment() {
                     commandArgs.addAll(listOf("-y", "-i", tempInput.absolutePath))
 
                     if (isVideo) {
+                        val hasAudio = com.example.accessiblevideoeditor.media.FFmpegProcessor.hasAudioTrack(tempInput.absolutePath)
                         val ptsFactor = 1.0f / factor
-                        val filter = "[0:v]setpts=$ptsFactor*PTS[v];[0:a]$audioFilter[a]"
-                        commandArgs.addAll(listOf(
-                            "-filter_complex", filter,
-                            "-map", "[v]", "-map", "[a]",
-                            "-c:v", "mpeg4", "-q:v", "2",
-                            "-c:a", "aac", "-b:a", "192k",
-                            outputPath
-                        ))
+                        if (hasAudio) {
+                            val filter = "[0:v]setpts=$ptsFactor*PTS[v];[0:a]$audioFilter[a]"
+                            commandArgs.addAll(listOf(
+                                "-filter_complex", filter,
+                                "-map", "[v]", "-map", "[a]",
+                                "-c:v", "mpeg4", "-q:v", "2",
+                                "-c:a", "aac", "-b:a", "192k",
+                                outputPath
+                            ))
+                        } else {
+                            val filter = "[0:v]setpts=$ptsFactor*PTS[v][v]"
+                            commandArgs.addAll(listOf(
+                                "-filter_complex", filter,
+                                "-map", "[v]",
+                                "-c:v", "mpeg4", "-q:v", "2",
+                                outputPath
+                            ))
+                        }
                     } else {
                         commandArgs.addAll(listOf(
                             "-af", audioFilter,
@@ -127,13 +140,15 @@ class SpeedControlFragment : Fragment() {
                     val success = FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray(), totalDurationMs = targetDuration)
                     if (success) {
                         val mime = if (isVideo) "video/mp4" else "audio/mp3"
-                        FileUtils.saveToGallery(requireContext(), File(outputPath), mime)
+                        FileUtils.saveToGallery(safeContext, File(outputPath), mime)
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_240), Toast.LENGTH_SHORT).show()
+                            val currentContext = context ?: return@withContext
+                            Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.string_240), Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_241), Toast.LENGTH_LONG).show()
+                            val currentContext = context ?: return@withContext
+                            Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.string_241), Toast.LENGTH_LONG).show()
                         }
                     }
                 }
@@ -157,3 +172,4 @@ class SpeedControlFragment : Fragment() {
         _binding = null
     }
 }
+

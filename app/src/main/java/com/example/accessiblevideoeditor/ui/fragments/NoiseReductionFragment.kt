@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -80,7 +80,7 @@ class NoiseReductionFragment : Fragment() {
     }
 
     private fun processNoiseReduction(uri: Uri, levelIndex: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val tempInput = MediaUtils.copyUriToTempFile(requireContext(), uri, "noise_input_${System.currentTimeMillis()}")
                 if (tempInput != null && tempInput.exists()) {
@@ -151,3 +151,4 @@ class NoiseReductionFragment : Fragment() {
         _binding = null
     }
 }
+

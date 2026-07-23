@@ -19,6 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+import androidx.navigation.fragment.findNavController
+
 class AiAnalysisFragment : Fragment() {
 
     private var _binding: FragmentAiAnalysisBinding? = null
@@ -53,6 +55,10 @@ class AiAnalysisFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.topAppBar.setNavigationOnClickListener {
+            try { findNavController().navigateUp() } catch (_: Exception) {}
+        }
 
         binding.btnSelectImage.setOnClickListener {
             imagePickerLauncher.launch("image/*")

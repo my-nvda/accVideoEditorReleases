@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -280,7 +280,7 @@ class AudioStudioFragment : Fragment() {
             else -> "m4a"
         }
         
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
                     ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_57))
@@ -333,7 +333,7 @@ class AudioStudioFragment : Fragment() {
     }
 
     private fun extractAudio(uri: Uri) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
                     ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_15))
@@ -372,7 +372,7 @@ class AudioStudioFragment : Fragment() {
     }
 
     private fun applyBassBoost(uri: Uri) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
                     ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_39))
@@ -416,3 +416,4 @@ class AudioStudioFragment : Fragment() {
         _binding = null
     }
 }
+

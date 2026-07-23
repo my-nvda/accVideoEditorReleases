@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -69,7 +69,7 @@ class CompressVideoFragment : Fragment() {
     }
 
     private fun processVideo(uri: Uri) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) {
                 SoundManager.playProcessing()
                 ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_111), true)
@@ -112,3 +112,4 @@ class CompressVideoFragment : Fragment() {
         _binding = null
     }
 }
+

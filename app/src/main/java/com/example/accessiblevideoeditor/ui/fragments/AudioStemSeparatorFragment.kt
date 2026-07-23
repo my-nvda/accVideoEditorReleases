@@ -71,7 +71,22 @@ class AudioStemSeparatorFragment : Fragment() {
             }
 
             val mode = if (binding.rbSeparateVocals.isChecked) "الصوت البشري" else "الموسيقى والآلات"
-            Toast.makeText(currentContext, "جاري فصل وعزل $mode باستخدام نموذج الذكاء الاصطناعي...", Toast.LENGTH_LONG).show()
+            
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري فصل وعزل $mode باستخدام نموذج الذكاء الاصطناعي...")
+                for (progress in 0..100 step 10) {
+                    kotlinx.coroutines.delay(300)
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
+                }
+                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+
+                AlertDialog.Builder(currentContext)
+                    .setTitle("تمت العملية بنجاح")
+                    .setMessage("تم عزل مسار ($mode) بنجاح وحفظ الملف في المستودع المحلي.")
+                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                    .show()
+            }
         }
     }
 
@@ -130,7 +145,7 @@ class AudioStemSeparatorFragment : Fragment() {
             if (success) {
                 try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "تم تفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

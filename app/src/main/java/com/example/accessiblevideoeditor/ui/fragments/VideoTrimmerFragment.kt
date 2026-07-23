@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -91,7 +91,7 @@ class VideoTrimmerFragment : Fragment() {
         val trimMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_46).replace(" %1\$s%%", "")
         ProcessingManager.startProcessing(trimMsg)
         
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 // 1. Copy video to temp file
                 val tempVideo = MediaUtils.copyUriToTempFile(
@@ -148,3 +148,4 @@ class VideoTrimmerFragment : Fragment() {
         _binding = null
     }
 }
+

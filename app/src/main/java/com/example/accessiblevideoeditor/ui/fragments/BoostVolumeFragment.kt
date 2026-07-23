@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -69,7 +69,7 @@ class BoostVolumeFragment : Fragment() {
     }
 
     private fun processVideo(uri: Uri) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val tempFile = MediaUtils.copyUriToTempFile(requireContext(), uri, "temp_boost_${System.currentTimeMillis()}.mp4")
             if (tempFile != null) {
                 withContext(Dispatchers.Main) {
@@ -113,3 +113,4 @@ class BoostVolumeFragment : Fragment() {
         _binding = null
     }
 }
+

@@ -343,4 +343,10 @@ customization, smart cutting, and more.</string>
     <string name="title_audio_normalization">Dynamic Audio Normalization</string>
     <string name="title_ai_scene_inspector">AI Video Scene Inspector</string>
     <string name="btn_analyze_scenes">Analyze Video Scenes</string>
+    <string name="btn_ai_voice_dubbing">AI Voice Dubbing &amp; TTS</string>
+    <string name="btn_audio_stem_separator">AI Audio Stem Separator</string>
+    <string name="btn_auto_shorts_creator">Auto Shorts &amp; Reels Creator</string>
+    <string name="btn_cinematic_lut_shaders">Cinematic LUTs &amp; Shaders</string>
+    <string name="btn_ai_scene_audio_description">AI Scene Audio Description</string>
+    <string name="btn_subtitles_ocr_srt">Subtitles OCR &amp; SRT Extractor</string>
 </resources>

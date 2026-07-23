@@ -10,8 +10,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 83
-        versionName = "2.5.4"
+        versionCode = 84
+        versionName = "2.5.5"
     }
 
     buildTypes {
@@ -44,12 +44,9 @@ android {
 
     lint {
         disable += setOf(
-            "MissingTranslation",
-            "LocalContextGetResourceValueCall",
-            "LocalContextConfigurationRead",
-            "LocalContextResourcesRead"
+            "MissingTranslation"
         )
-        abortOnError = false
+        abortOnError = true
     }
 }
 
@@ -84,11 +81,6 @@ dependencies {
   
   // FFmpeg for Media Processing
   implementation(libs.ffmpeg.kit.full)
-  
-
-  
-  // AppCompat for Language Switching
-  implementation("androidx.appcompat:appcompat:1.6.1")
   
   // ExoPlayer for Video Preview
   val media3_version = "1.3.1"

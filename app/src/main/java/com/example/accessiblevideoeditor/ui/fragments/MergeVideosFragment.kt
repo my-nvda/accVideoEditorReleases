@@ -1,4 +1,4 @@
-package com.example.accessiblevideoeditor.ui.fragments
+﻿package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -81,7 +81,7 @@ class MergeVideosFragment : Fragment() {
     }
 
     private fun processVideos(uris: List<Uri>, transitionType: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val inputs = uris.mapIndexedNotNull { index, uri ->
                     MediaUtils.copyUriToTempFile(requireContext(), uri, "merge_temp_${System.currentTimeMillis()}_$index.mp4")?.absolutePath
@@ -171,3 +171,4 @@ class MergeVideosFragment : Fragment() {
         _binding = null
     }
 }
+
