@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Model Status Card -->
+            <!-- Model Status & Download Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,10 +40,28 @@
                         android:id="@+id/tvModelStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="حالة النموذج: نموذج Piper Arabic ONNX مثبت ومحمل محلياً ✅"
+                        android:text="حالة النموذج: جاري الفحص..."
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorPrimary"
                         android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDownloadModel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="تنزيل نموذج الصوت العربي (Piper ONNX - 63 MB)"
+                        android:visibility="gone"
+                        app:icon="@android:drawable/stat_sys_download" />
+
+                    <ProgressBar
+                        android:id="@+id/pbModelDownload"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:max="100"
+                        android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

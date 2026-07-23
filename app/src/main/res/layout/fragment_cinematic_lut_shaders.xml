@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Model Status & Download Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,20 +40,38 @@
                         android:id="@+id/tvModelStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="حالة الفلاتر: حزمة 3D LUT Shaders السينمائية محملة ✅"
+                        android:text="حالة النموذج: جاري الفحص..."
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorPrimary"
                         android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDownloadModel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="تنزيل حزمة الفلاتر والتأثيرات السينمائية (5 MB)"
+                        android:visibility="gone"
+                        app:icon="@android:drawable/stat_sys_download" />
+
+                    <ProgressBar
+                        android:id="@+id/pbModelDownload"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:max="100"
+                        android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSelectVideoImage"
+                android:id="@+id/btnSelectMedia"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار فيديو أو صورة للتعديل"
+                android:text="اختيار صورة أو فيديو لتطبيق الفلتر"
                 app:icon="@android:drawable/ic_menu_gallery" />
 
             <TextView
@@ -63,41 +82,11 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="اختر الفلتر السينمائي (Preset):"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:layout_marginBottom="8dp" />
-
-            <Spinner
-                android:id="@+id/spLutPreset"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:minHeight="48dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="درجة التباين والسطوع:"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:layout_marginBottom="4dp" />
-
-            <SeekBar
-                android:id="@+id/sbContrast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="200"
-                android:progress="100"
-                android:layout_marginBottom="20dp"
-                android:contentDescription="درجة التباين والسطوع" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnApplyLut"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="تطبيق الفلتر وتصدير الملف"
+                android:text="تطبيق الفلتر السينمائي ومعالجة الألوان"
                 app:icon="@android:drawable/ic_media_play" />
 
         </LinearLayout>

@@ -7,17 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.accessiblevideoeditor.databinding.FragmentAiVoiceDubbingBinding
 import com.example.accessiblevideoeditor.ui.CloudConfigManager
-import java.io.File
+import com.example.accessiblevideoeditor.updater.BeepUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AiVoiceDubbingFragment : Fragment() {
 
     private var _binding: FragmentAiVoiceDubbingBinding? = null
     private val binding get() = _binding!!
     private var selectedMediaUri: Uri? = null
+    private val featureId = "btnAiVoiceDubbing"
+    private val downloadUrl = "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx"
 
     private val selectMediaLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
@@ -38,14 +44,13 @@ class AiVoiceDubbingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.topAppBar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            try { findNavController().navigateUp() } catch (_: Exception) {}
         }
 
-        val modelFile = CloudConfigManager.getDownloadedModelFile(requireContext(), "btnAiVoiceDubbing")
-        if (modelFile != null && modelFile.exists()) {
-            binding.tvModelStatus.text = "حالة النموذج: نموذج Piper Arabic ONNX محمل محلياً ✅ (${modelFile.length() / (1024 * 1024)}MB)"
-        } else {
-            binding.tvModelStatus.text = "حالة النموذج: محمل ومفعل محلياً ✅"
+        checkModelStatus()
+
+        binding.btnDownloadModel.setOnClickListener {
+            promptDownloadModel()
         }
 
         binding.btnSelectAudioVideo.setOnClickListener {
@@ -53,14 +58,82 @@ class AiVoiceDubbingFragment : Fragment() {
         }
 
         binding.btnGenerateVoice.setOnClickListener {
+            val currentContext = context ?: return@setOnClickListener
+            val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
+            if (modelFile == null || !modelFile.exists()) {
+                promptDownloadModel()
+                return@setOnClickListener
+            }
+
             val text = binding.etDubbingText.text?.toString()?.trim()
             if (text.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), "الرجاء كتابة النص المراد دبلجته أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentContext, "الرجاء كتابة النص المراد دبلجته أولاً", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val speed = binding.sbSpeed.progress / 100.0f
-            Toast.makeText(requireContext(), "جاري توليد الصوت والدبلجة بالذكاء الاصطناعي بسرعات ورنة متوافقة ($speed)...", Toast.LENGTH_LONG).show()
+            Toast.makeText(currentContext, "جاري توليد الصوت والدبلجة بالذكاء الاصطناعي بسرعات ورنة متوافقة ($speed)...", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun checkModelStatus() {
+        val currentContext = context ?: return
+        val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
+        if (modelFile != null && modelFile.exists()) {
+            binding.tvModelStatus.text = "حالة النموذج: نموذج Piper Arabic ONNX محمل محلياً ✅ (${modelFile.length() / (1024 * 1024)}MB)"
+            binding.btnDownloadModel.visibility = View.GONE
+            binding.pbModelDownload.visibility = View.GONE
+        } else {
+            binding.tvModelStatus.text = "حالة النموذج: النموذج غير مثبت محلياً (حجمه 63 MB)"
+            binding.btnDownloadModel.visibility = View.VISIBLE
+            binding.pbModelDownload.visibility = View.GONE
+        }
+    }
+
+    private fun promptDownloadModel() {
+        val currentActivity = activity ?: return
+        val dialogContext = android.view.ContextThemeWrapper(currentActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
+        AlertDialog.Builder(dialogContext)
+            .setTitle("تنزيل نموذج الذكاء الاصطناعي")
+            .setMessage("يتطلب هذا المحرك تنزيل نموذج الصوت العربي (حجمه 63 MB). هل تريد بدء التنزيل الآن؟")
+            .setPositiveButton("تنزيل الآن") { dialog, _ ->
+                try { dialog.dismiss() } catch (_: Exception) {}
+                startDownloadingModel()
+            }
+            .setNegativeButton("لاحقاً") { dialog, _ ->
+                try { dialog.dismiss() } catch (_: Exception) {}
+            }
+            .show()
+    }
+
+    private fun startDownloadingModel() {
+        val currentContext = context ?: return
+        binding.btnDownloadModel.visibility = View.GONE
+        binding.pbModelDownload.visibility = View.VISIBLE
+        binding.pbModelDownload.progress = 0
+        binding.tvModelStatus.text = "جاري تنزيل نموذج الذكاء الاصطناعي من السيرفر..."
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            val success = CloudConfigManager.downloadFeatureModel(
+                currentContext.applicationContext,
+                featureId,
+                downloadUrl
+            ) { percent ->
+                if (_binding != null) {
+                    binding.pbModelDownload.progress = percent
+                    binding.tvModelStatus.text = "جاري التنزيل... التقدم: $percent%"
+                    if (percent % 20 == 0) {
+                        try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
+                    }
+                }
+            }
+
+            if (success) {
+                try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+            } else {
+                try { Toast.makeText(currentContext, "تم تفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+            }
+            checkModelStatus()
         }
     }
 

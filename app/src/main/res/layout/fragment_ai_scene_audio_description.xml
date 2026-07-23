@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Model Status & Download Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,10 +40,28 @@
                         android:id="@+id/tvModelStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="حالة المحرك: محرك الوصف الصوتي التفاعلي للمكفوفين محمل ✅"
+                        android:text="حالة النموذج: جاري الفحص..."
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorPrimary"
                         android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDownloadModel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="تنزيل حزمة محرك الوصف الصوتي (10 MB)"
+                        android:visibility="gone"
+                        app:icon="@android:drawable/stat_sys_download" />
+
+                    <ProgressBar
+                        android:id="@+id/pbModelDownload"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:max="100"
+                        android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -52,8 +71,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار فيديو للتحليل والوصف الصوتي"
-                app:icon="@android:drawable/ic_menu_slideshow" />
+                android:text="اختيار فيديو لإضافة وصف صوتي مشاهد"
+                app:icon="@android:drawable/ic_menu_gallery" />
 
             <TextView
                 android:id="@+id/tvSelectedVideo"
@@ -63,46 +82,12 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="مستوى التفاصيل المطلوبة في الوصف:"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:layout_marginBottom="8dp" />
-
-            <RadioGroup
-                android:id="@+id/rgDetailLevel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-                <RadioButton
-                    android:id="@+id/rbDetailHigh"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="وصف تفصيلي شامل للبيئة والأشخاص والحركات" />
-                <RadioButton
-                    android:id="@+id/rbDetailBrief"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="إيجاز سريع لأهم الأحداث والشخصيات فقط" />
-            </RadioGroup>
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGenerateDescription"
+                android:id="@+id/btnGenerateAudioDescription"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="بدء التحليل وتوليد الوصف الصوتي"
+                android:text="توليد الوصف الصوتي وسرد مشاهد المشاهدين"
                 app:icon="@android:drawable/ic_media_play" />
-
-            <TextView
-                android:id="@+id/tvDescriptionOutput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:lineSpacingExtra="4dp"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?attr/colorOnSurface" />
 
         </LinearLayout>
     </ScrollView>
