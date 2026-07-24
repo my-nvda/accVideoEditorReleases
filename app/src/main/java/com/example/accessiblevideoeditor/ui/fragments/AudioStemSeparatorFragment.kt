@@ -88,7 +88,7 @@ class AudioStemSeparatorFragment : Fragment() {
                             // Vocals: Natural speech range (100Hz-8000Hz), FFT denoiser, and dynamic noise gate to mute music during silence.
                             // Instruments: Phase cancellation for stereo, fallback to multi-band formant notch filters to suppress voice formants (-30dB).
                             val filter = if (separateVocals) {
-                                "highpass=f=100,lowpass=f=8000,afftdn=noise=-25,agate=threshold=-30dB:ratio=2:range=-24dB"
+                                "highpass=f=100,lowpass=f=8000,afftdn,agate=threshold=-30dB:ratio=2:range=-24dB"
                             } else {
                                 "pan=stereo|c0=c0-c1|c1=c1-c0,bass=g=3"
                             }
@@ -105,7 +105,7 @@ class AudioStemSeparatorFragment : Fragment() {
                             if (!res) {
                                 // Fallback filter using formants multi-band notch filters (works on Mono and Stereo)
                                 val fallbackFilter = if (separateVocals) {
-                                    "highpass=f=120,lowpass=f=7000,afftdn=noise=-20"
+                                    "highpass=f=120,lowpass=f=7000,afftdn"
                                 } else {
                                     "anequalizer=c0 f=500 w=400 g=-30|c0 f=2000 w=1500 g=-30"
                                 }
