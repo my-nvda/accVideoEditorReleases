@@ -61,6 +61,17 @@ object FFmpegProcessor {
                     if (isSuccess) {
                         val finalPercent = (progressOffset + (100f * progressScale)).coerceIn(0f, 100f)
                         ProcessingManager.updateProgress(finalPercent / 100f, "")
+                    } else {
+                        val commandStr = commandArgs.joinToString(" ")
+                        val outputStr = session.allLogsAsString ?: ""
+                        val context = ProcessingManager.appContext
+                        if (context != null) {
+                            com.example.accessiblevideoeditor.utils.ErrorLogger.logError(
+                                context,
+                                "FFMPEG",
+                                "FFmpeg Command Failed: $commandStr\nLogs:\n$outputStr"
+                            )
+                        }
                     }
                     try {
                         if (continuation.isActive) {

@@ -100,7 +100,25 @@ class AudioStemSeparatorFragment : Fragment() {
                                 "-q:a", "2",
                                 outputPath
                             )
-                            val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                            var res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                            if (!res) {
+                                // Fallback filter for mono/unsupported files:
+                                val fallbackFilter = if (separateVocals) {
+                                    "highpass=f=200,lowpass=f=3000"
+                                } else {
+                                    "anequalizer=c0 f=1000 w=800 g=-20"
+                                }
+                                val fallbackCommand = arrayOf(
+                                    "-y",
+                                    "-i", tempInput.absolutePath,
+                                    "-af", fallbackFilter,
+                                    "-c:a", "libmp3lame",
+                                    "-q:a", "2",
+                                    outputPath
+                                )
+                                res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(fallbackCommand)
+                            }
+                            
                             if (res) {
                                 com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "audio/mp3")
                                 true

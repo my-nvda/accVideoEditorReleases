@@ -147,6 +147,28 @@
                 android:layout_marginBottom="16dp"
                 android:background="?android:attr/listDivider" />
 
+            <!-- Error Logger Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="مستكشف الأخطاء وإصلاحها"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewErrorLog"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="16dp"
+                android:text="عرض سجل الأخطاء والانهيارات"
+                style="@style/Widget.Material3.Button.TonalButton" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="16dp"
+                android:background="?android:attr/listDivider" />
+
             <!-- About / Extra Section -->
             <TextView
                 android:layout_width="match_parent"

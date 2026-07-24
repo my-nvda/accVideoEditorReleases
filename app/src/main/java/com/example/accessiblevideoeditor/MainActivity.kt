@@ -49,6 +49,18 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    // Global Error Logger Setup
+    val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+    Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+        com.example.accessiblevideoeditor.utils.ErrorLogger.logError(
+            applicationContext,
+            "CRASH",
+            "Uncaught crash in thread ${thread.name}",
+            throwable
+        )
+        defaultHandler?.uncaughtException(thread, throwable)
+    }
+
     handleUpdateIntent(intent)
     handleShareIntent(intent)
 

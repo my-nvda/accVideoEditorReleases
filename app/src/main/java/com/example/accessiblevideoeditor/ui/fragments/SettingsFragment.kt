@@ -104,6 +104,38 @@ class SettingsFragment : Fragment() {
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
 
+        binding.btnViewErrorLog.setOnClickListener {
+            val safeCtx = context ?: return@setOnClickListener
+            val logs = com.example.accessiblevideoeditor.utils.ErrorLogger.getLogContent(safeCtx)
+            
+            val scrollView = android.widget.ScrollView(safeCtx)
+            val textView = android.widget.TextView(safeCtx).apply {
+                text = logs
+                setPadding(32, 32, 32, 32)
+                setTextIsSelectable(true)
+                typeface = android.graphics.Typeface.MONOSPACE
+            }
+            scrollView.addView(textView)
+            
+            androidx.appcompat.app.AlertDialog.Builder(safeCtx)
+                .setTitle("سجل أخطاء وانهيارات النظام")
+                .setView(scrollView)
+                .setPositiveButton("نسخ الكل") { d, _ ->
+                    d.dismiss()
+                    val clipboard = safeCtx.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                    val clip = android.content.ClipData.newPlainText("Error Logs", logs)
+                    clipboard.setPrimaryClip(clip)
+                    android.widget.Toast.makeText(safeCtx, "تم نسخ السجل بالكامل إلى الحافظة", android.widget.Toast.LENGTH_SHORT).show()
+                }
+                .setNeutralButton("مسح السجل") { d, _ ->
+                    d.dismiss()
+                    com.example.accessiblevideoeditor.utils.ErrorLogger.clearLog(safeCtx)
+                    android.widget.Toast.makeText(safeCtx, "تم مسح السجل بنجاح", android.widget.Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("إغلاق") { d, _ -> d.dismiss() }
+                .show()
+        }
+
         binding.btnHelp.setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_helpFragment)
         }
