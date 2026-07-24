@@ -1,6 +1,6 @@
 {
-  "versionCode": 97,
-  "versionName": "2.6.8",
+  "versionCode": 98,
+  "versionName": "2.6.9",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.6.8:\n- دعم الترجمة الكاملة وإزالة النصوص الثابتة وغير المعربة من واجهة عازل الموسيقى (Audio Stem Separator).\n- تعريب وتدويل خيارات سجل الأخطاء والانهيارات داخل الإعدادات ودعم اللغات المتعددة.\n- مواءمة ملفات المزايا السحابية والترجمات البعيدة لضمان تماشيها التام مع التحديثات الأخيرة."
+  "releaseNotes": "إصدار 2.6.9:\n- إصلاح خطأ الخادم السحابي الذكي (Gradio Predict failed with code 500: {\"error\":null}).\n- قمنا بتحديث بنية طلب الـ JSON المرسل لخادم الذكاء الاصطناعي ليتوافق تماماً مع إصدار Gradio الحديث، حيث تم تعيين مسار الملف السحابي المؤقت إلى المتغير الصحيح (name) وإرفاق اسم الملف الأصلي (orig_name)."
 }
