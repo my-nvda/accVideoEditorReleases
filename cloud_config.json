@@ -1,61 +1,6 @@
 {
   "disabledFeatures": [],
-  "newFeatures": [
-    {
-      "id": "btnAiVoiceDubbing",
-      "featureId": "btnAiVoiceDubbing",
-      "title": "دبلجة وتوليد الصوت بالذكاء الاصطناعي",
-      "description": "توليد تعليق صوتي ودبلجة مخصصة باللغة العربية مع التحكم برنة الصوت والسرعة عبر نموذج Piper Arabic ONNX Model (63.2MB).",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/voice_dubbing.onnx",
-      "sizeMb": 63.2,
-      "version": 1
-    },
-    {
-      "id": "btnAudioStemSeparator",
-      "featureId": "btnAudioStemSeparator",
-      "title": "عازل ومحلل الآلات والموسيقى",
-      "description": "فصل الصوت البشري النقائي عن الموسيقى التصويرية والآلات الموسيقية عبر نموذج Spleeter 2Stems ONNX Model (48.6MB).",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/vocal_separator_model.tar.bz2",
-      "sizeMb": 48.6,
-      "version": 1
-    },
-    {
-      "id": "btnSubtitlesOcrSrt",
-      "featureId": "btnSubtitlesOcrSrt",
-      "title": "مستخرج وقارئ الترجمات الشاشاتية SRT",
-      "description": "استخراج الترجمات المدمجة بصرية من الفيديو إلى ملفات SRT أو قراءتها صوتياً باستخدام نموذج Tesseract Arabic OCR (1.43MB).",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/ara.traineddata",
-      "sizeMb": 1.43,
-      "version": 1
-    },
-    {
-      "id": "btnAutoShortsCreator",
-      "featureId": "btnAutoShortsCreator",
-      "title": "مولد الفيديوهات القصيرة والقوالب الذكية",
-      "description": "تحويل الصور والفيديوهات تلقائياً لمقاطع Shorts وReels مع نصوص وموسيقى.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/shorts_templates.json",
-      "sizeMb": 8.0,
-      "version": 1
-    },
-    {
-      "id": "btnCinematicLutShaders",
-      "featureId": "btnCinematicLutShaders",
-      "title": "حزمة الفلاتر والتأثيرات السينمائية",
-      "description": "تأثيرات سينمائية وانتقالية واحترافية وتعديل درجات الألوان والإضاءة عبر حزم 3D LUT Shaders.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/cinematic_luts.json",
-      "sizeMb": 5.0,
-      "version": 1
-    },
-    {
-      "id": "btnAiSceneAudioDescription",
-      "featureId": "btnAiSceneAudioDescription",
-      "title": "الوصف الصوتي التفاعلي للمكفوفين",
-      "description": "تحليل مشاهد الفيديو وتوليد تعليق ووصف صوتي تفاعلي للحدث والبيئة.",
-      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/audio_description_rules.json",
-      "sizeMb": 10.0,
-      "version": 1
-    }
-  ],
+  "newFeatures": [],
   "featurePatches": [],
   "allAvailableFeatureIds": {
     "btnVideoEditor": "محرر الفيديو الشامل",

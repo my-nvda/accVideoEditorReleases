@@ -1,6 +1,6 @@
 {
-  "versionCode": 96,
-  "versionName": "2.6.7",
+  "versionCode": 97,
+  "versionName": "2.6.8",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.6.7:\n- حل مشكلة انقطاع الاتصال وسخونة الهاتف أثناء المعالجة السحابية (SocketException: Software caused connection abort).\n- قمنا باستبدال تشفير ومزامنة Base64 الضخمة بنظام رفع تدفقي ذكي (Multipart Form Upload) لرفع الملفات الكبيرة مباشرة إلى خادم الذكاء الاصطناعي دون استهلاك لذاكرة الهاتف أو التسبب في انقطاع الشبكة."
+  "releaseNotes": "إصدار 2.6.8:\n- دعم الترجمة الكاملة وإزالة النصوص الثابتة وغير المعربة من واجهة عازل الموسيقى (Audio Stem Separator).\n- تعريب وتدويل خيارات سجل الأخطاء والانهيارات داخل الإعدادات ودعم اللغات المتعددة.\n- مواءمة ملفات المزايا السحابية والترجمات البعيدة لضمان تماشيها التام مع التحديثات الأخيرة."
 }
