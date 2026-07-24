@@ -1,6 +1,6 @@
 {
-  "versionCode": 94,
-  "versionName": "2.6.5",
+  "versionCode": 95,
+  "versionName": "2.6.6",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.6.5:\n- إصلاح وحل خطأ محرك FFmpeg (Option not found for afftdn).\n- تم إزالة خيار 'noise' غير المدعوم في فلتر afftdn بنسخة أندرويد ليعمل الفلتر بنمطه الذكي الافتراضي والتلقائي بنجاح 100% دون أي توقف أو فشل في معالجة الصوت البشري."
+  "releaseNotes": "إصدار 2.6.6:\n- دمج وتفعيل محرك العزل المزدوج (Dual Audio Stem Separation Engine).\n- إضافة خيار المعالجة السحابية الذكية (Online AI Engine) عبر خادم Meta Demucs السحابي مجاناً بالكامل ودون مفاتيح سرية للحصول على عزل فائق وجودة استوديو.\n- إقران خيار المعالجة المحلية (Offline Engine) لتطلب تحميل النموذج (48MB) أوفلاين وتشغل نظام الفلاتر الصوتية المتطور بدون إنترنت تماماً."
 }
