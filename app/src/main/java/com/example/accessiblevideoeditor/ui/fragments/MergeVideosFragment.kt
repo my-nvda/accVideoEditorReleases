@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -108,6 +108,19 @@ class MergeVideosFragment : Fragment() {
                     val filterParts = StringBuilder()
                     val concatParts = StringBuilder()
                     
+                    var portraitCount = 0
+                    var landscapeCount = 0
+                    inputs.forEach { path ->
+                        val dims = FFmpegProcessor.getVideoDimensions(path)
+                        if (dims.second > dims.first) {
+                            portraitCount++
+                        } else {
+                            landscapeCount++
+                        }
+                    }
+                    val targetWidth = if (portraitCount > landscapeCount) 720 else 1280
+                    val targetHeight = if (portraitCount > landscapeCount) 1280 else 720
+
                     inputs.forEachIndexed { index, path ->
                         val hasAudio = hasAudioList[index]
                         val segDur = durationsSec[index]
@@ -115,7 +128,19 @@ class MergeVideosFragment : Fragment() {
                             ",fade=t=in:st=0:d=0.5,fade=t=out:st=${segDur - 0.5f}:d=0.5"
                         } else ""
 
-                        filterParts.append("[$index:v]scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,fps=30$fadeFilter[v$index];")
+                        val dims = FFmpegProcessor.getVideoDimensions(path)
+                        val isPortraitVideo = dims.second > dims.first
+                        val isTargetPortrait = targetHeight > targetWidth
+                        
+                        if (isPortraitVideo == isTargetPortrait) {
+                            filterParts.append("[$index:v]scale=$targetWidth:$targetHeight:force_original_aspect_ratio=increase,crop=$targetWidth:$targetHeight,setsar=1,fps=30$fadeFilter[v$index];")
+                        } else {
+                            filterParts.append("[$index:v]split[bg$index][fg$index];")
+                            filterParts.append("[bg$index]scale=$targetWidth:$targetHeight:force_original_aspect_ratio=increase,crop=$targetWidth:$targetHeight,boxblur=20:20[bgblur$index];")
+                            filterParts.append("[fg$index]scale=$targetWidth:$targetHeight:force_original_aspect_ratio=decrease[fgscale$index];")
+                            filterParts.append("[bgblur$index][fgscale$index]overlay=(W-w)/2:(H-h)/2,setsar=1,fps=30$fadeFilter[v$index];")
+                        }
+
                         if (hasAudio) {
                             filterParts.append("[$index:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a$index];")
                         } else {

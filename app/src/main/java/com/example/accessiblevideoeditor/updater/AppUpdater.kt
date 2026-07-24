@@ -342,7 +342,24 @@ object AppUpdater {
                         if (progress.totalBytes > 0) {
                             val percent = ((progress.bytesDownloaded.toFloat() / progress.totalBytes.toFloat()) * 100).toInt()
                             progressBar.progress = percent
-                            messageView.text = activity.getString(R.string.string_214, percent)
+                            
+                            val downloadedMb = progress.bytesDownloaded.toDouble() / (1024.0 * 1024.0)
+                            val totalMb = progress.totalBytes.toDouble() / (1024.0 * 1024.0)
+                            
+                            val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                activity.resources.configuration.locales[0]
+                            } else {
+                                @Suppress("DEPRECATION")
+                                activity.resources.configuration.locale
+                            }
+                            val isArabic = locale.language == "ar"
+                            
+                            val detailText = if (isArabic) {
+                                String.format(java.util.Locale("ar"), "جاري التنزيل: %.2f ميجابايت من %.2f ميجابايت (%d%%)", downloadedMb, totalMb, percent)
+                            } else {
+                                String.format(java.util.Locale.US, "Downloading: %.2f MB of %.2f MB (%d%%)", downloadedMb, totalMb, percent)
+                            }
+                            messageView.text = detailText
                         }
                         if (progress.status == DownloadManager.STATUS_SUCCESSFUL || progress.status == DownloadManager.STATUS_FAILED) {
                             try { dialog.dismiss() } catch (_: Exception) {}
