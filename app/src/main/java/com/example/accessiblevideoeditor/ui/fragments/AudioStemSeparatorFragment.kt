@@ -170,46 +170,87 @@ class AudioStemSeparatorFragment : Fragment() {
     ): Boolean = withContext(Dispatchers.IO) {
         try {
             val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(context, inputUri, "cloud_sep") ?: return@withContext false
-            val fileBytes = tempInput.readBytes()
-            val base64Str = android.util.Base64.encodeToString(fileBytes, android.util.Base64.NO_WRAP)
-            val audioDataUri = "data:audio/mp3;base64,$base64Str"
+            val spaceUrl = "https://iqbalzz-vocals-instrumentals.hf.space"
+            val boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW"
+            val CRLF = "\r\n"
             
-            // Build JSON payload for Gradio API
+            // 1. Upload file using multipart/form-data to prevent Base64 socket overflow
+            val uploadUrl = java.net.URL("$spaceUrl/upload")
+            val uploadConn = uploadUrl.openConnection() as java.net.HttpURLConnection
+            uploadConn.requestMethod = "POST"
+            uploadConn.doOutput = true
+            uploadConn.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
+            uploadConn.connectTimeout = 60000
+            uploadConn.readTimeout = 60000
+            
+            uploadConn.outputStream.use { os ->
+                val writer = os.writer(Charsets.UTF_8)
+                writer.append("--$boundary").append(CRLF)
+                writer.append("Content-Disposition: form-data; name=\"files\"; filename=\"audio.mp3\"").append(CRLF)
+                writer.append("Content-Type: audio/mpeg").append(CRLF)
+                writer.append(CRLF)
+                writer.flush()
+                
+                tempInput.inputStream().use { inputStream ->
+                    inputStream.copyTo(os)
+                }
+                
+                writer.append(CRLF)
+                writer.append("--$boundary--").append(CRLF)
+                writer.flush()
+            }
+            
+            if (uploadConn.responseCode != java.net.HttpURLConnection.HTTP_OK) {
+                val errText = uploadConn.errorStream?.bufferedReader()?.use { it.readText() } ?: ""
+                com.example.accessiblevideoeditor.utils.ErrorLogger.logError(
+                    context,
+                    "CLOUD_AI",
+                    "Multipart Upload failed with code ${uploadConn.responseCode}: $errText"
+                )
+                return@withContext false
+            }
+            
+            val uploadResponse = uploadConn.inputStream.bufferedReader().use { it.readText() }
+            val uploadJsonArray = org.json.JSONArray(uploadResponse)
+            val serverTempPath = uploadJsonArray.getString(0) // Temp path on Hugging Face: /tmp/gradio/.../audio.mp3
+            
+            // 2. Call prediction endpoint using the uploaded temp file path
+            val predictUrl = java.net.URL("$spaceUrl/api/predict")
+            val predictConn = predictUrl.openConnection() as java.net.HttpURLConnection
+            predictConn.requestMethod = "POST"
+            predictConn.doOutput = true
+            predictConn.setRequestProperty("Content-Type", "application/json")
+            predictConn.connectTimeout = 180000 // 3 minutes timeout for remote processing
+            predictConn.readTimeout = 180000
+            
             val payloadObj = org.json.JSONObject().apply {
                 val dataArray = org.json.JSONArray().apply {
                     put(org.json.JSONObject().apply {
                         put("name", "audio.mp3")
-                        put("data", audioDataUri)
+                        put("data", org.json.JSONObject.NULL)
+                        put("is_file", true)
+                        put("path", serverTempPath)
                     })
                 }
                 put("data", dataArray)
             }
             val jsonPayload = payloadObj.toString()
             
-            // Connect to predict endpoint of Iqbalzz/vocals-instrumentals Space
-            val url = java.net.URL("https://iqbalzz-vocals-instrumentals.hf.space/api/predict")
-            val conn = url.openConnection() as java.net.HttpURLConnection
-            conn.requestMethod = "POST"
-            conn.setRequestProperty("Content-Type", "application/json")
-            conn.doOutput = true
-            conn.connectTimeout = 120000 // 2 minutes timeout for remote processing
-            conn.readTimeout = 120000
-            
-            conn.outputStream.use { os ->
+            predictConn.outputStream.use { os ->
                 os.write(jsonPayload.toByteArray(Charsets.UTF_8))
             }
             
-            if (conn.responseCode == java.net.HttpURLConnection.HTTP_OK) {
-                val responseText = conn.inputStream.bufferedReader().use { it.readText() }
+            if (predictConn.responseCode == java.net.HttpURLConnection.HTTP_OK) {
+                val responseText = predictConn.inputStream.bufferedReader().use { it.readText() }
                 val responseJson = org.json.JSONObject(responseText)
                 val dataArray = responseJson.optJSONArray("data")
                 if (dataArray != null && dataArray.length() >= 2) {
                     val index = if (separateVocals) 0 else 1
                     val fileObj = dataArray.getJSONObject(index)
-                    val serverTempPath = fileObj.getString("name")
+                    val outServerTempPath = fileObj.getString("name")
                     
-                    // Download the separated file
-                    val downloadUrlStr = "https://iqbalzz-vocals-instrumentals.hf.space/file=$serverTempPath"
+                    // 3. Download the separated file
+                    val downloadUrlStr = "$spaceUrl/file=$outServerTempPath"
                     val downloadUrl = java.net.URL(downloadUrlStr)
                     val downloadConn = downloadUrl.openConnection() as java.net.HttpURLConnection
                     downloadConn.requestMethod = "GET"
@@ -228,11 +269,11 @@ class AudioStemSeparatorFragment : Fragment() {
                     }
                 }
             } else {
-                val errText = conn.errorStream?.bufferedReader()?.use { it.readText() } ?: ""
+                val errText = predictConn.errorStream?.bufferedReader()?.use { it.readText() } ?: ""
                 com.example.accessiblevideoeditor.utils.ErrorLogger.logError(
                     context,
                     "CLOUD_AI",
-                    "Server returned code ${conn.responseCode}: $errText"
+                    "Gradio Predict failed with code ${predictConn.responseCode}: $errText"
                 )
             }
         } catch (e: Exception) {
