@@ -346,4 +346,51 @@
     <string name="btn_cinematic_lut_shaders">حزمة الفلاتر والتأثيرات السينمائية</string>
     <string name="btn_ai_scene_audio_description">الوصف الصوتي التفاعلي للمكفوفين</string>
     <string name="btn_subtitles_ocr_srt">مستخرج وقارئ الترجمات SRT</string>
+    
+    <!-- Audio Stem Separator Feature Strings -->
+    <string name="title_audio_stem_separator">عازل ومحلل الآلات والموسيقى</string>
+    <string name="label_model_status_checking">حالة النموذج: جاري الفحص...</string>
+    <string name="btn_download_separator_model">تنزيل نموذج عزل الموسيقى (Spleeter ONNX - 48 MB)</string>
+    <string name="btn_select_audio_file">اختيار ملف الصوت أو الفيديو</string>
+    <string name="label_no_file_selected">الملف المختار: لم يتم اختيار ملف</string>
+    <string name="label_selected_file_path">الملف المختار: %1$s</string>
+    <string name="label_processing_engine">محرك معالجة وفصل الصوت:</string>
+    <string name="engine_cloud">معالجة ذكية سحابية (أونلاين - جودة استوديو فائقة)</string>
+    <string name="engine_local">معالجة محلية بالهاتف (أوفلاين - ذكاء اصطناعي ونظام فلاتر)</string>
+    <string name="label_separation_mode">وضع الفصل المطلوب:</string>
+    <string name="mode_vocals">عزل واستخراج الصوت البشري فقط (Vocals)</string>
+    <string name="mode_instruments">استخراج الموسيقى والآلات فقط (Music/Accompaniment)</string>
+    <string name="btn_start_separation">بدء عملية فصل وعزل المسارات</string>
+    <string name="msg_please_select_audio">الرجاء اختيار ملف صوت أولاً</string>
+    <string name="msg_processing_local">جاري فصل وعزل %1$s محلياً باستخدام نظام الفلاتر...</string>
+    <string name="msg_processing_cloud">جاري فصل وعزل %1$s سحابياً بالذكاء الاصطناعي...</string>
+    <string name="label_vocals_arabic">الصوت البشري</string>
+    <string name="label_instruments_arabic">الموسيقى والآلات</string>
+    <string name="msg_success_dialog_title">تمت العملية بنجاح</string>
+    <string name="msg_success_dialog_body">تم عزل مسار (%1$s) بنجاح وحفظ الملف في الاستوديو (Gallery).</string>
+    <string name="btn_ok">موافق</string>
+    <string name="msg_failed_separation">فشل فصل وعزل مسار الصوت</string>
+    <string name="model_status_not_downloaded">حالة النموذج: غير محمل (المعالجة المحلية معطلة)</string>
+    <string name="model_status_downloaded">حالة النموذج: محمل (المعالجة المحلية جاهزة)</string>
+    <string name="model_status_downloading">جاري التحميل: %1$d%%</string>
+
+    <string name="model_status_loaded">حالة النموذج: نموذج Spleeter ONNX محمل محلياً ✅ (%1$d ميجابايت)</string>
+    <string name="model_status_not_installed">حالة النموذج: النموذج غير مثبت محلياً (حجمه 48 ميجابايت)</string>
+    <string name="dialog_download_title">تنزيل نموذج الذكاء الاصطناعي</string>
+    <string name="dialog_download_message">يتطلب هذا المحرك تنزيل نموذج عزل الصوت والآلات (حجمه 48 ميجابايت). هل تريد بدء التنزيل الآن؟</string>
+    <string name="btn_download_now">تنزيل الآن</string>
+    <string name="btn_later">لاحقاً</string>
+    <string name="msg_download_starting">جاري تنزيل نموذج الذكاء الاصطناعي من السيرفر...</string>
+    <string name="msg_download_progress">جاري التنزيل... التقدم: %1$d%%</string>
+    <string name="msg_download_success">تم تنزيل وتفعيل النموذج بنجاح!</string>
+    <string name="msg_download_failed">فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً</string>
+
+    <!-- Settings Diagnostic Log Strings -->
+    <string name="btn_view_error_log">عرض سجل الأخطاء والانهيارات</string>
+    <string name="title_error_log">سجل أخطاء وانهيارات النظام</string>
+    <string name="btn_copy_all">نسخ الكل</string>
+    <string name="btn_clear_log">مسح السجل</string>
+    <string name="btn_close">إغلاق</string>
+    <string name="msg_log_copied">تم نسخ السجل بالكامل إلى الحافظة</string>
+    <string name="msg_log_cleared">تم مسح السجل بنجاح</string>
 </resources>

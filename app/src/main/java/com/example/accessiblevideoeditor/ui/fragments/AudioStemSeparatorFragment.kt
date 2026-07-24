@@ -1,5 +1,6 @@
 package com.example.accessiblevideoeditor.ui.fragments
 
+import com.example.accessiblevideoeditor.R
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -71,17 +72,17 @@ class AudioStemSeparatorFragment : Fragment() {
             }
 
             if (selectedAudioUri == null) {
-                Toast.makeText(currentContext, "الرجاء اختيار ملف صوت أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentContext, getString(R.string.msg_please_select_audio), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val mode = if (binding.rbSeparateVocals.isChecked) "الصوت البشري" else "الموسيقى والآلات"
             val separateVocals = binding.rbSeparateVocals.isChecked
+            val modeStr = if (separateVocals) getString(R.string.label_vocals_arabic) else getString(R.string.label_instruments_arabic)
             
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
-                    if (isLocal) "جاري فصل وعزل $mode محلياً باستخدام نظام الفلاتر..."
-                    else "جاري فصل وعزل $mode سحابياً بالذكاء الاصطناعي..."
+                    if (isLocal) getString(R.string.msg_processing_local, modeStr)
+                    else getString(R.string.msg_processing_cloud, modeStr)
                 )
                 
                 val inputUri = selectedAudioUri ?: return@launch
@@ -151,12 +152,12 @@ class AudioStemSeparatorFragment : Fragment() {
                 if (success) {
                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                     AlertDialog.Builder(currentContext)
-                        .setTitle("تمت العملية بنجاح")
-                        .setMessage("تم عزل مسار ($mode) بنجاح وحفظ الملف في الاستوديو (Gallery).")
-                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .setTitle(getString(R.string.msg_success_dialog_title))
+                        .setMessage(getString(R.string.msg_success_dialog_body, modeStr))
+                        .setPositiveButton(getString(R.string.btn_ok)) { d, _ -> d.dismiss() }
                         .show()
                 } else {
-                    Toast.makeText(currentContext, "فشل فصل وعزل مسار الصوت", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, getString(R.string.msg_failed_separation), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -292,11 +293,11 @@ class AudioStemSeparatorFragment : Fragment() {
         val currentContext = context ?: return
         val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
         if (modelFile != null && modelFile.exists()) {
-            binding.tvModelStatus.text = "حالة النموذج: نموذج Spleeter ONNX محمل محلياً ✅ (${modelFile.length() / (1024 * 1024)}MB)"
+            binding.tvModelStatus.text = getString(R.string.model_status_loaded, modelFile.length() / (1024 * 1024))
             binding.btnDownloadModel.visibility = View.GONE
             binding.pbModelDownload.visibility = View.GONE
         } else {
-            binding.tvModelStatus.text = "حالة النموذج: النموذج غير مثبت محلياً (حجمه 48 MB)"
+            binding.tvModelStatus.text = getString(R.string.model_status_not_installed)
             binding.btnDownloadModel.visibility = View.VISIBLE
             binding.pbModelDownload.visibility = View.GONE
         }
@@ -306,13 +307,13 @@ class AudioStemSeparatorFragment : Fragment() {
         val currentActivity = activity ?: return
         val dialogContext = android.view.ContextThemeWrapper(currentActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
         AlertDialog.Builder(dialogContext)
-            .setTitle("تنزيل نموذج الذكاء الاصطناعي")
-            .setMessage("يتطلب هذا المحرك تنزيل نموذج عزل الصوت والآلات (حجمه 48 MB). هل تريد بدء التنزيل الآن؟")
-            .setPositiveButton("تنزيل الآن") { dialog, _ ->
+            .setTitle(getString(R.string.dialog_download_title))
+            .setMessage(getString(R.string.dialog_download_message))
+            .setPositiveButton(getString(R.string.btn_download_now)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
                 startDownloadingModel()
             }
-            .setNegativeButton("لاحقاً") { dialog, _ ->
+            .setNegativeButton(getString(R.string.btn_later)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
             }
             .show()
@@ -323,7 +324,7 @@ class AudioStemSeparatorFragment : Fragment() {
         binding.btnDownloadModel.visibility = View.GONE
         binding.pbModelDownload.visibility = View.VISIBLE
         binding.pbModelDownload.progress = 0
-        binding.tvModelStatus.text = "جاري تنزيل نموذج الذكاء الاصطناعي من السيرفر..."
+        binding.tvModelStatus.text = getString(R.string.msg_download_starting)
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val success = CloudConfigManager.downloadFeatureModel(
@@ -333,7 +334,7 @@ class AudioStemSeparatorFragment : Fragment() {
             ) { percent ->
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
-                    binding.tvModelStatus.text = "جاري التنزيل... التقدم: $percent%"
+                    binding.tvModelStatus.text = getString(R.string.msg_download_progress, percent)
                     if (percent % 20 == 0) {
                         try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     }
@@ -341,9 +342,9 @@ class AudioStemSeparatorFragment : Fragment() {
             }
 
             if (success) {
-                try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, getString(R.string.msg_download_success), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, getString(R.string.msg_download_failed), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

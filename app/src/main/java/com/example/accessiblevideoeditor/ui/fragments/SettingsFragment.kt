@@ -118,21 +118,21 @@ class SettingsFragment : Fragment() {
             scrollView.addView(textView)
             
             androidx.appcompat.app.AlertDialog.Builder(safeCtx)
-                .setTitle("سجل أخطاء وانهيارات النظام")
+                .setTitle(getString(R.string.title_error_log))
                 .setView(scrollView)
-                .setPositiveButton("نسخ الكل") { d, _ ->
+                .setPositiveButton(getString(R.string.btn_copy_all)) { d, _ ->
                     d.dismiss()
                     val clipboard = safeCtx.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
                     val clip = android.content.ClipData.newPlainText("Error Logs", logs)
                     clipboard.setPrimaryClip(clip)
-                    android.widget.Toast.makeText(safeCtx, "تم نسخ السجل بالكامل إلى الحافظة", android.widget.Toast.LENGTH_SHORT).show()
+                    android.widget.Toast.makeText(safeCtx, getString(R.string.msg_log_copied), android.widget.Toast.LENGTH_SHORT).show()
                 }
-                .setNeutralButton("مسح السجل") { d, _ ->
+                .setNeutralButton(getString(R.string.btn_clear_log)) { d, _ ->
                     d.dismiss()
                     com.example.accessiblevideoeditor.utils.ErrorLogger.clearLog(safeCtx)
-                    android.widget.Toast.makeText(safeCtx, "تم مسح السجل بنجاح", android.widget.Toast.LENGTH_SHORT).show()
+                    android.widget.Toast.makeText(safeCtx, getString(R.string.msg_log_cleared), android.widget.Toast.LENGTH_SHORT).show()
                 }
-                .setNegativeButton("إغلاق") { d, _ -> d.dismiss() }
+                .setNegativeButton(getString(R.string.btn_close)) { d, _ -> d.dismiss() }
                 .show()
         }
 

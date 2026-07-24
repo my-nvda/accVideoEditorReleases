@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:title="عازل ومحلل الآلات والموسيقى"
+        app:title="@string/title_audio_stem_separator"
         app:titleTextColor="?attr/colorOnPrimary" />
 
     <ScrollView
@@ -37,7 +37,7 @@
                         android:id="@+id/tvModelStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="حالة النموذج: جاري الفحص..."
+                        android:text="@string/label_model_status_checking"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="تنزيل نموذج عزل الموسيقى (Spleeter ONNX - 48 MB)"
+                        android:text="@string/btn_download_separator_model"
                         android:visibility="gone" />
 
                     <ProgressBar
@@ -66,20 +66,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار ملف الصوت أو الفيديو" />
+                android:text="@string/btn_select_audio_file" />
 
             <TextView
                 android:id="@+id/tvSelectedAudio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="الملف المختار: لم يتم اختيار ملف"
+                android:text="@string/label_no_file_selected"
                 android:textSize="14sp"
                 android:layout_marginBottom="16dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="محرك معالجة وفصل الصوت:"
+                android:text="@string/label_processing_engine"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
@@ -94,18 +94,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="معالجة ذكية سحابية (أونلاين - جودة استوديو فائقة)" />
+                    android:text="@string/engine_cloud" />
                 <RadioButton
                     android:id="@+id/rbEngineLocal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="معالجة محلية بالهاتف (أوفلاين - ذكاء اصطناعي ونظام فلاتر)" />
+                    android:text="@string/engine_local" />
             </RadioGroup>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="وضع الفصل المطلوب:"
+                android:text="@string/label_separation_mode"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
@@ -120,19 +120,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="عزل واستخراج الصوت البشري فقط (Vocals)" />
+                    android:text="@string/mode_vocals" />
                 <RadioButton
                     android:id="@+id/rbSeparateMusic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="استخراج الموسيقى والآلات فقط (Music/Accompaniment)" />
+                    android:text="@string/mode_instruments" />
             </RadioGroup>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnProcessSeparation"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="بدء عملية فصل وعزل المسارات" />
+                android:text="@string/btn_start_separation" />
 
         </LinearLayout>
     </ScrollView>
