@@ -55,7 +55,7 @@ class AudioStemSeparatorFragment : Fragment() {
         }
 
         binding.btnSelectAudio.setOnClickListener {
-            selectAudioLauncher.launch("audio/*")
+            selectAudioLauncher.launch("*/*")
         }
 
         binding.btnProcessSeparation.setOnClickListener {

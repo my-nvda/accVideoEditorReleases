@@ -118,40 +118,46 @@ class AiSceneAudioDescriptionFragment : Fragment() {
                             
                             // 3. Synthesize description text to WAV using TTS
                             val tempWav = java.io.File(currentContext.cacheDir, "desc_${System.currentTimeMillis()}.wav")
-                            val latch = java.util.concurrent.CountDownLatch(1)
                             var ttsSuccess = false
+                            val ttsLatch = java.util.concurrent.CountDownLatch(1)
+                            var ttsInitSuccess = false
                             
+                            var tts: android.speech.tts.TextToSpeech? = null
                             withContext(Dispatchers.Main) {
-                                val tts = android.speech.tts.TextToSpeech(currentContext) { status ->
+                                tts = android.speech.tts.TextToSpeech(currentContext) { status ->
                                     if (status == android.speech.tts.TextToSpeech.SUCCESS) {
-                                        latch.countDown()
-                                    } else {
-                                        latch.countDown()
+                                        ttsInitSuccess = true
                                     }
+                                    ttsLatch.countDown()
                                 }
-                                
-                                val initLatch = java.util.concurrent.CountDownLatch(1)
+                            }
+                            
+                            ttsLatch.await(10, java.util.concurrent.TimeUnit.SECONDS)
+                            
+                            if (ttsInitSuccess && tts != null) {
                                 val loc = java.util.Locale("ar")
-                                tts.setLanguage(loc)
-                                tts.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                                tts!!.setLanguage(loc)
+                                
+                                val voiceLatch = java.util.concurrent.CountDownLatch(1)
+                                tts!!.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
                                     override fun onStart(utteranceId: String?) {}
                                     override fun onDone(utteranceId: String?) {
                                         ttsSuccess = true
-                                        initLatch.countDown()
+                                        voiceLatch.countDown()
                                     }
                                     override fun onError(utteranceId: String?) {
-                                        initLatch.countDown()
+                                        voiceLatch.countDown()
                                     }
                                 })
                                 
                                 val params = Bundle()
                                 params.putString(android.speech.tts.TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "desc")
-                                tts.synthesizeToFile(descriptionText, params, tempWav, "desc")
-                                
-                                withContext(Dispatchers.IO) {
-                                    initLatch.await(20, java.util.concurrent.TimeUnit.SECONDS)
+                                withContext(Dispatchers.Main) {
+                                    tts!!.synthesizeToFile(descriptionText, params, tempWav, "desc")
                                 }
-                                tts.shutdown()
+                                
+                                voiceLatch.await(30, java.util.concurrent.TimeUnit.SECONDS)
+                                tts!!.shutdown()
                             }
                             
                             if (tempWav.exists() && tempWav.length() > 0L) {
