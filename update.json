@@ -1,6 +1,6 @@
 {
-  "versionCode": 95,
-  "versionName": "2.6.6",
+  "versionCode": 96,
+  "versionName": "2.6.7",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.6.6:\n- دمج وتفعيل محرك العزل المزدوج (Dual Audio Stem Separation Engine).\n- إضافة خيار المعالجة السحابية الذكية (Online AI Engine) عبر خادم Meta Demucs السحابي مجاناً بالكامل ودون مفاتيح سرية للحصول على عزل فائق وجودة استوديو.\n- إقران خيار المعالجة المحلية (Offline Engine) لتطلب تحميل النموذج (48MB) أوفلاين وتشغل نظام الفلاتر الصوتية المتطور بدون إنترنت تماماً."
+  "releaseNotes": "إصدار 2.6.7:\n- حل مشكلة انقطاع الاتصال وسخونة الهاتف أثناء المعالجة السحابية (SocketException: Software caused connection abort).\n- قمنا باستبدال تشفير ومزامنة Base64 الضخمة بنظام رفع تدفقي ذكي (Multipart Form Upload) لرفع الملفات الكبيرة مباشرة إلى خادم الذكاء الاصطناعي دون استهلاك لذاكرة الهاتف أو التسبب في انقطاع الشبكة."
 }
