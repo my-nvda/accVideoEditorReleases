@@ -63,7 +63,7 @@ object ProcessingManager {
         }
     }
 
-    fun startProcessing(message: String, cancellable: Boolean = false, sessionId: Long? = null, job: Job? = null) {
+    fun startProcessing(message: String, cancellable: Boolean = true, sessionId: Long? = null, job: Job? = null) {
         runOnMain {
             _state.value = _state.value.copy(
                 isProcessing = true,

@@ -84,6 +84,7 @@ class AudioStemSeparatorFragment : Fragment() {
                     if (isLocal) getString(R.string.msg_processing_local, modeStr)
                     else getString(R.string.msg_processing_cloud, modeStr)
                 )
+                com.example.accessiblevideoeditor.ui.ProcessingManager.updateJob(coroutineContext[kotlinx.coroutines.Job])
                 
                 val inputUri = selectedAudioUri ?: return@launch
                 val outputPath = currentContext.cacheDir.absolutePath + "/separated_out_${System.currentTimeMillis()}.mp3"

@@ -90,6 +90,7 @@ class MergeVideosFragment : Fragment() {
                 if (inputs.size > 1) {
                     withContext(Dispatchers.Main) {
                         ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_92))
+                        ProcessingManager.updateJob(coroutineContext[kotlinx.coroutines.Job])
                     }
                     val outputPath = requireContext().cacheDir.absolutePath + "/merged_${System.currentTimeMillis()}.mp4"
                     

@@ -83,6 +83,17 @@ class MainActivity : AppCompatActivity() {
         e.printStackTrace()
     }
 
+    // Clean up temporary files in cache directory on startup in background
+    lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+        try {
+            cacheDir.listFiles()?.forEach { file ->
+                try {
+                    file.deleteRecursively()
+                } catch (_: Exception) {}
+            }
+        } catch (_: Exception) {}
+    }
+
     // Request notification permission if Android 13+
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
         if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
