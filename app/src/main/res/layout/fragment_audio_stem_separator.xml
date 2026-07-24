@@ -79,6 +79,32 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="محرك معالجة وفصل الصوت:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/rgEngineChoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+                <RadioButton
+                    android:id="@+id/rbEngineCloud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="معالجة ذكية سحابية (أونلاين - جودة استوديو فائقة)" />
+                <RadioButton
+                    android:id="@+id/rbEngineLocal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="معالجة محلية بالهاتف (أوفلاين - ذكاء اصطناعي ونظام فلاتر)" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="وضع الفصل المطلوب:"
                 android:textSize="16sp"
                 android:textStyle="bold"

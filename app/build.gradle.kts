@@ -10,8 +10,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 94
-        versionName = "2.6.5"
+        versionCode = 95
+        versionName = "2.6.6"
     }
 
     buildTypes {
@@ -88,6 +88,8 @@ dependencies {
   implementation("androidx.media3:media3-ui:$media3_version")
   implementation("androidx.media3:media3-session:$media3_version")
   
+
+
 
 }
 
