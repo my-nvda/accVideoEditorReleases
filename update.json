@@ -1,6 +1,6 @@
 {
-  "versionCode": 89,
-  "versionName": "2.6.0",
+  "versionCode": 90,
+  "versionName": "2.6.1",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.6.0:\n- حل مشكلة اختيار الملفات في شاشة فصل الصوت عن الموسيقى (Audio Stem Separator) عن طريق تفعيل اختيار أي امتداد للملفات وسائط دون تقييد.\n- إصلاح وحل مشكلة انهيار/توقف عملية توليد الوصف الصوتي التوضيحي للمشاهد (AI Scene Audio Description) عبر ضبط تهيئة محرك تحويل النصوص إلى كلام (TTS) وتأمين تشغيله برمجياً بالخلفية."
+  "releaseNotes": "إصدار 2.6.1:\n- تحسين جودة عزل الصوت عن الموسيقى (Audio Stem Separator) بشكل كامل.\n- تطبيق خوارزمية إلغاء الطور الصوتي المجسم (Stereo Phase Cancellation / Karaoke Method) لعزل الموسيقى بشكل نقي مع الحفاظ على ترددات البيس.\n- دمج فلتر تقليل الضوضاء المعتمد على تحويل فورييه السريع (FFT-based Denoising) لإبراز ونقاء الصوت البشري (Vocals) ومنع خشونة الصوت المعتادة."
 }
