@@ -52,6 +52,8 @@ object FFmpegProcessor {
         var durationMs = totalDurationMs ?: getMediaDurationMs(sourceVideo)
         val startTime = System.currentTimeMillis()
         var maxPercentage = 0f
+        var lastRawTimeMs = 0.0
+        var accumulatedTimeOffsetMs = 0.0
 
         val session = FFmpegKit.executeWithArgumentsAsync(
             commandArgs,
@@ -91,9 +93,16 @@ object FFmpegProcessor {
                 val timeProcessedMs = statistics.time
                 val elapsedTimeMs = System.currentTimeMillis() - startTime
                 
+                if (timeProcessedMs < lastRawTimeMs && (lastRawTimeMs - timeProcessedMs) > 200) {
+                    accumulatedTimeOffsetMs += lastRawTimeMs
+                }
+                lastRawTimeMs = timeProcessedMs
+                
+                val totalTimeProcessedMs = accumulatedTimeOffsetMs + timeProcessedMs
+                
                 var percentage = 0f
                 if (durationMs > 0f) {
-                    var rawPercent = (timeProcessedMs.toFloat() / durationMs) * 100f
+                    var rawPercent = (totalTimeProcessedMs.toFloat() / durationMs) * 100f
                     if (rawPercent < 0f) rawPercent = 0f
                     if (rawPercent > 99f) rawPercent = 99f
                     percentage = progressOffset + (rawPercent * progressScale)
