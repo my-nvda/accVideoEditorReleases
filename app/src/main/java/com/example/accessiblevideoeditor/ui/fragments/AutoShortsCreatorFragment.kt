@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -50,6 +51,28 @@ class AutoShortsCreatorFragment : Fragment() {
 
         checkModelStatus()
 
+        val presets = arrayOf(
+            "تيك توك / ترويض (15 ثانية)",
+            "حالات واتساب (30 ثانية)",
+            "شورتس يوتيوب (60 ثانية)",
+            "ريلز إنستغرام (90 ثانية)",
+            "تخصيص مدة معينة..."
+        )
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, presets)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerDurationPreset.adapter = adapter
+        
+        binding.spinnerDurationPreset.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 4) {
+                    binding.tilCustomDuration.visibility = View.VISIBLE
+                } else {
+                    binding.tilCustomDuration.visibility = View.GONE
+                }
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+        }
+
         binding.btnDownloadModel.setOnClickListener {
             promptDownloadModel()
         }
@@ -71,6 +94,18 @@ class AutoShortsCreatorFragment : Fragment() {
                 return@setOnClickListener
             }
 
+            val selectedPosition = binding.spinnerDurationPreset.selectedItemPosition
+            val splitDurationSec = when (selectedPosition) {
+                0 -> 15
+                1 -> 30
+                2 -> 60
+                3 -> 90
+                else -> {
+                    val input = binding.etCustomDuration.text?.toString()?.toIntOrNull() ?: 15
+                    if (input <= 0) 15 else input
+                }
+            }
+
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحويل الفيديو إلى مقاطع قصيرة 9:16...")
                 
@@ -81,21 +116,21 @@ class AutoShortsCreatorFragment : Fragment() {
                         val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "shorts_input")
                         if (tempInput != null && tempInput.exists()) {
                             val durationMs = com.example.accessiblevideoeditor.media.FFmpegProcessor.getMediaDurationMs(tempInput.absolutePath)
-                            val durationSec = if (durationMs > 0) (durationMs / 1000.0) else 15.0
-                            val segmentsCount = Math.max(1, Math.ceil(durationSec / 15.0).toInt())
+                            val durationSec = if (durationMs > 0) (durationMs / 1000.0) else splitDurationSec.toDouble()
+                            val segmentsCount = Math.max(1, Math.ceil(durationSec / splitDurationSec.toDouble()).toInt())
                             
                             val hasAudio = com.example.accessiblevideoeditor.media.FFmpegProcessor.hasAudioTrack(tempInput.absolutePath)
                             var allSaved = true
                             
                             for (i in 0 until segmentsCount) {
-                                val startSec = i * 15
+                                val startSec = i * splitDurationSec
                                 val outputPathSegment = currentContext.cacheDir.absolutePath + "/shorts_out_${i}_${System.currentTimeMillis()}.mp4"
                                 
                                 val command = if (hasAudio) {
                                     arrayOf(
                                         "-y",
                                         "-ss", startSec.toString(),
-                                        "-t", "15",
+                                        "-t", splitDurationSec.toString(),
                                         "-i", tempInput.absolutePath,
                                         "-vf", "crop='floor(min(iw\\,ih*9/16)/2)*2':'floor(min(ih\\,iw*16/9)/2)*2'",
                                         "-c:v", "mpeg4",
@@ -107,7 +142,7 @@ class AutoShortsCreatorFragment : Fragment() {
                                     arrayOf(
                                         "-y",
                                         "-ss", startSec.toString(),
-                                        "-t", "15",
+                                        "-t", splitDurationSec.toString(),
                                         "-i", tempInput.absolutePath,
                                         "-vf", "crop='floor(min(iw\\,ih*9/16)/2)*2':'floor(min(ih\\,iw*16/9)/2)*2'",
                                         "-c:v", "mpeg4",
