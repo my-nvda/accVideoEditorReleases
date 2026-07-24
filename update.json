@@ -1,6 +1,6 @@
 {
-  "versionCode": 93,
-  "versionName": "2.6.4",
+  "versionCode": 94,
+  "versionName": "2.6.5",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.6.4:\n- ترقية خوارزميات عزل الصوت البشري والموسيقى (Audio Stem Separator) إلى مستوى جودة هندسة استوديو احترافية.\n- تفعيل فلتر بوابة الصوت الديناميكية (Audio Gate) لكتم الموسيقى تماماً عند سكوت المتحدث، مع دمج مخمد الضوضاء التكيفي لحماية نقاء الصوت البشري.\n- تفعيل الفلاتر الشريطية المتعددة (Multi-Band Formant Notch Filters) لعزل الموسيقى بشكل استوديو عن طريق كتم الحبال الصوتية فقط (-30dB) والحفاظ على الترددات الحادة وترددات البيس كاملة دون تأثر الجودة."
+  "releaseNotes": "إصدار 2.6.5:\n- إصلاح وحل خطأ محرك FFmpeg (Option not found for afftdn).\n- تم إزالة خيار 'noise' غير المدعوم في فلتر afftdn بنسخة أندرويد ليعمل الفلتر بنمطه الذكي الافتراضي والتلقائي بنجاح 100% دون أي توقف أو فشل في معالجة الصوت البشري."
 }
