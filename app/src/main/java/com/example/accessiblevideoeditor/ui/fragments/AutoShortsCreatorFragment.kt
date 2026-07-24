@@ -72,47 +72,62 @@ class AutoShortsCreatorFragment : Fragment() {
             }
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحويل الفيديو إلى مقطع قصير 9:16 جذاب...")
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحويل الفيديو إلى مقاطع قصيرة 9:16...")
                 
                 val inputUri = selectedVideoUri ?: return@launch
-                val outputPath = currentContext.cacheDir.absolutePath + "/shorts_out_${System.currentTimeMillis()}.mp4"
                 
                 val success = withContext(Dispatchers.IO) {
                     try {
                         val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "shorts_input")
                         if (tempInput != null && tempInput.exists()) {
+                            val durationMs = com.example.accessiblevideoeditor.media.FFmpegProcessor.getMediaDurationMs(tempInput.absolutePath)
+                            val durationSec = if (durationMs > 0) (durationMs / 1000.0) else 15.0
+                            val segmentsCount = Math.max(1, Math.ceil(durationSec / 15.0).toInt())
+                            
                             val hasAudio = com.example.accessiblevideoeditor.media.FFmpegProcessor.hasAudioTrack(tempInput.absolutePath)
-                            val command = if (hasAudio) {
-                                arrayOf(
-                                    "-y",
-                                    "-ss", "00:00:00",
-                                    "-i", tempInput.absolutePath,
-                                    "-t", "15",
-                                    "-vf", "crop=floor(ih*9/16/2)*2:ih",
-                                    "-c:v", "mpeg4",
-                                    "-q:v", "2",
-                                    "-c:a", "aac",
-                                    outputPath
-                                )
-                            } else {
-                                arrayOf(
-                                    "-y",
-                                    "-ss", "00:00:00",
-                                    "-i", tempInput.absolutePath,
-                                    "-t", "15",
-                                    "-vf", "crop=floor(ih*9/16/2)*2:ih",
-                                    "-c:v", "mpeg4",
-                                    "-q:v", "2",
-                                    outputPath
-                                )
+                            var allSaved = true
+                            
+                            for (i in 0 until segmentsCount) {
+                                val startSec = i * 15
+                                val outputPathSegment = currentContext.cacheDir.absolutePath + "/shorts_out_${i}_${System.currentTimeMillis()}.mp4"
+                                
+                                val command = if (hasAudio) {
+                                    arrayOf(
+                                        "-y",
+                                        "-ss", startSec.toString(),
+                                        "-t", "15",
+                                        "-i", tempInput.absolutePath,
+                                        "-vf", "crop='floor(min(iw\\,ih*9/16)/2)*2':'floor(min(ih\\,iw*16/9)/2)*2'",
+                                        "-c:v", "mpeg4",
+                                        "-q:v", "2",
+                                        "-c:a", "aac",
+                                        outputPathSegment
+                                    )
+                                } else {
+                                    arrayOf(
+                                        "-y",
+                                        "-ss", startSec.toString(),
+                                        "-t", "15",
+                                        "-i", tempInput.absolutePath,
+                                        "-vf", "crop='floor(min(iw\\,ih*9/16)/2)*2':'floor(min(ih\\,iw*16/9)/2)*2'",
+                                        "-c:v", "mpeg4",
+                                        "-q:v", "2",
+                                        outputPathSegment
+                                    )
+                                }
+                                
+                                withContext(Dispatchers.Main) {
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري معالجة الجزء ${i + 1} من $segmentsCount...")
+                                }
+                                
+                                val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                                if (res) {
+                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPathSegment), "video/mp4")
+                                } else {
+                                    allSaved = false
+                                }
                             }
-                            val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
-                            if (res) {
-                                com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "video/mp4")
-                                true
-                            } else {
-                                false
-                            }
+                            allSaved
                         } else {
                             false
                         }
@@ -128,11 +143,11 @@ class AutoShortsCreatorFragment : Fragment() {
                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                     AlertDialog.Builder(currentContext)
                         .setTitle("تمت العملية بنجاح")
-                        .setMessage("تم توليد المقطع القصير (9:16 Shorts) بنجاح وحفظه في المعرض (Gallery).")
+                        .setMessage("تم توليد مقاطع Shorts القصير (9:16) وتقسيمها بنجاح وحفظها في المعرض (Gallery).")
                         .setPositiveButton("موافق") { d, _ -> d.dismiss() }
                         .show()
                 } else {
-                    Toast.makeText(currentContext, "فشل إنشاء مقطع Shorts القصير", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, "فشل إنشاء مقاطع Shorts القصير", Toast.LENGTH_SHORT).show()
                 }
             }
         }
