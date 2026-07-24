@@ -227,10 +227,10 @@ class AudioStemSeparatorFragment : Fragment() {
             val payloadObj = org.json.JSONObject().apply {
                 val dataArray = org.json.JSONArray().apply {
                     put(org.json.JSONObject().apply {
-                        put("name", "audio.mp3")
+                        put("name", serverTempPath)
+                        put("orig_name", "audio.mp3")
                         put("data", org.json.JSONObject.NULL)
                         put("is_file", true)
-                        put("path", serverTempPath)
                     })
                 }
                 put("data", dataArray)
