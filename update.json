@@ -1,6 +1,6 @@
 {
-  "versionCode": 90,
-  "versionName": "2.6.1",
+  "versionCode": 92,
+  "versionName": "2.6.3",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.6.1:\n- تحسين جودة عزل الصوت عن الموسيقى (Audio Stem Separator) بشكل كامل.\n- تطبيق خوارزمية إلغاء الطور الصوتي المجسم (Stereo Phase Cancellation / Karaoke Method) لعزل الموسيقى بشكل نقي مع الحفاظ على ترددات البيس.\n- دمج فلتر تقليل الضوضاء المعتمد على تحويل فورييه السريع (FFT-based Denoising) لإبراز ونقاء الصوت البشري (Vocals) ومنع خشونة الصوت المعتادة."
+  "releaseNotes": "إصدار 2.6.3:\n- إضافة نظام تسجيل أخطاء عالمي ذكي (Global Diagnostic Error Logger).\n- تسجيل تفاصيل أي خطأ أو انهيار (Crash) يحدث في التطبيق مع حفظ كود الخطأ البرمجي وسلسلة الاستدعاءات (Stacktrace).\n- إضافة خيار \"عرض سجل الأخطاء والانهيارات\" في شاشة الإعدادات لعرض سجل الأخطاء كاملاً ونسخه أو مسحه لتسهيل التشخيص وحل المشاكل مباشرة."
 }
