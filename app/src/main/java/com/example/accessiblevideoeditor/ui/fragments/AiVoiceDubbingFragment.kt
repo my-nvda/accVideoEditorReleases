@@ -16,6 +16,7 @@ import com.example.accessiblevideoeditor.ui.CloudConfigManager
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AiVoiceDubbingFragment : Fragment() {
 
@@ -71,22 +72,115 @@ class AiVoiceDubbingFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val speed = binding.sbSpeed.progress / 100.0f
-            
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري توليد الصوت والدبلجة بالذكاء الاصطناعي...")
-                for (progress in 0..100 step 10) {
-                    kotlinx.coroutines.delay(300)
+                
+                val tempWav = java.io.File(currentContext.cacheDir, "dubbing_${System.currentTimeMillis()}.wav")
+                
+                val latch = java.util.concurrent.CountDownLatch(1)
+                var ttsSuccess = false
+                
+                val tts = android.speech.tts.TextToSpeech(currentContext) { status ->
+                    if (status == android.speech.tts.TextToSpeech.SUCCESS) {
+                        latch.countDown()
+                    } else {
+                        latch.countDown()
+                    }
+                }
+                
+                withContext(Dispatchers.IO) {
+                    latch.await(10, java.util.concurrent.TimeUnit.SECONDS)
+                }
+                
+                val loc = java.util.Locale("ar")
+                tts.setLanguage(loc)
+                
+                val voiceLatch = java.util.concurrent.CountDownLatch(1)
+                tts.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) {}
+                    override fun onDone(utteranceId: String?) {
+                        ttsSuccess = true
+                        voiceLatch.countDown()
+                    }
+                    override fun onError(utteranceId: String?) {
+                        voiceLatch.countDown()
+                    }
+                })
+                
+                val params = Bundle()
+                params.putString(android.speech.tts.TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "dubbing")
+                tts.synthesizeToFile(text, params, tempWav, "dubbing")
+                
+                // Simulate some progress updates while synthesizing
+                for (progress in 0..60 step 10) {
+                    kotlinx.coroutines.delay(200)
                     com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
                 }
-                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                 
-                AlertDialog.Builder(currentContext)
-                    .setTitle("تمت العملية بنجاح")
-                    .setMessage("تمت دبلجة النص بنجاح وتوليد الصوت الاصطناعي وحفظ الملف في المستودع المحلي.")
-                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
-                    .show()
+                withContext(Dispatchers.IO) {
+                    voiceLatch.await(30, java.util.concurrent.TimeUnit.SECONDS)
+                }
+                
+                tts.shutdown()
+                
+                if (!ttsSuccess || !tempWav.exists() || tempWav.length() == 0L) {
+                    com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                    Toast.makeText(currentContext, "فشل توليد الصوت عن طريق محرك الكلام للهاتف", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+                
+                val mediaUri = selectedMediaUri
+                val outputSaved = withContext(Dispatchers.IO) {
+                    try {
+                        if (mediaUri != null) {
+                            val tempVideo = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, mediaUri, "dub_video_in")
+                            if (tempVideo != null && tempVideo.exists()) {
+                                val outputPath = currentContext.cacheDir.absolutePath + "/dubbed_out_${System.currentTimeMillis()}.mp4"
+                                // Replace video audio with our new dubbed voice wav
+                                val command = arrayOf(
+                                    "-y",
+                                    "-i", tempVideo.absolutePath,
+                                    "-i", tempWav.absolutePath,
+                                    "-map", "0:v:0",
+                                    "-map", "1:a:0",
+                                    "-c:v", "copy",
+                                    "-c:a", "aac",
+                                    "-shortest",
+                                    outputPath
+                                )
+                                val success = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                                if (success) {
+                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "video/mp4")
+                                    true
+                                } else {
+                                    false
+                                }
+                            } else {
+                                false
+                            }
+                        } else {
+                            // Save TTS directly as audio file
+                            com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, tempWav, "audio/wav")
+                            true
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        false
+                    }
+                }
+                
+                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                
+                if (outputSaved) {
+                    com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                    AlertDialog.Builder(currentContext)
+                        .setTitle("تمت العملية بنجاح")
+                        .setMessage("تمت دبلجة النص وتوليد الصوت الاصطناعي بنجاح، وتم حفظ الملف في الاستوديو (Gallery).")
+                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .show()
+                } else {
+                    Toast.makeText(currentContext, "فشل معالجة وحفظ الملف المخرّج", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

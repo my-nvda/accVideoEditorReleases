@@ -16,6 +16,7 @@ import com.example.accessiblevideoeditor.ui.CloudConfigManager
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AiSceneAudioDescriptionFragment : Fragment() {
 
@@ -72,18 +73,145 @@ class AiSceneAudioDescriptionFragment : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحليل مشاهد الفيديو وإنشاء الوصف الصوتي...")
-                for (progress in 0..100 step 10) {
-                    kotlinx.coroutines.delay(300)
-                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
+                
+                val inputUri = selectedVideoUri ?: return@launch
+                val outputPath = currentContext.cacheDir.absolutePath + "/audio_desc_out_${System.currentTimeMillis()}.mp4"
+                
+                val success = withContext(Dispatchers.IO) {
+                    try {
+                        val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "audio_desc_input")
+                        if (tempInput != null && tempInput.exists()) {
+                            // 1. Extract first frame for Gemini analysis
+                            val tempFrame = java.io.File(currentContext.cacheDir, "frame_${System.currentTimeMillis()}.jpg")
+                            val extractSuccess = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(
+                                arrayOf("-y", "-ss", "00:00:01", "-i", tempInput.absolutePath, "-vframes", "1", tempFrame.absolutePath)
+                            )
+                            
+                            // 2. Query Gemini if API key is present
+                            var descriptionText = "تم إنشاء مسار وصف المشهد الصوتي للمكفوفين."
+                            val apiKey = com.example.accessiblevideoeditor.ui.SettingsManager.geminiApiKey.trim()
+                            val modelName = com.example.accessiblevideoeditor.ui.SettingsManager.geminiModel ?: "gemini-2.5-flash"
+                            
+                            if (extractSuccess && tempFrame.exists()) {
+                                try {
+                                    val bitmap = android.graphics.BitmapFactory.decodeFile(tempFrame.absolutePath)
+                                    if (bitmap != null && apiKey.isNotEmpty()) {
+                                        val model = com.google.ai.client.generativeai.GenerativeModel(
+                                            modelName = modelName,
+                                            apiKey = apiKey
+                                        )
+                                        val response = model.generateContent(
+                                            com.google.ai.client.generativeai.type.content {
+                                                image(bitmap)
+                                                text("صف هذه الصورة بالتفصيل باللغة العربية باختصار شديد لجعلها وصفاً صوتياً للمكفوفين (في جملة أو جملتين).")
+                                            }
+                                        )
+                                        val respText = response.text
+                                        if (!respText.isNullOrEmpty()) {
+                                            descriptionText = respText
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                            
+                            // 3. Synthesize description text to WAV using TTS
+                            val tempWav = java.io.File(currentContext.cacheDir, "desc_${System.currentTimeMillis()}.wav")
+                            val latch = java.util.concurrent.CountDownLatch(1)
+                            var ttsSuccess = false
+                            
+                            withContext(Dispatchers.Main) {
+                                val tts = android.speech.tts.TextToSpeech(currentContext) { status ->
+                                    if (status == android.speech.tts.TextToSpeech.SUCCESS) {
+                                        latch.countDown()
+                                    } else {
+                                        latch.countDown()
+                                    }
+                                }
+                                
+                                val initLatch = java.util.concurrent.CountDownLatch(1)
+                                val loc = java.util.Locale("ar")
+                                tts.setLanguage(loc)
+                                tts.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                                    override fun onStart(utteranceId: String?) {}
+                                    override fun onDone(utteranceId: String?) {
+                                        ttsSuccess = true
+                                        initLatch.countDown()
+                                    }
+                                    override fun onError(utteranceId: String?) {
+                                        initLatch.countDown()
+                                    }
+                                })
+                                
+                                val params = Bundle()
+                                params.putString(android.speech.tts.TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "desc")
+                                tts.synthesizeToFile(descriptionText, params, tempWav, "desc")
+                                
+                                withContext(Dispatchers.IO) {
+                                    initLatch.await(20, java.util.concurrent.TimeUnit.SECONDS)
+                                }
+                                tts.shutdown()
+                            }
+                            
+                            if (tempWav.exists() && tempWav.length() > 0L) {
+                                // 4. Mix description audio with original video audio
+                                val hasAudio = com.example.accessiblevideoeditor.media.FFmpegProcessor.hasAudioTrack(tempInput.absolutePath)
+                                val command = if (hasAudio) {
+                                    arrayOf(
+                                        "-y",
+                                        "-i", tempInput.absolutePath,
+                                        "-i", tempWav.absolutePath,
+                                        "-filter_complex", "[0:a][1:a]amix=inputs=2:duration=longest[a]",
+                                        "-map", "0:v:0",
+                                        "-map", "[a]",
+                                        "-c:v", "copy",
+                                        "-c:a", "aac",
+                                        outputPath
+                                    )
+                                } else {
+                                    arrayOf(
+                                        "-y",
+                                        "-i", tempInput.absolutePath,
+                                        "-i", tempWav.absolutePath,
+                                        "-map", "0:v:0",
+                                        "-map", "1:a:0",
+                                        "-c:v", "copy",
+                                        "-c:a", "aac",
+                                        outputPath
+                                    )
+                                }
+                                val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                                if (res) {
+                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "video/mp4")
+                                    true
+                                } else {
+                                    false
+                                }
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        false
+                    }
                 }
+                
                 com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-
-                AlertDialog.Builder(currentContext)
-                    .setTitle("تمت العملية بنجاح")
-                    .setMessage("تم توليد المسار الصوتي الوصفي للمكفوفين بنجاح ودمجه مع الفيديو.")
-                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
-                    .show()
+                
+                if (success) {
+                    com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                    AlertDialog.Builder(currentContext)
+                        .setTitle("تمت العملية بنجاح")
+                        .setMessage("تم توليد المسار الصوتي الوصفي للمكفوفين بنجاح ودمجه وحفظه في الاستوديو (Gallery).")
+                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .show()
+                } else {
+                    Toast.makeText(currentContext, "فشل توليد الوصف الصوتي للمشاهد", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

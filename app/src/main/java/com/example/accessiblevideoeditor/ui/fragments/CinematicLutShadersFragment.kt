@@ -16,6 +16,7 @@ import com.example.accessiblevideoeditor.ui.CloudConfigManager
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CinematicLutShadersFragment : Fragment() {
 
@@ -72,18 +73,75 @@ class CinematicLutShadersFragment : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تطبيق فلاتر اللوت السينمائي ومعالجة الألوان...")
-                for (progress in 0..100 step 10) {
-                    kotlinx.coroutines.delay(300)
-                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
+                
+                val inputUri = selectedMediaUri ?: return@launch
+                val isVideo = com.example.accessiblevideoeditor.media.MediaUtils.isVideoFile(currentContext, inputUri)
+                val ext = if (isVideo) "mp4" else "jpg"
+                val outputPath = currentContext.cacheDir.absolutePath + "/cinematic_out_${System.currentTimeMillis()}.$ext"
+                
+                val success = withContext(Dispatchers.IO) {
+                    try {
+                        val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "cinematic_input")
+                        if (tempInput != null && tempInput.exists()) {
+                            val command = if (isVideo) {
+                                val hasAudio = com.example.accessiblevideoeditor.media.FFmpegProcessor.hasAudioTrack(tempInput.absolutePath)
+                                if (hasAudio) {
+                                    arrayOf(
+                                        "-y",
+                                        "-i", tempInput.absolutePath,
+                                        "-vf", "curves=preset=vintage",
+                                        "-c:v", "mpeg4",
+                                        "-q:v", "2",
+                                        "-c:a", "copy",
+                                        outputPath
+                                    )
+                                } else {
+                                    arrayOf(
+                                        "-y",
+                                        "-i", tempInput.absolutePath,
+                                        "-vf", "curves=preset=vintage",
+                                        "-c:v", "mpeg4",
+                                        "-q:v", "2",
+                                        outputPath
+                                    )
+                                }
+                            } else {
+                                arrayOf(
+                                    "-y",
+                                    "-i", tempInput.absolutePath,
+                                    "-vf", "curves=preset=vintage",
+                                    outputPath
+                                )
+                            }
+                            val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                            if (res) {
+                                val mime = if (isVideo) "video/mp4" else "image/jpeg"
+                                com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), mime)
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        false
+                    }
                 }
+                
                 com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-
-                AlertDialog.Builder(currentContext)
-                    .setTitle("تمت العملية بنجاح")
-                    .setMessage("تم تطبيق الفلتر السينمائي ومعالجة ألوان الملف المختار وحفظه بنجاح.")
-                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
-                    .show()
+                
+                if (success) {
+                    com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                    AlertDialog.Builder(currentContext)
+                        .setTitle("تمت العملية بنجاح")
+                        .setMessage("تم تطبيق الفلتر السينمائي ومعالجة ألوان الملف المختار وحفظه في الاستوديو (Gallery).")
+                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .show()
+                } else {
+                    Toast.makeText(currentContext, "فشل تطبيق الفلتر السينمائي", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

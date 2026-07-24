@@ -16,6 +16,7 @@ import com.example.accessiblevideoeditor.ui.CloudConfigManager
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AutoShortsCreatorFragment : Fragment() {
 
@@ -71,19 +72,68 @@ class AutoShortsCreatorFragment : Fragment() {
             }
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحويل الفيديو إلى مقاطع قصيرة 9:16 جذابة...")
-                for (progress in 0..100 step 10) {
-                    kotlinx.coroutines.delay(300)
-                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحويل الفيديو إلى مقطع قصير 9:16 جذاب...")
+                
+                val inputUri = selectedVideoUri ?: return@launch
+                val outputPath = currentContext.cacheDir.absolutePath + "/shorts_out_${System.currentTimeMillis()}.mp4"
+                
+                val success = withContext(Dispatchers.IO) {
+                    try {
+                        val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "shorts_input")
+                        if (tempInput != null && tempInput.exists()) {
+                            val hasAudio = com.example.accessiblevideoeditor.media.FFmpegProcessor.hasAudioTrack(tempInput.absolutePath)
+                            val command = if (hasAudio) {
+                                arrayOf(
+                                    "-y",
+                                    "-ss", "00:00:00",
+                                    "-i", tempInput.absolutePath,
+                                    "-t", "15",
+                                    "-vf", "crop=floor(ih*9/16/2)*2:ih",
+                                    "-c:v", "mpeg4",
+                                    "-q:v", "2",
+                                    "-c:a", "aac",
+                                    outputPath
+                                )
+                            } else {
+                                arrayOf(
+                                    "-y",
+                                    "-ss", "00:00:00",
+                                    "-i", tempInput.absolutePath,
+                                    "-t", "15",
+                                    "-vf", "crop=floor(ih*9/16/2)*2:ih",
+                                    "-c:v", "mpeg4",
+                                    "-q:v", "2",
+                                    outputPath
+                                )
+                            }
+                            val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                            if (res) {
+                                com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "video/mp4")
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        false
+                    }
                 }
+                
                 com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-
-                AlertDialog.Builder(currentContext)
-                    .setTitle("تمت العملية بنجاح")
-                    .setMessage("تم توليد المقاطع القصيرة (9:16 Shorts) بنجاح وحفظها في المعرض.")
-                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
-                    .show()
+                
+                if (success) {
+                    com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                    AlertDialog.Builder(currentContext)
+                        .setTitle("تمت العملية بنجاح")
+                        .setMessage("تم توليد المقطع القصير (9:16 Shorts) بنجاح وحفظه في المعرض (Gallery).")
+                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .show()
+                } else {
+                    Toast.makeText(currentContext, "فشل إنشاء مقطع Shorts القصير", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

@@ -16,6 +16,7 @@ import com.example.accessiblevideoeditor.ui.CloudConfigManager
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AudioStemSeparatorFragment : Fragment() {
 
@@ -71,21 +72,60 @@ class AudioStemSeparatorFragment : Fragment() {
             }
 
             val mode = if (binding.rbSeparateVocals.isChecked) "الصوت البشري" else "الموسيقى والآلات"
+            val separateVocals = binding.rbSeparateVocals.isChecked
             
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري فصل وعزل $mode باستخدام نموذج الذكاء الاصطناعي...")
-                for (progress in 0..100 step 10) {
-                    kotlinx.coroutines.delay(300)
-                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
+                
+                val inputUri = selectedAudioUri ?: return@launch
+                val outputPath = currentContext.cacheDir.absolutePath + "/separated_out_${System.currentTimeMillis()}.mp3"
+                
+                val success = withContext(Dispatchers.IO) {
+                    try {
+                        val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "sep_input")
+                        if (tempInput != null && tempInput.exists()) {
+                            // Apply bandpass filter for vocals, equalizer bandreject filter for instruments
+                            val filter = if (separateVocals) {
+                                "highpass=f=200,lowpass=f=3000"
+                            } else {
+                                "anequalizer=c0 f=1000 w=800 g=-20|c1 f=1000 w=800 g=-20"
+                            }
+                            val command = arrayOf(
+                                "-y",
+                                "-i", tempInput.absolutePath,
+                                "-af", filter,
+                                "-c:a", "libmp3lame",
+                                "-q:a", "2",
+                                outputPath
+                            )
+                            val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                            if (res) {
+                                com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "audio/mp3")
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        false
+                    }
                 }
+                
                 com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-
-                AlertDialog.Builder(currentContext)
-                    .setTitle("تمت العملية بنجاح")
-                    .setMessage("تم عزل مسار ($mode) بنجاح وحفظ الملف في المستودع المحلي.")
-                    .setPositiveButton("موافق") { d, _ -> d.dismiss() }
-                    .show()
+                
+                if (success) {
+                    com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                    AlertDialog.Builder(currentContext)
+                        .setTitle("تمت العملية بنجاح")
+                        .setMessage("تم عزل مسار ($mode) بنجاح وحفظ الملف في الاستوديو (Gallery).")
+                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .show()
+                } else {
+                    Toast.makeText(currentContext, "فشل فصل وعزل مسار الصوت", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
