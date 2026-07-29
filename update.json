@@ -1,6 +1,6 @@
 {
-  "versionCode": 105,
-  "versionName": "2.7.6",
+  "versionCode": 106,
+  "versionName": "2.7.7",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.7.6:\n- إصلاح حجم البفر المستهدف (Buffer Capacity) لموديل DeepFilterNet3 الأوفلاين ليتطابق تماماً مع متطلبات النواة العصبية Native C/Rust.\n- تفعيل نظام التحقق من الإطارات الصوتية المعالجة وتنبيه المستخدم في حال إرجاع الموديل لأي أخطاء بدلاً من التجاهل الصامت.\n- ضبط وتكثيف قيم التوهين وعزل الضجيج (Attenuation Limit) لضمان الفعالية التامة والتنقية العالية في بيئات الضوضاء الصعبة."
+  "releaseNotes": "إصدار 2.7.7:\n- معالجة تشوهات وتآكل الصوت البشري (Speech Clipping/Distortion) عبر التحكم الدقيق في معامل الفلترة البعدية (Post-Filter Beta).\n- تخصيص معامل pf_beta للمستوى الخفيف (0.0) لمنع التشوهات كلياً والحفاظ على دفء ونقاء الصوت الأصلي.\n- ضبط مستويات التوهين التراكمي لـ DeepFilterNet3 (25dB / 35dB / 50dB) لتحقيق توازن مثالي بين عزل الضجيج ووضوح الكلام البشري."
 }
