@@ -161,7 +161,7 @@ class NoiseReductionFragment : Fragment() {
         }
     }
 
-    private fun processLocalDeepFilterNet3(tempInput: File, isVideo: Boolean, levelIndex: Int, outputPath: String): Boolean {
+    private suspend fun processLocalDeepFilterNet3(tempInput: File, isVideo: Boolean, levelIndex: Int, outputPath: String): Boolean {
         val pcmInput = File(requireContext().cacheDir, "dfn3_in_${System.currentTimeMillis()}.pcm")
         val pcmOutput = File(requireContext().cacheDir, "dfn3_out_${System.currentTimeMillis()}.pcm")
 
@@ -175,17 +175,22 @@ class NoiseReductionFragment : Fragment() {
             )
             val extractSession = FFmpegKit.execute(extractCmd.joinToString(" "))
             if (!ReturnCode.isSuccess(extractSession.returnCode) || !pcmInput.exists() || pcmInput.length() == 0L) {
+                val err = "فشل استخراج محتوى الصوت إلى PCM خام: ${extractSession.failStackTrace ?: "Unknown FFmpeg error"}"
+                withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
                 return false
             }
 
-            // Step 2: Run DeepFilterNet3 Inference via Native JNI
-            val deepFilterNet = com.rikorose.deepfilternet.NativeDeepFilterNet(requireContext())
-            
-            // Wait for model loading
-            var waitCount = 0
-            while (deepFilterNet.frameLength == null && waitCount < 50) {
-                Thread.sleep(100)
-                waitCount++
+            // Step 2: Custom Model Loader to safely locate deep_filter_mobile_model raw resource
+            val customModelLoader = object : com.kaleyra.noise_filter.model_loader.DeepFilterModelLoader {
+                override suspend fun load(context: android.content.Context): ByteArray {
+                    val packageName = context.packageName
+                    var resId = context.resources.getIdentifier("deep_filter_mobile_model", "raw", packageName)
+                    if (resId == 0) {
+                        resId = com.kaleyra.noise_filter.R.raw.deep_filter_mobile_model
+                    }
+                    val isStream = context.resources.openRawResource(resId)
+                    return isStream.use { it.readBytes() }
+                }
             }
 
             val attLimit = when (levelIndex) {
@@ -194,9 +199,28 @@ class NoiseReductionFragment : Fragment() {
                 2 -> 50f
                 else -> 30f
             }
-            deepFilterNet.setAttenuationLimit(attLimit)
 
-            val frameLength = (deepFilterNet.frameLength ?: 960L).toInt()
+            // Initialize NativeDeepFilterNet with custom loader
+            val deepFilterNet = com.rikorose.deepfilternet.NativeDeepFilterNet(
+                context = requireContext(),
+                attenuationLimit = attLimit,
+                modelLoader = customModelLoader
+            )
+
+            // Wait for asynchronous native model loading via callback latch
+            val latch = java.util.concurrent.CountDownLatch(1)
+            deepFilterNet.onModelLoaded {
+                latch.countDown()
+            }
+
+            val loadedOk = latch.await(10, java.util.concurrent.TimeUnit.SECONDS)
+            if (!loadedOk || deepFilterNet.frameLength == null) {
+                val err = "فشل تحميل نموذج DeepFilterNet3 في ذاكرة الجهاز (Timeout)"
+                withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
+                return false
+            }
+
+            val frameLength = deepFilterNet.frameLength!!.toInt()
             val bufferSizeBytes = frameLength * 2 // 16-bit PCM = 2 bytes per sample
 
             val byteBuffer = ByteBuffer.allocateDirect(bufferSizeBytes).apply {
@@ -252,9 +276,18 @@ class NoiseReductionFragment : Fragment() {
             }
 
             val mergeSession = FFmpegKit.execute(mergeArgs.joinToString(" "))
-            return ReturnCode.isSuccess(mergeSession.returnCode)
+            val success = ReturnCode.isSuccess(mergeSession.returnCode)
+            if (!success) {
+                val err = "فشل دمج وترميز الصوت المعالج مع الملف الأصلي: ${mergeSession.failStackTrace ?: "Unknown FFmpeg error"}"
+                withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
+            }
+            return success
         } catch (e: Exception) {
             e.printStackTrace()
+            val errorDetails = "خطأ في تنفيذ DeepFilterNet3 الأوفلاين:\n${e.localizedMessage ?: e.message}"
+            withContext(Dispatchers.Main) {
+                ProcessingManager.showError(errorDetails)
+            }
             return false
         } finally {
             try { pcmInput.delete() } catch (_: Exception) {}
