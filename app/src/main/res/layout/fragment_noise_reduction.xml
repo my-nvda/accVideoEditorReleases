@@ -39,6 +39,21 @@
                 android:visibility="gone" />
 
             <TextView
+                android:id="@+id/lblNoiseMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/label_noise_mode"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerNoiseMode"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp" />
+
+            <TextView
                 android:id="@+id/lblNoiseLevel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

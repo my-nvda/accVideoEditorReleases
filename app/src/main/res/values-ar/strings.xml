@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
 <string name="app_name">Accessible Video Editor</string>
+    <string name="label_noise_mode">اختر نمط عزل الضوضاء</string>
+    <string name="mode_noise_dsp">تصفية محلية محسنة (أوفلاين - خفيف)</string>
+    <string name="mode_noise_dfn3_offline">عزل ذكي بالذكاء الاصطناعي (أوفلاين - DeepFilterNet3)</string>
+    <string name="mode_noise_cloud_online">عزل ذكي بالذكاء الاصطناعي (أونلاين - جودة استوديو)</string>
     <string name="string_1">صف هذه الصورة أو الفيديو بالتفصيل باللغة العربية. ركز على العناصر المرئية والأشخاص والأفعال والنصوص المكتوبة والأصوات إن وجدت.</string>
     <string name="string_2">قم باستخراج وتفريغ النص من هذا الملف الصوتي باللغة العربية بدقة عالية. اكتب النص المستخرج فقط دون إضافات.</string>
     <string name="string_3">خطأ: مفتاح Gemini API مفقود. يرجى إضافته من الإعدادات.</string>

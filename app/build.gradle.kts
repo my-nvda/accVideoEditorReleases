@@ -10,16 +10,20 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 102
-        versionName = "2.7.3"
+        versionCode = 103
+        versionName = "2.7.4"
     }
 
     buildTypes {
         debug {
+            isMinifyEnabled = false
         }
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -81,6 +85,9 @@ dependencies {
   
   // FFmpeg for Media Processing
   implementation(libs.ffmpeg.kit.full)
+
+  // Local DeepFilterNet3 AI Noise Reduction
+  implementation("io.github.kaleyravideo:android-deepfilternet:0.0.8")
   
   // ExoPlayer for Video Preview
   val media3_version = "1.3.1"

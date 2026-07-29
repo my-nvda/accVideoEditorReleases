@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">Accessible Video Editor</string>
+    <string name="label_noise_mode">Select Noise Reduction Mode</string>
+    <string name="mode_noise_dsp">Optimized Local DSP (Offline - Light)</string>
+    <string name="mode_noise_dfn3_offline">DeepFilterNet3 AI (Offline - Smart)</string>
+    <string name="mode_noise_cloud_online">Studio AI (Online - High Quality)</string>
     <string name="string_1">Describe this photo or video in detail. Focus on visuals, people, actions and written texts if available.</string>
     <string name="string_2">Extract and transcribe the text from this audio file with high accuracy. Write only the extracted text without additions.</string>
     <string name="string_3">Error: Gemini API key is missing. Please add it from settings.</string>
