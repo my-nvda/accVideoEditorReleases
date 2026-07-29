@@ -195,10 +195,17 @@ class NoiseReductionFragment : Fragment() {
             }
 
             val attLimit = when (levelIndex) {
-                0 -> 20f
-                1 -> 40f
-                2 -> 100f
-                else -> 40f
+                0 -> 25f
+                1 -> 35f
+                2 -> 50f
+                else -> 35f
+            }
+
+            val pfBeta = when (levelIndex) {
+                0 -> 0.0f    // No post-filtering (pure deep filtering). Retains original voice warmth and speech completely.
+                1 -> 0.015f  // Light post-filtering. Smooth trade-off between extra cancellation and speech clarity.
+                2 -> 0.035f  // Moderate post-filtering. Stronger cancellation for noisy backgrounds.
+                else -> 0.015f
             }
 
             // Initialize NativeDeepFilterNet with custom loader
@@ -220,6 +227,9 @@ class NoiseReductionFragment : Fragment() {
                 withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
                 return false
             }
+
+            // Set the custom post-filter beta
+            deepFilterNet.setPostFilterBeta(pfBeta)
 
             val frameLength = deepFilterNet.frameLength!!.toInt()
             val bufferSizeBytes = frameLength
