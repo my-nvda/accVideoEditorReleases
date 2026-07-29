@@ -169,13 +169,14 @@ class NoiseReductionFragment : Fragment() {
             // Step 1: Extract & Resample Audio to 48kHz 16-bit PCM Mono
             val extractCmd = arrayOf(
                 "-y", "-i", tempInput.absolutePath,
-                "-vn", "-acodec", "pcm_s16le",
+                "-vn", "-f", "s16le", "-acodec", "pcm_s16le",
                 "-ar", "48000", "-ac", "1",
                 pcmInput.absolutePath
             )
-            val extractSession = FFmpegKit.execute(extractCmd.joinToString(" "))
+            val extractSession = FFmpegKit.executeWithArguments(extractCmd)
             if (!ReturnCode.isSuccess(extractSession.returnCode) || !pcmInput.exists() || pcmInput.length() == 0L) {
-                val err = "فشل استخراج محتوى الصوت إلى PCM خام: ${extractSession.failStackTrace ?: "Unknown FFmpeg error"}"
+                val ffmpegLogs = extractSession.allLogsAsString ?: extractSession.output ?: "Unknown FFmpeg error"
+                val err = "فشل استخراج محتوى الصوت إلى PCM خام:\n$ffmpegLogs"
                 withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
                 return false
             }
@@ -275,10 +276,11 @@ class NoiseReductionFragment : Fragment() {
                 ))
             }
 
-            val mergeSession = FFmpegKit.execute(mergeArgs.joinToString(" "))
+            val mergeSession = FFmpegKit.executeWithArguments(mergeArgs.toTypedArray())
             val success = ReturnCode.isSuccess(mergeSession.returnCode)
             if (!success) {
-                val err = "فشل دمج وترميز الصوت المعالج مع الملف الأصلي: ${mergeSession.failStackTrace ?: "Unknown FFmpeg error"}"
+                val ffmpegLogs = mergeSession.allLogsAsString ?: mergeSession.output ?: "Unknown FFmpeg error"
+                val err = "فشل دمج وترميز الصوت المعالج مع الملف الأصلي:\n$ffmpegLogs"
                 withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
             }
             return success
