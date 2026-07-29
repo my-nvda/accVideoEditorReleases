@@ -195,10 +195,10 @@ class NoiseReductionFragment : Fragment() {
             }
 
             val attLimit = when (levelIndex) {
-                0 -> 15f
-                1 -> 30f
-                2 -> 50f
-                else -> 30f
+                0 -> 20f
+                1 -> 40f
+                2 -> 100f
+                else -> 40f
             }
 
             // Initialize NativeDeepFilterNet with custom loader
@@ -222,7 +222,7 @@ class NoiseReductionFragment : Fragment() {
             }
 
             val frameLength = deepFilterNet.frameLength!!.toInt()
-            val bufferSizeBytes = frameLength * 2 // 16-bit PCM = 2 bytes per sample
+            val bufferSizeBytes = frameLength
 
             val byteBuffer = ByteBuffer.allocateDirect(bufferSizeBytes).apply {
                 order(ByteOrder.LITTLE_ENDIAN)
@@ -233,6 +233,9 @@ class NoiseReductionFragment : Fragment() {
             val buffer = ByteArray(bufferSizeBytes)
 
             var bytesRead: Int
+            var totalFrames = 0
+            var failedFrames = 0
+
             while (fis.read(buffer).also { bytesRead = it } != -1) {
                 byteBuffer.clear()
                 byteBuffer.put(buffer, 0, bytesRead)
@@ -243,7 +246,11 @@ class NoiseReductionFragment : Fragment() {
                 }
                 byteBuffer.flip()
 
-                deepFilterNet.processFrame(byteBuffer)
+                val score = deepFilterNet.processFrame(byteBuffer)
+                totalFrames++
+                if (score < 0f) {
+                    failedFrames++
+                }
 
                 val outputByteArray = ByteArray(byteBuffer.remaining())
                 byteBuffer.get(outputByteArray)
@@ -252,6 +259,11 @@ class NoiseReductionFragment : Fragment() {
 
             fis.close()
             fos.close()
+            
+            if (totalFrames > 0 && failedFrames == totalFrames) {
+                throw IllegalStateException("لم يتمكن الموديل المحلي من معالجة أي إطار صوتي (كافة الإطارات أرجعت رمز فشل -1.0). يرجى التحقق من توافق ملف الصوت.")
+            }
+            
             try { deepFilterNet.release() } catch (_: Exception) {}
 
             // Step 3: Re-encode clean PCM back into original container
