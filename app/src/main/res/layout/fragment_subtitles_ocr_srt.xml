@@ -92,7 +92,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="دمج وطباعة الترجمة (SRT) على الفيديو"
+                android:text="@string/title_burn_subtitles_section"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
@@ -103,13 +103,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="1. اختيار الفيديو للدمج" />
+                android:text="@string/btn_select_video_for_burn" />
 
             <TextView
                 android:id="@+id/tvSelectedVideoBurn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="الفيديو المختار: لم يتم اختيار ملف"
+                android:text="@string/label_selected_video_burn"
                 android:textSize="12sp"
                 android:layout_marginBottom="12dp" />
 
@@ -119,13 +119,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="2. اختيار ملف الترجمة (SRT)" />
+                android:text="@string/btn_select_srt_file" />
 
             <TextView
                 android:id="@+id/tvSelectedSrt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ملف الترجمة المختار: لم يتم اختيار ملف"
+                android:text="@string/label_selected_srt"
                 android:textSize="12sp"
                 android:layout_marginBottom="16dp" />
 
@@ -133,7 +133,7 @@
                 android:id="@+id/btnBurnSubtitles"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="دمج وطباعة الترجمة على الفيديو" />
+                android:text="@string/btn_burn_subtitles" />
 
         </LinearLayout>
     </ScrollView>

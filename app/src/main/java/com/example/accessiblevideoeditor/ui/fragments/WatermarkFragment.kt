@@ -45,10 +45,13 @@ class WatermarkFragment : Fragment() {
             val mimeType = requireContext().contentResolver.getType(uri)
             isSelectedMediaVideo = mimeType?.startsWith("video/") == true
             
+            val segment = uri.lastPathSegment
             if (isSelectedMediaVideo) {
-                binding.btnSelectVideo.text = "فيديو: " + (uri.lastPathSegment ?: "فيديو")
+                val fallback = AppStrings.get(requireContext(), R.string.label_video_fallback)
+                binding.btnSelectVideo.text = AppStrings.get(requireContext(), R.string.label_video_prefix, segment ?: fallback)
             } else {
-                binding.btnSelectVideo.text = "صورة: " + (uri.lastPathSegment ?: "صورة")
+                val fallback = AppStrings.get(requireContext(), R.string.label_image_fallback)
+                binding.btnSelectVideo.text = AppStrings.get(requireContext(), R.string.label_image_prefix, segment ?: fallback)
             }
         }
         updateApplyButtonState()

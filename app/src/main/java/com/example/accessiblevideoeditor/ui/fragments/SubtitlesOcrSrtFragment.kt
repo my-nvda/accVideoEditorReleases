@@ -13,6 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.accessiblevideoeditor.databinding.FragmentSubtitlesOcrSrtBinding
 import com.example.accessiblevideoeditor.ui.CloudConfigManager
+import com.example.accessiblevideoeditor.ui.AppStrings
+import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,14 +40,16 @@ class SubtitlesOcrSrtFragment : Fragment() {
     private val selectVideoForBurnLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedVideoForBurnUri = uri
-            binding.tvSelectedVideoBurn.text = "الفيديو المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            val name = uri.lastPathSegment ?: uri.toString()
+            binding.tvSelectedVideoBurn.text = AppStrings.get(requireContext(), R.string.label_selected_video_burn, name)
         }
     }
 
     private val selectSrtLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedSrtUri = uri
-            binding.tvSelectedSrt.text = "ملف الترجمة المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            val name = uri.lastPathSegment ?: uri.toString()
+            binding.tvSelectedSrt.text = AppStrings.get(requireContext(), R.string.label_selected_srt, name)
         }
     }
 

@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.accessiblevideoeditor.databinding.FragmentAutoShortsCreatorBinding
 import com.example.accessiblevideoeditor.ui.CloudConfigManager
+import com.example.accessiblevideoeditor.ui.AppStrings
+import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -152,7 +154,7 @@ class AutoShortsCreatorFragment : Fragment() {
                                 }
                                 
                                 withContext(Dispatchers.Main) {
-                                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري معالجة الجزء ${i + 1} من $segmentsCount...")
+                                    com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(AppStrings.get(currentContext, R.string.msg_shorts_processing, i + 1, segmentsCount))
                                 }
                                 
                                 val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
@@ -177,12 +179,12 @@ class AutoShortsCreatorFragment : Fragment() {
                 if (success) {
                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                     AlertDialog.Builder(currentContext)
-                        .setTitle("تمت العملية بنجاح")
-                        .setMessage("تم توليد مقاطع Shorts القصير (9:16) وتقسيمها بنجاح وحفظها في المعرض (Gallery).")
-                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .setTitle(AppStrings.get(currentContext, R.string.msg_dialog_success_title))
+                        .setMessage(AppStrings.get(currentContext, R.string.msg_shorts_success))
+                        .setPositiveButton(AppStrings.get(currentContext, R.string.btn_ok)) { d, _ -> d.dismiss() }
                         .show()
                 } else {
-                    Toast.makeText(currentContext, "فشل إنشاء مقاطع Shorts القصير", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_shorts_failed), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -192,11 +194,12 @@ class AutoShortsCreatorFragment : Fragment() {
         val currentContext = context ?: return
         val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
         if (modelFile != null && modelFile.exists()) {
-            binding.tvModelStatus.text = "حالة النموذج: حزمة قوالب الشورتس محملة محلياً ✅ (${modelFile.length() / 1024} KB)"
+            val sizeKb = (modelFile.length() / 1024).toInt()
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_shorts_loaded, sizeKb)
             binding.btnDownloadModel.visibility = View.GONE
             binding.pbModelDownload.visibility = View.GONE
         } else {
-            binding.tvModelStatus.text = "حالة النموذج: حزمة القوالب غير مثبتة محلياً (حجمها 8 MB)"
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_shorts_not_installed)
             binding.btnDownloadModel.visibility = View.VISIBLE
             binding.pbModelDownload.visibility = View.GONE
         }
@@ -206,13 +209,13 @@ class AutoShortsCreatorFragment : Fragment() {
         val currentActivity = activity ?: return
         val dialogContext = android.view.ContextThemeWrapper(currentActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
         AlertDialog.Builder(dialogContext)
-            .setTitle("تنزيل نموذج الذكاء الاصطناعي")
-            .setMessage("يتطلب هذا المحرك تنزيل حزمة قوالب الشورتس (حجمها 8 MB). هل تريد بدء التنزيل الآن؟")
-            .setPositiveButton("تنزيل الآن") { dialog, _ ->
+            .setTitle(AppStrings.get(currentActivity, R.string.dialog_download_title))
+            .setMessage(AppStrings.get(currentActivity, R.string.dialog_download_message_shorts))
+            .setPositiveButton(AppStrings.get(currentActivity, R.string.btn_download_now)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
                 startDownloadingModel()
             }
-            .setNegativeButton("لاحقاً") { dialog, _ ->
+            .setNegativeButton(AppStrings.get(currentActivity, R.string.btn_later)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
             }
             .show()
@@ -223,7 +226,7 @@ class AutoShortsCreatorFragment : Fragment() {
         binding.btnDownloadModel.visibility = View.GONE
         binding.pbModelDownload.visibility = View.VISIBLE
         binding.pbModelDownload.progress = 0
-        binding.tvModelStatus.text = "جاري تنزيل نموذج الذكاء الاصطناعي من السيرفر..."
+        binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_starting)
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val success = CloudConfigManager.downloadFeatureModel(
@@ -233,7 +236,7 @@ class AutoShortsCreatorFragment : Fragment() {
             ) { percent ->
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
-                    binding.tvModelStatus.text = "جاري التنزيل... التقدم: $percent%"
+                    binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_progress, percent)
                     if (percent % 20 == 0) {
                         try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     }
@@ -241,7 +244,7 @@ class AutoShortsCreatorFragment : Fragment() {
             }
 
             if (success) {
-                try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_success), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
                 try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }

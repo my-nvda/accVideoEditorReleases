@@ -402,4 +402,44 @@ customization, smart cutting, and more.</string>
     <string name="btn_close">Close</string>
     <string name="msg_log_copied">Logs copied to clipboard</string>
     <string name="msg_log_cleared">Logs cleared successfully</string>
+
+    <string name="title_burn_subtitles_section">Merge &amp; Burn Subtitles (SRT) on Video</string>
+    <string name="btn_select_video_for_burn">1. Select Video for Burning</string>
+    <string name="label_selected_video_burn">Selected Video: %1$s</string>
+    <string name="btn_select_srt_file">2. Select Subtitle File (SRT)</string>
+    <string name="label_selected_srt">Selected Subtitle: %1$s</string>
+
+    <string name="model_status_piper_loaded">Model Status: Piper Arabic ONNX loaded locally ✅ (%1$d MB)</string>
+    <string name="model_status_piper_not_installed">Model Status: Model not installed locally (Size 63 MB)</string>
+    <string name="dialog_download_message_piper">This engine requires downloading the Arabic voice model (63 MB). Do you want to start downloading now?</string>
+    <string name="msg_dubbing_success">Text dubbed and voice generated successfully, saved to Gallery.</string>
+    <string name="msg_dubbing_failed">Failed to generate voice locally or via cloud.</string>
+    <string name="msg_dialog_success_title">Success</string>
+
+    <string name="model_status_ad_loaded">Model Status: Audio description rules loaded ✅ (%1$d KB)</string>
+    <string name="model_status_ad_not_installed">Model Status: Engine not installed locally (Size 10 MB)</string>
+    <string name="dialog_download_message_ad">This engine requires downloading the audio description rules pack (10 MB). Do you want to start downloading now?</string>
+    <string name="msg_ad_success">Descriptive audio track generated and merged successfully, saved to Gallery.</string>
+    <string name="msg_ad_failed">Failed to generate scene audio description.</string>
+
+    <string name="btn_select_video_or_image">Select Video or Image</string>
+    <string name="label_video_prefix">Video: %1$s</string>
+    <string name="label_image_prefix">Image: %1$s</string>
+    <string name="label_video_fallback">Video</string>
+    <string name="label_image_fallback">Image</string>
+
+    <!-- Auto Shorts Creator -->
+    <string name="model_status_shorts_loaded">Model Status: Shorts template pack loaded locally ✅ (%1$d KB)</string>
+    <string name="model_status_shorts_not_installed">Model Status: Template pack not installed locally (Size 8 MB)</string>
+    <string name="dialog_download_message_shorts">This engine requires downloading the Shorts template pack (8 MB). Do you want to start downloading now?</string>
+    <string name="msg_shorts_processing">Processing segment %1$d of %2$d...</string>
+    <string name="msg_shorts_success">Shorts segment generated and saved to Gallery successfully.</string>
+    <string name="msg_shorts_failed">Failed to create Shorts segment.</string>
+
+    <!-- Cinematic LUT Shaders -->
+    <string name="model_status_lut_loaded">Model Status: Cinematic LUT filters loaded locally ✅ (%1$d KB)</string>
+    <string name="model_status_lut_not_installed">Model Status: Filters not installed locally (Size 5 MB)</string>
+    <string name="dialog_download_message_lut">This engine requires downloading the Cinematic LUT filters pack (5 MB). Do you want to start downloading now?</string>
+    <string name="msg_lut_success">Cinematic filter applied successfully and saved to Gallery.</string>
+    <string name="msg_lut_failed">Failed to apply cinematic filter.</string>
 </resources>

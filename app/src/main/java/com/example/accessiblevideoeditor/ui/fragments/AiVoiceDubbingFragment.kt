@@ -13,6 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.accessiblevideoeditor.databinding.FragmentAiVoiceDubbingBinding
 import com.example.accessiblevideoeditor.ui.CloudConfigManager
+import com.example.accessiblevideoeditor.ui.AppStrings
+import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -183,7 +185,7 @@ class AiVoiceDubbingFragment : Fragment() {
                 
                 if (!ttsSuccess || !tempWav.exists() || tempWav.length() == 0L) {
                     com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                    Toast.makeText(currentContext, "فشل توليد الصوت بالذكاء الاصطناعي أو محلياً", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_dubbing_failed), Toast.LENGTH_SHORT).show()
                     return@launch
                 }
                 
@@ -232,12 +234,12 @@ class AiVoiceDubbingFragment : Fragment() {
                 if (outputSaved) {
                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                     AlertDialog.Builder(currentContext)
-                        .setTitle("تمت العملية بنجاح")
-                        .setMessage("تمت دبلجة النص وتوليد الصوت الاصطناعي بنجاح، وتم حفظ الملف في الاستوديو (Gallery).")
-                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .setTitle(AppStrings.get(currentContext, R.string.msg_dialog_success_title))
+                        .setMessage(AppStrings.get(currentContext, R.string.msg_dubbing_success))
+                        .setPositiveButton(AppStrings.get(currentContext, R.string.btn_ok)) { d, _ -> d.dismiss() }
                         .show()
                 } else {
-                    Toast.makeText(currentContext, "فشل معالجة وحفظ الملف المخرّج", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.string_183), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -247,11 +249,12 @@ class AiVoiceDubbingFragment : Fragment() {
         val currentContext = context ?: return
         val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
         if (modelFile != null && modelFile.exists()) {
-            binding.tvModelStatus.text = "حالة النموذج: نموذج Piper Arabic ONNX محمل محلياً ✅ (${modelFile.length() / (1024 * 1024)}MB)"
+            val sizeMb = (modelFile.length() / (1024 * 1024)).toInt()
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_piper_loaded, sizeMb)
             binding.btnDownloadModel.visibility = View.GONE
             binding.pbModelDownload.visibility = View.GONE
         } else {
-            binding.tvModelStatus.text = "حالة النموذج: النموذج غير مثبت محلياً (حجمه 63 MB)"
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_piper_not_installed)
             binding.btnDownloadModel.visibility = View.VISIBLE
             binding.pbModelDownload.visibility = View.GONE
         }
@@ -261,13 +264,13 @@ class AiVoiceDubbingFragment : Fragment() {
         val currentActivity = activity ?: return
         val dialogContext = android.view.ContextThemeWrapper(currentActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
         AlertDialog.Builder(dialogContext)
-            .setTitle("تنزيل نموذج الذكاء الاصطناعي")
-            .setMessage("يتطلب هذا المحرك تنزيل نموذج الصوت العربي (حجمه 63 MB). هل تريد بدء التنزيل الآن؟")
-            .setPositiveButton("تنزيل الآن") { dialog, _ ->
+            .setTitle(AppStrings.get(currentActivity, R.string.dialog_download_title))
+            .setMessage(AppStrings.get(currentActivity, R.string.dialog_download_message_piper))
+            .setPositiveButton(AppStrings.get(currentActivity, R.string.btn_download_now)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
                 startDownloadingModel()
             }
-            .setNegativeButton("لاحقاً") { dialog, _ ->
+            .setNegativeButton(AppStrings.get(currentActivity, R.string.btn_later)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
             }
             .show()
@@ -278,7 +281,7 @@ class AiVoiceDubbingFragment : Fragment() {
         binding.btnDownloadModel.visibility = View.GONE
         binding.pbModelDownload.visibility = View.VISIBLE
         binding.pbModelDownload.progress = 0
-        binding.tvModelStatus.text = "جاري تنزيل نموذج الذكاء الاصطناعي من السيرفر..."
+        binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_starting)
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val success = CloudConfigManager.downloadFeatureModel(
@@ -288,7 +291,7 @@ class AiVoiceDubbingFragment : Fragment() {
             ) { percent ->
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
-                    binding.tvModelStatus.text = "جاري التنزيل... التقدم: $percent%"
+                    binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_progress, percent)
                     if (percent % 20 == 0) {
                         try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     }
@@ -296,9 +299,9 @@ class AiVoiceDubbingFragment : Fragment() {
             }
 
             if (success) {
-                try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_success), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_failed), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

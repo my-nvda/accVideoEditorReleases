@@ -232,7 +232,7 @@ class NoiseReductionFragment : Fragment() {
             deepFilterNet.setPostFilterBeta(pfBeta)
 
             val frameLength = deepFilterNet.frameLength!!.toInt()
-            val bufferSizeBytes = frameLength * 2 // 16-bit PCM = 2 bytes per sample
+            val bufferSizeBytes = frameLength
 
             val byteBuffer = ByteBuffer.allocateDirect(bufferSizeBytes).apply {
                 order(ByteOrder.LITTLE_ENDIAN)
@@ -309,6 +309,12 @@ class NoiseReductionFragment : Fragment() {
         } catch (e: Exception) {
             e.printStackTrace()
             val errorDetails = "خطأ في تنفيذ DeepFilterNet3 الأوفلاين:\n${e.localizedMessage ?: e.message}"
+            com.example.accessiblevideoeditor.utils.ErrorLogger.logError(
+                requireContext(),
+                "NoiseReduction",
+                "DeepFilterNet3 execution error: $errorDetails",
+                e
+            )
             withContext(Dispatchers.Main) {
                 ProcessingManager.showError(errorDetails)
             }

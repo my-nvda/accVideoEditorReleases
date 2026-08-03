@@ -13,6 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.accessiblevideoeditor.databinding.FragmentAiSceneAudioDescriptionBinding
 import com.example.accessiblevideoeditor.ui.CloudConfigManager
+import com.example.accessiblevideoeditor.ui.AppStrings
+import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -236,12 +238,12 @@ class AiSceneAudioDescriptionFragment : Fragment() {
                 if (success) {
                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                     AlertDialog.Builder(currentContext)
-                        .setTitle("تمت العملية بنجاح")
-                        .setMessage("تم توليد المسار الصوتي الوصفي للمكفوفين بنجاح ودمجه وحفظه في الاستوديو (Gallery).")
-                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .setTitle(AppStrings.get(currentContext, R.string.msg_dialog_success_title))
+                        .setMessage(AppStrings.get(currentContext, R.string.msg_ad_success))
+                        .setPositiveButton(AppStrings.get(currentContext, R.string.btn_ok)) { d, _ -> d.dismiss() }
                         .show()
                 } else {
-                    Toast.makeText(currentContext, "فشل توليد الوصف الصوتي للمشاهد", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_ad_failed), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -251,11 +253,12 @@ class AiSceneAudioDescriptionFragment : Fragment() {
         val currentContext = context ?: return
         val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
         if (modelFile != null && modelFile.exists()) {
-            binding.tvModelStatus.text = "حالة النموذج: قواعد محرك الوصف الصوتي محملة محلياً ✅ (${modelFile.length() / 1024} KB)"
+            val sizeKb = (modelFile.length() / 1024).toInt()
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_ad_loaded, sizeKb)
             binding.btnDownloadModel.visibility = View.GONE
             binding.pbModelDownload.visibility = View.GONE
         } else {
-            binding.tvModelStatus.text = "حالة النموذج: المحرك غير مثبت محلياً (حجمه 10 MB)"
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_ad_not_installed)
             binding.btnDownloadModel.visibility = View.VISIBLE
             binding.pbModelDownload.visibility = View.GONE
         }
@@ -265,13 +268,13 @@ class AiSceneAudioDescriptionFragment : Fragment() {
         val currentActivity = activity ?: return
         val dialogContext = android.view.ContextThemeWrapper(currentActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
         AlertDialog.Builder(dialogContext)
-            .setTitle("تنزيل نموذج الذكاء الاصطناعي")
-            .setMessage("يتطلب هذا المحرك تنزيل حزمة الوصف الصوتي (حجمها 10 MB). هل تريد بدء التنزيل الآن؟")
-            .setPositiveButton("تنزيل الآن") { dialog, _ ->
+            .setTitle(AppStrings.get(currentActivity, R.string.dialog_download_title))
+            .setMessage(AppStrings.get(currentActivity, R.string.dialog_download_message_ad))
+            .setPositiveButton(AppStrings.get(currentActivity, R.string.btn_download_now)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
                 startDownloadingModel()
             }
-            .setNegativeButton("لاحقاً") { dialog, _ ->
+            .setNegativeButton(AppStrings.get(currentActivity, R.string.btn_later)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
             }
             .show()
@@ -282,7 +285,7 @@ class AiSceneAudioDescriptionFragment : Fragment() {
         binding.btnDownloadModel.visibility = View.GONE
         binding.pbModelDownload.visibility = View.VISIBLE
         binding.pbModelDownload.progress = 0
-        binding.tvModelStatus.text = "جاري تنزيل نموذج الذكاء الاصطناعي من السيرفر..."
+        binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_starting)
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val success = CloudConfigManager.downloadFeatureModel(
@@ -292,7 +295,7 @@ class AiSceneAudioDescriptionFragment : Fragment() {
             ) { percent ->
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
-                    binding.tvModelStatus.text = "جاري التنزيل... التقدم: $percent%"
+                    binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_progress, percent)
                     if (percent % 20 == 0) {
                         try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     }
@@ -300,9 +303,9 @@ class AiSceneAudioDescriptionFragment : Fragment() {
             }
 
             if (success) {
-                try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_success), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_failed), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

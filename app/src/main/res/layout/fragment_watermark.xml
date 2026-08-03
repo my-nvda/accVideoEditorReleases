@@ -29,7 +29,7 @@
                 android:id="@+id/btnSelectVideo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="اختر فيديو أو صورة"
+                android:text="@string/btn_select_video_or_image"
                 android:layout_marginBottom="16dp" />
 
             <com.google.android.material.tabs.TabLayout

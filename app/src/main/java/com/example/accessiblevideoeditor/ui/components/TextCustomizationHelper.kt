@@ -11,7 +11,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.media.TextRenderer
-import com.google.android.material.slider.Slider
+import android.widget.SeekBar
 import com.example.accessiblevideoeditor.databinding.LayoutTextCustomizationPanelBinding
 
 class TextCustomizationHelper(
@@ -21,10 +21,10 @@ class TextCustomizationHelper(
 ) {
     private var currentOptions = TextRenderer.TextOptions(
         text = "",
-        textSizeSp = binding.slTextSize.value,
-        shadowRadius = binding.slShadowRadius.value,
-        shadowDx = binding.slShadowDx.value,
-        shadowDy = binding.slShadowDy.value
+        textSizeSp = binding.slTextSize.progress.toFloat(),
+        shadowRadius = binding.slShadowRadius.progress.toFloat(),
+        shadowDx = binding.slShadowDx.progress.toFloat(),
+        shadowDy = binding.slShadowDy.progress.toFloat()
     )
 
     private val colors = listOf(
@@ -72,25 +72,41 @@ class TextCustomizationHelper(
             }
         })
 
-        binding.slTextSize.addOnChangeListener { slider: Slider, value: Float, fromUser: Boolean ->
-            currentOptions = currentOptions.copy(textSizeSp = value)
-            notifyChange()
-        }
+        binding.slTextSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                currentOptions = currentOptions.copy(textSizeSp = progress.toFloat())
+                notifyChange()
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
 
-        binding.slShadowRadius.addOnChangeListener { slider: Slider, value: Float, fromUser: Boolean ->
-            currentOptions = currentOptions.copy(shadowRadius = value)
-            notifyChange()
-        }
+        binding.slShadowRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                currentOptions = currentOptions.copy(shadowRadius = progress.toFloat())
+                notifyChange()
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
 
-        binding.slShadowDx.addOnChangeListener { slider: Slider, value: Float, fromUser: Boolean ->
-            currentOptions = currentOptions.copy(shadowDx = value)
-            notifyChange()
-        }
+        binding.slShadowDx.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                currentOptions = currentOptions.copy(shadowDx = progress.toFloat())
+                notifyChange()
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
 
-        binding.slShadowDy.addOnChangeListener { slider: Slider, value: Float, fromUser: Boolean ->
-            currentOptions = currentOptions.copy(shadowDy = value)
-            notifyChange()
-        }
+        binding.slShadowDy.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                currentOptions = currentOptions.copy(shadowDy = progress.toFloat())
+                notifyChange()
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
 
         binding.rgPosition.setOnCheckedChangeListener { _, checkedId ->
             val position = when (checkedId) {

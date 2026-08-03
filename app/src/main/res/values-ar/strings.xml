@@ -399,4 +399,44 @@
     <string name="btn_close">إغلاق</string>
     <string name="msg_log_copied">تم نسخ السجل بالكامل إلى الحافظة</string>
     <string name="msg_log_cleared">تم مسح السجل بنجاح</string>
+
+    <string name="title_burn_subtitles_section">دمج وطباعة الترجمة (SRT) على الفيديو</string>
+    <string name="btn_select_video_for_burn">1. اختيار الفيديو للدمج</string>
+    <string name="label_selected_video_burn">الفيديو المختار: %1$s</string>
+    <string name="btn_select_srt_file">2. اختيار ملف الترجمة (SRT)</string>
+    <string name="label_selected_srt">ملف الترجمة المختار: %1$s</string>
+
+    <string name="model_status_piper_loaded">حالة النموذج: نموذج Piper Arabic ONNX محمل محلياً ✅ (%1$d ميجابايت)</string>
+    <string name="model_status_piper_not_installed">حالة النموذج: النموذج غير مثبت محلياً (حجمه 63 ميجابايت)</string>
+    <string name="dialog_download_message_piper">يتطلب هذا المحرك تنزيل نموذج الصوت العربي (حجمه 63 ميجابايت). هل تريد بدء التنزيل الآن؟</string>
+    <string name="msg_dubbing_success">تمت دبلجة النص وتوليد الصوت الاصطناعي بنجاح، وتم حفظ الملف في الاستوديو (Gallery).</string>
+    <string name="msg_dubbing_failed">فشل توليد الصوت بالذكاء الاصطناعي أو محلياً.</string>
+    <string name="msg_dialog_success_title">تمت العملية بنجاح</string>
+
+    <string name="model_status_ad_loaded">حالة النموذج: قواعد محرك الوصف الصوتي محملة محلياً ✅ (%1$d كيلوبايت)</string>
+    <string name="model_status_ad_not_installed">حالة النموذج: المحرك غير مثبت محلياً (حجمه 10 ميجابايت)</string>
+    <string name="dialog_download_message_ad">يتطلب هذا المحرك تنزيل حزمة الوصف الصوتي (حجمها 10 ميجابايت). هل تريد بدء التنزيل الآن؟</string>
+    <string name="msg_ad_success">تم توليد المسار الصوتي الوصفي للمكفوفين بنجاح ودمجه وحفظه في الاستوديو (Gallery).</string>
+    <string name="msg_ad_failed">فشل توليد الوصف الصوتي للمشاهد.</string>
+
+    <string name="btn_select_video_or_image">اختر فيديو أو صورة</string>
+    <string name="label_video_prefix">فيديو: %1$s</string>
+    <string name="label_image_prefix">صورة: %1$s</string>
+    <string name="label_video_fallback">فيديو</string>
+    <string name="label_image_fallback">صورة</string>
+
+    <!-- Auto Shorts Creator -->
+    <string name="model_status_shorts_loaded">حالة النموذج: حزمة قوالب الشورتس محملة محلياً ✅ (%1$d كيلوبايت)</string>
+    <string name="model_status_shorts_not_installed">حالة النموذج: حزمة القوالب غير مثبتة محلياً (حجمها 8 ميجابايت)</string>
+    <string name="dialog_download_message_shorts">يتطلب هذا المحرك تنزيل حزمة قوالب الشورتس (حجمها 8 ميجابايت). هل تريد بدء التنزيل الآن؟</string>
+    <string name="msg_shorts_processing">جاري معالجة الجزء %1$d من %2$d...</string>
+    <string name="msg_shorts_success">تمت العملية بنجاح: تم توليد مقاطع Shorts القصير (9:16) وتقسيمها بنجاح وحفظها في المعرض (Gallery).</string>
+    <string name="msg_shorts_failed">فشل إنشاء مقاطع Shorts القصير.</string>
+
+    <!-- Cinematic LUT Shaders -->
+    <string name="model_status_lut_loaded">حالة النموذج: حزمة الفلاتر واللوت محملة محلياً ✅ (%1$d كيلوبايت)</string>
+    <string name="model_status_lut_not_installed">حالة النموذج: حزمة الفلاتر غير مثبتة محلياً (حجمها 5 ميجابايت)</string>
+    <string name="dialog_download_message_lut">يتطلب هذا المحرك تنزيل حزمة الفلاتر السينمائية (حجمها 5 ميجابايت). هل تريد بدء التنزيل الآن؟</string>
+    <string name="msg_lut_success">تم تطبيق الفلتر السينمائي بنجاح وحفظ الفيديو المخرّج في المعرض (Gallery).</string>
+    <string name="msg_lut_failed">فشل تطبيق الفلتر السينمائي.</string>
 </resources>

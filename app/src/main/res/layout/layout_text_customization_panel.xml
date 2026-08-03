@@ -62,53 +62,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/string_64" />
-    <com.google.android.material.slider.Slider
+    <SeekBar
         android:id="@+id/slTextSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/string_64"
-        android:valueFrom="12"
-        android:valueTo="120"
-        android:value="60" />
+        android:min="12"
+        android:max="120"
+        android:progress="60" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/string_185" />
-    <com.google.android.material.slider.Slider
+    <SeekBar
         android:id="@+id/slShadowRadius"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/string_185"
-        android:valueFrom="0"
-        android:valueTo="50"
-        android:value="10" />
+        android:min="0"
+        android:max="50"
+        android:progress="10" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/string_186" />
-    <com.google.android.material.slider.Slider
+    <SeekBar
         android:id="@+id/slShadowDx"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/string_186"
-        android:valueFrom="-50"
-        android:valueTo="50"
-        android:value="5" />
+        android:min="-50"
+        android:max="50"
+        android:progress="5" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/string_187" />
-    <com.google.android.material.slider.Slider
+    <SeekBar
         android:id="@+id/slShadowDy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/string_187"
-        android:valueFrom="-50"
-        android:valueTo="50"
-        android:value="5" />
+        android:min="-50"
+        android:max="50"
+        android:progress="5" />
 
     <TextView
         android:id="@+id/tvLabelFontFamily"
