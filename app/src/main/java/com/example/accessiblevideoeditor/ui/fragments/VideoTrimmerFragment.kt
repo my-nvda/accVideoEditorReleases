@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -63,6 +63,24 @@ class VideoTrimmerFragment : Fragment() {
             videoPickerLauncher.launch("video/*")
         }
 
+        binding.btnSetStartTime.setOnClickListener {
+            val player = exoPlayer
+            if (player != null && selectedVideoUri != null) {
+                binding.etStartTime.setText(formatTime(player.currentPosition))
+            } else {
+                Toast.makeText(requireContext(), "الرجاء اختيار فيديو أولاً", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.btnSetEndTime.setOnClickListener {
+            val player = exoPlayer
+            if (player != null && selectedVideoUri != null) {
+                binding.etDuration.setText(formatTime(player.currentPosition))
+            } else {
+                Toast.makeText(requireContext(), "الرجاء اختيار فيديو أولاً", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.btnApply.setOnClickListener {
             val uri = selectedVideoUri
             if (uri == null) {
@@ -70,8 +88,19 @@ class VideoTrimmerFragment : Fragment() {
                 return@setOnClickListener
             }
             val startStr = binding.etStartTime.text.toString()
-            val durationStr = binding.etDuration.text.toString()
-            processVideo(uri, startStr, durationStr)
+            val endStr = binding.etDuration.text.toString()
+            processVideo(uri, startStr, endStr)
+        }
+    }
+    
+    private fun formatTime(ms: Long): String {
+        val seconds = (ms / 1000) % 60
+        val minutes = (ms / (1000 * 60)) % 60
+        val hours = (ms / (1000 * 60 * 60)) % 24
+        return if (hours > 0) {
+            String.format(java.util.Locale.US, "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds)
         }
     }
     
@@ -86,7 +115,7 @@ class VideoTrimmerFragment : Fragment() {
         }
     }
 
-    private fun processVideo(uri: Uri, startStr: String, durationStr: String) {
+    private fun processVideo(uri: Uri, startStr: String, endStr: String) {
         SoundManager.playProcessing()
         val trimMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_46).replace(" %1\$s%%", "")
         ProcessingManager.startProcessing(trimMsg)
@@ -102,13 +131,14 @@ class VideoTrimmerFragment : Fragment() {
                     // 2. Process with FFmpeg
                     val outputFile = File(requireContext().cacheDir, "output_trim_${System.currentTimeMillis()}.mp4")
                     
-                    val startSecs = parseTimeToSeconds(startStr).toString()
-                    val durationSecs = parseTimeToSeconds(durationStr).toString()
+                    val startSecs = parseTimeToSeconds(startStr)
+                    val endSecs = parseTimeToSeconds(endStr)
+                    val durationSecs = if (endSecs > startSecs) (endSecs - startSecs) else 1
                     
                     val success = FFmpegProcessor.trimVideo(
                         sourceVideo = tempVideo.absolutePath,
-                        startTimeInSeconds = startSecs,
-                        durationInSeconds = durationSecs,
+                        startTimeInSeconds = startSecs.toString(),
+                        durationInSeconds = durationSecs.toString(),
                         outputPath = outputFile.absolutePath
                     )
                     

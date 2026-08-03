@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
 <string name="app_name">Accessible Video Editor</string>
+    <string name="btn_set_start">البداية</string>
+    <string name="btn_set_end">النهاية</string>
     <string name="label_noise_mode">اختر نمط عزل الضوضاء</string>
     <string name="mode_noise_dsp">تصفية محلية محسنة (أوفلاين - خفيف)</string>
     <string name="mode_noise_dfn3_offline">عزل ذكي بالذكاء الاصطناعي (أوفلاين - DeepFilterNet3)</string>
@@ -338,18 +340,18 @@
     <string name="bg_vol_20">20% (خلفية هادئة)</string>
     <string name="bg_vol_30">30% (خلفية متوسطة)</string>
     <string name="bg_vol_50">50% (متساوي مع الصوت الأصلي)</string>
-    <string name="btn_burn_subtitles">طباعة الترجمة على الفيديو</string>
+    <string name="btn_burn_subtitles">دمج وطباعة الترجمة على الفيديو</string>
     <string name="btn_audio_normalization">موازنة الصوت التلقائية</string>
     <string name="btn_ai_scene_inspector">مستكشف ومشرح المشاهد</string>
     <string name="title_audio_normalization">موازنة وتنسيق مستوى الصوت</string>
     <string name="title_ai_scene_inspector">مستكشف ومشرح مشاهد الفيديو</string>
     <string name="btn_analyze_scenes">تحليل ومشرح المشاهد</string>
-    <string name="btn_ai_voice_dubbing">دبلجة وتوليد الصوت بالذكاء الاصطناعي</string>
-    <string name="btn_audio_stem_separator">عازل ومحلل الآلات والموسيقى</string>
-    <string name="btn_auto_shorts_creator">مولد الفيديوهات القصيرة والقوالب</string>
-    <string name="btn_cinematic_lut_shaders">حزمة الفلاتر والتأثيرات السينمائية</string>
-    <string name="btn_ai_scene_audio_description">الوصف الصوتي التفاعلي للمكفوفين</string>
-    <string name="btn_subtitles_ocr_srt">مستخرج وقارئ الترجمات SRT</string>
+    <string name="btn_ai_voice_dubbing">دبلجة وتوليد الصوت (AI)</string>
+    <string name="btn_audio_stem_separator">فصل وعزل الصوت والموسيقى</string>
+    <string name="btn_auto_shorts_creator">صانع الفيديوهات القصيرة تلقائياً</string>
+    <string name="btn_cinematic_lut_shaders">الفلاتر والتأثيرات السينمائية (LUT)</string>
+    <string name="btn_ai_scene_audio_description">الوصف الصوتي التفاعلي للمشاهد (AD)</string>
+    <string name="btn_subtitles_ocr_srt">مستخرج وقارئ ومدمج الترجمات (SRT)</string>
     
     <!-- Audio Stem Separator Feature Strings -->
     <string name="title_audio_stem_separator">عازل ومحلل الآلات والموسيقى</string>

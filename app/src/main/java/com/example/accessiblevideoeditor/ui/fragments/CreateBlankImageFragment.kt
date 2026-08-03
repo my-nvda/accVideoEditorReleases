@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -77,7 +77,7 @@ class CreateBlankImageFragment : Fragment() {
                 }
                 
                 val width = 1080
-                val height = 1080
+                val height = 1920
                 val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(bitmap)
                 canvas.drawColor(Color.BLACK)

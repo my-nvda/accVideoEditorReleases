@@ -81,10 +81,30 @@ class AiSceneAudioDescriptionFragment : Fragment() {
                     try {
                         val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "audio_desc_input")
                         if (tempInput != null && tempInput.exists()) {
-                            // 1. Extract first frame for Gemini analysis
-                            val tempFrame = java.io.File(currentContext.cacheDir, "frame_${System.currentTimeMillis()}.jpg")
-                            val extractSuccess = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(
-                                arrayOf("-y", "-ss", "00:00:01", "-i", tempInput.absolutePath, "-vframes", "1", tempFrame.absolutePath)
+                            // 1. Extract 4 frames proportionately across the video duration
+                            val durationMs = com.example.accessiblevideoeditor.media.FFmpegProcessor.getMediaDurationMs(tempInput.absolutePath)
+                            val durationSec = durationMs / 1000f
+                            val t1 = (durationSec * 0.1f).toInt()
+                            val t2 = (durationSec * 0.4f).toInt()
+                            val t3 = (durationSec * 0.7f).toInt()
+                            val t4 = (durationSec * 0.9f).toInt()
+
+                            val f1 = java.io.File(currentContext.cacheDir, "f1_${System.currentTimeMillis()}.jpg")
+                            val f2 = java.io.File(currentContext.cacheDir, "f2_${System.currentTimeMillis()}.jpg")
+                            val f3 = java.io.File(currentContext.cacheDir, "f3_${System.currentTimeMillis()}.jpg")
+                            val f4 = java.io.File(currentContext.cacheDir, "f4_${System.currentTimeMillis()}.jpg")
+
+                            com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(
+                                arrayOf("-y", "-ss", t1.toString(), "-i", tempInput.absolutePath, "-vframes", "1", f1.absolutePath)
+                            )
+                            com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(
+                                arrayOf("-y", "-ss", t2.toString(), "-i", tempInput.absolutePath, "-vframes", "1", f2.absolutePath)
+                            )
+                            com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(
+                                arrayOf("-y", "-ss", t3.toString(), "-i", tempInput.absolutePath, "-vframes", "1", f3.absolutePath)
+                            )
+                            com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(
+                                arrayOf("-y", "-ss", t4.toString(), "-i", tempInput.absolutePath, "-vframes", "1", f4.absolutePath)
                             )
                             
                             // 2. Query Gemini if API key is present
@@ -92,24 +112,29 @@ class AiSceneAudioDescriptionFragment : Fragment() {
                             val apiKey = com.example.accessiblevideoeditor.ui.SettingsManager.geminiApiKey.trim()
                             val modelName = com.example.accessiblevideoeditor.ui.SettingsManager.geminiModel ?: "gemini-2.5-flash"
                             
-                            if (extractSuccess && tempFrame.exists()) {
+                            if (apiKey.isNotEmpty()) {
                                 try {
-                                    val bitmap = android.graphics.BitmapFactory.decodeFile(tempFrame.absolutePath)
-                                    if (bitmap != null && apiKey.isNotEmpty()) {
-                                        val model = com.google.ai.client.generativeai.GenerativeModel(
-                                            modelName = modelName,
-                                            apiKey = apiKey
-                                        )
-                                        val response = model.generateContent(
-                                            com.google.ai.client.generativeai.type.content {
-                                                image(bitmap)
-                                                text("صف هذه الصورة بالتفصيل باللغة العربية باختصار شديد لجعلها وصفاً صوتياً للمكفوفين (في جملة أو جملتين).")
-                                            }
-                                        )
-                                        val respText = response.text
-                                        if (!respText.isNullOrEmpty()) {
-                                            descriptionText = respText
+                                    val b1 = android.graphics.BitmapFactory.decodeFile(f1.absolutePath)
+                                    val b2 = android.graphics.BitmapFactory.decodeFile(f2.absolutePath)
+                                    val b3 = android.graphics.BitmapFactory.decodeFile(f3.absolutePath)
+                                    val b4 = android.graphics.BitmapFactory.decodeFile(f4.absolutePath)
+                                    
+                                    val model = com.google.ai.client.generativeai.GenerativeModel(
+                                        modelName = modelName,
+                                        apiKey = apiKey
+                                    )
+                                    val response = model.generateContent(
+                                        com.google.ai.client.generativeai.type.content {
+                                            if (b1 != null) image(b1)
+                                            if (b2 != null) image(b2)
+                                            if (b3 != null) image(b3)
+                                            if (b4 != null) image(b4)
+                                            text("هذه 4 لقطات متتالية من فيديو تمثل الترتيب الزمني للأحداث. صف أحداث الفيديو بالكامل بالتفصيل باللغة العربية كقصة متكاملة ومستمرة لوصف المشاهد للمكفوفين (في جملتين أو ثلاث جمل قصيرة تلخص التطور من البداية للنهاية دون ذكر أن هذه لقطات أو صور).")
                                         }
+                                    )
+                                    val respText = response.text
+                                    if (!respText.isNullOrEmpty()) {
+                                        descriptionText = respText
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()

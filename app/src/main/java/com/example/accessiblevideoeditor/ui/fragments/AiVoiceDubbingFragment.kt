@@ -76,56 +76,114 @@ class AiVoiceDubbingFragment : Fragment() {
                 com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري توليد الصوت والدبلجة بالذكاء الاصطناعي...")
                 
                 val tempWav = java.io.File(currentContext.cacheDir, "dubbing_${System.currentTimeMillis()}.wav")
-                
-                val latch = java.util.concurrent.CountDownLatch(1)
                 var ttsSuccess = false
                 
-                val tts = android.speech.tts.TextToSpeech(currentContext) { status ->
-                    if (status == android.speech.tts.TextToSpeech.SUCCESS) {
-                        latch.countDown()
-                    } else {
-                        latch.countDown()
+                // 1. Try Online Google Translate TTS API
+                val success = withContext(Dispatchers.IO) {
+                    try {
+                        val chunks = splitText(text, 150)
+                        val tempFiles = mutableListOf<java.io.File>()
+                        var allDownloaded = true
+                        
+                        for ((index, chunk) in chunks.withIndex()) {
+                            val chunkFile = java.io.File(currentContext.cacheDir, "chunk_${index}_${System.currentTimeMillis()}.mp3")
+                            val encodedText = java.net.URLEncoder.encode(chunk, "UTF-8")
+                            val url = java.net.URL("https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q=$encodedText")
+                            val connection = url.openConnection() as java.net.HttpURLConnection
+                            connection.requestMethod = "GET"
+                            connection.setRequestProperty("User-Agent", "Mozilla/5.0")
+                            connection.connectTimeout = 8000
+                            connection.readTimeout = 8000
+                            
+                            if (connection.responseCode == java.net.HttpURLConnection.HTTP_OK) {
+                                connection.inputStream.use { input ->
+                                    chunkFile.outputStream().use { output ->
+                                        input.copyTo(output)
+                                    }
+                                }
+                                tempFiles.add(chunkFile)
+                            } else {
+                                allDownloaded = false
+                                break
+                            }
+                        }
+                        
+                        if (allDownloaded && tempFiles.isNotEmpty()) {
+                            if (tempFiles.size == 1) {
+                                tempFiles[0].renameTo(tempWav)
+                            } else {
+                                val concatArg = "concat:" + tempFiles.joinToString("|") { it.absolutePath }
+                                com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(
+                                    arrayOf("-y", "-i", concatArg, "-c", "copy", tempWav.absolutePath)
+                                )
+                            }
+                            tempWav.exists() && tempWav.length() > 0L
+                        } else {
+                            false
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        false
                     }
                 }
                 
-                withContext(Dispatchers.IO) {
-                    latch.await(10, java.util.concurrent.TimeUnit.SECONDS)
-                }
-                
-                val loc = java.util.Locale("ar")
-                tts.setLanguage(loc)
-                
-                val voiceLatch = java.util.concurrent.CountDownLatch(1)
-                tts.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
-                    override fun onStart(utteranceId: String?) {}
-                    override fun onDone(utteranceId: String?) {
-                        ttsSuccess = true
-                        voiceLatch.countDown()
+                if (success) {
+                    ttsSuccess = true
+                } else {
+                    // 2. Offline Fallback: Local Google TTS with Wavenet prioritizing
+                    withContext(Dispatchers.IO) {
+                        try {
+                            val latch = java.util.concurrent.CountDownLatch(1)
+                            var tts: android.speech.tts.TextToSpeech? = null
+                            withContext(Dispatchers.Main) {
+                                tts = android.speech.tts.TextToSpeech(currentContext) { status ->
+                                    latch.countDown()
+                                }
+                            }
+                            latch.await(10, java.util.concurrent.TimeUnit.SECONDS)
+                            
+                            if (tts != null) {
+                                val arVoices = tts!!.voices?.filter { it.locale.language == "ar" }
+                                val targetVoice = arVoices?.find { it.name.contains("wavenet", ignoreCase = true) }
+                                    ?: arVoices?.find { it.name.contains("local", ignoreCase = true).not() }
+                                    ?: arVoices?.firstOrNull()
+                                    
+                                if (targetVoice != null) {
+                                    tts!!.voice = targetVoice
+                                } else {
+                                    tts!!.setLanguage(java.util.Locale("ar"))
+                                }
+                                
+                                val voiceLatch = java.util.concurrent.CountDownLatch(1)
+                                tts!!.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                                    override fun onStart(utteranceId: String?) {}
+                                    override fun onDone(utteranceId: String?) {
+                                        ttsSuccess = true
+                                        voiceLatch.countDown()
+                                    }
+                                    override fun onError(utteranceId: String?) {
+                                        voiceLatch.countDown()
+                                    }
+                                })
+                                
+                                val params = Bundle()
+                                params.putString(android.speech.tts.TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "dubbing")
+                                withContext(Dispatchers.Main) {
+                                    tts!!.synthesizeToFile(text, params, tempWav, "dubbing")
+                                }
+                                
+                                voiceLatch.await(30, java.util.concurrent.TimeUnit.SECONDS)
+                                tts!!.shutdown()
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
-                    override fun onError(utteranceId: String?) {
-                        voiceLatch.countDown()
-                    }
-                })
-                
-                val params = Bundle()
-                params.putString(android.speech.tts.TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "dubbing")
-                tts.synthesizeToFile(text, params, tempWav, "dubbing")
-                
-                // Simulate some progress updates while synthesizing
-                for (progress in 0..60 step 10) {
-                    kotlinx.coroutines.delay(200)
-                    com.example.accessiblevideoeditor.ui.ProcessingManager.updateProgress(progress / 100f)
                 }
-                
-                withContext(Dispatchers.IO) {
-                    voiceLatch.await(30, java.util.concurrent.TimeUnit.SECONDS)
-                }
-                
-                tts.shutdown()
                 
                 if (!ttsSuccess || !tempWav.exists() || tempWav.length() == 0L) {
                     com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                    Toast.makeText(currentContext, "فشل توليد الصوت عن طريق محرك الكلام للهاتف", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, "فشل توليد الصوت بالذكاء الاصطناعي أو محلياً", Toast.LENGTH_SHORT).show()
                     return@launch
                 }
                 
@@ -244,6 +302,24 @@ class AiVoiceDubbingFragment : Fragment() {
             }
             checkModelStatus()
         }
+    }
+
+    private fun splitText(text: String, limit: Int = 150): List<String> {
+        val chunks = mutableListOf<String>()
+        var current = StringBuilder()
+        for (word in text.split(" ")) {
+            if (current.length + word.length + 1 > limit) {
+                val str = current.toString().trim()
+                if (str.isNotEmpty()) chunks.add(str)
+                current = StringBuilder()
+            }
+            current.append(word).append(" ")
+        }
+        val str = current.toString().trim()
+        if (str.isNotEmpty()) {
+            chunks.add(str)
+        }
+        return chunks
     }
 
     override fun onDestroyView() {

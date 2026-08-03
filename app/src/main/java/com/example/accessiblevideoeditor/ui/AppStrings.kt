@@ -15,13 +15,7 @@ object AppStrings {
      */
     fun loadCustomStrings(context: Context) {
         val currentLang = LanguageManager.getCurrentLanguageCode()
-        var file = File(context.filesDir, "custom_lang_$currentLang.json")
-        if (!file.exists()) {
-            val files = context.filesDir.listFiles { _, name -> name.startsWith("custom_lang_") && name.endsWith(".json") }
-            if (!files.isNullOrEmpty()) {
-                file = files.first()
-            }
-        }
+        val file = File(context.filesDir, "custom_lang_$currentLang.json")
         if (file.exists()) {
             try {
                 val json = JSONObject(file.readText(Charsets.UTF_8))

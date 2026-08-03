@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -37,11 +37,19 @@ class WatermarkFragment : Fragment() {
     private var isTextMode = false
     private var textOptions = TextRenderer.TextOptions(text = "")
     private var selectedPosition = ""
+    private var isSelectedMediaVideo = false
 
-    private val videoPickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    private val mediaPickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedVideoUri = uri
         if (uri != null) {
-            binding.btnSelectVideo.text = AppStrings.get(requireContext(), R.string.string_70)
+            val mimeType = requireContext().contentResolver.getType(uri)
+            isSelectedMediaVideo = mimeType?.startsWith("video/") == true
+            
+            if (isSelectedMediaVideo) {
+                binding.btnSelectVideo.text = "فيديو: " + (uri.lastPathSegment ?: "فيديو")
+            } else {
+                binding.btnSelectVideo.text = "صورة: " + (uri.lastPathSegment ?: "صورة")
+            }
         }
         updateApplyButtonState()
     }
@@ -69,8 +77,9 @@ class WatermarkFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        binding.btnSelectVideo.text = "اختر فيديو أو صورة"
         binding.btnSelectVideo.setOnClickListener {
-            videoPickerLauncher.launch("video/*")
+            mediaPickerLauncher.launch("*/*")
         }
 
         binding.btnSelectImage.setOnClickListener {
@@ -99,7 +108,7 @@ class WatermarkFragment : Fragment() {
         binding.btnApply.setOnClickListener {
             val vUri = selectedVideoUri
             if (vUri == null) {
-                Toast.makeText(requireContext(), "Please select a video", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "الرجاء اختيار ملف للتعديل أولاً", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             processWatermark(vUri)
@@ -134,8 +143,10 @@ class WatermarkFragment : Fragment() {
     private fun processWatermark(vUri: Uri) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val inputVideo = FileUtils.getPathFromUri(requireContext(), vUri)
-                val outputPath = requireContext().cacheDir.absolutePath + "/watermark_${System.currentTimeMillis()}.mp4"
+                val inputMedia = FileUtils.getPathFromUri(requireContext(), vUri)
+                val isVideo = isSelectedMediaVideo
+                val outputExt = if (isVideo) ".mp4" else ".jpg"
+                val outputPath = requireContext().cacheDir.absolutePath + "/watermark_${System.currentTimeMillis()}$outputExt"
                 
                 var inputImage: String? = null
                 if (isTextMode) {
@@ -150,7 +161,7 @@ class WatermarkFragment : Fragment() {
                     }
                 }
                 
-                if (inputVideo != null && inputImage != null) {
+                if (inputMedia != null && inputImage != null) {
                     withContext(Dispatchers.Main) {
                         ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_74))
                     }
@@ -163,15 +174,24 @@ class WatermarkFragment : Fragment() {
                         else -> "10:10"
                     }
                     
-                    val commandArgs = arrayOf(
-                        "-y", "-i", inputVideo, "-i", inputImage, 
-                        "-filter_complex", "[0:v][1:v]overlay=$overlayStr", 
-                        "-c:v", "mpeg4", "-q:v", "2", "-c:a", "copy", outputPath
-                    )
+                    val commandArgs = if (isVideo) {
+                        arrayOf(
+                            "-y", "-i", inputMedia, "-i", inputImage, 
+                            "-filter_complex", "[0:v][1:v]overlay=$overlayStr", 
+                            "-c:v", "mpeg4", "-q:v", "2", "-c:a", "copy", outputPath
+                        )
+                    } else {
+                        arrayOf(
+                            "-y", "-i", inputMedia, "-i", inputImage, 
+                            "-filter_complex", "[0:v][1:v]overlay=$overlayStr", 
+                            outputPath
+                        )
+                    }
                     
-                    val success = FFmpegProcessor.executeWithProgress(commandArgs, inputVideo)
+                    val success = FFmpegProcessor.executeWithProgress(commandArgs, inputMedia)
                     if (success) {
-                        FileUtils.saveToGallery(requireContext(), File(outputPath), "video/mp4")
+                        val mimeType = if (isVideo) "video/mp4" else "image/jpeg"
+                        FileUtils.saveToGallery(requireContext(), File(outputPath), mimeType)
                         withContext(Dispatchers.Main) {
                             Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_182), Toast.LENGTH_SHORT).show()
                         }

@@ -23,6 +23,8 @@ class SubtitlesOcrSrtFragment : Fragment() {
     private var _binding: FragmentSubtitlesOcrSrtBinding? = null
     private val binding get() = _binding!!
     private var selectedVideoUri: Uri? = null
+    private var selectedVideoForBurnUri: Uri? = null
+    private var selectedSrtUri: Uri? = null
     private val featureId = "btnSubtitlesOcrSrt"
     private val downloadUrl = "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/ara.traineddata"
 
@@ -30,6 +32,20 @@ class SubtitlesOcrSrtFragment : Fragment() {
         if (uri != null) {
             selectedVideoUri = uri
             binding.tvSelectedVideoOcr.text = "الفيديو المختار: ${uri.lastPathSegment ?: uri.toString()}"
+        }
+    }
+
+    private val selectVideoForBurnLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            selectedVideoForBurnUri = uri
+            binding.tvSelectedVideoBurn.text = "الفيديو المختار: ${uri.lastPathSegment ?: uri.toString()}"
+        }
+    }
+
+    private val selectSrtLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            selectedSrtUri = uri
+            binding.tvSelectedSrt.text = "ملف الترجمة المختار: ${uri.lastPathSegment ?: uri.toString()}"
         }
     }
 
@@ -56,6 +72,78 @@ class SubtitlesOcrSrtFragment : Fragment() {
 
         binding.btnSelectVideoForOcr.setOnClickListener {
             selectVideoLauncher.launch("video/*")
+        }
+
+        binding.btnSelectVideoForBurn.setOnClickListener {
+            selectVideoForBurnLauncher.launch("video/*")
+        }
+
+        binding.btnSelectSrtFile.setOnClickListener {
+            selectSrtLauncher.launch("*/*")
+        }
+
+        binding.btnBurnSubtitles.setOnClickListener {
+            val currentContext = context ?: return@setOnClickListener
+            val videoUri = selectedVideoForBurnUri
+            val srtUri = selectedSrtUri
+            
+            if (videoUri == null || srtUri == null) {
+                Toast.makeText(currentContext, "الرجاء اختيار فيديو وملف الترجمة أولاً", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري دمج وطباعة ملف الترجمة على الفيديو...")
+                
+                val success = withContext(Dispatchers.IO) {
+                    try {
+                        val tempVideo = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, videoUri, "temp_burn_vid")
+                        val tempSrt = java.io.File(currentContext.cacheDir, "temp_burn_${System.currentTimeMillis()}.srt")
+                        currentContext.contentResolver.openInputStream(srtUri).use { input ->
+                            tempSrt.outputStream().use { output ->
+                                input?.copyTo(output)
+                            }
+                        }
+                        
+                        if (tempVideo != null && tempVideo.exists() && tempSrt.exists()) {
+                            val outputPath = currentContext.cacheDir.absolutePath + "/burned_sub_${System.currentTimeMillis()}.mp4"
+                            val command = arrayOf(
+                                "-y",
+                                "-i", tempVideo.absolutePath,
+                                "-vf", "subtitles='${tempSrt.absolutePath}'",
+                                "-c:v", "mpeg4", "-q:v", "3",
+                                "-c:a", "copy",
+                                outputPath
+                            )
+                            val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                            if (res) {
+                                com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "video/mp4")
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        false
+                    }
+                }
+                
+                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+                
+                if (success) {
+                    com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                    AlertDialog.Builder(currentContext)
+                        .setTitle("تمت العملية بنجاح")
+                        .setMessage("تم دمج وطباعة ملف الترجمة SRT على الفيديو بنجاح وحفظه في المعرض (Gallery).")
+                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .show()
+                } else {
+                    Toast.makeText(currentContext, "فشل دمج ملف الترجمة، يرجى التحقق من الملف والمحاولة لاحقاً", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         binding.btnExtractSubtitles.setOnClickListener {

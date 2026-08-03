@@ -232,7 +232,7 @@ class NoiseReductionFragment : Fragment() {
             deepFilterNet.setPostFilterBeta(pfBeta)
 
             val frameLength = deepFilterNet.frameLength!!.toInt()
-            val bufferSizeBytes = frameLength
+            val bufferSizeBytes = frameLength * 2 // 16-bit PCM = 2 bytes per sample
 
             val byteBuffer = ByteBuffer.allocateDirect(bufferSizeBytes).apply {
                 order(ByteOrder.LITTLE_ENDIAN)

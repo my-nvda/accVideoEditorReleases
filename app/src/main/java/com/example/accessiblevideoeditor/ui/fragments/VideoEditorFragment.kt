@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -72,6 +72,24 @@ class VideoEditorFragment : Fragment() {
             textOptions = newOptions
         }
 
+        binding.btnSetStartTime.setOnClickListener {
+            val player = exoPlayer
+            if (player != null && selectedVideoUri != null) {
+                binding.etStartTime.setText(formatTime(player.currentPosition))
+            } else {
+                Toast.makeText(requireContext(), "الرجاء اختيار فيديو أولاً", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.btnSetEndTime.setOnClickListener {
+            val player = exoPlayer
+            if (player != null && selectedVideoUri != null) {
+                binding.etEndTime.setText(formatTime(player.currentPosition))
+            } else {
+                Toast.makeText(requireContext(), "الرجاء اختيار فيديو أولاً", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.btnApply.setOnClickListener {
             val uri = selectedVideoUri ?: return@setOnClickListener
             val startStr = binding.etStartTime.text.toString()
@@ -83,6 +101,17 @@ class VideoEditorFragment : Fragment() {
             }
             
             processVideo(uri, startStr, endStr)
+        }
+    }
+
+    private fun formatTime(ms: Long): String {
+        val seconds = (ms / 1000) % 60
+        val minutes = (ms / (1000 * 60)) % 60
+        val hours = (ms / (1000 * 60 * 60)) % 24
+        return if (hours > 0) {
+            String.format(java.util.Locale.US, "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds)
         }
     }
     
