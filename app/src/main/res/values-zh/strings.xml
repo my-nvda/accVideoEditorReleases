@@ -13,7 +13,7 @@
     <string name="string_10">正在创建视频...%1$s%%</string>
     <string name="string_11">已选择图像（单击可更改）</string>
     <string name="string_12">批处理</string>
-    <string name="string_13">字体大小：${textSizeSp.toInt()}</string>
+    <string name="string_13">字体大小：%1$d</string>
     <string name="string_14">已选择水印图像</string>
     <string name="string_15">从视频 (MP3) 中提取音频</string>
     <string name="string_16">选定的文件（单击以更改）</string>
@@ -82,8 +82,8 @@
     <string name="string_79">演示幻灯片制作器</string>
     <string name="string_80">照片幻灯片制作器</string>
     <string name="string_81">智能切割应用</string>
-    <string name="string_82">启动声音</string>
-    <string name="string_83">消除...</string>
+    <string name="string_82">成功提示音</string>
+    <string name="string_83">正在取消...</string>
     <string name="string_84">文本颜色：%1$s</string>
     <string name="string_85">声音已选择</string>
     <string name="string_86">增大音量</string>
@@ -100,7 +100,7 @@
     <string name="string_97">创建视频</string>
     <string name="string_98">选择操作：</string>
     <string name="string_99">选择音频文件</string>
-    <string name="string_100">外貌和语言</string>
+    <string name="string_100">外观与语言</string>
     <string name="string_101">快速转换器</string>
     <string name="string_102">音频编辑器</string>
     <string name="string_103">提取的文本</string>
@@ -110,19 +110,19 @@
     <string name="string_107">动画文字</string>
     <string name="string_108">改变图片</string>
     <string name="string_109">深色模式</string>
-    <string name="string_110">2. 程序</string>
+    <string name="string_110">2. 处理</string>
     <string name="string_111">处理声音</string>
     <string name="string_112">视频编辑器</string>
     <string name="string_113">选择视频</string>
-    <string name="string_114">换算公式</string>
+    <string name="string_114">输出格式</string>
     <string name="string_115">背景颜色：</string>
-    <string name="string_116">交易日志</string>
+    <string name="string_116">处理日志</string>
     <string name="string_117">开始加工</string>
     <string name="string_118">文本提取</string>
     <string name="string_119">右下角</string>
     <string name="string_120">左下角</string>
     <string name="string_121">右上</string>
-    <string name="string_122">倒车影像</string>
+    <string name="string_122">视频倒放</string>
     <string name="string_123">开始转换</string>
     <string name="string_124">选择图像</string>
     <string name="string_125">视频压缩</string>
@@ -137,8 +137,8 @@
     <string name="string_134">选择图像</string>
     <string name="string_135">文字颜色：</string>
     <string name="string_136">错误声音</string>
-    <string name="string_137">开始相反的</string>
-    <string name="string_138">倒车声音</string>
+    <string name="string_137">开始倒放</string>
+    <string name="string_138">音频倒放</string>
     <string name="string_139">立即合并</string>
     <string name="string_140">选择一个文件</string>
     <string name="string_141">复制文本</string>
@@ -147,16 +147,16 @@
     <string name="string_144">Facebook</string>
     <string name="string_145">播放</string>
     <string name="string_146">声音</string>
-    <string name="string_147">转型</string>
+    <string name="string_147">转换</string>
     <string name="string_148">Twitter</string>
     <string name="string_149">青色</string>
-    <string name="string_150">黑色的</string>
-    <string name="string_151">蓝色的</string>
-    <string name="string_152">绿色的</string>
-    <string name="string_153">红色的</string>
-    <string name="string_154">黄色的</string>
+    <string name="string_150">黑色</string>
+    <string name="string_151">蓝色</string>
+    <string name="string_152">绿色</string>
+    <string name="string_153">红色</string>
+    <string name="string_154">黄色</string>
     <string name="string_155">顶部</string>
-    <string name="string_156">白色的</string>
+    <string name="string_156">白色</string>
     <string name="string_157">底部</string>
     <string name="string_158">中间</string>
     <string name="string_182">操作成功完成</string>
@@ -185,4 +185,36 @@
     <string name="string_206">删除</string>
     <string name="string_207">取消</string>
     <string name="string_208">剩余时间：%1$02d:%2$02d</string>
-    <string name="string_184">阴影颜色</string>\n    <string name="string_185">阴影半径</string>\n    <string name="string_186">阴影偏移 X</string>\n    <string name="string_187">阴影偏移 Y</string>\n    <string name="string_188">对齐方式</string>\n    <string name="string_189">字体系列</string>\n    <string name="string_190">左对齐</string>\n    <string name="string_191">右对齐</string>\n    <string name="string_192">默认</string>\n    <string name="string_193">衬线</string>\n    <string name="string_194">无衬线</string>\n    <string name="string_195">等宽</string>\n    <string name="string_196">Gemini API 设置</string>\n    <string name="string_197">Gemini API 密钥</string>\n    <string name="string_198">选择 AI 模型</string>\n    <string name="string_199">文字水印</string>\n    <string name="string_200">图片水印</string>\n    <string name="string_201">有新更新！</string>\n    <string name="string_202">应用更新</string>\n    <string name="string_209">新更新</string>\n    <string name="string_210">发现新更新...</string>\n    <string name="string_211">下载并安装</string>\n    <string name="string_212">稍后</string>\n    <string name="string_213">正在下载更新</string>\n    <string name="string_214">已完成：%1$d%%</string>\n    <string name="string_215">已下载...</string>\n    <string name="string_216">剩余...</string>\n    <string name="string_217">正在初始化...</string>\n    <string name="string_218">取消下载</string>\n    <string name="string_219">正在检查更新...</string>\n    <string name="string_220">您已经在使用了最新版本！</string>\n    <string name="string_221">提取音频时出错</string>\n    <string name="string_222">操作成功完成</string>\n    <string name="string_223">处理视频时出错</string>\n    <string name="string_224">发生技术错误</string>\n    <string name="string_225">错误详情：</string>\n    <string name="string_226">其他选项</string>\n    <string name="string_227">剩余时间</string>\n    <string name="string_228">抱歉，AI 服务器目前负载较高。请稍后再试。</string>\n    <string name="string_229">已启用</string>\n    <string name="string_230">未指定</string>\n    <string name="string_231">编辑文本</string>\n    <string name="string_232">发现新更新</string>\n    <string name="string_233">版本</string>\n    <string name="string_234">发行说明</string>\n    <string name="string_235">您想现在更新吗？</string>\n    <string name="string_236">下载</string>\n    <string name="string_237">来自</string>\n    <string name="string_238">剩余</string>\n    <string name="string_239">参与翻译</string>\n    <string name="string_240">操作成功完成</string>\n    <string name="string_241">视频处理期间发生错误</string>\n    <string name="string_242">有新更新</string>\n    <string name="string_243">版本 %1$s 可供下载。</string>\n    <string name="string_244">点击立即更新</string>\n    <string name="string_245">应用翻译</string>\n    <string name="string_246">返回</string>\n    <string name="string_247">导入</string>\n    <string name="string_248">保存并应用</string>\n    <string name="string_249">导出</string>\n    <string name="string_250">选择目标翻译语言</string>\n    <string name="string_251">翻译为：%1$s ▼</string>\n    <string name="string_252">原文：</string>\n    <string name="string_253">原文为：%1$s</string>\n    <string name="string_254">翻译文本输入框：%1$s</string>\n    <string name="string_255">翻译</string>\n    <string name="string_256">保存并应用成功</string>\n    <string name="string_257">保存时出错</string>\n    <string name="string_258">翻译导出成功</string>\n    <string name="string_259">导出翻译失败</string>\n    <string name="string_260">已导入并应用翻译</string>\n    <string name="string_261">无效文件。不包含翻译文本。</string>\n    <string name="string_262">导入期间发生错误</string>\n    <string name="string_263">部分 %1$s</string>\n    <string name="string_264">通用文本</string>\n    <string name="string_265">设置</string>\n    <string name="string_266">工具与媒体</string>\n    <string name="string_267">视频播放器</string>\n    <string name="string_268">帮助与关于</string>\n    <string name="string_269">通用对话框</string>\n    <string name="string_270">创建空白图像</string>\n    <string name="string_271">创建黑色图像</string>\n    <string name="string_rn_title">最新动态</string>\n    <string name="string_rn_v2_4_4">v2.4.4\n- 增加了包括希伯来语在内的全面本地化支持。\n- 在帮助部分引入了“最新动态”屏幕。\n- 使用动态字符串和进度指示器改进了志愿者翻译屏幕。\n- 提取了剩余的硬编码字符串以进行完整翻译。</string>\n    <string name="string_rn_v2_4_3">v2.4.3\n- 修复了共享屏幕问题和不正确的标题。\n- 解决了设置中乱码的问题。</string>\n    <string name="string_rn_v2_4_2">v2.4.2\n- 改进了背景音频提取和视频处理。\n- 增强了 Gemini AI 的错误处理能力。</string>\n    <string name="string_rn_v1">v1.0.0\n- Accessible Video Editor 的初始版本，包含为屏幕阅读器优化的基本视频/音频编辑工具。</string>\n    <string name="string_rec_title">录音机</string>\n    <string name="string_rec_channels">音频通道</string>\n    <string name="string_rec_mono">单声道</string>\n    <string name="string_rec_stereo">立体声（双声道）</string>\n    <string name="string_rec_format">输出格式</string>\n    <string name="string_rec_start">开始录制</string>\n    <string name="string_rec_pause">暂停录制</string>\n    <string name="string_rec_resume">恢复录制</string>\n    <string name="string_rec_stop">停止并保存</string>\n    <string name="string_rec_cancel">取消录制</string>\n    <string name="string_rec_use_result">在工作室中使用录制的音频</string>\n    <string name="string_rec_recording_status">正在录制：%1$s</string>\n    <string name="string_rec_paused_status">录制已暂停：%1$s</string>\n</resources>
+    <string name="string_184">阴影颜色</string>\n    <string name="string_185">阴影半径</string>\n    <string name="string_186">阴影偏移 X</string>\n    <string name="string_187">阴影偏移 Y</string>\n    <string name="string_188">对齐方式</string>\n    <string name="string_189">字体系列</string>\n    <string name="string_190">左对齐</string>\n    <string name="string_191">右对齐</string>\n    <string name="string_192">默认</string>\n    <string name="string_193">衬线</string>\n    <string name="string_194">无衬线</string>\n    <string name="string_195">等宽</string>\n    <string name="string_196">Gemini API 设置</string>\n    <string name="string_197">Gemini API 密钥</string>\n    <string name="string_198">选择 AI 模型</string>\n    <string name="string_199">文字水印</string>\n    <string name="string_200">图片水印</string>\n    <string name="string_201">有新更新！</string>\n    <string name="string_202">应用更新</string>\n    <string name="string_209">新更新</string>\n    <string name="string_210">发现新更新...</string>\n    <string name="string_211">下载并安装</string>\n    <string name="string_212">稍后</string>\n    <string name="string_213">正在下载更新</string>\n    <string name="string_214">已完成：%1$d%%</string>\n    <string name="string_215">已下载...</string>\n    <string name="string_216">剩余...</string>\n    <string name="string_217">正在初始化...</string>\n    <string name="string_218">取消下载</string>\n    <string name="string_219">正在检查更新...</string>\n    <string name="string_220">您使用的是最新版本！</string>\n    <string name="string_221">提取音频时出错</string>\n    <string name="string_222">操作成功完成</string>\n    <string name="string_223">处理视频时出错</string>\n    <string name="string_224">发生技术错误</string>\n    <string name="string_225">错误详情：</string>\n    <string name="string_226">其他选项</string>\n    <string name="string_227">剩余时间</string>\n    <string name="string_228">抱歉，AI 服务器目前负载较高。请稍后再试。</string>\n    <string name="string_229">已启用</string>\n    <string name="string_230">未指定</string>\n    <string name="string_231">编辑文本</string>\n    <string name="string_232">发现新更新</string>\n    <string name="string_233">版本</string>\n    <string name="string_234">发行说明</string>\n    <string name="string_235">您想现在更新吗？</string>\n    <string name="string_236">下载</string>\n    <string name="string_237">来自</string>\n    <string name="string_238">剩余</string>\n    <string name="string_239">参与翻译</string>\n    <string name="string_240">操作成功完成</string>\n    <string name="string_241">视频处理期间发生错误</string>\n    <string name="string_242">有新更新</string>\n    <string name="string_243">版本 %1$s 可供下载。</string>\n    <string name="string_244">点击立即更新</string>\n    <string name="string_245">应用翻译</string>\n    <string name="string_246">返回</string>\n    <string name="string_247">导入</string>\n    <string name="string_248">保存并应用</string>\n    <string name="string_249">导出</string>\n    <string name="string_250">选择目标翻译语言</string>\n    <string name="string_251">翻译为：%1$s ▼</string>\n    <string name="string_252">原文：</string>\n    <string name="string_253">原文为：%1$s</string>\n    <string name="string_254">翻译文本输入框：%1$s</string>\n    <string name="string_255">翻译</string>\n    <string name="string_256">保存并应用成功</string>\n    <string name="string_257">保存时出错</string>\n    <string name="string_258">翻译导出成功</string>\n    <string name="string_259">导出翻译失败</string>\n    <string name="string_260">已导入并应用翻译</string>\n    <string name="string_261">无效文件。不包含翻译文本。</string>\n    <string name="string_262">导入期间发生错误</string>\n    <string name="string_263">部分 %1$s</string>\n    <string name="string_264">通用文本</string>\n    <string name="string_265">设置</string>\n    <string name="string_266">工具与媒体</string>\n    <string name="string_267">视频播放器</string>\n    <string name="string_268">帮助与关于</string>\n    <string name="string_269">通用对话框</string>\n    <string name="string_270">创建空白图像</string>
+    <string name="string_271">创建黑色图像</string>
+    <string name="string_rn_title">最新动态</string>
+    <string name="string_rn_v2_4_4">v2.4.4
+- 增加了包括希伯来语在内的全面本地化支持。
+- 在帮助部分引入了“最新动态”屏幕。
+- 使用动态字符串和进度指示器改进了志愿者翻译屏幕。
+- 提取了剩余的硬编码字符串以进行完整翻译。</string>
+    <string name="string_rn_v2_4_3">v2.4.3
+- 修复了共享屏幕问题和不正确的标题。
+- 解决了设置中乱码的问题。</string>
+    <string name="string_rn_v2_4_2">v2.4.2
+- 改进了背景音频提取和视频处理。
+- 增强了 Gemini AI 的错误处理能力。</string>
+    <string name="string_rn_v1">v1.0.0
+- Accessible Video Editor 的初始版本，包含为屏幕阅读器优化的基本视频/音频编辑工具。</string>
+    <string name="string_rec_title">录音机</string>
+    <string name="string_rec_channels">音频通道</string>
+    <string name="string_rec_mono">单声道</string>
+    <string name="string_rec_stereo">立体声（双声道）</string>
+    <string name="string_rec_format">输出格式</string>
+    <string name="string_rec_start">开始录制</string>
+    <string name="string_rec_pause">暂停录制</string>
+    <string name="string_rec_resume">恢复录制</string>
+    <string name="string_rec_stop">停止并保存</string>
+    <string name="string_rec_cancel">取消录制</string>
+    <string name="string_rec_use_result">在工作室中使用录制的音频</string>
+    <string name="string_rec_recording_status">正在录制：%1$s</string>
+    <string name="string_rec_paused_status">录制已暂停：%1$s</string>
+
+    <string name="btn_apply">应用</string>
+    <string name="btn_apply_changes">应用更改</string>
+</resources>

@@ -447,4 +447,7 @@ customization, smart cutting, and more.</string>
     <string name="title_device_id">Unique Device ID</string>
     <string name="btn_copy_device_id">Copy Device ID (ANDROID_ID)</string>
     <string name="msg_device_id_copied">Device ID copied to clipboard!</string>
+
+    <string name="btn_apply">Apply</string>
+    <string name="btn_apply_changes">Apply Changes</string>
 </resources>

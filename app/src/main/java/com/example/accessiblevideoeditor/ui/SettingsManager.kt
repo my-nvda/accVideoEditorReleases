@@ -36,7 +36,7 @@ object SettingsManager {
         private set
     var geminiApiKeyState = ""
         private set
-    var geminiModelState = "gemini-2.5-flash"
+    var geminiModelState = "gemini-3.5-flash"
         private set
 
     fun init(context: Context) {
@@ -49,7 +49,7 @@ object SettingsManager {
         witAiTokenState = prefs.getString(KEY_WIT_AI_TOKEN, "") ?: ""
         openAiKeyState = prefs.getString(KEY_OPENAI_KEY, "") ?: ""
         geminiApiKeyState = prefs.getString(KEY_GEMINI_API_KEY, "") ?: ""
-        geminiModelState = prefs.getString(KEY_GEMINI_MODEL, "gemini-2.5-flash") ?: "gemini-2.5-flash"
+        geminiModelState = prefs.getString(KEY_GEMINI_MODEL, "gemini-3.5-flash") ?: "gemini-3.5-flash"
     }
 
     var isStartupSoundEnabled: Boolean

@@ -49,7 +49,7 @@ class SettingsFragment : Fragment() {
         binding.etGeminiApiKey.setText(SettingsManager.geminiApiKey)
 
         // Setup AI Model Spinner
-        val models = listOf("gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash")
+        val models = listOf("gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-pro", "gemini-3.0-flash", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash")
         val modelAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, models)
         modelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spGeminiModel.adapter = modelAdapter

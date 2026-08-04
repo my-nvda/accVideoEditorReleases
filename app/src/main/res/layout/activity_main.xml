@@ -58,7 +58,9 @@
                     android:layout_marginBottom="16dp"
                     android:text="@string/string_111"
                     android:textAppearance="?attr/textAppearanceTitleLarge"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:importantForAccessibility="yes"
+                    android:focusable="true" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -66,23 +68,45 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:max="100" />
+                    android:max="100"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:id="@+id/tvProgressPercent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:importantForAccessibility="yes"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/tvProgressEta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textAlignment="center"
+                    android:importantForAccessibility="yes"
+                    android:focusable="true" />
 
                 <TextView
                     android:id="@+id/tvProgressStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/string_142"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textAlignment="center" />
+                    android:visibility="gone"
+                    android:importantForAccessibility="no" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCancelProcess"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/string_207" />
+                    android:text="@string/string_207"
+                    android:importantForAccessibility="yes"
+                    android:focusable="true" />
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>

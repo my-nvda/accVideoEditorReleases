@@ -61,9 +61,6 @@ class MainActivity : AppCompatActivity() {
         defaultHandler?.uncaughtException(thread, throwable)
     }
 
-    handleUpdateIntent(intent)
-    handleShareIntent(intent)
-
     // Initialize Managers
     com.example.accessiblevideoeditor.ui.SettingsManager.init(this)
     SoundManager.init(this)
@@ -101,10 +98,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    enableEdgeToEdge()
     setContentView(R.layout.activity_main)
 
     setupProcessingOverlay()
+
+    findViewById<View>(R.id.nav_host_fragment).post {
+        handleUpdateIntent(intent)
+        handleShareIntent(intent)
+    }
     
         // Register global fragment lifecycle callbacks for accessibility focus
         supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
@@ -207,6 +208,8 @@ class MainActivity : AppCompatActivity() {
       val overlay = findViewById<View>(R.id.progressOverlay)
       val navHost = findViewById<View>(R.id.nav_host_fragment)
       val tvTitle = findViewById<TextView>(R.id.tvProgressTitle)
+      val tvPercent = findViewById<TextView>(R.id.tvProgressPercent)
+      val tvEta = findViewById<TextView>(R.id.tvProgressEta)
       val tvStatus = findViewById<TextView>(R.id.tvProgressStatus)
       val progressBar = findViewById<ProgressBar>(R.id.progressBar)
       val btnCancel = findViewById<MaterialButton>(R.id.btnCancelProcess)
@@ -228,15 +231,17 @@ class MainActivity : AppCompatActivity() {
                 if (state.progress > 0f) {
                     progressBar.isIndeterminate = false
                     progressBar.progress = (state.progress * 100).toInt()
-                    val statusText = if (state.etaMessage.isNotEmpty()) {
-                        "${(state.progress * 100).toInt()}% - ${state.etaMessage}"
+                    tvPercent.text = "${(state.progress * 100).toInt()}%"
+                    if (state.etaMessage.isNotEmpty()) {
+                        tvEta.visibility = View.VISIBLE
+                        tvEta.text = state.etaMessage
                     } else {
-                        "${(state.progress * 100).toInt()}%"
+                        tvEta.visibility = View.GONE
                     }
-                    tvStatus.text = statusText
                 } else {
                     progressBar.isIndeterminate = true
-                    tvStatus.text = getString(R.string.string_142)
+                    tvPercent.text = getString(R.string.string_142)
+                    tvEta.visibility = View.GONE
                 }
 
                 btnCancel.visibility = if (state.isCancellable) View.VISIBLE else View.GONE

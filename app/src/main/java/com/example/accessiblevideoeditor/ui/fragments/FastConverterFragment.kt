@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -89,14 +89,26 @@ class FastConverterFragment : Fragment() {
                     ProcessingManager.stopProcessing()
                     if (success) {
                         SoundManager.playSuccess()
-                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_87), Toast.LENGTH_SHORT).show()
-                        val finalUri = MediaUtils.saveVideoToGallery(requireContext(), outputFile, "converted_video.${format.lowercase()}")
+                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_182), Toast.LENGTH_SHORT).show()
+                        val mimeType = when (format.uppercase()) {
+                            "MP4" -> "video/mp4"
+                            "MKV" -> "video/x-matroska"
+                            "AVI" -> "video/x-msvideo"
+                            "GIF" -> "image/gif"
+                            else -> "video/mp4"
+                        }
+                        val isImage = format.uppercase() == "GIF"
+                        val finalUri = if (isImage) {
+                            MediaUtils.saveImageToGallery(requireContext(), outputFile, "converted_video.gif", mimeType)
+                        } else {
+                            MediaUtils.saveVideoToGallery(requireContext(), outputFile, "converted_video.${format.lowercase()}", mimeType)
+                        }
                         if (finalUri != null) {
-                            HistoryManager.saveToHistory(requireContext(), com.example.accessiblevideoeditor.media.HistoryItem(uriString = finalUri.toString(), name = "converted_video.${format.lowercase()}", type = "video", timestamp = System.currentTimeMillis()))
+                            HistoryManager.saveToHistory(requireContext(), com.example.accessiblevideoeditor.media.HistoryItem(uriString = finalUri.toString(), name = "converted_video.${format.lowercase()}", type = if (isImage) "image" else "video", timestamp = System.currentTimeMillis()))
                         }
                     } else {
                         SoundManager.playError()
-                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_89), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {

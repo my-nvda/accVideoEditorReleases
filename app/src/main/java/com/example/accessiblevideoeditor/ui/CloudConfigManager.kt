@@ -71,38 +71,49 @@ object CloudConfigManager {
                         val stringsJsonStr = stringsConn.inputStream.bufferedReader().use { it.readText() }
                         val map = mutableMapOf<String, String>()
                         var serverVersion = -1
+                        val currentLang = LanguageManager.getCurrentLanguageCode()
 
                         try {
                             val stringsRoot = JSONObject(stringsJsonStr)
                             // Read version field for comparison
                             serverVersion = stringsRoot.optInt("version", -1)
-                            if (stringsRoot.has("strings")) {
-                                val stringsObj = stringsRoot.getJSONObject("strings")
+                            if (stringsRoot.has(currentLang)) {
+                                val stringsObj = stringsRoot.getJSONObject(currentLang)
                                 for (key in stringsObj.keys()) {
                                     map[key] = stringsObj.getString(key)
+                                }
+                            } else {
+                                val targetLang = stringsRoot.optString("lang", "ar")
+                                if (currentLang == targetLang && stringsRoot.has("strings")) {
+                                    val stringsObj = stringsRoot.getJSONObject("strings")
+                                    for (key in stringsObj.keys()) {
+                                        map[key] = stringsObj.getString(key)
+                                    }
                                 }
                             }
                         } catch (je: Exception) {
                             // Robust line/pair level fallback if JSON has syntax errors like missing commas
-                            val itemRegex = """"([^"\\]+)"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"""".toRegex()
-                            itemRegex.findAll(stringsJsonStr).forEach { m ->
-                                val k = m.groupValues[1]
-                                val v = m.groupValues[2]
-                                if (k != "strings" && k != "version") {
-                                    map[k] = v
+                            val langMatch = """"lang"\s*:\s*"([^"]+)"""".toRegex().find(stringsJsonStr)
+                            val targetLang = langMatch?.groupValues?.get(1) ?: "ar"
+                            if (currentLang == targetLang) {
+                                val itemRegex = """"([^"\\]+)"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"""".toRegex()
+                                itemRegex.findAll(stringsJsonStr).forEach { m ->
+                                    val k = m.groupValues[1]
+                                    val v = m.groupValues[2]
+                                    if (k != "strings" && k != "version" && k != "lang") {
+                                        map[k] = v
+                                    }
                                 }
                             }
                         }
 
+                        val file = File(context.filesDir, "custom_lang_$currentLang.json")
                         if (map.isNotEmpty()) {
                             val stringsObj = JSONObject()
                             for ((k, v) in map) {
                                 stringsObj.put(k, v)
                             }
                             val newContent = stringsObj.toString()
-                            val currentLang = LanguageManager.getCurrentLanguageCode()
-                            val file = File(context.filesDir, "custom_lang_$currentLang.json")
-
                             val cachedContent = if (file.exists()) file.readText(Charsets.UTF_8) else ""
                             val cachedVersion = prefs?.getInt(KEY_STRINGS_VERSION, -1) ?: -1
 
@@ -116,11 +127,16 @@ object CloudConfigManager {
                                 }
                                 stringsUpdated = true
                             }
-
-                            // ALWAYS reload AppStrings into memory cache so customStrings is populated
-                            withContext(Dispatchers.Main) {
-                                AppStrings.loadCustomStrings(context)
+                        } else {
+                            if (file.exists()) {
+                                file.delete()
+                                stringsUpdated = true
                             }
+                        }
+
+                        // ALWAYS reload AppStrings into memory cache so customStrings is populated
+                        withContext(Dispatchers.Main) {
+                            AppStrings.loadCustomStrings(context)
                         }
                     }
                 } catch (se: Exception) {
