@@ -136,6 +136,37 @@ class SettingsFragment : Fragment() {
                 .show()
         }
 
+        binding.btnCopyDeviceId.setOnClickListener {
+            val safeCtx = context ?: return@setOnClickListener
+            val androidId = android.provider.Settings.Secure.getString(
+                safeCtx.contentResolver,
+                android.provider.Settings.Secure.ANDROID_ID
+            ) ?: "unknown"
+            
+            val clipboard = safeCtx.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            val clip = android.content.ClipData.newPlainText("Device ID", androidId)
+            clipboard.setPrimaryClip(clip)
+            
+            val copiedMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(safeCtx, R.string.msg_device_id_copied)
+            android.widget.Toast.makeText(
+                safeCtx,
+                if (copiedMsg.isNotBlank()) copiedMsg else "Device ID copied to clipboard!",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        try {
+            val safeCtx = context
+            if (safeCtx != null) {
+                val androidId = android.provider.Settings.Secure.getString(
+                    safeCtx.contentResolver,
+                    android.provider.Settings.Secure.ANDROID_ID
+                ) ?: ""
+                val btnText = com.example.accessiblevideoeditor.ui.AppStrings.get(safeCtx, R.string.btn_copy_device_id)
+                binding.btnCopyDeviceId.contentDescription = if (btnText.isNotBlank()) "$btnText: $androidId" else "Copy Device ID: $androidId"
+            }
+        } catch (_: Exception) {}
+
         binding.btnHelp.setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_helpFragment)
         }

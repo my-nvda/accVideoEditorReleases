@@ -444,4 +444,7 @@ customization, smart cutting, and more.</string>
     <string name="msg_lut_failed">Failed to apply cinematic filter.</string>
     <string name="dialog_feature_disabled_title">Feature Disabled</string>
     <string name="dialog_feature_disabled_message">This feature is currently disabled and requires activation by the developer or host.</string>
+    <string name="title_device_id">Unique Device ID</string>
+    <string name="btn_copy_device_id">Copy Device ID (ANDROID_ID)</string>
+    <string name="msg_device_id_copied">Device ID copied to clipboard!</string>
 </resources>

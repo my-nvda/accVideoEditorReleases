@@ -206,6 +206,26 @@ object CloudConfigManager {
                     }
                 }
                 
+                // 3. Process Whitelisted Devices
+                val currentWhitelist = mutableMapOf<String, List<String>>()
+                try {
+                    val root = JSONObject(jsonStr)
+                    if (root.has("whitelistedDevices")) {
+                        val whitelistObj = root.getJSONObject("whitelistedDevices")
+                        whitelistObj.keys().forEach { key ->
+                            val arr = whitelistObj.getJSONArray(key)
+                            val devices = mutableListOf<String>()
+                            for (i in 0 until arr.length()) {
+                                devices.add(arr.getString(i))
+                            }
+                            currentWhitelist[key] = devices
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                result.whitelistedFeatures = currentWhitelist
+                
                 result.isSuccess = true
             }
         } catch (e: Exception) {
@@ -323,4 +343,5 @@ class CloudConfigResult {
     var currentlyDisabledIds: Set<String> = emptySet()
     var reEnabledFeatureIds: List<String> = emptyList()
     val pendingDownloads: MutableList<DynamicFeatureItem> = mutableListOf()
+    var whitelistedFeatures: Map<String, List<String>> = emptyMap()
 }

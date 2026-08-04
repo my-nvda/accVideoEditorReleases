@@ -225,8 +225,19 @@ class HomeFragment : Fragment() {
 
                     if (result.isSuccess) {
                         enabledFeatures.clear()
+                        val androidId = try {
+                            android.provider.Settings.Secure.getString(
+                                currentContext.contentResolver,
+                                android.provider.Settings.Secure.ANDROID_ID
+                            ) ?: ""
+                        } catch (_: Exception) {
+                            ""
+                        }
                         for (id in allFeatures) {
-                            if (!result.currentlyDisabledIds.contains(id)) {
+                            val isGloballyDisabled = result.currentlyDisabledIds.contains(id)
+                            val whitelist = result.whitelistedFeatures[id] ?: emptyList()
+                            val isWhitelisted = androidId.isNotBlank() && whitelist.contains(androidId)
+                            if (!isGloballyDisabled || isWhitelisted) {
                                 enabledFeatures.add(id)
                             }
                         }
