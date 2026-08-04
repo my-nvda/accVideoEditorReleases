@@ -25,6 +25,62 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    private val allFeatures = setOf(
+        "btnVideoEditor",
+        "btnImageEditor",
+        "btnWatermark",
+        "btnCreateBlankImage",
+        "btnVideoTrimmer",
+        "btnSmartCut",
+        "btnAudioEditor",
+        "btnAudioStudio",
+        "btnAiAnalysis",
+        "btnStt",
+        "btnOcr",
+        "btnFastConverter",
+        "btnBoostVolume",
+        "btnExtractAudio",
+        "btnCompressVideo",
+        "btnMergeVideos",
+        "btnReverseMedia",
+        "btnSlideshowMaker",
+        "btnTickerText",
+        "btnBatchProcess",
+        "btnSpeedControl",
+        "btnNoiseReduction",
+        "btnBackgroundMusic",
+        "btnAudioNormalization",
+        "btnAiSceneInspector",
+        "btnAiVoiceDubbing",
+        "btnAudioStemSeparator",
+        "btnAutoShortsCreator",
+        "btnCinematicLutShaders",
+        "btnAiSceneAudioDescription",
+        "btnSubtitlesOcrSrt"
+    )
+
+    private val enabledFeatures = mutableSetOf<String>()
+
+    private fun handleFeatureClick(featureId: String, actionId: Int, view: View) {
+        val context = context ?: return
+        if (enabledFeatures.contains(featureId)) {
+            navigateWithFocus(view, actionId)
+        } else {
+            val title = AppStrings.get(context, R.string.dialog_feature_disabled_title)
+            val msg = AppStrings.get(context, R.string.dialog_feature_disabled_message)
+            val btnOk = AppStrings.get(context, R.string.btn_close)
+            
+            androidx.appcompat.app.AlertDialog.Builder(context)
+                .setTitle(if (title.isNotBlank()) title else "ميزة غير مفعلة")
+                .setMessage(if (msg.isNotBlank()) msg else "هذه الميزة معطلة حالياً وتتطلب التفعيل من قبل المطور أو المستضيف.")
+                .setPositiveButton(if (btnOk.isNotBlank()) btnOk else "إغلاق") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,12 +91,7 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        try {
-            val cachedDisabled = CloudConfigManager.getCachedDisabledFeatures(requireContext())
-            updateFeatureVisibilities(cachedDisabled)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        enabledFeatures.clear()
         checkRemoteCloudConfig()
     }
 
@@ -113,39 +164,39 @@ class HomeFragment : Fragment() {
             }
             
             // Main Navigation clicks
-            binding.btnVideoEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoEditorFragment) }
-            binding.btnVideoTrimmer.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_videoTrimmerFragment) }
-            binding.btnSmartCut.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_smartCutFragment) }
-            binding.btnMergeVideos.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_mergeVideosFragment) }
-            binding.btnReverseMedia.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_reverseMediaFragment) }
-            binding.btnAudioEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioEditorFragment) }
-            binding.btnAudioStudio.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioStudioFragment) }
-            binding.btnExtractAudio.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_extractAudioFragment) }
-            binding.btnBoostVolume.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_boostVolumeFragment) }
-            binding.btnCompressVideo.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_compressVideoFragment) }
-            binding.btnImageEditor.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_imageEditorFragment) }
-            binding.btnWatermark.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_watermarkFragment) }
-            binding.btnCreateBlankImage.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_createBlankImageFragment) }
-            binding.btnSlideshowMaker.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_slideshowMakerFragment) }
-            binding.btnTickerText.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_tickerTextFragment) }
-            binding.btnAiAnalysis.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiAnalysisFragment) }
-            binding.btnStt.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_sttFragment) }
-            binding.btnOcr.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_ocrFragment) }
-            binding.btnBatchProcess.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_batchProcessFragment) }
-            binding.btnFastConverter.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_fastConverterFragment) }
-            binding.btnSpeedControl.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_speedControlFragment) }
-            binding.btnNoiseReduction.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_noiseReductionFragment) }
-            binding.btnBackgroundMusic.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_backgroundMusicFragment) }
-            binding.btnAudioNormalization.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioNormalizationFragment) }
-            binding.btnAiSceneInspector.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiSceneInspectorFragment) }
+            binding.btnVideoEditor.setOnClickListener { handleFeatureClick("btnVideoEditor", R.id.action_homeFragment_to_videoEditorFragment, it) }
+            binding.btnVideoTrimmer.setOnClickListener { handleFeatureClick("btnVideoTrimmer", R.id.action_homeFragment_to_videoTrimmerFragment, it) }
+            binding.btnSmartCut.setOnClickListener { handleFeatureClick("btnSmartCut", R.id.action_homeFragment_to_smartCutFragment, it) }
+            binding.btnMergeVideos.setOnClickListener { handleFeatureClick("btnMergeVideos", R.id.action_homeFragment_to_mergeVideosFragment, it) }
+            binding.btnReverseMedia.setOnClickListener { handleFeatureClick("btnReverseMedia", R.id.action_homeFragment_to_reverseMediaFragment, it) }
+            binding.btnAudioEditor.setOnClickListener { handleFeatureClick("btnAudioEditor", R.id.action_homeFragment_to_audioEditorFragment, it) }
+            binding.btnAudioStudio.setOnClickListener { handleFeatureClick("btnAudioStudio", R.id.action_homeFragment_to_audioStudioFragment, it) }
+            binding.btnExtractAudio.setOnClickListener { handleFeatureClick("btnExtractAudio", R.id.action_homeFragment_to_extractAudioFragment, it) }
+            binding.btnBoostVolume.setOnClickListener { handleFeatureClick("btnBoostVolume", R.id.action_homeFragment_to_boostVolumeFragment, it) }
+            binding.btnCompressVideo.setOnClickListener { handleFeatureClick("btnCompressVideo", R.id.action_homeFragment_to_compressVideoFragment, it) }
+            binding.btnImageEditor.setOnClickListener { handleFeatureClick("btnImageEditor", R.id.action_homeFragment_to_imageEditorFragment, it) }
+            binding.btnWatermark.setOnClickListener { handleFeatureClick("btnWatermark", R.id.action_homeFragment_to_watermarkFragment, it) }
+            binding.btnCreateBlankImage.setOnClickListener { handleFeatureClick("btnCreateBlankImage", R.id.action_homeFragment_to_createBlankImageFragment, it) }
+            binding.btnSlideshowMaker.setOnClickListener { handleFeatureClick("btnSlideshowMaker", R.id.action_homeFragment_to_slideshowMakerFragment, it) }
+            binding.btnTickerText.setOnClickListener { handleFeatureClick("btnTickerText", R.id.action_homeFragment_to_tickerTextFragment, it) }
+            binding.btnAiAnalysis.setOnClickListener { handleFeatureClick("btnAiAnalysis", R.id.action_homeFragment_to_aiAnalysisFragment, it) }
+            binding.btnStt.setOnClickListener { handleFeatureClick("btnStt", R.id.action_homeFragment_to_sttFragment, it) }
+            binding.btnOcr.setOnClickListener { handleFeatureClick("btnOcr", R.id.action_homeFragment_to_ocrFragment, it) }
+            binding.btnBatchProcess.setOnClickListener { handleFeatureClick("btnBatchProcess", R.id.action_homeFragment_to_batchProcessFragment, it) }
+            binding.btnFastConverter.setOnClickListener { handleFeatureClick("btnFastConverter", R.id.action_homeFragment_to_fastConverterFragment, it) }
+            binding.btnSpeedControl.setOnClickListener { handleFeatureClick("btnSpeedControl", R.id.action_homeFragment_to_speedControlFragment, it) }
+            binding.btnNoiseReduction.setOnClickListener { handleFeatureClick("btnNoiseReduction", R.id.action_homeFragment_to_noiseReductionFragment, it) }
+            binding.btnBackgroundMusic.setOnClickListener { handleFeatureClick("btnBackgroundMusic", R.id.action_homeFragment_to_backgroundMusicFragment, it) }
+            binding.btnAudioNormalization.setOnClickListener { handleFeatureClick("btnAudioNormalization", R.id.action_homeFragment_to_audioNormalizationFragment, it) }
+            binding.btnAiSceneInspector.setOnClickListener { handleFeatureClick("btnAiSceneInspector", R.id.action_homeFragment_to_aiSceneInspectorFragment, it) }
 
             // Dynamic Features clicks
-            binding.btnAiVoiceDubbing.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiVoiceDubbingFragment) }
-            binding.btnAudioStemSeparator.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_audioStemSeparatorFragment) }
-            binding.btnAutoShortsCreator.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_autoShortsCreatorFragment) }
-            binding.btnCinematicLutShaders.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_cinematicLutShadersFragment) }
-            binding.btnAiSceneAudioDescription.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_aiSceneAudioDescriptionFragment) }
-            binding.btnSubtitlesOcrSrt.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_subtitlesOcrSrtFragment) }
+            binding.btnAiVoiceDubbing.setOnClickListener { handleFeatureClick("btnAiVoiceDubbing", R.id.action_homeFragment_to_aiVoiceDubbingFragment, it) }
+            binding.btnAudioStemSeparator.setOnClickListener { handleFeatureClick("btnAudioStemSeparator", R.id.action_homeFragment_to_audioStemSeparatorFragment, it) }
+            binding.btnAutoShortsCreator.setOnClickListener { handleFeatureClick("btnAutoShortsCreator", R.id.action_homeFragment_to_autoShortsCreatorFragment, it) }
+            binding.btnCinematicLutShaders.setOnClickListener { handleFeatureClick("btnCinematicLutShaders", R.id.action_homeFragment_to_cinematicLutShadersFragment, it) }
+            binding.btnAiSceneAudioDescription.setOnClickListener { handleFeatureClick("btnAiSceneAudioDescription", R.id.action_homeFragment_to_aiSceneAudioDescriptionFragment, it) }
+            binding.btnSubtitlesOcrSrt.setOnClickListener { handleFeatureClick("btnSubtitlesOcrSrt", R.id.action_homeFragment_to_subtitlesOcrSrtFragment, it) }
 
             binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
         } catch (e: Exception) {
@@ -172,53 +223,20 @@ class HomeFragment : Fragment() {
                         Toast.makeText(currentContext, "هناك ميزات إضافية جديدة متوفرة للتنزيل!", Toast.LENGTH_LONG).show()
                     }
 
-                    // Apply feature visibility based on cloud_config.json
-                    updateFeatureVisibilities(result.currentlyDisabledIds)
+                    if (result.isSuccess) {
+                        enabledFeatures.clear()
+                        for (id in allFeatures) {
+                            if (!result.currentlyDisabledIds.contains(id)) {
+                                enabledFeatures.add(id)
+                            }
+                        }
+                    } else {
+                        enabledFeatures.clear()
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
-    }
-
-    private fun updateFeatureVisibilities(disabledIds: Set<String>) {
-        if (_binding == null) return
-        try {
-            binding.btnVideoEditor.visibility = if (disabledIds.contains("btnVideoEditor")) View.GONE else View.VISIBLE
-            binding.btnImageEditor.visibility = if (disabledIds.contains("btnImageEditor")) View.GONE else View.VISIBLE
-            binding.btnWatermark.visibility = if (disabledIds.contains("btnWatermark")) View.GONE else View.VISIBLE
-            binding.btnCreateBlankImage.visibility = if (disabledIds.contains("btnCreateBlankImage")) View.GONE else View.VISIBLE
-            binding.btnVideoTrimmer.visibility = if (disabledIds.contains("btnVideoTrimmer")) View.GONE else View.VISIBLE
-            binding.btnSmartCut.visibility = if (disabledIds.contains("btnSmartCut")) View.GONE else View.VISIBLE
-            binding.btnAudioEditor.visibility = if (disabledIds.contains("btnAudioEditor")) View.GONE else View.VISIBLE
-            binding.btnAudioStudio.visibility = if (disabledIds.contains("btnAudioStudio")) View.GONE else View.VISIBLE
-            binding.btnAiAnalysis.visibility = if (disabledIds.contains("btnAiAnalysis")) View.GONE else View.VISIBLE
-            binding.btnStt.visibility = if (disabledIds.contains("btnStt")) View.GONE else View.VISIBLE
-            binding.btnOcr.visibility = if (disabledIds.contains("btnOcr")) View.GONE else View.VISIBLE
-            binding.btnFastConverter.visibility = if (disabledIds.contains("btnFastConverter")) View.GONE else View.VISIBLE
-            binding.btnBoostVolume.visibility = if (disabledIds.contains("btnBoostVolume")) View.GONE else View.VISIBLE
-            binding.btnExtractAudio.visibility = if (disabledIds.contains("btnExtractAudio")) View.GONE else View.VISIBLE
-            binding.btnCompressVideo.visibility = if (disabledIds.contains("btnCompressVideo")) View.GONE else View.VISIBLE
-            binding.btnMergeVideos.visibility = if (disabledIds.contains("btnMergeVideos")) View.GONE else View.VISIBLE
-            binding.btnReverseMedia.visibility = if (disabledIds.contains("btnReverseMedia")) View.GONE else View.VISIBLE
-            binding.btnSlideshowMaker.visibility = if (disabledIds.contains("btnSlideshowMaker")) View.GONE else View.VISIBLE
-            binding.btnTickerText.visibility = if (disabledIds.contains("btnTickerText")) View.GONE else View.VISIBLE
-            binding.btnBatchProcess.visibility = if (disabledIds.contains("btnBatchProcess")) View.GONE else View.VISIBLE
-            binding.btnSpeedControl.visibility = if (disabledIds.contains("btnSpeedControl")) View.GONE else View.VISIBLE
-            binding.btnNoiseReduction.visibility = if (disabledIds.contains("btnNoiseReduction")) View.GONE else View.VISIBLE
-            binding.btnBackgroundMusic.visibility = if (disabledIds.contains("btnBackgroundMusic")) View.GONE else View.VISIBLE
-            binding.btnAudioNormalization.visibility = if (disabledIds.contains("btnAudioNormalization")) View.GONE else View.VISIBLE
-            binding.btnAiSceneInspector.visibility = if (disabledIds.contains("btnAiSceneInspector")) View.GONE else View.VISIBLE
-            
-            // Dynamic Features visibilities
-            binding.btnAiVoiceDubbing.visibility = if (disabledIds.contains("btnAiVoiceDubbing")) View.GONE else View.VISIBLE
-            binding.btnAudioStemSeparator.visibility = if (disabledIds.contains("btnAudioStemSeparator")) View.GONE else View.VISIBLE
-            binding.btnAutoShortsCreator.visibility = if (disabledIds.contains("btnAutoShortsCreator")) View.GONE else View.VISIBLE
-            binding.btnCinematicLutShaders.visibility = if (disabledIds.contains("btnCinematicLutShaders")) View.GONE else View.VISIBLE
-            binding.btnAiSceneAudioDescription.visibility = if (disabledIds.contains("btnAiSceneAudioDescription")) View.GONE else View.VISIBLE
-            binding.btnSubtitlesOcrSrt.visibility = if (disabledIds.contains("btnSubtitlesOcrSrt")) View.GONE else View.VISIBLE
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 

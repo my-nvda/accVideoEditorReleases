@@ -442,4 +442,6 @@ customization, smart cutting, and more.</string>
     <string name="dialog_download_message_lut">This engine requires downloading the Cinematic LUT filters pack (5 MB). Do you want to start downloading now?</string>
     <string name="msg_lut_success">Cinematic filter applied successfully and saved to Gallery.</string>
     <string name="msg_lut_failed">Failed to apply cinematic filter.</string>
+    <string name="dialog_feature_disabled_title">Feature Disabled</string>
+    <string name="dialog_feature_disabled_message">This feature is currently disabled and requires activation by the developer or host.</string>
 </resources>

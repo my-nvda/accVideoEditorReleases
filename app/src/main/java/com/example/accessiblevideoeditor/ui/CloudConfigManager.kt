@@ -287,7 +287,7 @@ object CloudConfigManager {
 
                             if (totalLength > 0) {
                                 val progress = ((downloadedBytes * 100) / totalLength).toInt()
-                                if (progress != lastReportedProgress && progress % 10 == 0) {
+                                if (progress != lastReportedProgress && progress % 5 == 0) {
                                     lastReportedProgress = progress
                                     try {
                                         withContext(Dispatchers.Main) {

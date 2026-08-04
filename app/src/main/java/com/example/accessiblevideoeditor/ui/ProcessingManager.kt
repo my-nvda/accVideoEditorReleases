@@ -63,6 +63,8 @@ object ProcessingManager {
         }
     }
 
+    private var lastBeepPercent = -5
+
     fun startProcessing(message: String, cancellable: Boolean = true, sessionId: Long? = null, job: Job? = null) {
         runOnMain {
             _state.value = _state.value.copy(
@@ -74,10 +76,9 @@ object ProcessingManager {
             )
             currentSessionId = sessionId
             currentJob = job
+            lastBeepPercent = -5
         }
     }
-
-    private var lastSoundPlayTime = 0L
 
     fun updateProgress(newProgress: Float, newEta: String = "") {
         runOnMain {
@@ -86,10 +87,10 @@ object ProcessingManager {
                 etaMessage = if (newEta.isNotBlank()) newEta else _state.value.etaMessage
             )
             
-            val currentMs = System.currentTimeMillis()
-            if (currentMs - lastSoundPlayTime > 1500) { // play beep every 1.5 seconds
-                com.example.accessiblevideoeditor.media.SoundManager.playProgressBeep((newProgress * 100).toInt())
-                lastSoundPlayTime = currentMs
+            val percent = (newProgress * 100).toInt()
+            if (percent >= lastBeepPercent + 5) {
+                com.example.accessiblevideoeditor.media.SoundManager.playProgressBeep(percent)
+                lastBeepPercent = percent
             }
         }
     }

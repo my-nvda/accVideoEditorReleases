@@ -336,7 +336,7 @@ class AudioStemSeparatorFragment : Fragment() {
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
                     binding.tvModelStatus.text = getString(R.string.msg_download_progress, percent)
-                    if (percent % 20 == 0) {
+                    if (percent % 5 == 0) {
                         try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     }
                 }

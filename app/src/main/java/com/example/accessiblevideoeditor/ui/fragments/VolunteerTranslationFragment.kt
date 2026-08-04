@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -35,7 +35,8 @@ class VolunteerTranslationFragment : Fragment() {
     private val categorizedStrings = mutableMapOf<String, List<String>>()
     private val translations = mutableMapOf<String, String>()
     private var categories = listOf<String>()
-    
+    private var lastBeepPercent = -5
+
     private lateinit var adapter: TranslationAdapter
 
     private val supportedLanguages = listOf(
@@ -291,9 +292,16 @@ class VolunteerTranslationFragment : Fragment() {
                 } catch (e: Exception) {}
             }
             val percent = if (originalStrings.isEmpty()) 0f else (translatedCount.toFloat() / originalStrings.size.toFloat()) * 100
+            val pInt = percent.toInt()
             withContext(Dispatchers.Main) {
-                binding.pbCompletion.progress = percent.toInt()
-                binding.tvProgressLabel.text = AppStrings.get(requireContext(), R.string.string_translation_progress, percent.toInt())
+                binding.pbCompletion.progress = pInt
+                binding.tvProgressLabel.text = AppStrings.get(requireContext(), R.string.string_translation_progress, pInt)
+                if (pInt >= lastBeepPercent + 5) {
+                    try {
+                        com.example.accessiblevideoeditor.updater.BeepUtils.playProgressBeep(pInt)
+                    } catch (_: Exception) {}
+                    lastBeepPercent = pInt
+                }
             }
         }
     }

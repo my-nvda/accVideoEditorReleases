@@ -439,4 +439,6 @@
     <string name="dialog_download_message_lut">يتطلب هذا المحرك تنزيل حزمة الفلاتر السينمائية (حجمها 5 ميجابايت). هل تريد بدء التنزيل الآن؟</string>
     <string name="msg_lut_success">تم تطبيق الفلتر السينمائي بنجاح وحفظ الفيديو المخرّج في المعرض (Gallery).</string>
     <string name="msg_lut_failed">فشل تطبيق الفلتر السينمائي.</string>
+    <string name="dialog_feature_disabled_title">ميزة غير مفعلة</string>
+    <string name="dialog_feature_disabled_message">هذه الميزة معطلة حالياً وتتطلب التفعيل من قبل المطور أو المستضيف.</string>
 </resources>

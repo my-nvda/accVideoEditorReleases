@@ -284,7 +284,7 @@ class SubtitlesOcrSrtFragment : Fragment() {
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
                     binding.tvModelStatus.text = "جاري التنزيل... التقدم: $percent%"
-                    if (percent % 20 == 0) {
+                    if (percent % 5 == 0) {
                         try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     }
                 }
