@@ -1,6 +1,6 @@
 {
-  "versionCode": 109,
-  "versionName": "2.9.1",
+  "versionCode": 110,
+  "versionName": "2.9.2",
   "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
-  "releaseNotes": "إصدار 2.9.1 الجديد:\n- تحديث إصلاحي بسيط لحل مشكلة عدم احتفاظ التطبيق بالإعدادات السحابية وتطبيقها تلقائياً عند فتح التطبيق دون اتصال بالإنترنت."
+  "releaseNotes": "إصدار 2.9.2 الجديد:\n- جعل الميزات معطلة افتراضياً حتى يتم جلب ملف التفعيل من السحاب.\n- إضافة ميزة إصدار نغمات التقدم عند كل 5% لكافة شاشات التنزيل والتحميل."
 }
