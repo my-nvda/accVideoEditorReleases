@@ -1,7 +1,6 @@
 {
   "disabledFeatures": [
     "btnVideoEditor",
-    "btnImageEditor",
     "btnWatermark",
     "btnCreateBlankImage",
     "btnVideoTrimmer",
