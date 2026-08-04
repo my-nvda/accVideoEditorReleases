@@ -35,6 +35,12 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        try {
+            val cachedDisabled = CloudConfigManager.getCachedDisabledFeatures(requireContext())
+            updateFeatureVisibilities(cachedDisabled)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         checkRemoteCloudConfig()
     }
 

@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -85,6 +85,21 @@ class AudioStudioFragment : Fragment() {
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+
+        // Apply dynamic translations and set explicit content descriptions for accessibility
+        binding.rbMono.text = AppStrings.get(requireContext(), R.string.string_rec_mono)
+        binding.rbStereo.text = AppStrings.get(requireContext(), R.string.string_rec_stereo)
+        binding.rgChannels.contentDescription = AppStrings.get(requireContext(), R.string.string_rec_channels)
+        
+        binding.rbM4A.text = AppStrings.get(requireContext(), R.string.string_format_m4a)
+        binding.rbWAV.text = AppStrings.get(requireContext(), R.string.string_format_wav)
+        binding.rbMP3.text = AppStrings.get(requireContext(), R.string.string_format_mp3)
+        binding.rgFormat.contentDescription = AppStrings.get(requireContext(), R.string.string_rec_format)
+
+        binding.btnStartRecording.text = AppStrings.get(requireContext(), R.string.string_rec_start)
+        binding.btnCancelRecording.text = AppStrings.get(requireContext(), R.string.string_rec_cancel)
+        binding.btnStopRecording.text = AppStrings.get(requireContext(), R.string.string_rec_stop)
+        binding.btnPauseResume.text = AppStrings.get(requireContext(), R.string.string_rec_pause)
 
         binding.btnSelectMedia.setOnClickListener {
             mediaPickerLauncher.launch("*/*")

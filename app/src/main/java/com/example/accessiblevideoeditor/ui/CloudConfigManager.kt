@@ -214,6 +214,11 @@ object CloudConfigManager {
         return@withContext result
     }
 
+    fun getCachedDisabledFeatures(context: Context): Set<String> {
+        init(context)
+        return prefs?.getStringSet(KEY_DISABLED_SET, emptySet()) ?: emptySet()
+    }
+
     fun isFeatureDownloaded(featureIdKey: String): Boolean {
         val downloaded = prefs?.getStringSet(KEY_DOWNLOADED_FEATURES, emptySet()) ?: emptySet()
         return downloaded.contains(featureIdKey)
