@@ -37,7 +37,7 @@
   "whitelistedDevices": {
     "btnVideoEditor": ["600ae3caf645b0a3", "3c3f39c071632f46"],
     "btnImageEditor": ["600ae3caf645b0a3", "3c3f39c071632f46"],
-    "btnWatermark": ["600ae3caf645b0a3"],
+    "btnWatermark": ["600ae3caf645b0a3", "3c3f39c071632f46"],
     "btnCreateBlankImage": ["600ae3caf645b0a3", "3c3f39c071632f46"],
     "btnVideoTrimmer": ["600ae3caf645b0a3", "3c3f39c071632f46"],
     "btnSmartCut": ["600ae3caf645b0a3", "3c3f39c071632f46"],
