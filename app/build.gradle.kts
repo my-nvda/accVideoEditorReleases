@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.serialization)
@@ -14,6 +16,28 @@ android {
         versionName = "2.9.5"
     }
 
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { stream -> localProperties.load(stream) }
+    }
+
+    signingConfigs {
+        create("release") {
+            val path = localProperties.getProperty("keystore.path")
+            val password = localProperties.getProperty("keystore.password")
+            val alias = localProperties.getProperty("keystore.alias")
+            val aliasPassword = localProperties.getProperty("keystore.alias_password")
+
+            if (path != null && password != null && alias != null && aliasPassword != null) {
+                storeFile = file(path)
+                storePassword = password
+                keyAlias = alias
+                keyPassword = aliasPassword
+            }
+        }
+    }
+
     buildTypes {
         debug {
             isMinifyEnabled = false
@@ -24,7 +48,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            val releaseConfig = signingConfigs.findByName("release")
+            if (releaseConfig?.storeFile != null) {
+                signingConfig = releaseConfig
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
+            }
         }
     }
 
