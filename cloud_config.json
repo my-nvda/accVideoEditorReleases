@@ -36,6 +36,7 @@
   "featurePatches": [],
   "whitelistedDevices": {
     "btnVideoEditor": [
+      "062c80e6a4faab64",
       "e0c9ef4bd15c7752"
     ],
     "btnImageEditor": [
