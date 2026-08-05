@@ -235,9 +235,9 @@ object FFmpegProcessor {
             }
         )
         
-        val finished = latch.await(30, java.util.concurrent.TimeUnit.SECONDS)
+        val finished = latch.await(20, java.util.concurrent.TimeUnit.MINUTES)
         if (!finished) {
-            resultLog = "FFmpeg timed out after 30 seconds"
+            resultLog = "FFmpeg timed out after 20 minutes"
         }
         return@withContext resultLog
     }
