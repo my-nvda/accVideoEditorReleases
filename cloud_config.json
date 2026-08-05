@@ -36,97 +36,97 @@
   "featurePatches": [],
   "whitelistedDevices": {
     "btnVideoEditor": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnImageEditor": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnWatermark": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnCreateBlankImage": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnVideoTrimmer": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnSmartCut": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAudioEditor": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAudioStudio": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAiAnalysis": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnStt": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnOcr": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnFastConverter": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnBoostVolume": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnExtractAudio": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnCompressVideo": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnMergeVideos": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnReverseMedia": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnSlideshowMaker": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnTickerText": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnBatchProcess": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnSpeedControl": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnNoiseReduction": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnBackgroundMusic": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAudioNormalization": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAiSceneInspector": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAiVoiceDubbing": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAudioStemSeparator": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAutoShortsCreator": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnCinematicLutShaders": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnAiSceneAudioDescription": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ],
     "btnSubtitlesOcrSrt": [
-      "162c80e6a4faab64"
+      "062c80e6a4faab64"
     ]
   },
   "allAvailableFeatureIds": {
@@ -163,6 +163,6 @@
     "btnSubtitlesOcrSrt": "مستخرج وقارئ الترجمات الشاشاتية SRT"
   },
   "deviceNames": {
-    "162c80e6a4faab64": "عابر"
+    "062c80e6a4faab64": "عابر"
   }
 }
