@@ -37,164 +37,196 @@
   "whitelistedDevices": {
     "btnVideoEditor": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnImageEditor": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnWatermark": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnCreateBlankImage": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnVideoTrimmer": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnSmartCut": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAudioEditor": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAudioStudio": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAiAnalysis": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnStt": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnOcr": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnFastConverter": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnBoostVolume": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnExtractAudio": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnCompressVideo": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnMergeVideos": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnReverseMedia": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnSlideshowMaker": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnTickerText": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnBatchProcess": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnSpeedControl": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnNoiseReduction": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnBackgroundMusic": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAudioNormalization": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAiSceneInspector": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAiVoiceDubbing": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAudioStemSeparator": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAutoShortsCreator": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnCinematicLutShaders": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnAiSceneAudioDescription": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ],
     "btnSubtitlesOcrSrt": [
       "062c80e6a4faab64",
-      "e0c9ef4bd15c7752"
+      "e0c9ef4bd15c7752",
+      "58df865bb003bac8"
     ]
   },
   "allAvailableFeatureIds": {
-    "btnVideoEditor": "محرر الفيديو الشامل",
-    "btnImageEditor": "محرر الصور",
-    "btnWatermark": "إضافة علامة مائية ونصوص",
-    "btnCreateBlankImage": "إنشاء صورة ملونة فارغة",
-    "btnVideoTrimmer": "قص الفيديو المحدد",
-    "btnSmartCut": "القص الذكي للصمت والهدوء",
-    "btnAudioEditor": "محرر الصوتيات والتأثيرات",
-    "btnAudioStudio": "استوديو الهندسة الصوتية",
-    "btnAiAnalysis": "تحليل الصور والفيديوهات بالذكاء الاصطناعي",
-    "btnStt": "التفريغ التلقائي للصوت إلى نص",
-    "btnOcr": "قراءة وتفريغ النصوص من الصور OCR",
-    "btnFastConverter": "المحول السريع لصيغ الفيديو والصوت",
-    "btnBoostVolume": "تضخيم ورفع مستوى الصوت",
-    "btnExtractAudio": "استخراج الصوت من الفيديو",
-    "btnCompressVideo": "تقليل وحجم وضغط الفيديو",
-    "btnMergeVideos": "دمج الفيديوهات وتأثيرات الانتقال",
-    "btnReverseMedia": "عكس اتجاه تشغيل الفيديو والصوت",
-    "btnSlideshowMaker": "صانع العروض والشرائح من الصور",
-    "btnTickerText": "شريط الأخبار المتحرك على الفيديو",
-    "btnBatchProcess": "المعالجة الجماعية للملفات",
-    "btnSpeedControl": "تغيير سرعة التشغيل",
-    "btnNoiseReduction": "إزالة الضوضاء وتصفية التشويش",
-    "btnBackgroundMusic": "دمج موسيقى خلفية",
-    "btnAudioNormalization": "موازنة مستوى الصوت التلقائي",
-    "btnAiSceneInspector": "مستكشف ومشرح مشاهد الفيديو الذكي",
-    "btnAiVoiceDubbing": "دبلجة وتوليد الصوت بالذكاء الاصطناعي",
-    "btnAudioStemSeparator": "عازل ومحلل الآلات والموسيقى",
-    "btnAutoShortsCreator": "مولد الفيديوهات القصيرة والقوالب الذكية",
-    "btnCinematicLutShaders": "حزمة الفلاتر والتأثيرات السينمائية",
-    "btnAiSceneAudioDescription": "الوصف الصوتي التفاعلي للمكفوفين",
-    "btnSubtitlesOcrSrt": "مستخرج وقارئ الترجمات الشاشاتية SRT"
+    "btnVideoEditor": "\u0645\u062d\u0631\u0631 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0627\u0644\u0634\u0627\u0645\u0644",
+    "btnImageEditor": "\u0645\u062d\u0631\u0631 \u0627\u0644\u0635\u0648\u0631",
+    "btnWatermark": "\u0625\u0636\u0627\u0641\u0629 \u0639\u0644\u0627\u0645\u0629 \u0645\u0627\u0626\u064a\u0629 \u0648\u0646\u0635\u0648\u0635",
+    "btnCreateBlankImage": "\u0625\u0646\u0634\u0627\u0621 \u0635\u0648\u0631\u0629 \u0645\u0644\u0648\u0646\u0629 \u0641\u0627\u0631\u063a\u0629",
+    "btnVideoTrimmer": "\u0642\u0635 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0627\u0644\u0645\u062d\u062f\u062f",
+    "btnSmartCut": "\u0627\u0644\u0642\u0635 \u0627\u0644\u0630\u0643\u064a \u0644\u0644\u0635\u0645\u062a \u0648\u0627\u0644\u0647\u062f\u0648\u0621",
+    "btnAudioEditor": "\u0645\u062d\u0631\u0631 \u0627\u0644\u0635\u0648\u062a\u064a\u0627\u062a \u0648\u0627\u0644\u062a\u0623\u062b\u064a\u0631\u0627\u062a",
+    "btnAudioStudio": "\u0627\u0633\u062a\u0648\u062f\u064a\u0648 \u0627\u0644\u0647\u0646\u062f\u0633\u0629 \u0627\u0644\u0635\u0648\u062a\u064a\u0629",
+    "btnAiAnalysis": "\u062a\u062d\u0644\u064a\u0644 \u0627\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u0641\u064a\u062f\u064a\u0648\u0647\u0627\u062a \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a",
+    "btnStt": "\u0627\u0644\u062a\u0641\u0631\u064a\u063a \u0627\u0644\u062a\u0644\u0642\u0627\u0626\u064a \u0644\u0644\u0635\u0648\u062a \u0625\u0644\u0649 \u0646\u0635",
+    "btnOcr": "\u0642\u0631\u0627\u0621\u0629 \u0648\u062a\u0641\u0631\u064a\u063a \u0627\u0644\u0646\u0635\u0648\u0635 \u0645\u0646 \u0627\u0644\u0635\u0648\u0631 OCR",
+    "btnFastConverter": "\u0627\u0644\u0645\u062d\u0648\u0644 \u0627\u0644\u0633\u0631\u064a\u0639 \u0644\u0635\u064a\u063a \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0648\u0627\u0644\u0635\u0648\u062a",
+    "btnBoostVolume": "\u062a\u0636\u062e\u064a\u0645 \u0648\u0631\u0641\u0639 \u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0635\u0648\u062a",
+    "btnExtractAudio": "\u0627\u0633\u062a\u062e\u0631\u0627\u062c \u0627\u0644\u0635\u0648\u062a \u0645\u0646 \u0627\u0644\u0641\u064a\u062f\u064a\u0648",
+    "btnCompressVideo": "\u062a\u0642\u0644\u064a\u0644 \u0648\u062d\u062c\u0645 \u0648\u0636\u063a\u0637 \u0627\u0644\u0641\u064a\u062f\u064a\u0648",
+    "btnMergeVideos": "\u062f\u0645\u062c \u0627\u0644\u0641\u064a\u062f\u064a\u0648\u0647\u0627\u062a \u0648\u062a\u0623\u062b\u064a\u0631\u0627\u062a \u0627\u0644\u0627\u0646\u062a\u0642\u0627\u0644",
+    "btnReverseMedia": "\u0639\u0643\u0633 \u0627\u062a\u062c\u0627\u0647 \u062a\u0634\u063a\u064a\u0644 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0648\u0627\u0644\u0635\u0648\u062a",
+    "btnSlideshowMaker": "\u0635\u0627\u0646\u0639 \u0627\u0644\u0639\u0631\u0648\u0636 \u0648\u0627\u0644\u0634\u0631\u0627\u0626\u062d \u0645\u0646 \u0627\u0644\u0635\u0648\u0631",
+    "btnTickerText": "\u0634\u0631\u064a\u0637 \u0627\u0644\u0623\u062e\u0628\u0627\u0631 \u0627\u0644\u0645\u062a\u062d\u0631\u0643 \u0639\u0644\u0649 \u0627\u0644\u0641\u064a\u062f\u064a\u0648",
+    "btnBatchProcess": "\u0627\u0644\u0645\u0639\u0627\u0644\u062c\u0629 \u0627\u0644\u062c\u0645\u0627\u0639\u064a\u0629 \u0644\u0644\u0645\u0644\u0641\u0627\u062a",
+    "btnSpeedControl": "\u062a\u063a\u064a\u064a\u0631 \u0633\u0631\u0639\u0629 \u0627\u0644\u062a\u0634\u063a\u064a\u0644",
+    "btnNoiseReduction": "\u0625\u0632\u0627\u0644\u0629 \u0627\u0644\u0636\u0648\u0636\u0627\u0621 \u0648\u062a\u0635\u0641\u064a\u0629 \u0627\u0644\u062a\u0634\u0648\u064a\u0634",
+    "btnBackgroundMusic": "\u062f\u0645\u062c \u0645\u0648\u0633\u064a\u0642\u0649 \u062e\u0644\u0641\u064a\u0629",
+    "btnAudioNormalization": "\u0645\u0648\u0627\u0632\u0646\u0629 \u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0635\u0648\u062a \u0627\u0644\u062a\u0644\u0642\u0627\u0626\u064a",
+    "btnAiSceneInspector": "\u0645\u0633\u062a\u0643\u0634\u0641 \u0648\u0645\u0634\u0631\u062d \u0645\u0634\u0627\u0647\u062f \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0627\u0644\u0630\u0643\u064a",
+    "btnAiVoiceDubbing": "\u062f\u0628\u0644\u062c\u0629 \u0648\u062a\u0648\u0644\u064a\u062f \u0627\u0644\u0635\u0648\u062a \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a",
+    "btnAudioStemSeparator": "\u0639\u0627\u0632\u0644 \u0648\u0645\u062d\u0644\u0644 \u0627\u0644\u0622\u0644\u0627\u062a \u0648\u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649",
+    "btnAutoShortsCreator": "\u0645\u0648\u0644\u062f \u0627\u0644\u0641\u064a\u062f\u064a\u0648\u0647\u0627\u062a \u0627\u0644\u0642\u0635\u064a\u0631\u0629 \u0648\u0627\u0644\u0642\u0648\u0627\u0644\u0628 \u0627\u0644\u0630\u0643\u064a\u0629",
+    "btnCinematicLutShaders": "\u062d\u0632\u0645\u0629 \u0627\u0644\u0641\u0644\u0627\u062a\u0631 \u0648\u0627\u0644\u062a\u0623\u062b\u064a\u0631\u0627\u062a \u0627\u0644\u0633\u064a\u0646\u0645\u0627\u0626\u064a\u0629",
+    "btnAiSceneAudioDescription": "\u0627\u0644\u0648\u0635\u0641 \u0627\u0644\u0635\u0648\u062a\u064a \u0627\u0644\u062a\u0641\u0627\u0639\u0644\u064a \u0644\u0644\u0645\u0643\u0641\u0648\u0641\u064a\u0646",
+    "btnSubtitlesOcrSrt": "\u0645\u0633\u062a\u062e\u0631\u062c \u0648\u0642\u0627\u0631\u0626 \u0627\u0644\u062a\u0631\u062c\u0645\u0627\u062a \u0627\u0644\u0634\u0627\u0634\u0627\u062a\u064a\u0629 SRT"
   },
   "deviceNames": {
     "062c80e6a4faab64": "ahmed salah",
-    "e0c9ef4bd15c7752": "abd alazez al alamry"
+    "e0c9ef4bd15c7752": "abd alazez al alamry",
+    "58df865bb003bac8": "ramez maged"
   }
 }
