@@ -35,37 +35,99 @@
   "newFeatures": [],
   "featurePatches": [],
   "whitelistedDevices": {
-    "btnVideoEditor": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnImageEditor": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnWatermark": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnCreateBlankImage": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnVideoTrimmer": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnSmartCut": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAudioEditor": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAudioStudio": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAiAnalysis": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnStt": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnOcr": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnFastConverter": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnBoostVolume": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnExtractAudio": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnCompressVideo": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnMergeVideos": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnReverseMedia": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnSlideshowMaker": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnTickerText": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnBatchProcess": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnSpeedControl": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnNoiseReduction": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnBackgroundMusic": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAudioNormalization": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAiSceneInspector": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAiVoiceDubbing": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAudioStemSeparator": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAutoShortsCreator": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnCinematicLutShaders": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnAiSceneAudioDescription": ["062c80e6a4faab64", "3c3f39c071632f46"],
-    "btnSubtitlesOcrSrt": ["062c80e6a4faab64", "3c3f39c071632f46"]
+    "btnVideoEditor": [
+      "062c80e6a4faab64"
+    ],
+    "btnImageEditor": [
+      "062c80e6a4faab64"
+    ],
+    "btnWatermark": [
+      "062c80e6a4faab64"
+    ],
+    "btnCreateBlankImage": [
+      "062c80e6a4faab64"
+    ],
+    "btnVideoTrimmer": [
+      "062c80e6a4faab64"
+    ],
+    "btnSmartCut": [
+      "062c80e6a4faab64"
+    ],
+    "btnAudioEditor": [
+      "062c80e6a4faab64"
+    ],
+    "btnAudioStudio": [
+      "062c80e6a4faab64"
+    ],
+    "btnAiAnalysis": [
+      "062c80e6a4faab64"
+    ],
+    "btnStt": [
+      "062c80e6a4faab64"
+    ],
+    "btnOcr": [
+      "062c80e6a4faab64"
+    ],
+    "btnFastConverter": [
+      "062c80e6a4faab64"
+    ],
+    "btnBoostVolume": [
+      "062c80e6a4faab64"
+    ],
+    "btnExtractAudio": [
+      "062c80e6a4faab64"
+    ],
+    "btnCompressVideo": [
+      "062c80e6a4faab64"
+    ],
+    "btnMergeVideos": [
+      "062c80e6a4faab64"
+    ],
+    "btnReverseMedia": [
+      "062c80e6a4faab64"
+    ],
+    "btnSlideshowMaker": [
+      "062c80e6a4faab64"
+    ],
+    "btnTickerText": [
+      "062c80e6a4faab64"
+    ],
+    "btnBatchProcess": [
+      "062c80e6a4faab64"
+    ],
+    "btnSpeedControl": [
+      "062c80e6a4faab64"
+    ],
+    "btnNoiseReduction": [
+      "062c80e6a4faab64"
+    ],
+    "btnBackgroundMusic": [
+      "062c80e6a4faab64"
+    ],
+    "btnAudioNormalization": [
+      "062c80e6a4faab64"
+    ],
+    "btnAiSceneInspector": [
+      "062c80e6a4faab64"
+    ],
+    "btnAiVoiceDubbing": [
+      "062c80e6a4faab64"
+    ],
+    "btnAudioStemSeparator": [
+      "062c80e6a4faab64"
+    ],
+    "btnAutoShortsCreator": [
+      "062c80e6a4faab64"
+    ],
+    "btnCinematicLutShaders": [
+      "062c80e6a4faab64"
+    ],
+    "btnAiSceneAudioDescription": [
+      "062c80e6a4faab64"
+    ],
+    "btnSubtitlesOcrSrt": [
+      "062c80e6a4faab64"
+    ]
   },
   "allAvailableFeatureIds": {
     "btnVideoEditor": "محرر الفيديو الشامل",
@@ -99,5 +161,8 @@
     "btnCinematicLutShaders": "حزمة الفلاتر والتأثيرات السينمائية",
     "btnAiSceneAudioDescription": "الوصف الصوتي التفاعلي للمكفوفين",
     "btnSubtitlesOcrSrt": "مستخرج وقارئ الترجمات الشاشاتية SRT"
+  },
+  "deviceNames": {
+    "062c80e6a4faab64": "عابر"
   }
 }
