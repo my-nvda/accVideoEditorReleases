@@ -36,97 +36,128 @@
   "featurePatches": [],
   "whitelistedDevices": {
     "btnVideoEditor": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnImageEditor": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnWatermark": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnCreateBlankImage": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnVideoTrimmer": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnSmartCut": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAudioEditor": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAudioStudio": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAiAnalysis": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnStt": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnOcr": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnFastConverter": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnBoostVolume": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnExtractAudio": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnCompressVideo": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnMergeVideos": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnReverseMedia": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnSlideshowMaker": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnTickerText": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnBatchProcess": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnSpeedControl": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnNoiseReduction": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnBackgroundMusic": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAudioNormalization": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAiSceneInspector": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAiVoiceDubbing": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAudioStemSeparator": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAutoShortsCreator": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnCinematicLutShaders": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnAiSceneAudioDescription": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ],
     "btnSubtitlesOcrSrt": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
     ]
   },
   "allAvailableFeatureIds": {
@@ -163,6 +194,7 @@
     "btnSubtitlesOcrSrt": "\u0645\u0633\u062a\u062e\u0631\u062c \u0648\u0642\u0627\u0631\u0626 \u0627\u0644\u062a\u0631\u062c\u0645\u0627\u062a \u0627\u0644\u0634\u0627\u0634\u0627\u062a\u064a\u0629 SRT"
   },
   "deviceNames": {
-    "062c80e6a4faab64": "ahmed salah"
+    "062c80e6a4faab64": "ahmed salah",
+    "e0c9ef4bd15c7752": "abd alazez al alamry"
   }
 }
