@@ -37,164 +37,164 @@
   "whitelistedDevices": {
     "btnVideoEditor": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnImageEditor": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnWatermark": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnCreateBlankImage": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnVideoTrimmer": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnSmartCut": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnAudioEditor": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnAudioStudio": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnAiAnalysis": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnStt": [
       "062c80e6a4faab64",
-      "58df865bb003bac8",
-      "2d02ab680638812f"
+      "2d02ab680638812f",
+      "58df865bb003bac8"
     ],
     "btnOcr": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnFastConverter": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnBoostVolume": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnExtractAudio": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnCompressVideo": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnMergeVideos": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnReverseMedia": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnSlideshowMaker": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnTickerText": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnBatchProcess": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnSpeedControl": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnNoiseReduction": [
       "062c80e6a4faab64"
     ],
     "btnBackgroundMusic": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnAudioNormalization": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnAiSceneInspector": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnAiVoiceDubbing": [
       "062c80e6a4faab64"
     ],
     "btnAudioStemSeparator": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnAutoShortsCreator": [
       "062c80e6a4faab64",
+      "2d02ab680638812f",
       "58df865bb003bac8",
-      "e0c9ef4bd15c7752",
-      "2d02ab680638812f"
+      "e0c9ef4bd15c7752"
     ],
     "btnCinematicLutShaders": [
       "062c80e6a4faab64",
@@ -204,7 +204,8 @@
       "062c80e6a4faab64"
     ],
     "btnSubtitlesOcrSrt": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "58df865bb003bac8"
     ]
   },
   "allAvailableFeatureIds": {
@@ -242,8 +243,8 @@
   },
   "deviceNames": {
     "062c80e6a4faab64": "ahmed salah",
+    "2d02ab680638812f": "omar alganzoury",
     "58df865bb003bac8": "ramez maged",
-    "e0c9ef4bd15c7752": "abd alazez al alamry",
-    "2d02ab680638812f": "omar alganzoury"
+    "e0c9ef4bd15c7752": "abd alazez al alamry"
   }
 }
