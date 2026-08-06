@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -83,11 +83,11 @@ class ReverseMediaFragment : Fragment() {
                     val commandArgs = mutableListOf("-y", "-i", input)
                     if (reverseVideo) {
                         commandArgs.add("-vf")
-                        commandArgs.add("reverse")
+                        commandArgs.add("reverse,setpts=PTS-STARTPTS")
                     }
                     if (reverseAudio) {
                         commandArgs.add("-af")
-                        commandArgs.add("areverse")
+                        commandArgs.add("areverse,asetpts=PTS-STARTPTS")
                     }
                     commandArgs.add(outputPath)
                     

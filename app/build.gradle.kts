@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 113
-        versionName = "2.9.5"
+        versionCode = 114
+        versionName = "2.9.6"
     }
 
     val localProperties = Properties()
