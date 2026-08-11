@@ -264,7 +264,7 @@
     "btnAudioStemSeparator": "عازل ومحلل الآلات والموسيقى",
     "btnAutoShortsCreator": "مولد الفيديوهات القصيرة والقوالب الذكية",
     "btnCinematicLutShaders": "حزمة الفلاتر والتأثيرات السينمائية",
-    "btnAiSceneAudioDescription": "الوصف الصوتي التفاعلي للمكفوفين",
+    "btnAiSceneAudioDescription": "الوصف الصوتي التفاعلي",
     "btnSubtitlesOcrSrt": "مستخرج وقارئ الترجمات الشاشاتية SRT"
   },
   "deviceNames": {
@@ -279,5 +279,17 @@
   "telemetryConfig": {
     "token": "Uks4eGQwcDhIZjBDdkJva29NWUdqQ3p5UXhMc1MxeElyaXpFX3BoZw==",
     "repo": "my-nvda/AccessibleVideoEditor"
-  }
+  },
+  "announcements": [
+    {
+      "id": "ann_1786465232230",
+      "title": "إختبار",
+      "message": "هذا مجرد إختبار"
+    },
+    {
+      "id": "ann_1786465307600",
+      "title": "تجربة أخرى",
+      "message": "مرحبا بكم"
+    }
+  ]
 }
