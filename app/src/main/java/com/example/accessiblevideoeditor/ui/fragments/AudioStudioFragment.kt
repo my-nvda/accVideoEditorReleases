@@ -67,7 +67,7 @@ class AudioStudioFragment : Fragment() {
         if (isGranted) {
             startRecordingAudio()
         } else {
-            Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -215,7 +215,7 @@ class AudioStudioFragment : Fragment() {
             timerHandler.post(timerRunnable)
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(requireContext(), "Error starting recording: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_error_start_record, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -263,7 +263,7 @@ class AudioStudioFragment : Fragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(requireContext(), "Error stopping recording", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_error_stop_record), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -285,7 +285,7 @@ class AudioStudioFragment : Fragment() {
         
         activeRecordingPath?.let { File(it).delete() }
         activeRecordingPath = null
-        Toast.makeText(requireContext(), "Recording cancelled", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_record_cancelled), Toast.LENGTH_SHORT).show()
     }
     
     private fun processRecordedAudio(inputPath: String) {

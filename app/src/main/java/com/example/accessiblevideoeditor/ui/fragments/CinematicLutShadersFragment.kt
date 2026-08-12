@@ -31,7 +31,7 @@ class CinematicLutShadersFragment : Fragment() {
     private val selectMediaLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedMediaUri = uri
-            binding.tvSelectedMedia.text = "الملف المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            binding.tvSelectedMedia.text = AppStrings.get(requireContext(), R.string.label_selected_file_path, uri.lastPathSegment ?: uri.toString())
         }
     }
 
@@ -69,12 +69,12 @@ class CinematicLutShadersFragment : Fragment() {
             }
 
             if (selectedMediaUri == null) {
-                Toast.makeText(currentContext, "الرجاء اختيار ملف صورة أو فيديو أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.toast_select_video_or_image), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تطبيق فلاتر اللوت السينمائي ومعالجة الألوان...")
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(AppStrings.get(currentContext, R.string.msg_lut_apply_start))
                 
                 val inputUri = selectedMediaUri ?: return@launch
                 val isVideo = com.example.accessiblevideoeditor.media.MediaUtils.isVideoFile(currentContext, inputUri)
@@ -137,12 +137,12 @@ class CinematicLutShadersFragment : Fragment() {
                 if (success) {
                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                     AlertDialog.Builder(currentContext)
-                        .setTitle("تمت العملية بنجاح")
-                        .setMessage("تم تطبيق الفلتر السينمائي ومعالجة ألوان الملف المختار وحفظه في الاستوديو (Gallery).")
-                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .setTitle(AppStrings.get(currentContext, R.string.msg_dialog_success_title))
+                        .setMessage(AppStrings.get(currentContext, R.string.msg_lut_success))
+                        .setPositiveButton(AppStrings.get(currentContext, R.string.btn_ok)) { d, _ -> d.dismiss() }
                         .show()
                 } else {
-                    Toast.makeText(currentContext, "فشل تطبيق الفلتر السينمائي", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_lut_failed), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -152,11 +152,11 @@ class CinematicLutShadersFragment : Fragment() {
         val currentContext = context ?: return
         val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
         if (modelFile != null && modelFile.exists()) {
-            binding.tvModelStatus.text = "حالة النموذج: حزمة الفلاتر واللوت محملة محلياً ✅ (${modelFile.length() / 1024} KB)"
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_lut_loaded, modelFile.length() / 1024)
             binding.btnDownloadModel.visibility = View.GONE
             binding.pbModelDownload.visibility = View.GONE
         } else {
-            binding.tvModelStatus.text = "حالة النموذج: حزمة الفلاتر غير مثبتة محلياً (حجمها 5 MB)"
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_lut_not_installed)
             binding.btnDownloadModel.visibility = View.VISIBLE
             binding.pbModelDownload.visibility = View.GONE
         }
@@ -166,13 +166,13 @@ class CinematicLutShadersFragment : Fragment() {
         val currentActivity = activity ?: return
         val dialogContext = android.view.ContextThemeWrapper(currentActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
         AlertDialog.Builder(dialogContext)
-            .setTitle("تنزيل نموذج الذكاء الاصطناعي")
-            .setMessage("يتطلب هذا المحرك تنزيل حزمة الفلاتر السينمائية (حجمها 5 MB). هل تريد بدء التنزيل الآن؟")
-            .setPositiveButton("تنزيل الآن") { dialog, _ ->
+            .setTitle(AppStrings.get(dialogContext, R.string.dialog_download_title))
+            .setMessage(AppStrings.get(dialogContext, R.string.dialog_download_message_lut))
+            .setPositiveButton(AppStrings.get(dialogContext, R.string.btn_download_now)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
                 startDownloadingModel()
             }
-            .setNegativeButton("لاحقاً") { dialog, _ ->
+            .setNegativeButton(AppStrings.get(dialogContext, R.string.btn_later)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
             }
             .show()
@@ -183,7 +183,7 @@ class CinematicLutShadersFragment : Fragment() {
         binding.btnDownloadModel.visibility = View.GONE
         binding.pbModelDownload.visibility = View.VISIBLE
         binding.pbModelDownload.progress = 0
-        binding.tvModelStatus.text = "جاري تنزيل نموذج الذكاء الاصطناعي من السيرفر..."
+        binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_starting)
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val success = CloudConfigManager.downloadFeatureModel(
@@ -193,7 +193,7 @@ class CinematicLutShadersFragment : Fragment() {
             ) { percent ->
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
-                    binding.tvModelStatus.text = "جاري التنزيل... التقدم: $percent%"
+                    binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_progress, percent)
                     if (percent % 5 == 0) {
                         try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     }
@@ -201,9 +201,9 @@ class CinematicLutShadersFragment : Fragment() {
             }
 
             if (success) {
-                try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_success), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_failed), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

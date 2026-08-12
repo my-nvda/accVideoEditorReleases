@@ -128,7 +128,7 @@ class ImageEditorFragment : Fragment() {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     val currentContext = context ?: return@withContext
-                    Toast.makeText(currentContext, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.string_73, e.message.orEmpty()), Toast.LENGTH_SHORT).show()
                 }
             } finally {
                 withContext(NonCancellable) {

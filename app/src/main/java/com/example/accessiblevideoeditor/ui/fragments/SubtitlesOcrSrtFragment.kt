@@ -33,7 +33,7 @@ class SubtitlesOcrSrtFragment : Fragment() {
     private val selectVideoLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedVideoUri = uri
-            binding.tvSelectedVideoOcr.text = "الفيديو المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            binding.tvSelectedVideoOcr.text = AppStrings.get(requireContext(), R.string.label_selected_video, uri.lastPathSegment ?: uri.toString())
         }
     }
 
@@ -92,12 +92,12 @@ class SubtitlesOcrSrtFragment : Fragment() {
             val srtUri = selectedSrtUri
             
             if (videoUri == null || srtUri == null) {
-                Toast.makeText(currentContext, "الرجاء اختيار فيديو وملف الترجمة أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.toast_select_video_and_srt), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري دمج وطباعة ملف الترجمة على الفيديو...")
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(AppStrings.get(currentContext, R.string.msg_burn_start))
                 
                 val success = withContext(Dispatchers.IO) {
                     try {
@@ -140,12 +140,12 @@ class SubtitlesOcrSrtFragment : Fragment() {
                 if (success) {
                     com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
                     AlertDialog.Builder(currentContext)
-                        .setTitle("تمت العملية بنجاح")
-                        .setMessage("تم دمج وطباعة ملف الترجمة SRT على الفيديو بنجاح وحفظه في المعرض (Gallery).")
-                        .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                        .setTitle(AppStrings.get(currentContext, R.string.msg_dialog_success_title))
+                        .setMessage(AppStrings.get(currentContext, R.string.msg_burn_success_body))
+                        .setPositiveButton(AppStrings.get(currentContext, R.string.btn_ok)) { d, _ -> d.dismiss() }
                         .show()
                 } else {
-                    Toast.makeText(currentContext, "فشل دمج ملف الترجمة، يرجى التحقق من الملف والمحاولة لاحقاً", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_burn_failed), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -159,12 +159,12 @@ class SubtitlesOcrSrtFragment : Fragment() {
             }
 
             if (selectedVideoUri == null) {
-                Toast.makeText(currentContext, "الرجاء اختيار ملف فيديو أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.toast_select_video_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري مسح إطارات الفيديو ضوئياً واستخراج الترجمة المطبوعة...")
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(AppStrings.get(currentContext, R.string.msg_ocr_scan_start))
                 
                 val inputUri = selectedVideoUri ?: return@launch
                 val ocrProcessor = com.example.accessiblevideoeditor.media.OcrProcessor()
@@ -175,9 +175,9 @@ class SubtitlesOcrSrtFragment : Fragment() {
                         val text2 = ocrProcessor.extractTextFromVideoFrame(currentContext, inputUri, 5)
                         val text3 = ocrProcessor.extractTextFromVideoFrame(currentContext, inputUri, 8)
                         
-                        val clean1 = if (text1.contains("API Key is missing") || text1.contains("Error")) "الترجمة المستخرجة الأولى بالذكاء الاصطناعي" else text1
-                        val clean2 = if (text2.contains("API Key is missing") || text2.contains("Error")) "النص المستخرج الثاني من المشهد" else text2
-                        val clean3 = if (text3.contains("API Key is missing") || text3.contains("Error")) "نهاية المقطع والترجمة التوضيحية" else text3
+                        val clean1 = if (text1.contains("API Key is missing") || text1.contains("Error")) AppStrings.get(currentContext, R.string.srt_placeholder_1) else text1
+                        val clean2 = if (text2.contains("API Key is missing") || text2.contains("Error")) AppStrings.get(currentContext, R.string.srt_placeholder_2) else text2
+                        val clean3 = if (text3.contains("API Key is missing") || text3.contains("Error")) AppStrings.get(currentContext, R.string.srt_placeholder_3) else text3
                         
                         """
                             1
@@ -197,7 +197,7 @@ class SubtitlesOcrSrtFragment : Fragment() {
                         """
                             1
                             00:00:01,000 --> 00:00:05,000
-                            حدث خطأ أثناء استخراج الترجمة تلقائياً.
+                            ${AppStrings.get(currentContext, R.string.srt_error_placeholder)}
                         """.trimIndent()
                     }
                 }
@@ -222,17 +222,17 @@ class SubtitlesOcrSrtFragment : Fragment() {
                     }
                     
                     AlertDialog.Builder(currentContext)
-                        .setTitle("تمت العملية بنجاح")
-                        .setMessage("تم استخراج الترجمات وحفظ ملف SRT بنجاح. هل تريد مشاركة أو حفظ ملف الترجمة الآن؟")
-                        .setPositiveButton("مشاركة") { d, _ ->
+                        .setTitle(AppStrings.get(currentContext, R.string.msg_dialog_success_title))
+                        .setMessage(AppStrings.get(currentContext, R.string.msg_srt_success_body))
+                        .setPositiveButton(AppStrings.get(currentContext, R.string.string_172)) { d, _ ->
                             d.dismiss()
-                            currentContext.startActivity(android.content.Intent.createChooser(shareIntent, "حفظ/مشاركة ملف الترجمة"))
+                            currentContext.startActivity(android.content.Intent.createChooser(shareIntent, AppStrings.get(currentContext, R.string.chooser_save_share_srt)))
                         }
-                        .setNegativeButton("إلغاء") { d, _ -> d.dismiss() }
+                        .setNegativeButton(AppStrings.get(currentContext, R.string.string_207)) { d, _ -> d.dismiss() }
                         .show()
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(currentContext, "فشل حفظ ومشاركة ملف الترجمة المخرّج", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_srt_save_failed), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -242,11 +242,11 @@ class SubtitlesOcrSrtFragment : Fragment() {
         val currentContext = context ?: return
         val modelFile = CloudConfigManager.getDownloadedModelFile(currentContext, featureId)
         if (modelFile != null && modelFile.exists()) {
-            binding.tvModelStatus.text = "حالة النموذج: نموذج Tesseract Arabic OCR محمل محلياً ✅ (${modelFile.length() / 1024} KB)"
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_ocr_loaded, modelFile.length() / 1024)
             binding.btnDownloadModel.visibility = View.GONE
             binding.pbModelDownload.visibility = View.GONE
         } else {
-            binding.tvModelStatus.text = "حالة النموذج: النموذج غير مثبت محلياً (حجمه 1.4 MB)"
+            binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.model_status_ocr_not_installed)
             binding.btnDownloadModel.visibility = View.VISIBLE
             binding.pbModelDownload.visibility = View.GONE
         }
@@ -256,13 +256,13 @@ class SubtitlesOcrSrtFragment : Fragment() {
         val currentActivity = activity ?: return
         val dialogContext = android.view.ContextThemeWrapper(currentActivity, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
         AlertDialog.Builder(dialogContext)
-            .setTitle("تنزيل نموذج الذكاء الاصطناعي")
-            .setMessage("يتطلب هذا المحرك تنزيل نموذج التعرّف الضوئي العربي (حجمه 1.4 MB). هل تريد بدء التنزيل الآن؟")
-            .setPositiveButton("تنزيل الآن") { dialog, _ ->
+            .setTitle(AppStrings.get(dialogContext, R.string.dialog_download_title))
+            .setMessage(AppStrings.get(dialogContext, R.string.dialog_download_message_ocr))
+            .setPositiveButton(AppStrings.get(dialogContext, R.string.btn_download_now)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
                 startDownloadingModel()
             }
-            .setNegativeButton("لاحقاً") { dialog, _ ->
+            .setNegativeButton(AppStrings.get(dialogContext, R.string.btn_later)) { dialog, _ ->
                 try { dialog.dismiss() } catch (_: Exception) {}
             }
             .show()
@@ -273,7 +273,7 @@ class SubtitlesOcrSrtFragment : Fragment() {
         binding.btnDownloadModel.visibility = View.GONE
         binding.pbModelDownload.visibility = View.VISIBLE
         binding.pbModelDownload.progress = 0
-        binding.tvModelStatus.text = "جاري تنزيل نموذج الذكاء الاصطناعي من السيرفر..."
+        binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_starting)
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val success = CloudConfigManager.downloadFeatureModel(
@@ -283,7 +283,7 @@ class SubtitlesOcrSrtFragment : Fragment() {
             ) { percent ->
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
-                    binding.tvModelStatus.text = "جاري التنزيل... التقدم: $percent%"
+                    binding.tvModelStatus.text = AppStrings.get(currentContext, R.string.msg_download_progress, percent)
                     if (percent % 5 == 0) {
                         try { BeepUtils.playProgressBeep(percent) } catch (_: Exception) {}
                     }
@@ -291,9 +291,9 @@ class SubtitlesOcrSrtFragment : Fragment() {
             }
 
             if (success) {
-                try { Toast.makeText(currentContext, "تم تنزيل وتفعيل النموذج بنجاح!", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_success), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_failed), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

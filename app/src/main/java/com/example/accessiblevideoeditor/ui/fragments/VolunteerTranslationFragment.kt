@@ -40,17 +40,17 @@ class VolunteerTranslationFragment : Fragment() {
     private lateinit var adapter: TranslationAdapter
 
     private val supportedLanguages = listOf(
-        "ar" to "ط§ظ„ط¹ط±ط¨ظٹط©",
-        "en" to "ط§ظ„ط¥ظ†ط¬ظ„ظٹط²ظٹط©",
-        "fr" to "ط§ظ„ظپط±ظ†ط³ظٹط©",
-        "es" to "ط§ظ„ط¥ط³ط¨ط§ظ†ظٹط©",
-        "zh-CN" to "ط§ظ„طµظٹظ†ظٹط©",
-        "ru" to "ط§ظ„ط±ظˆط³ظٹط©",
-        "ja" to "ط§ظ„ظٹط§ط¨ط§ظ†ظٹط©",
-        "he" to "ط§ظ„ط¹ط¨ط±ظٹط©",
-        "fa" to "ط§ظ„ظپط§ط±ط³ظٹط©",
-        "ur" to "ط§ظ„ط£ط±ط¯ظٹط©",
-        "tr" to "ط§ظ„طھط±ظƒظٹط©"
+        "ar" to "العربية",
+        "en" to "الإنجليزية",
+        "fr" to "الفرنسية",
+        "es" to "الإسبانية",
+        "zh-CN" to "الصينية",
+        "ru" to "الروسية",
+        "ja" to "اليابانية",
+        "he" to "العبرية",
+        "fa" to "الفارسية",
+        "ur" to "الأردية",
+        "tr" to "التركية"
     )
 
     private val exportLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
@@ -331,12 +331,12 @@ class VolunteerTranslationFragment : Fragment() {
     
     private fun getCategoryArabic(arText: String): String {
         val text = arText.lowercase()
-        if (listOf("ط¥ط¹ط¯ط§ط¯", "ظ„ط؛ط©", "ظ…ظپطھط§ط­", "طھط·ط¨ظٹظ‚", "ظ„ظˆظ†", "ط´ط§ط´ط©").any { it in text }) return "ط¥ط¹ط¯ط§ط¯ط§طھ"
-        if (listOf("ظ‚طµ", "ط§ط³طھط®ط±ط§ط¬", "طµظ…طھ", "طµظˆطھ", "ظپظٹط¯ظٹظˆ", "ظ…ط¹ط§ظ„ط¬ط©", "طھط­ط¯ظٹط¯", "طھطµط¯ظٹط±", "ط¯ظ…ط¬", "طھط­ظˆظٹظ„", "طµظˆط±ط©").any { it in text }) return "ط£ط¯ظˆط§طھ ظˆظˆط³ط§ط¦ط·"
-        if (listOf("طھط´ط؛ظٹظ„", "ط§ظٹظ‚ط§ظپ", "ط¥ظٹظ‚ط§ظپ", "طھظ‚ط¯ظٹظ…", "طھط£ط®ظٹط±", "ظ…ط¯ط©", "ظˆظ‚طھ").any { it in text }) return "ظ…ط´ط؛ظ„ ط§ظ„ظپظٹط¯ظٹظˆ"
-        if (listOf("ظ…ط³ط§ط¹ط¯ط©", "ط­ظˆظ„", "طھط­ط¯ظٹط«", "ظ…ط·ظˆط±", "ط¯ظ„ظٹظ„", "ط¨ط±ظٹط¯").any { it in text }) return "ظ…ط³ط§ط¹ط¯ط© ظˆط­ظˆظ„"
-        if (listOf("ط®ط·ط£", "ظپط´ظ„", "ظ†ط¬ط§ط­", "ط§ظ†طھط¸ط±", "طھط­ظ…ظٹظ„", "ط¥ظ„ط؛ط§ط،", "ظ…ظˆط§ظپظ‚", "ظ†ط¹ظ…", "ظ„ط§", "ط­ظپط¸", "ظٹط±ط¬ظ‰").any { it in text }) return "ط­ظˆط§ط±ط§طھ ط¹ط§ظ…ط©"
-        return "ظ†طµظˆطµ ط¹ط§ظ…ط©"
+        if (listOf("إعداد", "لغة", "مفتاح", "تطبيق", "لون", "شاشة").any { it in text }) return "إعدادات"
+        if (listOf("قص", "استخراج", "صمت", "صوت", "فيديو", "معالجة", "تحديد", "تصدير", "دمج", "تحويل", "صورة").any { it in text }) return "أدوات ووسائط"
+        if (listOf("تشغيل", "ايقاف", "إيقاف", "تقديم", "تأخير", "مدة", "وقت").any { it in text }) return "مشغل الفيديو"
+        if (listOf("مساعدة", "حول", "تحديث", "مطور", "دليل", "بريد").any { it in text }) return "مساعدة وحول"
+        if (listOf("خطأ", "فشل", "نجاح", "انتظر", "تحميل", "إلغاء", "موافق", "نعم", "لا", "حفظ", "يرجى").any { it in text }) return "حوارات عامة"
+        return "نصوص عامة"
     }
 
     override fun onDestroyView() {

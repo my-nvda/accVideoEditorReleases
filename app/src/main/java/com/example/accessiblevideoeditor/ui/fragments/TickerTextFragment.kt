@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -72,11 +72,11 @@ class TickerTextFragment : Fragment() {
         binding.btnApply.setOnClickListener {
             val vUri = selectedVideoUri
             if (vUri == null) {
-                Toast.makeText(requireContext(), "Please select a video", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_select_video_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (textOptions.text.isBlank()) {
-                Toast.makeText(requireContext(), "Please enter some text", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_enter_text), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             processTickerText(vUri)
@@ -134,7 +134,7 @@ class TickerTextFragment : Fragment() {
                 if (e is CancellationException) throw e
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_SHORT).show()
                 }
             } finally {
                 withContext(NonCancellable) {

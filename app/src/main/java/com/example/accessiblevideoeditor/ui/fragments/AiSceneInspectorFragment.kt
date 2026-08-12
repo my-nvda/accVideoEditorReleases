@@ -80,7 +80,7 @@ class AiSceneInspectorFragment : Fragment() {
         val uri = selectedUri ?: return
 
         viewLifecycleOwner.lifecycleScope.launch {
-            ProcessingManager.startProcessing("جاري تحليل ومشرح مشاهد الفيديو بواسطة الذكاء الاصطناعي...", cancellable = true)
+            ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.msg_scene_inspector_start), cancellable = true)
             ProcessingManager.updateJob(coroutineContext[kotlinx.coroutines.Job])
 
             var resultText = ""
@@ -101,7 +101,7 @@ class AiSceneInspectorFragment : Fragment() {
                     }
                     val mimeType = currentContext.contentResolver.getType(uri) ?: "video/mp4"
 
-                    val promptText = "قم بتحليل هذا الفيديو وتفكيكه إلى مشاهد زمنيّة مفصلة موجهة لشخص كفيف. اذكر كل مشهد بتوقيته الزمني التقديري مع شرح دقيق للأحداث البصرية والأشخاص والحركات والخلفيات باللغة العربية."
+                    val promptText = AppStrings.get(currentContext, R.string.prompt_scene_inspector)
 
                     val inputContent = content {
                         blob(mimeType, bytes)
@@ -109,12 +109,12 @@ class AiSceneInspectorFragment : Fragment() {
                     }
 
                     resultText = withContext(Dispatchers.IO) {
-                        model.generateContent(inputContent).text ?: "لم يتم العثور على تحليل للمشاهد."
+                        model.generateContent(inputContent).text ?: AppStrings.get(currentContext, R.string.msg_scene_no_analysis)
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                resultText = "حدث خطأ أثناء تحليل المشاهد: ${e.message}"
+                resultText = AppStrings.get(requireContext(), R.string.msg_scene_error, e.message.orEmpty())
             } finally {
                 ProcessingManager.stopProcessing()
                 binding.etResultText.setText(resultText)

@@ -41,6 +41,42 @@ object FFmpegProcessor {
         return 0f
     }
 
+    private fun injectQualitySettings(commandArgs: Array<String>): Array<String> {
+        val quality = com.example.accessiblevideoeditor.ui.SettingsManager.exportQuality
+        if (quality == "high") return commandArgs
+        
+        val list = commandArgs.toMutableList()
+        val cvIdx = list.indexOf("-c:v")
+        if (cvIdx != -1 && cvIdx + 1 < list.size && list[cvIdx + 1] == "mpeg4") {
+            val qvIdx = list.indexOf("-q:v")
+            val bvIdx = list.indexOf("-b:v")
+            val targetVBitrate = if (quality == "medium") "1.5M" else "600k"
+            
+            if (qvIdx != -1 && qvIdx + 1 < list.size) {
+                list[qvIdx] = "-b:v"
+                list[qvIdx + 1] = targetVBitrate
+            } else if (bvIdx != -1 && bvIdx + 1 < list.size) {
+                list[bvIdx + 1] = targetVBitrate
+            } else {
+                list.add(cvIdx + 2, "-b:v")
+                list.add(cvIdx + 3, targetVBitrate)
+            }
+            
+            val caIdx = list.indexOf("-c:a")
+            if (caIdx != -1 && caIdx + 1 < list.size && list[caIdx + 1] == "aac") {
+                val baIdx = list.indexOf("-b:a")
+                val targetABitrate = if (quality == "medium") "128k" else "96k"
+                if (baIdx != -1 && baIdx + 1 < list.size) {
+                    list[baIdx + 1] = targetABitrate
+                } else {
+                    list.add(caIdx + 2, "-b:a")
+                    list.add(caIdx + 3, targetABitrate)
+                }
+            }
+        }
+        return list.toTypedArray()
+    }
+
     suspend fun executeWithProgress(
         commandArgs: Array<String>,
         sourceVideo: String? = null,
@@ -49,6 +85,7 @@ object FFmpegProcessor {
         progressScale: Float = 1.0f,
         logCollector: ((String) -> Unit)? = null
     ): Boolean = kotlinx.coroutines.suspendCancellableCoroutine { continuation ->
+        val finalCommandArgs = injectQualitySettings(commandArgs)
         var durationMs = totalDurationMs ?: getMediaDurationMs(sourceVideo)
         val startTime = System.currentTimeMillis()
         var maxPercentage = 0f
@@ -56,7 +93,7 @@ object FFmpegProcessor {
         var accumulatedTimeOffsetMs = 0.0
 
         val session = FFmpegKit.executeWithArgumentsAsync(
-            commandArgs,
+            finalCommandArgs,
             { session ->
                 if (continuation.isActive) {
                     val isSuccess = ReturnCode.isSuccess(session.returnCode)
@@ -64,7 +101,7 @@ object FFmpegProcessor {
                         val finalPercent = (progressOffset + (100f * progressScale)).coerceIn(0f, 100f)
                         ProcessingManager.updateProgress(finalPercent / 100f, "")
                     } else {
-                        val commandStr = commandArgs.joinToString(" ")
+                        val commandStr = finalCommandArgs.joinToString(" ")
                         val outputStr = session.allLogsAsString ?: ""
                         val context = ProcessingManager.appContext
                         if (context != null) {

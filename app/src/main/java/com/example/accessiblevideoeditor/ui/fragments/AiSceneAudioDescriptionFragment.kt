@@ -31,7 +31,7 @@ class AiSceneAudioDescriptionFragment : Fragment() {
     private val selectVideoLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedVideoUri = uri
-            binding.tvSelectedVideo.text = "الفيديو المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            binding.tvSelectedVideo.text = AppStrings.get(requireContext(), R.string.label_selected_video, uri.lastPathSegment ?: uri.toString())
         }
     }
 
@@ -69,12 +69,12 @@ class AiSceneAudioDescriptionFragment : Fragment() {
             }
 
             if (selectedVideoUri == null) {
-                Toast.makeText(currentContext, "الرجاء اختيار ملف فيديو أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.toast_select_video_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحليل مشاهد الفيديو وإنشاء الوصف الصوتي...")
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(AppStrings.get(currentContext, R.string.msg_ad_analyze_start))
                 
                 val inputUri = selectedVideoUri ?: return@launch
                 val outputPath = currentContext.cacheDir.absolutePath + "/audio_desc_out_${System.currentTimeMillis()}.mp4"
@@ -110,7 +110,7 @@ class AiSceneAudioDescriptionFragment : Fragment() {
                             )
                             
                             // 2. Query Gemini if API key is present
-                            var descriptionText = "تم إنشاء مسار وصف المشهد الصوتي للمكفوفين."
+                            var descriptionText = AppStrings.get(currentContext, R.string.msg_ad_description_fallback)
                             val apiKey = com.example.accessiblevideoeditor.ui.SettingsManager.geminiApiKey.trim()
                             val modelName = com.example.accessiblevideoeditor.ui.SettingsManager.geminiModel ?: "gemini-2.5-flash"
                             
@@ -131,7 +131,7 @@ class AiSceneAudioDescriptionFragment : Fragment() {
                                             if (b2 != null) image(b2)
                                             if (b3 != null) image(b3)
                                             if (b4 != null) image(b4)
-                                            text("هذه 4 لقطات متتالية من فيديو تمثل الترتيب الزمني للأحداث. صف أحداث الفيديو بالكامل بالتفصيل باللغة العربية كقصة متكاملة ومستمرة لوصف المشاهد للمكفوفين (في جملتين أو ثلاث جمل قصيرة تلخص التطور من البداية للنهاية دون ذكر أن هذه لقطات أو صور).")
+                                            text(AppStrings.get(currentContext, R.string.prompt_ad_4frames))
                                         }
                                     )
                                     val respText = response.text

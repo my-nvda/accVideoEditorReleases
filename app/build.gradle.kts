@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 114
-        versionName = "2.9.6"
+        versionCode = 115
+        versionName = "2.9.7"
     }
 
     val localProperties = Properties()
@@ -116,6 +116,7 @@ dependencies {
   // Navigation
   implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
   implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+  implementation("androidx.work:work-runtime-ktx:2.9.0")
   
   // FFmpeg for Media Processing
   implementation(libs.ffmpeg.kit.full)

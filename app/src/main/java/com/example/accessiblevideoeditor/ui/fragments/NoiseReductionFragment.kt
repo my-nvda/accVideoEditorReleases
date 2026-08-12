@@ -120,7 +120,7 @@ class NoiseReductionFragment : Fragment() {
                             success = processCloudDeepFilterNet2(tempInput, isVideo, levelIndex, outputPath)
                             if (!success) {
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(requireContext(), "الخدمة السحابية غير متوفرة، جاري استخدام DeepFilterNet3 محلياً...", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.msg_noise_cloud_fallback), Toast.LENGTH_SHORT).show()
                                 }
                                 success = processLocalDeepFilterNet3(tempInput, isVideo, levelIndex, outputPath)
                             }
@@ -149,7 +149,7 @@ class NoiseReductionFragment : Fragment() {
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 withContext(Dispatchers.Main) {
-                    ProcessingManager.showError(e.message ?: "Noise reduction failed")
+                    ProcessingManager.showError(e.message ?: AppStrings.get(requireContext(), R.string.msg_noise_failed_fallback))
                 }
             } finally {
                 withContext(NonCancellable) {
@@ -176,7 +176,7 @@ class NoiseReductionFragment : Fragment() {
             val extractSession = FFmpegKit.executeWithArguments(extractCmd)
             if (!ReturnCode.isSuccess(extractSession.returnCode) || !pcmInput.exists() || pcmInput.length() == 0L) {
                 val ffmpegLogs = extractSession.allLogsAsString ?: extractSession.output ?: "Unknown FFmpeg error"
-                val err = "فشل استخراج محتوى الصوت إلى PCM خام:\n$ffmpegLogs"
+                val err = AppStrings.get(requireContext(), R.string.msg_noise_pcm_failed, ffmpegLogs)
                 withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
                 return false
             }
@@ -223,7 +223,7 @@ class NoiseReductionFragment : Fragment() {
 
             val loadedOk = latch.await(10, java.util.concurrent.TimeUnit.SECONDS)
             if (!loadedOk || deepFilterNet.frameLength == null) {
-                val err = "فشل تحميل نموذج DeepFilterNet3 في ذاكرة الجهاز (Timeout)"
+                val err = AppStrings.get(requireContext(), R.string.msg_noise_model_timeout)
                 withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
                 return false
             }
@@ -271,7 +271,7 @@ class NoiseReductionFragment : Fragment() {
             fos.close()
             
             if (totalFrames > 0 && failedFrames == totalFrames) {
-                throw IllegalStateException("لم يتمكن الموديل المحلي من معالجة أي إطار صوتي (كافة الإطارات أرجعت رمز فشل -1.0). يرجى التحقق من توافق ملف الصوت.")
+                throw IllegalStateException(AppStrings.get(requireContext(), R.string.msg_noise_frames_failed))
             }
             
             try { deepFilterNet.release() } catch (_: Exception) {}
@@ -302,13 +302,13 @@ class NoiseReductionFragment : Fragment() {
             val success = ReturnCode.isSuccess(mergeSession.returnCode)
             if (!success) {
                 val ffmpegLogs = mergeSession.allLogsAsString ?: mergeSession.output ?: "Unknown FFmpeg error"
-                val err = "فشل دمج وترميز الصوت المعالج مع الملف الأصلي:\n$ffmpegLogs"
+                val err = AppStrings.get(requireContext(), R.string.msg_noise_merge_failed, ffmpegLogs)
                 withContext(Dispatchers.Main) { ProcessingManager.showError(err) }
             }
             return success
         } catch (e: Exception) {
             e.printStackTrace()
-            val errorDetails = "خطأ في تنفيذ DeepFilterNet3 الأوفلاين:\n${e.localizedMessage ?: e.message}"
+            val errorDetails = AppStrings.get(requireContext(), R.string.msg_noise_df3_error, (e.localizedMessage ?: e.message).orEmpty())
             com.example.accessiblevideoeditor.utils.ErrorLogger.logError(
                 requireContext(),
                 "NoiseReduction",

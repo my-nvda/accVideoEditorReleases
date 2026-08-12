@@ -64,6 +64,7 @@ class HomeFragment : Fragment() {
     private fun handleFeatureClick(featureId: String, actionId: Int, view: View) {
         val context = context ?: return
         if (enabledFeatures.contains(featureId)) {
+            com.example.accessiblevideoeditor.telemetry.TelemetryManager.recordFeatureClick(context, featureId)
             navigateWithFocus(view, actionId)
         } else {
             val title = AppStrings.get(context, R.string.dialog_feature_disabled_title)
@@ -71,9 +72,9 @@ class HomeFragment : Fragment() {
             val btnOk = AppStrings.get(context, R.string.btn_close)
             
             androidx.appcompat.app.AlertDialog.Builder(context)
-                .setTitle(if (title.isNotBlank()) title else "ميزة غير مفعلة")
-                .setMessage(if (msg.isNotBlank()) msg else "هذه الميزة معطلة حالياً وتتطلب التفعيل من قبل المطور أو المستضيف.")
-                .setPositiveButton(if (btnOk.isNotBlank()) btnOk else "إغلاق") { dialog, _ ->
+                .setTitle(if (title.isNotBlank()) title else context.getString(R.string.dialog_feature_disabled_title))
+                .setMessage(if (msg.isNotBlank()) msg else context.getString(R.string.dialog_feature_disabled_message))
+                .setPositiveButton(if (btnOk.isNotBlank()) btnOk else context.getString(R.string.btn_close)) { dialog, _ ->
                     dialog.dismiss()
                 }
                 .create()
@@ -220,7 +221,7 @@ class HomeFragment : Fragment() {
                     }
 
                     if (result.pendingDownloads.isNotEmpty()) {
-                        Toast.makeText(currentContext, "هناك ميزات إضافية جديدة متوفرة للتنزيل!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_new_features_download), Toast.LENGTH_LONG).show()
                     }
 
                     if (result.isSuccess) {

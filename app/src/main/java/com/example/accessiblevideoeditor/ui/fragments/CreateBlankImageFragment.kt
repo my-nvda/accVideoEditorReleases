@@ -57,7 +57,7 @@ class CreateBlankImageFragment : Fragment() {
 
         binding.btnApply.setOnClickListener {
             if (textOptions.text.isBlank()) {
-                Toast.makeText(requireContext(), "Please enter some text", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_enter_text), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             processImage()
@@ -103,7 +103,7 @@ class CreateBlankImageFragment : Fragment() {
                 if (e is CancellationException) throw e
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_SHORT).show()
                 }
             } finally {
                 withContext(NonCancellable) {

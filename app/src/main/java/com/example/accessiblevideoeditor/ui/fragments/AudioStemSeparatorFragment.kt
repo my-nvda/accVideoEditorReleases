@@ -30,7 +30,7 @@ class AudioStemSeparatorFragment : Fragment() {
     private val selectAudioLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedAudioUri = uri
-            binding.tvSelectedAudio.text = "الملف المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            binding.tvSelectedAudio.text = getString(R.string.label_selected_file_path, uri.lastPathSegment ?: uri.toString())
         }
     }
 
@@ -50,6 +50,7 @@ class AudioStemSeparatorFragment : Fragment() {
         }
 
         checkModelStatus()
+        wakeUpCloudSpace()
 
         binding.btnDownloadModel.setOnClickListener {
             promptDownloadModel()
@@ -97,10 +98,15 @@ class AudioStemSeparatorFragment : Fragment() {
                                 // Advanced high-fidelity audio engineering filters:
                                 // Vocals: Natural speech range (100Hz-8000Hz), FFT denoiser, and dynamic noise gate to mute music during silence.
                                 // Instruments: Phase cancellation for stereo, fallback to multi-band formant notch filters to suppress voice formants (-30dB).
+                                val channels = getAudioChannelCount(currentContext, inputUri)
                                 val filter = if (separateVocals) {
                                     "highpass=f=100,lowpass=f=8000,afftdn,agate=threshold=-30dB:ratio=2:range=-24dB"
                                 } else {
-                                    "pan=stereo|c0=c0-c1|c1=c1-c0,bass=g=3"
+                                    if (channels > 1) {
+                                        "pan=stereo|c0=c0-c1|c1=c1-c0,bass=g=3"
+                                    } else {
+                                        "bandreject=f=1000:width_type=h:w=800,bass=g=3"
+                                    }
                                 }
                                 
                                 val command = arrayOf(
@@ -117,7 +123,11 @@ class AudioStemSeparatorFragment : Fragment() {
                                     val fallbackFilter = if (separateVocals) {
                                         "highpass=f=120,lowpass=f=7000,afftdn"
                                     } else {
-                                        "anequalizer=c0 f=500 w=400 g=-30|c0 f=2000 w=1500 g=-30"
+                                        if (channels > 1) {
+                                            "anequalizer=c0 f=500 w=400 g=-30|c0 f=2000 w=1500 g=-30|c1 f=500 w=400 g=-30|c1 f=2000 w=1500 g=-30"
+                                        } else {
+                                            "anequalizer=c0 f=500 w=400 g=-30|c0 f=2000 w=1500 g=-30"
+                                        }
                                     }
                                     val fallbackCommand = arrayOf(
                                         "-y",
@@ -348,6 +358,33 @@ class AudioStemSeparatorFragment : Fragment() {
                 try { Toast.makeText(currentContext, getString(R.string.msg_download_failed), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
+        }
+    }
+
+    private fun getAudioChannelCount(context: android.content.Context, uri: Uri): Int {
+        val retriever = android.media.MediaMetadataRetriever()
+        try {
+            retriever.setDataSource(context, uri)
+            val channelsStr = retriever.extractMetadata(33)
+            return channelsStr?.toIntOrNull() ?: 2
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try { retriever.release() } catch (_: Exception) {}
+        }
+        return 2
+    }
+
+    private fun wakeUpCloudSpace() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val url = java.net.URL("https://iqbalzz-vocals-instrumentals.hf.space/")
+                val conn = url.openConnection() as java.net.HttpURLConnection
+                conn.requestMethod = "GET"
+                conn.connectTimeout = 5000
+                conn.readTimeout = 5000
+                conn.responseCode // Just trigger connection
+            } catch (_: Exception) {}
         }
     }
 

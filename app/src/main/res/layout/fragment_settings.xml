@@ -140,7 +140,21 @@
                 android:layout_marginBottom="16dp"
                 android:minHeight="48dp"
                 android:contentDescription="@string/string_17" />
-
+            <TextView
+                android:id="@+id/tvLabelExportQuality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_export_quality"
+                android:labelFor="@id/spExportQuality"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:layout_marginBottom="4dp" />
+            <Spinner
+                android:id="@+id/spExportQuality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:minHeight="48dp"
+                android:contentDescription="@string/label_export_quality" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -152,7 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="مستكشف الأخطاء وإصلاحها"
+                android:text="@string/title_troubleshooting"
                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
             <com.google.android.material.button.MaterialButton
@@ -160,7 +174,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="16dp"
-                android:text="عرض سجل الأخطاء والانهيارات"
+                android:text="@string/btn_view_error_log"
                 style="@style/Widget.Material3.Button.TonalButton" />
 
             <View

@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -60,7 +60,7 @@ class SmartCutFragment : Fragment() {
         binding.btnApply.setOnClickListener {
             val uri = selectedVideoUri
             if (uri == null) {
-                Toast.makeText(requireContext(), "Please select a video first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_select_video_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             

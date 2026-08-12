@@ -31,9 +31,13 @@ class ReverseMediaFragment : Fragment() {
     private var selectedVideoUri: Uri? = null
 
     private val videoPickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        selectedVideoUri = uri
-        if (uri != null) {
-            binding.btnSelectVideo.text = AppStrings.get(requireContext(), R.string.string_70)
+        if (uri != null && isAdded) {
+            selectedVideoUri = uri
+            context?.let { ctx ->
+                if (_binding != null) {
+                    binding.btnSelectVideo.text = AppStrings.get(ctx, R.string.string_70)
+                }
+            }
         }
     }
 
@@ -53,13 +57,20 @@ class ReverseMediaFragment : Fragment() {
         }
 
         binding.btnSelectVideo.setOnClickListener {
-            videoPickerLauncher.launch("video/*")
+            try {
+                videoPickerLauncher.launch("video/*")
+            } catch (e: Exception) {
+                e.printStackTrace()
+                context?.let { ctx -> Toast.makeText(ctx, AppStrings.get(ctx, R.string.reverse_no_app), Toast.LENGTH_SHORT).show() }
+            }
         }
 
         binding.btnApply.setOnClickListener {
             val uri = selectedVideoUri
             if (uri == null) {
-                Toast.makeText(requireContext(), "Please select a video first", Toast.LENGTH_SHORT).show()
+                context?.let { ctx ->
+                    Toast.makeText(ctx, AppStrings.get(ctx, R.string.reverse_select_first), Toast.LENGTH_SHORT).show()
+                }
                 return@setOnClickListener
             }
             
@@ -71,14 +82,15 @@ class ReverseMediaFragment : Fragment() {
     }
 
     private fun processVideo(uri: Uri, reverseVideo: Boolean, reverseAudio: Boolean) {
+        val appContext = context?.applicationContext ?: return
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val input = FileUtils.getPathFromUri(requireContext(), uri)
+                val input = FileUtils.getPathFromUri(appContext, uri)
                 if (input != null) {
                     withContext(Dispatchers.Main) {
-                        ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_68))
+                        ProcessingManager.startProcessing(AppStrings.get(appContext, R.string.string_68))
                     }
-                    val outputPath = requireContext().cacheDir.absolutePath + "/reverse_${System.currentTimeMillis()}.mp4"
+                    val outputPath = appContext.cacheDir.absolutePath + "/reverse_${System.currentTimeMillis()}.mp4"
                     
                     val commandArgs = mutableListOf("-y", "-i", input)
                     if (reverseVideo) {
@@ -94,13 +106,17 @@ class ReverseMediaFragment : Fragment() {
                     val success = FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray(), input)
                     
                     if (success) {
-                        FileUtils.saveToGallery(requireContext(), File(outputPath), "video/mp4")
+                        FileUtils.saveToGallery(appContext, File(outputPath), "video/mp4")
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_222), Toast.LENGTH_SHORT).show()
+                            if (isAdded) {
+                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_222), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_223), Toast.LENGTH_LONG).show()
+                            if (isAdded) {
+                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_223), Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }

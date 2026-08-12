@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:title="مولد الفيديوهات القصيرة والقوالب"
+        app:title="@string/btn_auto_shorts_creator"
         app:titleTextColor="?attr/colorOnPrimary" />
 
     <ScrollView
@@ -38,7 +38,7 @@
                         android:id="@+id/tvModelStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="حالة النموذج: جاري الفحص..."
+                        android:text="@string/label_model_status_checking"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="تنزيل حزمة قوالب الفيديوهات القصيرة (8 MB)"
+                        android:text="@string/btn_download_shorts_model"
                         android:visibility="gone" />
 
                     <ProgressBar
@@ -67,20 +67,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار فيديو كامل لتقطيعه لشورتس" />
+                android:text="@string/btn_select_video_shorts" />
 
             <TextView
                 android:id="@+id/tvSelectedVideo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="الفيديو المختار: لم يتم اختيار فيديو"
+                android:text="@string/label_selected_video_none"
                 android:textSize="14sp"
                 android:layout_marginBottom="16dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="تخصيص مدة وتقطيع الأجزاء للشبكات الاجتماعية:"
+                android:text="@string/label_shorts_duration"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                app:helperText="أدخل المدة المرغوبة بالثواني">
+                app:helperText="@string/helper_shorts_custom_duration">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCustomDuration"
@@ -107,11 +107,26 @@
                     android:text="15" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_shorts_aspect_ratio"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/spinnerAspectRatio"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/desc_shorts_aspect_ratio" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGenerateShorts"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="توليد المقاطع القصيرة تلقائياً (9:16 Shorts)" />
+                android:text="@string/btn_generate_shorts_action" />
 
         </LinearLayout>
     </ScrollView>

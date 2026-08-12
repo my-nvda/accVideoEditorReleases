@@ -68,6 +68,68 @@
                     android:hint="@string/string_36" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Interactive Slide Preview Section -->
+            <LinearLayout
+                android:id="@+id/layoutPreviewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_slideshow_preview_title"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:layout_marginBottom="8dp" />
+
+                <ImageView
+                    android:id="@+id/ivSlidePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="fitCenter"
+                    android:background="#121212"
+                    android:layout_marginBottom="8dp"
+                    android:contentDescription="@string/desc_slideshow_preview_img" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp">
+
+                    <Button
+                        android:id="@+id/btnPrevSlide"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_slideshow_prev" />
+
+                    <TextView
+                        android:id="@+id/tvSlideIndexIndicator"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/label_slideshow_indicator_default"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+
+                    <Button
+                        android:id="@+id/btnNextSlide"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_slideshow_next" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnPreviewAudio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_slideshow_preview_audio"
+                    style="@style/Widget.Material3.Button.TonalButton" />
+            </LinearLayout>
+
             <Button
                 android:id="@+id/btnApply"
                 android:layout_width="match_parent"

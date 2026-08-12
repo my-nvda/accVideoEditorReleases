@@ -30,14 +30,18 @@ object CloudConfigManager {
     private const val KEY_DOWNLOADED_FEATURES = "downloaded_features_set"
     private const val KEY_STRINGS_VERSION = "strings_patch_version"
 
-    // Set to true by checkCloudConfig when new translations were saved — read by HomeFragment to call recreate()
-    @Volatile var stringsUpdated = false
+    @Volatile var githubToken: String = ""
+    @Volatile var githubRepo: String = ""
+    @Volatile var stringsUpdated: Boolean = false
 
     private var prefs: SharedPreferences? = null
 
     fun init(context: Context) {
         if (prefs == null) {
             prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val savedToken = prefs?.getString("github_token", "") ?: ""
+            githubToken = decodeBase64(savedToken)
+            githubRepo = prefs?.getString("github_repo", "") ?: ""
         }
     }
 
@@ -237,6 +241,25 @@ object CloudConfigManager {
                             currentWhitelist[key] = devices
                         }
                     }
+
+                    // Parse telemetryConfig
+                    val tokenToSave = if (root.has("telemetryConfig")) {
+                        val tc = root.getJSONObject("telemetryConfig")
+                        githubToken = decodeBase64(tc.optString("token", ""))
+                        githubRepo = tc.optString("repo", "")
+                        tc.optString("token", "")
+                    } else {
+                        githubToken = decodeBase64(root.optString("github_token", ""))
+                        githubRepo = root.optString("github_repo", "")
+                        root.optString("github_token", "")
+                    }
+
+                    // Save to SharedPreferences
+                    prefs?.edit()?.apply {
+                        putString("github_token", tokenToSave)
+                        putString("github_repo", githubRepo)
+                        apply()
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -351,6 +374,19 @@ object CloudConfigManager {
         val files = modelsDir.listFiles { _, name -> name.startsWith("${featureId}_model") }
         val file = files?.firstOrNull()
         return if (file != null && file.exists() && file.length() > 0) file else null
+    }
+
+    private fun decodeBase64(input: String): String {
+        if (input.isBlank()) return ""
+        if (input.trim().startsWith("ghp_")) return input.trim()
+        return try {
+            val decodedBytes = android.util.Base64.decode(input, android.util.Base64.DEFAULT)
+            val decoded = String(decodedBytes, Charsets.UTF_8).trim()
+            // Token was reversed before encoding, so reverse it back
+            decoded.reversed()
+        } catch (e: Exception) {
+            input.trim()
+        }
     }
 }
 

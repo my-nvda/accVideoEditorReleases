@@ -1,5 +1,6 @@
 package com.example.accessiblevideoeditor.ui.fragments
 
+import com.example.accessiblevideoeditor.ui.AppStrings
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -77,7 +78,7 @@ class VideoEditorFragment : Fragment() {
             if (player != null && selectedVideoUri != null) {
                 binding.etStartTime.setText(formatTime(player.currentPosition))
             } else {
-                Toast.makeText(requireContext(), "الرجاء اختيار فيديو أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_select_video_only), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -86,7 +87,7 @@ class VideoEditorFragment : Fragment() {
             if (player != null && selectedVideoUri != null) {
                 binding.etEndTime.setText(formatTime(player.currentPosition))
             } else {
-                Toast.makeText(requireContext(), "الرجاء اختيار فيديو أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_select_video_only), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -96,7 +97,7 @@ class VideoEditorFragment : Fragment() {
             val endStr = binding.etEndTime.text.toString()
             
             if (textOptions.text.isEmpty()) {
-                Toast.makeText(requireContext(), "Please enter text", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_enter_text), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             

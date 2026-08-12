@@ -1,5 +1,7 @@
 package com.example.accessiblevideoeditor.updater
 
+import com.example.accessiblevideoeditor.R
+import com.example.accessiblevideoeditor.ui.AppStrings
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
@@ -57,19 +59,19 @@ object UpdateManager {
     fun downloadUpdate(context: Context, apkUrl: String) {
         try {
             val request = DownloadManager.Request(Uri.parse(apkUrl))
-                .setTitle("Downloading Update")
-                .setDescription("Accessible Video Editor Update")
+                .setTitle(AppStrings.get(context, R.string.updater_downloading_title))
+                .setDescription(AppStrings.get(context, R.string.updater_desc))
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "update.apk")
 
             val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             downloadManager.enqueue(request)
-            Toast.makeText(context, "Update download started...", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, AppStrings.get(context, R.string.updater_download_started), Toast.LENGTH_LONG).show()
             
             // Note: In a full implementation, you would register a BroadcastReceiver 
             // for DownloadManager.ACTION_DOWNLOAD_COMPLETE to prompt the install intent.
         } catch (e: Exception) {
-            Toast.makeText(context, "Failed to start download.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, AppStrings.get(context, R.string.updater_download_failed), Toast.LENGTH_SHORT).show()
         }
     }
 }

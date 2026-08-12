@@ -16,6 +16,7 @@ import com.example.accessiblevideoeditor.updater.AppUpdater
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.Fragment
 import com.example.accessiblevideoeditor.ui.AccessibilityUtils
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
   private val fragmentStack = mutableListOf<String>()
   private val lastFocusedViewIdMap = mutableMapOf<String, Int>()
   private var isAppReturningFromBackground = false
+  private var wasProcessing = false
 
   fun saveLastFocusedViewId(fragmentName: String, viewId: Int) {
       if (viewId != View.NO_ID) {
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Initialize Managers
+    com.example.accessiblevideoeditor.telemetry.CrashReporter.init(this)
     com.example.accessiblevideoeditor.ui.SettingsManager.init(this)
     SoundManager.init(this)
     SoundManager.playStartup()
@@ -202,6 +205,85 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
     }
+    scheduleCloudPolling()
+    checkBatteryOptimizations()
+  }
+
+  private fun scheduleCloudPolling() {
+      try {
+          lifecycleScope.launch(Dispatchers.IO) {
+              try {
+                  com.example.accessiblevideoeditor.telemetry.TelemetryManager.uploadTelemetryData(applicationContext)
+              } catch (e: Exception) {
+                  e.printStackTrace()
+              }
+          }
+
+          val constraints = androidx.work.Constraints.Builder()
+              .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+              .build()
+
+          val workRequest = androidx.work.PeriodicWorkRequestBuilder<com.example.accessiblevideoeditor.updater.CloudPollWorker>(
+              30, java.util.concurrent.TimeUnit.MINUTES
+          )
+              .setConstraints(constraints)
+              .build()
+
+          androidx.work.WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+              "CloudPollWork",
+              androidx.work.ExistingPeriodicWorkPolicy.REPLACE,
+              workRequest
+          )
+
+          val telemetryWorkRequest = androidx.work.PeriodicWorkRequestBuilder<com.example.accessiblevideoeditor.telemetry.TelemetryUploadWorker>(
+              12, java.util.concurrent.TimeUnit.HOURS
+          )
+              .setConstraints(constraints)
+              .build()
+
+          androidx.work.WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+              "TelemetryUploadWork",
+              androidx.work.ExistingPeriodicWorkPolicy.REPLACE,
+              telemetryWorkRequest
+          )
+      } catch (e: Exception) {
+          e.printStackTrace()
+      }
+  }
+
+  private fun checkBatteryOptimizations() {
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+          try {
+              val pm = getSystemService(Context.POWER_SERVICE) as? android.os.PowerManager
+              if (pm != null && !pm.isIgnoringBatteryOptimizations(packageName)) {
+                  val title = try { AppStrings.get(this, R.string.dialog_battery_title) } catch (_: Exception) { "تحسين استهلاك البطارية" }
+                  val msg = try { AppStrings.get(this, R.string.dialog_battery_msg) } catch (_: Exception) { "يتم إغلاق عمليات المونتاج وفحص الإشعارات في الخلفية بواسطة نظام الأندرويد لتوفير الطاقة. يرجى استثناء التطبيق لضمان استقرار العمليات." }
+                  val btnSettings = try { AppStrings.get(this, R.string.btn_go_to_settings) } catch (_: Exception) { "الذهاب للإعدادات" }
+
+                  androidx.appcompat.app.AlertDialog.Builder(this)
+                      .setTitle(if (title.isNotBlank()) title else "تحسين استهلاك البطارية")
+                      .setMessage(if (msg.isNotBlank()) msg else "يتم إغلاق عمليات المونتاج وفحص الإشعارات في الخلفية بواسطة نظام الأندرويد لتوفير الطاقة. يرجى استثناء التطبيق لضمان استقرار العمليات.")
+                      .setPositiveButton(if (btnSettings.isNotBlank()) btnSettings else "الذهاب للإعدادات") { d, _ ->
+                          d.dismiss()
+                          try {
+                              val intent = android.content.Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                                  data = android.net.Uri.parse("package:$packageName")
+                              }
+                              startActivity(intent)
+                          } catch (e: Exception) {
+                              try {
+                                  val intent = android.content.Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                                  startActivity(intent)
+                              } catch (_: Exception) {}
+                          }
+                      }
+                      .setNegativeButton(android.R.string.cancel) { d, _ -> d.dismiss() }
+                      .show()
+              }
+          } catch (e: Exception) {
+              e.printStackTrace()
+          }
+      }
   }
 
   private fun setupProcessingOverlay() {
@@ -246,14 +328,18 @@ class MainActivity : AppCompatActivity() {
 
                 btnCancel.visibility = if (state.isCancellable) View.VISIBLE else View.GONE
 
-                // Send accessibility focus to the overlay title
-                tvTitle.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_VIEW_FOCUSED)
-                tvTitle.requestFocus()
-            } else {
-                overlay.visibility = View.GONE
-                // Restore screen reader access to content behind overlay
-                navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
-            }
+                  // Send accessibility focus to the overlay title only once at startup
+                  if (!wasProcessing) {
+                      tvTitle.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                      tvTitle.requestFocus()
+                      wasProcessing = true
+                  }
+              } else {
+                  overlay.visibility = View.GONE
+                  // Restore screen reader access to content behind overlay
+                  navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+                  wasProcessing = false
+              }
 
             // Show error dialog when errorLog is not null
             state.errorLog?.let { error ->

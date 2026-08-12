@@ -72,7 +72,7 @@ class MergeVideosFragment : Fragment() {
 
         binding.btnApply.setOnClickListener {
             if (selectedUris.size < 2) {
-                Toast.makeText(requireContext(), "Please select at least two videos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_select_two_videos), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val transitionType = binding.spinnerTransition.selectedItemPosition

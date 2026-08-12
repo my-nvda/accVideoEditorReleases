@@ -75,7 +75,7 @@ object AppUpdater {
                         versionCode = serverVersionCode,
                         versionName = json.getString("versionName"),
                         downloadUrl = json.getString("downloadUrl"),
-                        releaseNotes = json.optString("releaseNotes", "")
+                        releaseNotes = json.optString("releaseNotes", "").replace("\\n", "\n")
                     )
                 }
             }
@@ -88,12 +88,12 @@ object AppUpdater {
     fun downloadAndInstall(context: Context, updateInfo: UpdateInfo): Long {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(updateInfo.downloadUrl)
-        val title = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_202) } catch (_: Exception) { "تنزيل التحديث" }
-        val desc = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_203).replace("%s", updateInfo.versionName) } catch (_: Exception) { "الإصدار ${updateInfo.versionName}" }
+        val title = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_202) } catch (_: Exception) { context.getString(R.string.string_202) }
+        val desc = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_203, updateInfo.versionName) } catch (_: Exception) { context.getString(R.string.string_203, updateInfo.versionName) }
         
         val request = DownloadManager.Request(uri)
-            .setTitle(if (title.isNotBlank()) title else "جاري تنزيل التحديث")
-            .setDescription(if (desc.isNotBlank()) desc else "الإصدار ${updateInfo.versionName}")
+            .setTitle(if (title.isNotBlank()) title else context.getString(R.string.string_213))
+            .setDescription(if (desc.isNotBlank()) desc else context.getString(R.string.string_243, updateInfo.versionName))
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "AccessibleVideoEditor_Update.apk")
 
@@ -139,7 +139,7 @@ object AppUpdater {
                     val progress = ((bytesDownloaded.toFloat() / bytesTotal.toFloat()) * 100).toInt()
                     if (progress >= lastBeepPercent + 5 && progress < 100) {
                         lastBeepPercent = progress
-                        try { BeepUtils.playProgressBeep(progress) } catch (_: Exception) {}
+                        try { com.example.accessiblevideoeditor.media.SoundManager.playProgressBeep(progress) } catch (_: Exception) {}
                     }
                 }
 
@@ -218,19 +218,19 @@ object AppUpdater {
             val contentPendingIntent = android.app.PendingIntent.getActivity(context, 0, activityIntent, pendingIntentFlags)
             val downloadPendingIntent = android.app.PendingIntent.getActivity(context, 1, downloadIntent, pendingIntentFlags)
 
-            val title = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_242) } catch (_: Exception) { "تحديث جديد متوفر" }
-            val btnText = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_244) } catch (_: Exception) { "تنزيل الآن" }
+            val title = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_242) } catch (_: Exception) { context.getString(R.string.string_242) }
+            val btnText = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_244) } catch (_: Exception) { context.getString(R.string.btn_download_now) }
 
             val builder = androidx.core.app.NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(if (title.isNotBlank()) title else "تحديث جديد متوفر")
-                .setContentText("الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل.")
+                .setContentTitle(if (title.isNotBlank()) title else context.getString(R.string.string_242))
+                .setContentText(context.getString(R.string.string_243, updateInfo.versionName))
                 .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(androidx.core.app.NotificationCompat.DEFAULT_ALL)
                 .setContentIntent(contentPendingIntent)
                 .addAction(
                     android.R.drawable.ic_menu_save,
-                    if (btnText.isNotBlank()) btnText else "تنزيل الآن",
+                    if (btnText.isNotBlank()) btnText else context.getString(R.string.btn_download_now),
                     downloadPendingIntent
                 )
                 .setAutoCancel(true)
@@ -250,7 +250,7 @@ object AppUpdater {
         try {
             val title = try {
                 com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_242)
-            } catch (_: Exception) { "تحديث جديد متوفر" }
+            } catch (_: Exception) { activity.getString(R.string.string_242) }
 
             val msgTemplate = try {
                 com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.string_243)
@@ -264,10 +264,10 @@ object AppUpdater {
                 if (msgTemplate.contains("%")) {
                     String.format(msgTemplate, updateInfo.versionName)
                 } else {
-                    "الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل."
+                    activity.getString(R.string.string_243, updateInfo.versionName)
                 }
             } catch (_: Exception) {
-                "الإصدار ${updateInfo.versionName} متوفر الآن للتنزيل."
+                activity.getString(R.string.string_243, updateInfo.versionName)
             }
 
             val fullMessage = if (updateInfo.releaseNotes.isNotBlank()) {
@@ -277,9 +277,9 @@ object AppUpdater {
             }
 
             val builder = androidx.appcompat.app.AlertDialog.Builder(activity)
-            builder.setTitle(if (title.isNotBlank()) title else "تحديث جديد متوفر")
+            builder.setTitle(if (title.isNotBlank()) title else activity.getString(R.string.string_242))
             builder.setMessage(fullMessage)
-            builder.setPositiveButton(if (btnText.isNotBlank()) btnText else "تنزيل الآن") { dialog, _ ->
+            builder.setPositiveButton(if (btnText.isNotBlank()) btnText else activity.getString(R.string.btn_download_now)) { dialog, _ ->
                 dialog.dismiss()
                 startDownloadWithProgress(activity, updateInfo)
             }
@@ -354,11 +354,9 @@ object AppUpdater {
                             }
                             val isArabic = locale.language == "ar"
                             
-                            val detailText = if (isArabic) {
-                                String.format(java.util.Locale("ar"), "جاري التنزيل: %.2f ميجابايت من %.2f ميجابايت (%d%%)", downloadedMb, totalMb, percent)
-                            } else {
-                                String.format(java.util.Locale.US, "Downloading: %.2f MB of %.2f MB (%d%%)", downloadedMb, totalMb, percent)
-                            }
+                            val fmt = com.example.accessiblevideoeditor.ui.AppStrings.get(activity, R.string.updater_progress_mb)
+                            val formatLocale = if (isArabic) java.util.Locale("ar") else java.util.Locale.US
+                            val detailText = String.format(formatLocale, fmt, downloadedMb, totalMb, percent)
                             messageView.text = detailText
                         }
                         if (progress.status == DownloadManager.STATUS_SUCCESSFUL || progress.status == DownloadManager.STATUS_FAILED) {
@@ -367,6 +365,47 @@ object AppUpdater {
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun showNotification(context: Context, notificationId: Int, title: String, message: String) {
+        try {
+            val channelId = "app_general_channel"
+            val channelName = "General Announcements"
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? android.app.NotificationManager
+                ?: return
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = android.app.NotificationChannel(
+                    channelId,
+                    channelName,
+                    android.app.NotificationManager.IMPORTANCE_DEFAULT
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            val activityIntent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+            
+            val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+            } else {
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT
+            }
+            val contentPendingIntent = android.app.PendingIntent.getActivity(context, notificationId, activityIntent, pendingIntentFlags)
+
+            val builder = androidx.core.app.NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(contentPendingIntent)
+                .setAutoCancel(true)
+
+            notificationManager.notify(notificationId, builder.build())
         } catch (e: Exception) {
             e.printStackTrace()
         }

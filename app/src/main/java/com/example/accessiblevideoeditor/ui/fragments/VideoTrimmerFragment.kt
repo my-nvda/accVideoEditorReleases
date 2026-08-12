@@ -68,7 +68,7 @@ class VideoTrimmerFragment : Fragment() {
             if (player != null && selectedVideoUri != null) {
                 binding.etStartTime.setText(formatTime(player.currentPosition))
             } else {
-                Toast.makeText(requireContext(), "الرجاء اختيار فيديو أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.toast_select_video_first), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -77,14 +77,14 @@ class VideoTrimmerFragment : Fragment() {
             if (player != null && selectedVideoUri != null) {
                 binding.etDuration.setText(formatTime(player.currentPosition))
             } else {
-                Toast.makeText(requireContext(), "الرجاء اختيار فيديو أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.toast_select_video_first), Toast.LENGTH_SHORT).show()
             }
         }
 
         binding.btnApply.setOnClickListener {
             val uri = selectedVideoUri
             if (uri == null) {
-                Toast.makeText(requireContext(), "Please select a video first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.toast_select_video_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val startStr = binding.etStartTime.text.toString()

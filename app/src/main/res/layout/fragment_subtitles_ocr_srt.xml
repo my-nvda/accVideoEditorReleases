@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:title="مستخرج وقارئ الترجمات SRT"
+        app:title="@string/btn_subtitles_ocr_srt"
         app:titleTextColor="?attr/colorOnPrimary" />
 
     <ScrollView
@@ -37,7 +37,7 @@
                         android:id="@+id/tvModelStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="حالة النموذج: جاري الفحص..."
+                        android:text="@string/label_model_status_checking"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="تنزيل نموذج OCR العربي Tesseract (15 MB)"
+                        android:text="@string/btn_download_ocr_model"
                         android:visibility="gone" />
 
                     <ProgressBar
@@ -66,13 +66,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="اختيار فيديو أو صورة لاستخراج الترجمات" />
+                android:text="@string/btn_select_media_ocr" />
 
             <TextView
                 android:id="@+id/tvSelectedVideoOcr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="الملف المختار: لم يتم اختيار ملف"
+                android:text="@string/label_selected_media_none"
                 android:textSize="12sp"
                 android:layout_marginBottom="16dp" />
 
@@ -80,7 +80,7 @@
                 android:id="@+id/btnExtractSubtitles"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="استخراج الترجمات وتحويلها لملف SRT" />
+                android:text="@string/btn_extract_subtitles_action" />
 
             <View
                 android:layout_width="match_parent"

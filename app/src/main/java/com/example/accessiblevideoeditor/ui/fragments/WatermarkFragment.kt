@@ -80,7 +80,7 @@ class WatermarkFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        binding.btnSelectVideo.text = "اختر فيديو أو صورة"
+        binding.btnSelectVideo.text = AppStrings.get(requireContext(), R.string.toast_select_video_or_image_short)
         binding.btnSelectVideo.setOnClickListener {
             mediaPickerLauncher.launch("*/*")
         }
@@ -111,7 +111,7 @@ class WatermarkFragment : Fragment() {
         binding.btnApply.setOnClickListener {
             val vUri = selectedVideoUri
             if (vUri == null) {
-                Toast.makeText(requireContext(), "الرجاء اختيار ملف للتعديل أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_select_media_to_edit), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             processWatermark(vUri)
@@ -205,14 +205,14 @@ class WatermarkFragment : Fragment() {
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), "Failed to prepare watermark", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_failed_prepare_watermark), Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_SHORT).show()
                 }
             } finally {
                 withContext(NonCancellable) {

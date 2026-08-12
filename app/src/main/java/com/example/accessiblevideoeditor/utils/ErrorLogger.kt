@@ -1,5 +1,7 @@
 package com.example.accessiblevideoeditor.utils
 
+import com.example.accessiblevideoeditor.R
+import com.example.accessiblevideoeditor.ui.AppStrings
 import android.content.Context
 import java.io.File
 import java.io.PrintWriter
@@ -38,9 +40,9 @@ object ErrorLogger {
     fun getLogContent(context: Context): String {
         return try {
             val logFile = File(context.filesDir, LOG_FILE_NAME)
-            if (logFile.exists()) logFile.readText() else "لا توجد أخطاء مسجلة حالياً."
+            if (logFile.exists()) logFile.readText() else AppStrings.get(context, R.string.errorlog_empty)
         } catch (e: Exception) {
-            "فشل قراءة سجل الأخطاء: ${e.message}"
+            AppStrings.get(context, R.string.errorlog_read_failed, e.message.orEmpty())
         }
     }
 

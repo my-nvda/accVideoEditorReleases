@@ -32,7 +32,7 @@ class AutoShortsCreatorFragment : Fragment() {
     private val selectVideoLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedVideoUri = uri
-            binding.tvSelectedVideo.text = "الفيديو المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            binding.tvSelectedVideo.text = AppStrings.get(requireContext(), R.string.label_selected_video, uri.lastPathSegment ?: uri.toString())
         }
     }
 
@@ -54,11 +54,11 @@ class AutoShortsCreatorFragment : Fragment() {
         checkModelStatus()
 
         val presets = arrayOf(
-            "تيك توك / ترويض (15 ثانية)",
-            "حالات واتساب (30 ثانية)",
-            "شورتس يوتيوب (60 ثانية)",
-            "ريلز إنستغرام (90 ثانية)",
-            "تخصيص مدة معينة..."
+            AppStrings.get(requireContext(), R.string.shorts_preset_15),
+            AppStrings.get(requireContext(), R.string.shorts_preset_30),
+            AppStrings.get(requireContext(), R.string.shorts_preset_60),
+            AppStrings.get(requireContext(), R.string.shorts_preset_90),
+            AppStrings.get(requireContext(), R.string.shorts_custom)
         )
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, presets)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -74,6 +74,16 @@ class AutoShortsCreatorFragment : Fragment() {
             }
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
+
+        val aspectRatios = arrayOf(
+            AppStrings.get(requireContext(), R.string.ar_9_16),
+            AppStrings.get(requireContext(), R.string.ar_4_5),
+            AppStrings.get(requireContext(), R.string.ar_1_1),
+            AppStrings.get(requireContext(), R.string.ar_16_9)
+        )
+        val arAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, aspectRatios)
+        arAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerAspectRatio.adapter = arAdapter
 
         binding.btnDownloadModel.setOnClickListener {
             promptDownloadModel()
@@ -92,7 +102,7 @@ class AutoShortsCreatorFragment : Fragment() {
             }
 
             if (selectedVideoUri == null) {
-                Toast.makeText(currentContext, "الرجاء اختيار ملف فيديو أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.toast_select_video_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -108,8 +118,16 @@ class AutoShortsCreatorFragment : Fragment() {
                 }
             }
 
+            val arPosition = binding.spinnerAspectRatio.selectedItemPosition
+            val cropFilter = when (arPosition) {
+                0 -> "crop='floor(min(iw\\,ih*9/16)/2)*2':'floor(min(ih\\,iw*16/9)/2)*2'" // 9:16
+                1 -> "crop='floor(min(iw\\,ih*4/5)/2)*2':'floor(min(ih\\,iw*5/4)/2)*2'"  // 4:5
+                2 -> "crop='floor(min(iw\\,ih)/2)*2':'floor(min(ih\\,iw)/2)*2'"        // 1:1
+                else -> "crop='floor(min(iw\\,ih*16/9)/2)*2':'floor(min(ih\\,iw*9/16)/2)*2'" // 16:9
+            }
+
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري تحويل الفيديو إلى مقاطع قصيرة 9:16...")
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(AppStrings.get(currentContext, R.string.msg_shorts_export_start))
                 
                 val inputUri = selectedVideoUri ?: return@launch
                 
@@ -134,7 +152,7 @@ class AutoShortsCreatorFragment : Fragment() {
                                         "-ss", startSec.toString(),
                                         "-t", splitDurationSec.toString(),
                                         "-i", tempInput.absolutePath,
-                                        "-vf", "crop='floor(min(iw\\,ih*9/16)/2)*2':'floor(min(ih\\,iw*16/9)/2)*2'",
+                                        "-vf", cropFilter,
                                         "-c:v", "mpeg4",
                                         "-q:v", "2",
                                         "-c:a", "aac",
@@ -146,7 +164,7 @@ class AutoShortsCreatorFragment : Fragment() {
                                         "-ss", startSec.toString(),
                                         "-t", splitDurationSec.toString(),
                                         "-i", tempInput.absolutePath,
-                                        "-vf", "crop='floor(min(iw\\,ih*9/16)/2)*2':'floor(min(ih\\,iw*16/9)/2)*2'",
+                                        "-vf", cropFilter,
                                         "-c:v", "mpeg4",
                                         "-q:v", "2",
                                         outputPathSegment
@@ -246,7 +264,7 @@ class AutoShortsCreatorFragment : Fragment() {
             if (success) {
                 try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_success), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             } else {
-                try { Toast.makeText(currentContext, "فشل تنزيل نموذج الذكاء الاصطناعي، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
+                try { Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_download_failed), Toast.LENGTH_SHORT).show() } catch (_: Exception) {}
             }
             checkModelStatus()
         }

@@ -1,5 +1,6 @@
 package com.example.accessiblevideoeditor.ui.fragments
 
+import com.example.accessiblevideoeditor.ui.AppStrings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -64,6 +65,19 @@ class SettingsFragment : Fragment() {
         val currentLangIndex = LanguageManager.supportedLanguages.indexOfFirst { it.first == LanguageManager.getCurrentLanguageCode() }
         if (currentLangIndex >= 0) binding.spLanguage.setSelection(currentLangIndex)
 
+        // Setup Export Quality Spinner
+        val qualityList = listOf(
+            AppStrings.get(requireContext(), R.string.quality_high),
+            AppStrings.get(requireContext(), R.string.quality_medium),
+            AppStrings.get(requireContext(), R.string.quality_low)
+        )
+        val qualityCodes = listOf("high", "medium", "low")
+        val qualityAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, qualityList)
+        qualityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spExportQuality.adapter = qualityAdapter
+        val currentQualityIndex = qualityCodes.indexOf(SettingsManager.exportQuality)
+        if (currentQualityIndex >= 0) binding.spExportQuality.setSelection(currentQualityIndex)
+
         // Setup Listeners
         binding.switchStartupSound.setOnCheckedChangeListener { _, isChecked -> SettingsManager.isStartupSoundEnabled = isChecked }
         binding.switchProcessingSound.setOnCheckedChangeListener { _, isChecked -> SettingsManager.isProcessingSoundEnabled = isChecked }
@@ -100,6 +114,13 @@ class SettingsFragment : Fragment() {
                 if (selectedCode != LanguageManager.getCurrentLanguageCode()) {
                     LanguageManager.setLanguage(selectedCode)
                 }
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+        }
+
+        binding.spExportQuality.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                SettingsManager.exportQuality = qualityCodes[position]
             }
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
@@ -178,7 +199,8 @@ class SettingsFragment : Fragment() {
         binding.btnCheckUpdates.setOnClickListener {
             val safeCtx = context ?: return@setOnClickListener
             try {
-                android.widget.Toast.makeText(safeCtx, "جاري التحقق من وجود تحديثات...", android.widget.Toast.LENGTH_SHORT).show()
+                val toastText = com.example.accessiblevideoeditor.ui.AppStrings.get(safeCtx, R.string.toast_checking_updates)
+                android.widget.Toast.makeText(safeCtx, if (toastText.isNotBlank()) toastText else "Checking for updates...", android.widget.Toast.LENGTH_SHORT).show()
             } catch (_: Exception) {}
 
             viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
@@ -197,10 +219,15 @@ class SettingsFragment : Fragment() {
                         com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateDialog(activeActivity, info)
                         com.example.accessiblevideoeditor.updater.AppUpdater.showUpdateNotification(activeContext, info)
                     } else {
+                        val title = com.example.accessiblevideoeditor.ui.AppStrings.get(activeActivity, R.string.dialog_check_updates_title)
+                        val msgTemplate = com.example.accessiblevideoeditor.ui.AppStrings.get(activeActivity, R.string.msg_app_up_to_date)
+                        val msg = if (msgTemplate.contains("%")) String.format(msgTemplate, com.example.accessiblevideoeditor.BuildConfig.VERSION_NAME)
+                                  else "Your app is up to date with the latest official version (${com.example.accessiblevideoeditor.BuildConfig.VERSION_NAME}). No new updates available."
+                        
                         androidx.appcompat.app.AlertDialog.Builder(activeActivity)
-                            .setTitle("التحقق من التحديثات")
-                            .setMessage("تطبيقك محدث لأحدث إصدار أصلي (${com.example.accessiblevideoeditor.BuildConfig.VERSION_NAME}). لا توجد تحديثات جديدة حالياً.")
-                            .setPositiveButton("موافق") { d, _ -> d.dismiss() }
+                            .setTitle(if (title.isNotBlank()) title else "Check for Updates")
+                            .setMessage(msg)
+                            .setPositiveButton(getString(R.string.btn_ok)) { d, _ -> d.dismiss() }
                             .show()
                     }
                 } catch (e: Exception) {

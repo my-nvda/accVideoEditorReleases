@@ -31,7 +31,7 @@ class AiVoiceDubbingFragment : Fragment() {
     private val selectMediaLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedMediaUri = uri
-            binding.tvSelectedFile.text = "الملحوق المختار: ${uri.lastPathSegment ?: uri.toString()}"
+            binding.tvSelectedFile.text = AppStrings.get(requireContext(), R.string.label_selected_file_path, uri.lastPathSegment ?: uri.toString())
         }
     }
 
@@ -70,12 +70,12 @@ class AiVoiceDubbingFragment : Fragment() {
 
             val text = binding.etDubbingText.text?.toString()?.trim()
             if (text.isNullOrEmpty()) {
-                Toast.makeText(currentContext, "الرجاء كتابة النص المراد دبلجته أولاً", Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.toast_write_text_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing("جاري توليد الصوت والدبلجة بالذكاء الاصطناعي...")
+                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(AppStrings.get(currentContext, R.string.msg_dub_generate_start))
                 
                 val tempWav = java.io.File(currentContext.cacheDir, "dubbing_${System.currentTimeMillis()}.wav")
                 var ttsSuccess = false
