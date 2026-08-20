@@ -288,4 +288,53 @@
 
     <string name="btn_apply">Применить</string>
     <string name="btn_apply_changes">Применить изменения</string>
+
+    <string name="btn_projects_dashboard">Студия проектов</string>
+    <string name="btn_new_project">Новый проект</string>
+    <string name="label_recent_projects">Recent Projects</string>
+    <string name="msg_no_projects">No projects found. Click New Project to start!</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_duplicate">Duplicate</string>
+    <string name="menu_delete">Delete</string>
+    <string name="dialog_rename_title">Rename Project</string>
+    <string name="dialog_delete_title">Delete Project</string>
+    <string name="dialog_delete_message">Are you sure you want to delete this project?</string>
+    <string name="btn_export_project">Экспорт</string>
+    <string name="btn_add_action">Add Edit Action</string>
+    <string name="label_active_layers">Active Project Layers</string>
+    <string name="msg_project_saved">Project saved successfully</string>
+    <string name="label_trim_action">Обрезка</string>
+    <string name="label_text_action">Текст</string>
+    <string name="label_watermark_action">Водяной знак</string>
+    <string name="label_speed_action">Скорость и громкость</string>
+    <string name="btn_save_project">Сохранить</string>
+
+
+    <string name="msg_error_project_id_missing">Ошибка: ID проекта отсутствует</string>
+    <string name="msg_error_project_not_found">Ошибка: Проект не найден</string>
+    <string name="label_disabled">Отключено</string>
+    <string name="msg_no_text_overlays">Нет текстовых наложений</string>
+    <string name="label_layers">слоёв</string>
+    <string name="label_speed">Speed</string>
+    <string name="label_volume">Громкость</string>
+    <string name="btn_set_start_current">Установить начало на текущую позицию</string>
+    <string name="btn_set_end_current">Установить конец на текущую позицию</string>
+    <string name="label_start_time">Время начала:</string>
+    <string name="label_end_time">Время окончания:</string>
+    <string name="btn_add_new_text">+ Добавить текст</string>
+    <string name="msg_no_text_added">Текстовые наложения ещё не добавлены</string>
+    <string name="dialog_add_text_title">Добавить текст</string>
+    <string name="hint_enter_text_content">Введите текст</string>
+    <string name="hint_start_time_eg">Начало (например 00:05)</string>
+    <string name="hint_end_time_eg">Конец (например 00:15)</string>
+    <string name="btn_set_current_position">Установить на текущую позицию</string>
+    <string name="label_text_content">Содержание текста:</string>
+    <string name="btn_choose_watermark_image">Выбрать изображение водяного знака</string>
+    <string name="label_watermark_position">Положение водяного знака:</string>
+    <string name="label_speed_multiplier">Множитель скорости:</string>
+    <string name="label_volume_level">Уровень громкости:</string>
+    <string name="label_mute">0% (Без звука)</string>
+    <string name="msg_error_project_render_failed">Ошибка: Не удалось обработать проект.</string>
+    <string name="msg_project_export_success">Проект успешно обработан и сохранён!</string>
+
 </resources>

@@ -171,7 +171,7 @@ class SpeechToTextFragment : Fragment() {
                             "-f", "lavfi", "-i", "color=c=black:s=1280x720:d=$durSec",
                             "-i", tempInput.absolutePath,
                             "-vf", vfFilter,
-                            "-c:v", "mpeg4", "-q:v", "2",
+                            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18",
                             "-c:a", "aac", "-b:a", "192k",
                             outputPath
                         ))

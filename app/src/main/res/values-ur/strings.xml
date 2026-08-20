@@ -288,4 +288,53 @@
 
     <string name="btn_apply">لاگو کریں</string>
     <string name="btn_apply_changes">تبدیلیاں لاگو کریں</string>
+
+    <string name="btn_projects_dashboard">پروجیکٹ اسٹوڈیو</string>
+    <string name="btn_new_project">نیا پروجیکٹ</string>
+    <string name="label_recent_projects">Recent Projects</string>
+    <string name="msg_no_projects">No projects found. Click New Project to start!</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_duplicate">Duplicate</string>
+    <string name="menu_delete">Delete</string>
+    <string name="dialog_rename_title">Rename Project</string>
+    <string name="dialog_delete_title">Delete Project</string>
+    <string name="dialog_delete_message">Are you sure you want to delete this project?</string>
+    <string name="btn_export_project">ایکسپورٹ</string>
+    <string name="btn_add_action">Add Edit Action</string>
+    <string name="label_active_layers">Active Project Layers</string>
+    <string name="msg_project_saved">Project saved successfully</string>
+    <string name="label_trim_action">تراشنا</string>
+    <string name="label_text_action">متن</string>
+    <string name="label_watermark_action">واٹر مارک</string>
+    <string name="label_speed_action">رفتار اور آواز</string>
+    <string name="btn_save_project">محفوظ کریں</string>
+
+
+    <string name="msg_error_project_id_missing">خرابی: پروجیکٹ شناخت موجود نہیں</string>
+    <string name="msg_error_project_not_found">خرابی: پروجیکٹ نہیں ملا</string>
+    <string name="label_disabled">غیر فعال</string>
+    <string name="msg_no_text_overlays">کوئی متن نہیں</string>
+    <string name="label_layers">تہیں</string>
+    <string name="label_speed">Speed</string>
+    <string name="label_volume">آواز</string>
+    <string name="btn_set_start_current">شروع کو موجودہ مقام پر سیٹ کریں</string>
+    <string name="btn_set_end_current">اختتام کو موجودہ مقام پر سیٹ کریں</string>
+    <string name="label_start_time">شروع کا وقت:</string>
+    <string name="label_end_time">اختتام کا وقت:</string>
+    <string name="btn_add_new_text">+ نیا متن شامل کریں</string>
+    <string name="msg_no_text_added">ابھی تک کوئی متن شامل نہیں کیا گیا</string>
+    <string name="dialog_add_text_title">متن شامل کریں</string>
+    <string name="hint_enter_text_content">متن کا مواد درج کریں</string>
+    <string name="hint_start_time_eg">شروع کا وقت (مثلاً 00:05)</string>
+    <string name="hint_end_time_eg">اختتام کا وقت (مثلاً 00:15)</string>
+    <string name="btn_set_current_position">موجودہ مقام پر سیٹ کریں</string>
+    <string name="label_text_content">متن کا مواد:</string>
+    <string name="btn_choose_watermark_image">واٹر مارک تصویر منتخب کریں</string>
+    <string name="label_watermark_position">واٹر مارک کی جگہ:</string>
+    <string name="label_speed_multiplier">رفتار کا ضارب:</string>
+    <string name="label_volume_level">آواز کی سطح:</string>
+    <string name="label_mute">0% (خاموش)</string>
+    <string name="msg_error_project_render_failed">خرابی: پروجیکٹ پروسیسنگ ناکام ہو گئی۔</string>
+    <string name="msg_project_export_success">پروجیکٹ کامیابی سے پروسیس اور محفوظ ہو گیا!</string>
+
 </resources>

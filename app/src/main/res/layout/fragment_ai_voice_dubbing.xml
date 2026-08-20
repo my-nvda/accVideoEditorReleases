@@ -1,125 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="@string/btn_ai_voice_dubbing"
-        app:titleTextColor="?attr/colorOnPrimary" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    <TextView
-                        android:id="@+id/tvModelStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_model_status_checking"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnDownloadModel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/btn_download_dub_model"
-                        android:visibility="gone" />
-
-                    <ProgressBar
-                        android:id="@+id/pbModelDownload"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:visibility="gone" />
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="@string/btn_ai_voice_dubbing" app:titleTextColor="?attr/colorOnPrimary" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="12dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:id="@+id/tvModelStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_model_status_checking" android:textSize="14sp" android:textStyle="bold" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnDownloadModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/btn_download_dub_model" android:visibility="gone" android:minHeight="48dp" />
+                    <ProgressBar android:id="@+id/pbModelDownload" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:max="100" android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_enter_dub_text"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDubbingText"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:gravity="top|start"
-                    android:hint="@string/hint_write_dub_text"
-                    android:inputType="textMultiLine" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_enter_dub_text" android:textSize="16sp" android:textStyle="bold" android:layout_marginBottom="8dp" />
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etDubbingText" android:layout_width="match_parent" android:layout_height="120dp" android:gravity="top|start" android:hint="@string/hint_write_dub_text" android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_dub_speed"
-                android:textSize="14sp"
-                android:layout_marginBottom="4dp" />
-
-            <SeekBar
-                android:id="@+id/sbSpeed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="200"
-                android:progress="100"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="@string/desc_dub_speed" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSelectAudioVideo"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="@string/btn_select_media_dub" />
-
-            <TextView
-                android:id="@+id/tvSelectedFile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_selected_media_none"
-                android:textSize="12sp"
-                android:layout_marginBottom="16dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGenerateVoice"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="@string/btn_generate_dub" />
-
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_dub_speed" android:textSize="14sp" android:layout_marginBottom="4dp" />
+            <SeekBar android:id="@+id/sbSpeed" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="200" android:progress="100" android:layout_marginBottom="16dp" android:contentDescription="@string/desc_dub_speed" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnSelectAudioVideo" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/btn_select_media_dub" android:minHeight="48dp" />
+            <TextView android:id="@+id/tvSelectedFile" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_selected_media_none" android:textSize="12sp" android:layout_marginBottom="16dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnGenerateVoice" android:layout_width="match_parent" android:layout_height="60dp" android:text="@string/btn_generate_dub" android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

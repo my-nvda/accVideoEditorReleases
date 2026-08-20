@@ -32,6 +32,7 @@ object CloudConfigManager {
 
     @Volatile var githubToken: String = ""
     @Volatile var githubRepo: String = ""
+    @Volatile var githubProxyUrl: String = ""
     @Volatile var stringsUpdated: Boolean = false
 
     private var prefs: SharedPreferences? = null
@@ -42,6 +43,7 @@ object CloudConfigManager {
             val savedToken = prefs?.getString("github_token", "") ?: ""
             githubToken = decodeBase64(savedToken)
             githubRepo = prefs?.getString("github_repo", "") ?: ""
+            githubProxyUrl = prefs?.getString("github_proxy_url", "") ?: ""
         }
     }
 
@@ -243,27 +245,103 @@ object CloudConfigManager {
                     }
 
                     // Parse telemetryConfig
+                    var proxyUrlToSave = ""
                     val tokenToSave = if (root.has("telemetryConfig")) {
                         val tc = root.getJSONObject("telemetryConfig")
                         githubToken = decodeBase64(tc.optString("token", ""))
                         githubRepo = tc.optString("repo", "")
+                        proxyUrlToSave = tc.optString("proxyUrl", "")
                         tc.optString("token", "")
                     } else {
                         githubToken = decodeBase64(root.optString("github_token", ""))
                         githubRepo = root.optString("github_repo", "")
+                        proxyUrlToSave = root.optString("proxy_url", "")
                         root.optString("github_token", "")
                     }
+                    githubProxyUrl = proxyUrlToSave
 
                     // Save to SharedPreferences
                     prefs?.edit()?.apply {
                         putString("github_token", tokenToSave)
                         putString("github_repo", githubRepo)
+                        putString("github_proxy_url", proxyUrlToSave)
                         apply()
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
                 result.whitelistedFeatures = currentWhitelist
+
+                // 4. Process Announcements and Device Groups
+                try {
+                    val root = JSONObject(jsonStr)
+                    val androidId = try {
+                        android.provider.Settings.Secure.getString(
+                            context.contentResolver,
+                            android.provider.Settings.Secure.ANDROID_ID
+                        ) ?: ""
+                    } catch (_: Exception) {
+                        ""
+                    }
+                    
+                    val myGroups = mutableSetOf<String>()
+                    if (root.has("deviceGroups")) {
+                        val dgObj = root.getJSONObject("deviceGroups")
+                        dgObj.keys().forEach { groupName ->
+                            val members = dgObj.getJSONArray(groupName)
+                            for (i in 0 until members.length()) {
+                                if (members.getString(i) == androidId) {
+                                    myGroups.add(groupName)
+                                }
+                            }
+                        }
+                    }
+
+                    val shownAnnouncements = prefs?.getStringSet("shown_announcements", emptySet()) ?: emptySet()
+
+                    if (root.has("announcements")) {
+                        val annArr = root.getJSONArray("announcements")
+                        val currentTime = System.currentTimeMillis()
+
+                        for (i in 0 until annArr.length()) {
+                            val annObj = annArr.getJSONObject(i)
+                            val annId = annObj.getString("id")
+
+                            if (!shownAnnouncements.contains(annId)) {
+                                val title = annObj.optString("title", "")
+                                val msg = annObj.optString("message", "")
+                                val targetDevices = mutableListOf<String>()
+                                if (annObj.has("targetDevices")) {
+                                    val tdArr = annObj.getJSONArray("targetDevices")
+                                    for (j in 0 until tdArr.length()) {
+                                        targetDevices.add(tdArr.getString(j))
+                                    }
+                                }
+                                val targetGroup = annObj.optString("targetGroup", "all")
+                                val scheduleTime = annObj.optLong("scheduleTime", 0L)
+
+                                val timeMatch = scheduleTime == 0L || currentTime >= scheduleTime
+                                val deviceMatch = targetDevices.isEmpty() || (androidId.isNotBlank() && targetDevices.contains(androidId))
+                                val groupMatch = targetGroup == "all" || targetGroup.isBlank() || myGroups.contains(targetGroup)
+
+                                if (timeMatch && deviceMatch && groupMatch) {
+                                    result.pendingAnnouncements.add(
+                                        CloudAnnouncementItem(
+                                            id = annId,
+                                            title = title,
+                                            message = msg,
+                                            targetDevices = targetDevices,
+                                            targetGroup = targetGroup,
+                                            scheduleTime = scheduleTime
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 
                 result.isSuccess = true
             }
@@ -302,6 +380,12 @@ object CloudConfigManager {
 
             val ext = if (downloadUrl.contains(".onnx")) ".onnx" else if (downloadUrl.contains(".tar.bz2")) ".tar.bz2" else if (downloadUrl.contains(".traineddata")) ".traineddata" else ".json"
             val targetFile = File(modelsDir, "${featureId}_model$ext")
+            val tmpFile = File(modelsDir, "${featureId}_model$ext.tmp")
+
+            var downloadedBytes = 0L
+            if (tmpFile.exists()) {
+                downloadedBytes = tmpFile.length()
+            }
 
             var currentUrl = downloadUrl
             var connection: HttpURLConnection? = null
@@ -316,6 +400,11 @@ object CloudConfigManager {
                 connection.readTimeout = 20000
                 connection.requestMethod = "GET"
                 connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                
+                // Add Range header for resumption
+                if (downloadedBytes > 0) {
+                    connection.setRequestProperty("Range", "bytes=$downloadedBytes-")
+                }
 
                 val status = connection.responseCode
                 if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == 307 || status == 308) {
@@ -330,12 +419,23 @@ object CloudConfigManager {
             }
 
             val conn = connection ?: return@withContext false
-            if (conn.responseCode == HttpURLConnection.HTTP_OK) {
-                val totalLength = conn.contentLength
-                var downloadedBytes = 0L
+            val responseCode = conn.responseCode
+            val isPartial = responseCode == HttpURLConnection.HTTP_PARTIAL // 206
+            val isOk = responseCode == HttpURLConnection.HTTP_OK // 200
+
+            if (isPartial || isOk) {
+                var append = false
+                var totalLength = conn.contentLength.toLong()
+                
+                if (isPartial) {
+                    append = true
+                    totalLength += downloadedBytes
+                } else {
+                    downloadedBytes = 0L
+                }
 
                 conn.inputStream.use { input ->
-                    targetFile.outputStream().use { output ->
+                    java.io.FileOutputStream(tmpFile, append).use { output ->
                         val buffer = ByteArray(16384)
                         var bytesRead: Int
                         var lastReportedProgress = -1
@@ -359,8 +459,16 @@ object CloudConfigManager {
                     }
                 }
 
-                markFeatureAsDownloaded(featureId)
-                return@withContext true
+                // Download completed, rename tmp to target
+                if (tmpFile.exists() && tmpFile.length() > 0) {
+                    if (targetFile.exists()) {
+                        targetFile.delete()
+                    }
+                    if (tmpFile.renameTo(targetFile)) {
+                        markFeatureAsDownloaded(featureId)
+                        return@withContext true
+                    }
+                }
             }
         } catch (e: Throwable) {
             e.printStackTrace()
@@ -388,7 +496,22 @@ object CloudConfigManager {
             input.trim()
         }
     }
+    fun markAnnouncementAsShown(context: Context, annId: String) {
+        init(context)
+        val shown = (prefs?.getStringSet("shown_announcements", emptySet()) ?: emptySet()).toMutableSet()
+        shown.add(annId)
+        prefs?.edit()?.putStringSet("shown_announcements", shown)?.apply()
+    }
 }
+
+data class CloudAnnouncementItem(
+    val id: String,
+    val title: String,
+    val message: String,
+    val targetDevices: List<String>,
+    val targetGroup: String,
+    val scheduleTime: Long
+)
 
 class CloudConfigResult {
     var isSuccess: Boolean = false
@@ -396,4 +519,5 @@ class CloudConfigResult {
     var reEnabledFeatureIds: List<String> = emptyList()
     val pendingDownloads: MutableList<DynamicFeatureItem> = mutableListOf()
     var whitelistedFeatures: Map<String, List<String>> = emptyMap()
+    val pendingAnnouncements: MutableList<CloudAnnouncementItem> = mutableListOf()
 }

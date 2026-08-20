@@ -553,11 +553,12 @@
     <string name="btn_select_media_ocr">اختيار فيديو أو صورة لاستخراج الترجمات</string>
     <string name="btn_extract_subtitles_action">استخراج الترجمات وتحويلها لملف SRT</string>
     <string name="label_slideshow_preview_title">معاينة الشرائح ومزامنة الصوت</string>
-    <string name="desc_slideshow_preview_img">صورة المعاينة للشريحة الحالية</string>
+    <string name="desc_slideshow_preview_img">معاينة الشريحة الحالية</string>
     <string name="btn_slideshow_prev">السابق</string>
     <string name="btn_slideshow_next">التالي</string>
     <string name="btn_slideshow_preview_audio">معاينة صوت الشريحة الحالية</string>
     <string name="label_slideshow_indicator_default">0 / 0</string>
+    <string name="btn_preview_range">معاينة المقطع المختار</string>
 
     <!-- Newly Extracted Kotlin Toast/Alert Strings -->
     <string name="toast_permission_denied">تم رفض الإذن</string>
@@ -567,4 +568,68 @@
     <string name="toast_enter_text">الرجاء إدخال النص أولاً</string>
     <string name="toast_select_two_videos">الرجاء اختيار مقطعي فيديو على الأقل</string>
     <string name="toast_failed_prepare_watermark">فشل إعداد العلامة المائية</string>
+
+    <string name="btn_projects_dashboard">استوديو المشاريع</string>
+    <string name="btn_new_project">مشروع جديد</string>
+    <string name="label_recent_projects">المشاريع الأخيرة</string>
+    <string name="msg_no_projects">لا توجد مشاريع حالية. اضغط على مشروع جديد للبدء!</string>
+    <string name="menu_rename">إعادة تسمية</string>
+    <string name="menu_duplicate">تكرار</string>
+    <string name="menu_delete">حذف</string>
+    <string name="dialog_rename_title">إعادة تسمية المشروع</string>
+    <string name="dialog_delete_title">حذف المشروع</string>
+    <string name="dialog_delete_message">هل أنت متأكد من رغبتك في حذف هذا المشروع؟</string>
+    <string name="btn_export_project">تصدير المشروع</string>
+    <string name="btn_add_action">إضافة عملية تعديل</string>
+    <string name="label_active_layers">طبقات المشروع النشطة</string>
+    <string name="msg_project_saved">تم حفظ المشروع بنجاح</string>
+    <string name="label_trim_action">قص نطاق الفيديو</string>
+    <string name="label_text_action">النصوص المتراكبة</string>
+    <string name="label_watermark_action">العلامة المائية</string>
+    <string name="label_speed_action">السرعة ومستوى الصوت</string>
+    <string name="btn_save_project">حفظ المشروع</string>
+
+
+    <string name="msg_error_project_id_missing">خطأ: معرف المشروع مفقود</string>
+    <string name="msg_error_project_not_found">خطأ: لم يتم العثور على المشروع</string>
+    <string name="label_disabled">معطل</string>
+    <string name="msg_no_text_overlays">لا توجد نصوص متراكبة</string>
+    <string name="label_layers">طبقات</string>
+    <string name="label_volume">مستوى الصوت</string>
+    <string name="btn_set_start_current">تعيين البداية للموضع الحالي</string>
+    <string name="btn_set_end_current">تعيين النهاية للموضع الحالي</string>
+    <string name="label_start_time">وقت البدء:</string>
+    <string name="label_end_time">وقت النهاية:</string>
+    <string name="btn_add_new_text">+ إضافة نص متراكب جديد</string>
+    <string name="msg_no_text_added">لا توجد نصوص متراكبة مضافة حالياً</string>
+    <string name="dialog_add_text_title">إضافة نص متراكب</string>
+    <string name="hint_enter_text_content">أدخل محتوى النص المتراكب</string>
+    <string name="hint_start_time_eg">وقت البدء (مثال: 00:05)</string>
+    <string name="hint_end_time_eg">وقت النهاية (مثال: 00:15)</string>
+    <string name="btn_set_current_position">تعيين للموضع الحالي</string>
+    <string name="label_text_content">محتوى النص:</string>
+    <string name="btn_choose_watermark_image">اختر صورة العلامة المائية</string>
+    <string name="label_watermark_position">موضع العلامة المائية:</string>
+    <string name="label_speed_multiplier">مضاعف السرعة:</string>
+    <string name="label_volume_level">مستوى الصوت:</string>
+    <string name="label_mute">0% (كتم)</string>
+    <string name="msg_error_project_render_failed">خطأ: فشل تصدير المشروع.</string>
+    <string name="msg_project_export_success">تم تصدير وحفظ كامل طبقات المشروع بنجاح!</string>
+
+    <!-- Background Removal Customizations -->
+    <string name="img_bg_removal_title">عزل خلفية الصور</string>
+    <string name="btn_select_image">اختر الصورة المصدر</string>
+    <string name="label_src_preview">معاينة الصورة المصدر</string>
+    <string name="bg_removal_mode_label">اختر وضع الخلفية:</string>
+    <string name="bg_removal_title">إعدادات عزل الخلفية</string>
+    <string name="bg_removal_auto">تلقائي (كروما خضراء)</string>
+    <string name="bg_removal_green">كروما خضراء مصمتة</string>
+    <string name="bg_removal_blue">كروما زرقاء مصمتة</string>
+    <string name="bg_removal_transparent">خلفية شفافة تماماً</string>
+    <string name="bg_removal_custom">صورة خلفية مخصصة</string>
+    <string name="btn_choose_background_image">اختر صورة الخلفية</string>
+    <string name="label_selected_bg">الخلفية المختارة</string>
+    <string name="label_no_bg_selected">لم يتم اختيار صورة خلفية بعد</string>
+    <string name="bg_removal_fps_label">معدل إطارات معالجة الفيديو (FPS):</string>
+    <string name="fps_auto">تلقائي (الكشف عن إطارات الفيديو)</string>
 </resources>

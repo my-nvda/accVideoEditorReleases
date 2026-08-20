@@ -1,100 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="@string/string_25"
-        app:titleTextColor="?attr/colorOnPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="16dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/string_77"
-                        android:textAppearance="?attr/textAppearanceTitleMedium"
-                        android:layout_marginBottom="8dp" />
-
-                    <Button
-                        android:id="@+id/btnSelectVideo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/string_67" />
-                        
-                    <Button
-                        android:id="@+id/btnSelectAudio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/string_19" />
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="@string/string_25" app:titleTextColor="?attr/colorOnPrimary" app:navigationIcon="@android:drawable/ic_menu_revert" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardElevation="4dp" android:layout_marginBottom="16dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_77" android:textAppearance="?attr/textAppearanceTitleMedium" android:layout_marginBottom="8dp" />
+                    <Button android:id="@+id/btnSelectVideo" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_67" android:minHeight="48dp" />
+                    <Button android:id="@+id/btnSelectAudio" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_19" android:minHeight="48dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="4dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/string_110"
-                        android:textAppearance="?attr/textAppearanceTitleMedium"
-                        android:layout_marginBottom="8dp" />
-
-                    <Button
-                        android:id="@+id/btnRemoveAudio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="?attr/colorError"
-                        android:text="@string/string_25" />
-                        
-                    <Button
-                        android:id="@+id/btnReplaceAudio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/string_7" />
-                        
-                    <Button
-                        android:id="@+id/btnMixAudio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/string_9" />
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardElevation="4dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_110" android:textAppearance="?attr/textAppearanceTitleMedium" android:layout_marginBottom="8dp" />
+                    <Button android:id="@+id/btnRemoveAudio" android:layout_width="match_parent" android:layout_height="wrap_content" android:backgroundTint="?attr/colorError" android:text="@string/string_25" android:minHeight="48dp" />
+                    <Button android:id="@+id/btnReplaceAudio" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_7" android:minHeight="48dp" />
+                    <Button android:id="@+id/btnMixAudio" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_9" android:minHeight="48dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

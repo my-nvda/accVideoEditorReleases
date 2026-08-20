@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="@string/img_bg_removal_title"
+        app:titleTextColor="?attr/colorOnPrimary"
+        app:navigationIcon="@android:drawable/ic_menu_revert" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <Button
+                android:id="@+id/btnSelectSrcImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_select_image"
+                android:layout_marginBottom="16dp"
+                android:minHeight="48dp" />
+
+            <ImageView
+                android:id="@+id/ivSrcPreview"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginBottom="16dp"
+                android:scaleType="fitCenter"
+                android:background="#12000000"
+                android:contentDescription="@string/label_src_preview"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvLabel_bgMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bg_removal_mode_label"
+                android:labelFor="@id/spBgMode"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/spBgMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:minHeight="48dp" />
+
+            <!-- Custom Background Section (Dynamic Visibility) -->
+            <LinearLayout
+                android:id="@+id/llCustomBgSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btnSelectBgImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_choose_background_image"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:minHeight="48dp" />
+
+                <TextView
+                    android:id="@+id/tvBgPathText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_no_bg_selected"
+                    android:padding="8dp"
+                    android:gravity="center_horizontal" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnApplyBgRemoval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_apply"
+                android:minHeight="48dp"
+                android:layout_marginBottom="16dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

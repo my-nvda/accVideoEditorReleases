@@ -115,6 +115,12 @@
         <action
             android:id="@+id/action_homeFragment_to_subtitlesOcrSrtFragment"
             app:destination="@id/subtitlesOcrSrtFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_projectsDashboardFragment"
+            app:destination="@id/projectsDashboardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_imageChromaFragment"
+            app:destination="@id/imageChromaFragment" />
 
     </fragment>
 
@@ -129,6 +135,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_volunteerTranslationFragment"
             app:destination="@id/volunteerTranslationFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_userStatsFragment"
+            app:destination="@id/userStatsFragment" />
     </fragment>
 
     <fragment
@@ -312,6 +321,40 @@
         android:name="com.example.accessiblevideoeditor.ui.fragments.SubtitlesOcrSrtFragment"
         android:label="SubtitlesOcrSrtFragment"
         tools:layout="@layout/fragment_subtitles_ocr_srt" />
+
+    <fragment
+        android:id="@+id/userStatsFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.UserStatsFragment"
+        android:label="UserStatsFragment"
+        tools:layout="@layout/fragment_user_stats" />
+
+    <fragment
+        android:id="@+id/projectsDashboardFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.ProjectsDashboardFragment"
+        android:label="ProjectsDashboardFragment"
+        tools:layout="@layout/fragment_projects_dashboard">
+        <action
+            android:id="@+id/action_projectsDashboardFragment_to_unifiedWorkspaceFragment"
+            app:destination="@id/unifiedWorkspaceFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/unifiedWorkspaceFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.UnifiedWorkspaceFragment"
+        android:label="UnifiedWorkspaceFragment"
+        tools:layout="@layout/fragment_unified_workspace">
+        <argument
+            android:name="projectId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/imageChromaFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.ImageChromaFragment"
+        android:label="ImageChromaFragment"
+        tools:layout="@layout/fragment_image_chroma" />
 
 </navigation>
 

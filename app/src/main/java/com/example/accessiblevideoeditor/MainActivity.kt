@@ -86,10 +86,14 @@ class MainActivity : AppCompatActivity() {
     // Clean up temporary files in cache directory on startup in background
     lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
         try {
+            val thirtyMinutesAgo = System.currentTimeMillis() - 30 * 60 * 1000L
             cacheDir.listFiles()?.forEach { file ->
-                try {
-                    file.deleteRecursively()
-                } catch (_: Exception) {}
+                val name = file.name
+                if ((name.startsWith("temp_") || name.startsWith("project_") || name.startsWith("auto_subject_")) && file.lastModified() < thirtyMinutesAgo) {
+                    try {
+                        file.deleteRecursively()
+                    } catch (_: Exception) {}
+                }
             }
         } catch (_: Exception) {}
     }

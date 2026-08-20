@@ -288,4 +288,53 @@
 
     <string name="btn_apply">適用</string>
     <string name="btn_apply_changes">変更を適用</string>
+
+    <string name="btn_projects_dashboard">プロジェクトスタジオ</string>
+    <string name="btn_new_project">新しいプロジェクト</string>
+    <string name="label_recent_projects">Recent Projects</string>
+    <string name="msg_no_projects">No projects found. Click New Project to start!</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_duplicate">Duplicate</string>
+    <string name="menu_delete">Delete</string>
+    <string name="dialog_rename_title">Rename Project</string>
+    <string name="dialog_delete_title">Delete Project</string>
+    <string name="dialog_delete_message">Are you sure you want to delete this project?</string>
+    <string name="btn_export_project">エクスポート</string>
+    <string name="btn_add_action">Add Edit Action</string>
+    <string name="label_active_layers">Active Project Layers</string>
+    <string name="msg_project_saved">Project saved successfully</string>
+    <string name="label_trim_action">トリミング</string>
+    <string name="label_text_action">テキスト</string>
+    <string name="label_watermark_action">ウォーターマーク</string>
+    <string name="label_speed_action">速度と音量</string>
+    <string name="btn_save_project">保存</string>
+
+
+    <string name="msg_error_project_id_missing">エラー: プロジェクトIDがありません</string>
+    <string name="msg_error_project_not_found">エラー: プロジェクトが見つかりません</string>
+    <string name="label_disabled">無効</string>
+    <string name="msg_no_text_overlays">テキストオーバーレイなし</string>
+    <string name="label_layers">レイヤー</string>
+    <string name="label_speed">Speed</string>
+    <string name="label_volume">音量</string>
+    <string name="btn_set_start_current">開始を現在位置に設定</string>
+    <string name="btn_set_end_current">終了を現在位置に設定</string>
+    <string name="label_start_time">開始時間:</string>
+    <string name="label_end_time">終了時間:</string>
+    <string name="btn_add_new_text">+ テキストを追加</string>
+    <string name="msg_no_text_added">テキストオーバーレイはまだ追加されていません</string>
+    <string name="dialog_add_text_title">テキストオーバーレイを追加</string>
+    <string name="hint_enter_text_content">テキスト内容を入力</string>
+    <string name="hint_start_time_eg">開始時間 (例 00:05)</string>
+    <string name="hint_end_time_eg">終了時間 (例 00:15)</string>
+    <string name="btn_set_current_position">現在位置に設定</string>
+    <string name="label_text_content">テキスト内容:</string>
+    <string name="btn_choose_watermark_image">ウォーターマーク画像を選択</string>
+    <string name="label_watermark_position">ウォーターマーク位置:</string>
+    <string name="label_speed_multiplier">速度倍率:</string>
+    <string name="label_volume_level">音量レベル:</string>
+    <string name="label_mute">0% (ミュート)</string>
+    <string name="msg_error_project_render_failed">エラー: プロジェクトのレンダリングに失敗しました。</string>
+    <string name="msg_project_export_success">プロジェクトが正常にレンダリングされ保存されました！</string>
+
 </resources>

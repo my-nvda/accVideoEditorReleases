@@ -144,36 +144,37 @@ class WatermarkFragment : Fragment() {
     }
 
     private fun processWatermark(vUri: Uri) {
+        val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val inputMedia = FileUtils.getPathFromUri(requireContext(), vUri)
+                val inputMedia = FileUtils.getPathFromUri(appContext, vUri)
                 val isVideo = isSelectedMediaVideo
                 val outputExt = if (isVideo) ".mp4" else ".jpg"
-                val outputPath = requireContext().cacheDir.absolutePath + "/watermark_${System.currentTimeMillis()}$outputExt"
+                val outputPath = appContext.cacheDir.absolutePath + "/watermark_${System.currentTimeMillis()}$outputExt"
                 
                 var inputImage: String? = null
                 if (isTextMode) {
-                    val textImgPath = requireContext().cacheDir.absolutePath + "/text_wm_${System.currentTimeMillis()}.png"
+                    val textImgPath = appContext.cacheDir.absolutePath + "/text_wm_${System.currentTimeMillis()}.png"
                     if (TextRenderer.createTickerPng(textOptions, File(textImgPath))) {
                         inputImage = textImgPath
                     }
                 } else {
                     val wUri = selectedImageUri
                     if (wUri != null) {
-                        inputImage = FileUtils.getPathFromUri(requireContext(), wUri)
+                        inputImage = FileUtils.getPathFromUri(appContext, wUri)
                     }
                 }
                 
                 if (inputMedia != null && inputImage != null) {
                     withContext(Dispatchers.Main) {
-                        ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_74))
+                        ProcessingManager.startProcessing(AppStrings.get(appContext, R.string.string_74))
                     }
                     
                     val overlayStr = when (selectedPosition) {
-                        AppStrings.get(requireContext(), R.string.string_126) -> "10:10" // Top Left
-                        AppStrings.get(requireContext(), R.string.string_121) -> "W-w-10:10" // Top Right
-                        AppStrings.get(requireContext(), R.string.string_120) -> "10:H-h-10" // Bottom Left
-                        AppStrings.get(requireContext(), R.string.string_119) -> "W-w-10:H-h-10" // Bottom Right
+                        AppStrings.get(appContext, R.string.string_126) -> "10:10" // Top Left
+                        AppStrings.get(appContext, R.string.string_121) -> "W-w-10:10" // Top Right
+                        AppStrings.get(appContext, R.string.string_120) -> "10:H-h-10" // Bottom Left
+                        AppStrings.get(appContext, R.string.string_119) -> "W-w-10:H-h-10" // Bottom Right
                         else -> "10:10"
                     }
                     
@@ -181,7 +182,7 @@ class WatermarkFragment : Fragment() {
                         arrayOf(
                             "-y", "-i", inputMedia, "-i", inputImage, 
                             "-filter_complex", "[0:v][1:v]overlay=$overlayStr", 
-                            "-c:v", "mpeg4", "-q:v", "2", "-c:a", "copy", outputPath
+                            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "copy", outputPath
                         )
                     } else {
                         arrayOf(
@@ -194,25 +195,33 @@ class WatermarkFragment : Fragment() {
                     val success = FFmpegProcessor.executeWithProgress(commandArgs, inputMedia)
                     if (success) {
                         val mimeType = if (isVideo) "video/mp4" else "image/jpeg"
-                        FileUtils.saveToGallery(requireContext(), File(outputPath), mimeType)
+                        FileUtils.saveToGallery(appContext, File(outputPath), mimeType)
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_182), Toast.LENGTH_SHORT).show()
+                            if (isAdded) {
+                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_182), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()
+                            if (isAdded) {
+                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_183), Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_failed_prepare_watermark), Toast.LENGTH_SHORT).show()
+                        if (isAdded) {
+                            Toast.makeText(appContext, AppStrings.get(appContext, R.string.toast_failed_prepare_watermark), Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_73, e.message ?: ""), Toast.LENGTH_SHORT).show()
+                    if (isAdded) {
+                        Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_73, e.message ?: ""), Toast.LENGTH_SHORT).show()
+                    }
                 }
             } finally {
                 withContext(NonCancellable) {

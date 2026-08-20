@@ -106,7 +106,7 @@ class BatchProcessFragment : Fragment() {
                         val success = if (isAudioExtraction) {
                             FFmpegProcessor.extractAudio(inputPath, outputPath, "mp3")
                         } else if (selectedOperationId == R.string.string_95) {
-                            val commandArgs = arrayOf("-y", "-i", inputPath, "-map", "0:v", "-map", "0:a?", "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac", outputPath)
+                            val commandArgs = arrayOf("-y", "-i", inputPath, "-map", "0:v", "-map", "0:a?", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "aac", outputPath)
                             FFmpegProcessor.executeWithProgress(commandArgs, inputPath)
                         } else {
                             FFmpegProcessor.compressVideo(inputPath, outputPath)

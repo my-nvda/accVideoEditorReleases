@@ -556,11 +556,12 @@ customization, smart cutting, and more.</string>
     <string name="btn_select_media_ocr">Select video or photo to extract subtitles</string>
     <string name="btn_extract_subtitles_action">Extract subtitles and convert to SRT file</string>
     <string name="label_slideshow_preview_title">Preview slides and sync audio</string>
-    <string name="desc_slideshow_preview_img">Preview image for current slide</string>
+    <string name="desc_slideshow_preview_img">Preview of current slide</string>
     <string name="btn_slideshow_prev">Previous</string>
     <string name="btn_slideshow_next">Next</string>
     <string name="btn_slideshow_preview_audio">Preview audio of current slide</string>
     <string name="label_slideshow_indicator_default">0 / 0</string>
+    <string name="btn_preview_range">Preview Selected Range</string>
 
     <!-- Newly Extracted Kotlin Toast/Alert Strings -->
     <string name="toast_permission_denied">Permission Denied</string>
@@ -570,4 +571,68 @@ customization, smart cutting, and more.</string>
     <string name="toast_enter_text">Please enter some text</string>
     <string name="toast_select_two_videos">Please select at least two videos</string>
     <string name="toast_failed_prepare_watermark">Failed to prepare watermark</string>
+
+    <string name="btn_projects_dashboard">Projects Studio</string>
+    <string name="btn_new_project">New Project</string>
+    <string name="label_recent_projects">Recent Projects</string>
+    <string name="msg_no_projects">No projects found. Click New Project to start!</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_duplicate">Duplicate</string>
+    <string name="menu_delete">Delete</string>
+    <string name="dialog_rename_title">Rename Project</string>
+    <string name="dialog_delete_title">Delete Project</string>
+    <string name="dialog_delete_message">Are you sure you want to delete this project?</string>
+    <string name="btn_export_project">Export Project</string>
+    <string name="btn_add_action">Add Edit Action</string>
+    <string name="label_active_layers">Active Project Layers</string>
+    <string name="msg_project_saved">Project saved successfully</string>
+    <string name="label_trim_action">Trim video range</string>
+    <string name="label_text_action">Text Overlays</string>
+    <string name="label_watermark_action">Watermark Logo</string>
+    <string name="label_speed_action">Speed &amp; Volume</string>
+    <string name="btn_save_project">Save Project</string>
+
+
+    <string name="msg_error_project_id_missing">Error: Project ID missing</string>
+    <string name="msg_error_project_not_found">Error: Project not found</string>
+    <string name="label_disabled">Disabled</string>
+    <string name="msg_no_text_overlays">No text overlays</string>
+    <string name="label_layers">layers</string>
+    <string name="label_volume">Volume</string>
+    <string name="btn_set_start_current">Set start to current position</string>
+    <string name="btn_set_end_current">Set end to current position</string>
+    <string name="label_start_time">Start Time:</string>
+    <string name="label_end_time">End Time:</string>
+    <string name="btn_add_new_text">+ Add New Text Overlay</string>
+    <string name="msg_no_text_added">No text overlays currently added</string>
+    <string name="dialog_add_text_title">Add Text Overlay</string>
+    <string name="hint_enter_text_content">Enter text overlay content</string>
+    <string name="hint_start_time_eg">Start Time (eg 00:05)</string>
+    <string name="hint_end_time_eg">End Time (eg 00:15)</string>
+    <string name="btn_set_current_position">Set to current position</string>
+    <string name="label_text_content">Text Content:</string>
+    <string name="btn_choose_watermark_image">Choose Watermark Image</string>
+    <string name="label_watermark_position">Watermark Position:</string>
+    <string name="label_speed_multiplier">Speed Multiplier:</string>
+    <string name="label_volume_level">Volume Level:</string>
+    <string name="label_mute">0% (Mute)</string>
+    <string name="msg_error_project_render_failed">Error: Project render failed.</string>
+    <string name="msg_project_export_success">Project rendered and saved to gallery successfully!</string>
+
+    <!-- Background Removal Customizations -->
+    <string name="img_bg_removal_title">Image Background Removal</string>
+    <string name="btn_select_image">Select Source Image</string>
+    <string name="label_src_preview">Source Image Preview</string>
+    <string name="bg_removal_mode_label">Select Background Mode:</string>
+    <string name="bg_removal_title">Background Removal Settings</string>
+    <string name="bg_removal_auto">Auto Subject (Green Screen)</string>
+    <string name="bg_removal_green">Green Screen Chroma</string>
+    <string name="bg_removal_blue">Blue Screen Chroma</string>
+    <string name="bg_removal_transparent">Transparent Background</string>
+    <string name="bg_removal_custom">Custom Background Image</string>
+    <string name="btn_choose_background_image">Choose Background Image</string>
+    <string name="label_selected_bg">Selected Background</string>
+    <string name="label_no_bg_selected">No background image selected</string>
+    <string name="bg_removal_fps_label">Video Processing Frame Rate (FPS):</string>
+    <string name="fps_auto">Auto Detect Original FPS</string>
 </resources>

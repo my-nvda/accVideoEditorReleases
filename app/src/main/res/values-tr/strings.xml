@@ -288,4 +288,53 @@
 
     <string name="btn_apply">Uygula</string>
     <string name="btn_apply_changes">Değişiklikleri Uygula</string>
+
+    <string name="btn_projects_dashboard">Proje Stüdyosu</string>
+    <string name="btn_new_project">Yeni Proje</string>
+    <string name="label_recent_projects">Recent Projects</string>
+    <string name="msg_no_projects">No projects found. Click New Project to start!</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_duplicate">Duplicate</string>
+    <string name="menu_delete">Delete</string>
+    <string name="dialog_rename_title">Rename Project</string>
+    <string name="dialog_delete_title">Delete Project</string>
+    <string name="dialog_delete_message">Are you sure you want to delete this project?</string>
+    <string name="btn_export_project">Dışa Aktar</string>
+    <string name="btn_add_action">Add Edit Action</string>
+    <string name="label_active_layers">Active Project Layers</string>
+    <string name="msg_project_saved">Project saved successfully</string>
+    <string name="label_trim_action">Kırpma</string>
+    <string name="label_text_action">Metin</string>
+    <string name="label_watermark_action">Filigran</string>
+    <string name="label_speed_action">Hız ve Ses</string>
+    <string name="btn_save_project">Kaydet</string>
+
+
+    <string name="msg_error_project_id_missing">Hata: Proje kimliği eksik</string>
+    <string name="msg_error_project_not_found">Hata: Proje bulunamadı</string>
+    <string name="label_disabled">Devre Dışı</string>
+    <string name="msg_no_text_overlays">Metin bindirmesi yok</string>
+    <string name="label_layers">katman</string>
+    <string name="label_speed">Speed</string>
+    <string name="label_volume">Ses</string>
+    <string name="btn_set_start_current">Başlangıcı mevcut konuma ayarla</string>
+    <string name="btn_set_end_current">Bitişi mevcut konuma ayarla</string>
+    <string name="label_start_time">Başlangıç Zamanı:</string>
+    <string name="label_end_time">Bitiş Zamanı:</string>
+    <string name="btn_add_new_text">+ Yeni Metin Ekle</string>
+    <string name="msg_no_text_added">Henüz metin bindirmesi eklenmedi</string>
+    <string name="dialog_add_text_title">Metin Bindirmesi Ekle</string>
+    <string name="hint_enter_text_content">Metin içeriğini girin</string>
+    <string name="hint_start_time_eg">Başlangıç (örn. 00:05)</string>
+    <string name="hint_end_time_eg">Bitiş (örn. 00:15)</string>
+    <string name="btn_set_current_position">Mevcut konuma ayarla</string>
+    <string name="label_text_content">Metin İçeriği:</string>
+    <string name="btn_choose_watermark_image">Filigran Görseli Seç</string>
+    <string name="label_watermark_position">Filigran Konumu:</string>
+    <string name="label_speed_multiplier">Hız Çarpanı:</string>
+    <string name="label_volume_level">Ses Seviyesi:</string>
+    <string name="label_mute">0% (Sessiz)</string>
+    <string name="msg_error_project_render_failed">Hata: Proje işleme başarısız.</string>
+    <string name="msg_project_export_success">Proje başarıyla işlendi ve kaydedildi!</string>
+
 </resources>

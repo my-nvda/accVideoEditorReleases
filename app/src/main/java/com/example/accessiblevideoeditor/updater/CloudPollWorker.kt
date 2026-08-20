@@ -12,7 +12,13 @@ class CloudPollWorker(
 
     override suspend fun doWork(): Result {
         try {
-            CloudConfigManager.checkCloudConfig(applicationContext)
+            val result = CloudConfigManager.checkCloudConfig(applicationContext)
+            if (result.isSuccess) {
+                for (ann in result.pendingAnnouncements) {
+                    AppUpdater.showNotification(applicationContext, ann.id.hashCode(), ann.title, ann.message)
+                    CloudConfigManager.markAnnouncementAsShown(applicationContext, ann.id)
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             return Result.retry()

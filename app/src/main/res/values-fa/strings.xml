@@ -288,4 +288,53 @@
 
     <string name="btn_apply">اعمال</string>
     <string name="btn_apply_changes">اعمال تغییرات</string>
+
+    <string name="btn_projects_dashboard">استودیو پروژه ها</string>
+    <string name="btn_new_project">پروژه جدید</string>
+    <string name="label_recent_projects">پروژه های اخیر</string>
+    <string name="msg_no_projects">هیچ پروژه ای یافت نشد. برای شروع روی پروژه جدید کلیک کنید!</string>
+    <string name="menu_rename">تغییر نام</string>
+    <string name="menu_duplicate">تکثیر</string>
+    <string name="menu_delete">حذف</string>
+    <string name="dialog_rename_title">تغییر نام پروژه</string>
+    <string name="dialog_delete_title">حذف پروژه</string>
+    <string name="dialog_delete_message">آیا مطمئن هستید که می خواهید این پروژه را حذف کنید؟</string>
+    <string name="btn_export_project">خروجی گرفتن از پروژه</string>
+    <string name="btn_add_action">افزودن عملیات ویرایش</string>
+    <string name="label_active_layers">لایه های فعال پروژه</string>
+    <string name="msg_project_saved">پروژه با موفقیت ذخیره شد</string>
+    <string name="label_trim_action">برش محدوده ویدیو</string>
+    <string name="label_text_action">متون روی ویدیو</string>
+    <string name="label_watermark_action">واترمارک</string>
+    <string name="label_speed_action">سرعت و صدا</string>
+    <string name="btn_save_project">ذخیره پروژه</string>
+
+
+    <string name="msg_error_project_id_missing">خطا: شناسه پروژه وجود ندارد</string>
+    <string name="msg_error_project_not_found">خطا: پروژه یافت نشد</string>
+    <string name="label_disabled">غیرفعال</string>
+    <string name="msg_no_text_overlays">بدون متن روی ویدیو</string>
+    <string name="label_layers">لایه</string>
+    <string name="label_speed">سرعت</string>
+    <string name="label_volume">صدا</string>
+    <string name="btn_set_start_current">تنظیم شروع در موقعیت فعلی</string>
+    <string name="btn_set_end_current">تنظیم پایان در موقعیت فعلی</string>
+    <string name="label_start_time">زمان شروع:</string>
+    <string name="label_end_time">زمان پایان:</string>
+    <string name="btn_add_new_text">+ افزودن متن جدید</string>
+    <string name="msg_no_text_added">هیچ متنی اضافه نشده است</string>
+    <string name="dialog_add_text_title">افزودن متن</string>
+    <string name="hint_enter_text_content">متن خود را وارد کنید</string>
+    <string name="hint_start_time_eg">زمان شروع (مانند 00:05)</string>
+    <string name="hint_end_time_eg">زمان پایان (مانند 00:15)</string>
+    <string name="btn_set_current_position">تنظیم در موقعیت فعلی</string>
+    <string name="label_text_content">محتوای متن:</string>
+    <string name="btn_choose_watermark_image">انتخاب تصویر واترمارک</string>
+    <string name="label_watermark_position">موقعیت واترمارک:</string>
+    <string name="label_speed_multiplier">تغییر سرعت:</string>
+    <string name="label_volume_level">سطح صدا:</string>
+    <string name="label_mute">0% (بی‌صدا)</string>
+    <string name="msg_error_project_render_failed">خطا: خروجی گرفتن ناموفق بود.</string>
+    <string name="msg_project_export_success">پروژه با موفقیت خروجی گرفته و ذخیره شد!</string>
+
 </resources>

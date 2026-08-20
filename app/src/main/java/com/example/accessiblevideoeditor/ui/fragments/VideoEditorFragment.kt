@@ -36,6 +36,8 @@ class VideoEditorFragment : Fragment() {
     private var selectedVideoUri: Uri? = null
     private var exoPlayer: ExoPlayer? = null
     private var textOptions = TextRenderer.TextOptions(text = "")
+    private val previewHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var previewRunnable: Runnable? = null
 
     private val videoPickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedVideoUri = uri
@@ -89,6 +91,49 @@ class VideoEditorFragment : Fragment() {
             } else {
                 Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_select_video_only), Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.btnPreviewRange.setOnClickListener {
+            val player = exoPlayer
+            if (player == null || selectedVideoUri == null) {
+                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.toast_select_video_only), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            
+            val startSecs = parseTimeToSeconds(binding.etStartTime.text.toString())
+            val endSecs = parseTimeToSeconds(binding.etEndTime.text.toString())
+            
+            val startMs = startSecs * 1000L
+            val endMs = endSecs * 1000L
+            
+            val duration = player.duration
+            val finalEndMs = if (endMs <= startMs) {
+                if (duration > 0) duration else (startMs + 5000)
+            } else {
+                endMs
+            }
+            
+            previewRunnable?.let { previewHandler.removeCallbacks(it) }
+            
+            player.seekTo(startMs)
+            player.play()
+            
+            val runnable = object : Runnable {
+                override fun run() {
+                    val p = exoPlayer
+                    if (p != null && p.isPlaying) {
+                        if (p.currentPosition >= finalEndMs) {
+                            p.pause()
+                            p.seekTo(startMs)
+                            previewRunnable = null
+                            return
+                        }
+                        previewHandler.postDelayed(this, 50)
+                    }
+                }
+            }
+            previewRunnable = runnable
+            previewHandler.post(runnable)
         }
 
         binding.btnApply.setOnClickListener {
@@ -166,12 +211,20 @@ class VideoEditorFragment : Fragment() {
                     
                     // 6. Save to Gallery
                     if (resultLog == "SUCCESS") {
-                        MediaUtils.saveVideoToGallery(
+                        val savedUri = MediaUtils.saveVideoToGallery(
                             requireContext(),
                             outputFile,
                             "AccessibleEditor_Video_${System.currentTimeMillis()}.mp4"
                         )
                         SoundManager.playSuccess()
+                        withContext(Dispatchers.Main) {
+                            com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                requireContext(),
+                                savedUri,
+                                "تم تعديل الفيديو وحفظه في الاستوديو بنجاح!",
+                                "video/mp4"
+                            )
+                        }
                     } else {
                         ProcessingManager.showError(resultLog)
                     }
@@ -193,6 +246,7 @@ class VideoEditorFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        previewRunnable?.let { previewHandler.removeCallbacks(it) }
         exoPlayer?.release()
         exoPlayer = null
         _binding = null

@@ -89,7 +89,6 @@ class FastConverterFragment : Fragment() {
                     ProcessingManager.stopProcessing()
                     if (success) {
                         SoundManager.playSuccess()
-                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_182), Toast.LENGTH_SHORT).show()
                         val mimeType = when (format.uppercase()) {
                             "MP4" -> "video/mp4"
                             "MKV" -> "video/x-matroska"
@@ -106,6 +105,12 @@ class FastConverterFragment : Fragment() {
                         if (finalUri != null) {
                             HistoryManager.saveToHistory(requireContext(), com.example.accessiblevideoeditor.media.HistoryItem(uriString = finalUri.toString(), name = "converted_video.${format.lowercase()}", type = if (isImage) "image" else "video", timestamp = System.currentTimeMillis()))
                         }
+                        com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                            requireContext(),
+                            finalUri,
+                            AppStrings.get(requireContext(), R.string.string_182),
+                            mimeType
+                        )
                     } else {
                         SoundManager.playError()
                         Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_SHORT).show()

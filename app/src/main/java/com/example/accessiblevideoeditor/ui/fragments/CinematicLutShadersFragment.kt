@@ -92,8 +92,9 @@ class CinematicLutShadersFragment : Fragment() {
                                         "-y",
                                         "-i", tempInput.absolutePath,
                                         "-vf", "curves=preset=vintage",
-                                        "-c:v", "mpeg4",
-                                        "-q:v", "2",
+                                        "-c:v", "libx264",
+                                        "-preset", "ultrafast",
+                                        "-crf", "18",
                                         "-c:a", "copy",
                                         outputPath
                                     )
@@ -102,8 +103,9 @@ class CinematicLutShadersFragment : Fragment() {
                                         "-y",
                                         "-i", tempInput.absolutePath,
                                         "-vf", "curves=preset=vintage",
-                                        "-c:v", "mpeg4",
-                                        "-q:v", "2",
+                                        "-c:v", "libx264",
+                                        "-preset", "ultrafast",
+                                        "-crf", "18",
                                         outputPath
                                     )
                                 }

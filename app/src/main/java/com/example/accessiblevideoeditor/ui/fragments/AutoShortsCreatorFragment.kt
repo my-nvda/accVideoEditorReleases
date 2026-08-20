@@ -153,8 +153,9 @@ class AutoShortsCreatorFragment : Fragment() {
                                         "-t", splitDurationSec.toString(),
                                         "-i", tempInput.absolutePath,
                                         "-vf", cropFilter,
-                                        "-c:v", "mpeg4",
-                                        "-q:v", "2",
+                                        "-c:v", "libx264",
+                                        "-preset", "ultrafast",
+                                        "-crf", "18",
                                         "-c:a", "aac",
                                         outputPathSegment
                                     )
@@ -165,8 +166,9 @@ class AutoShortsCreatorFragment : Fragment() {
                                         "-t", splitDurationSec.toString(),
                                         "-i", tempInput.absolutePath,
                                         "-vf", cropFilter,
-                                        "-c:v", "mpeg4",
-                                        "-q:v", "2",
+                                        "-c:v", "libx264",
+                                        "-preset", "ultrafast",
+                                        "-crf", "18",
                                         outputPathSegment
                                     )
                                 }

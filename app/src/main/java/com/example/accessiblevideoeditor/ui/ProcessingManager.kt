@@ -112,20 +112,6 @@ object ProcessingManager {
             )
             currentSessionId = null
             currentJob = null
-            
-            // Cleanup cache files starting with temp_
-            appContext?.let { ctx ->
-                try {
-                    val cacheFiles = ctx.cacheDir.listFiles()
-                    cacheFiles?.forEach { file ->
-                        if (file.name.startsWith("temp_")) {
-                            file.delete()
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
         }
     }
 

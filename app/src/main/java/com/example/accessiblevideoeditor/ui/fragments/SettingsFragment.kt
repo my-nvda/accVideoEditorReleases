@@ -196,6 +196,10 @@ class SettingsFragment : Fragment() {
             findNavController().navigate(R.id.action_settingsFragment_to_volunteerTranslationFragment)
         }
 
+        binding.btnUserStats.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_userStatsFragment)
+        }
+
         binding.btnCheckUpdates.setOnClickListener {
             val safeCtx = context ?: return@setOnClickListener
             try {

@@ -10,7 +10,7 @@ androidxTestEspresso = "3.7.0"
 coroutines = "1.10.2"
 junit = "4.13.2"
 kotlin = "2.3.20"
-ffmpegKit = "6.0"
+ffmpegKit = "6.0.3"
 mlKitTextRecognition = "16.0.1"
 coroutinesPlayServices = "1.9.0"
 vosk = "0.3.32"
@@ -25,11 +25,12 @@ androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core",
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-ffmpeg-kit-full = { module = "com.mrljdx:ffmpeg-kit-full", version.ref = "ffmpegKit" }
+ffmpeg-kit-full = { module = "dev.ffmpegkit-maintained:ffmpeg-kit-full-gpl", version.ref = "ffmpegKit" }
 mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlKitTextRecognition" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
 vosk-android = { module = "com.alphacephei:vosk-android", version.ref = "vosk" }
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+smart-exception = { module = "com.arthenica:smart-exception-java", version = "0.2.1" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

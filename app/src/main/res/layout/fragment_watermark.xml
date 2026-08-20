@@ -1,86 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="@string/string_21"
-        app:titleTextColor="?attr/colorOnPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <Button
-                android:id="@+id/btnSelectVideo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_select_video_or_image"
-                android:layout_marginBottom="16dp" />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/string_200" />
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/string_199" />
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="@string/string_21" app:titleTextColor="?attr/colorOnPrimary" app:navigationIcon="@android:drawable/ic_menu_revert" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <Button android:id="@+id/btnSelectVideo" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_select_video_or_image" android:layout_marginBottom="16dp" android:minHeight="48dp" />
+            <com.google.android.material.tabs.TabLayout android:id="@+id/tabLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+                <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/string_200" />
+                <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/string_199" />
             </com.google.android.material.tabs.TabLayout>
-
-            <FrameLayout
-                android:id="@+id/flWatermarkContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-                
-                <Button
-                    android:id="@+id/btnSelectImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/string_24" />
-                    
-                <include
-                    android:id="@+id/textPanel"
-                    layout="@layout/layout_text_customization_panel"
-                    android:visibility="gone" />
+            <FrameLayout android:id="@+id/flWatermarkContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+                <Button android:id="@+id/btnSelectImage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_24" android:minHeight="48dp" />
+                <include android:id="@+id/textPanel" layout="@layout/layout_text_customization_panel" android:visibility="gone" />
             </FrameLayout>
-            
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/string_60" />
-            <Spinner
-                android:id="@+id/spPosition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp" />
-
-            <Button
-                android:id="@+id/btnApply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_apply" />
-
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_60" android:id="@+id/tvLabel_spPosition" android:labelFor="@id/spPosition" />
+            <Spinner android:id="@+id/spPosition" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" android:contentDescription="@string/string_60" />
+            <Button android:id="@+id/btnApply" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_apply" android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

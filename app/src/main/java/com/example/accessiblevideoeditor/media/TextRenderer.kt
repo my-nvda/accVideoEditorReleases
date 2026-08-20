@@ -171,19 +171,21 @@ object TextRenderer {
             TextPosition.BOTTOM -> height - textHeight - (height * 0.1f).toInt()
         }
 
-        // Draw Background Box
+        // Draw Background Box (Padded Box Backdrop with Rounded Corners)
         if (options.bgColor != Color.TRANSPARENT) {
-            val bgPaint = Paint().apply {
+            val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = options.bgColor
                 style = Paint.Style.FILL
             }
-            val bgRect = Rect(
-                0, // Full width box
-                startY - padding,
-                width,
-                startY + textHeight + padding
+            val boxPaddingH = (width * 0.04f).coerceAtLeast(24f)
+            val boxPaddingV = (height * 0.015f).coerceAtLeast(12f)
+            val bgRect = android.graphics.RectF(
+                (padding - boxPaddingH).coerceAtLeast(0f),
+                (startY - boxPaddingV).coerceAtLeast(0f),
+                (padding + textWidth + boxPaddingH).coerceAtMost(width.toFloat()),
+                (startY + textHeight + boxPaddingV).coerceAtMost(height.toFloat())
             )
-            canvas.drawRect(bgRect, bgPaint)
+            canvas.drawRoundRect(bgRect, 20f, 20f, bgPaint)
         }
 
         // Draw Text

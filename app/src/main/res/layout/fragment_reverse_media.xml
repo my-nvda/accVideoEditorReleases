@@ -1,59 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="@string/string_65"
-        app:titleTextColor="?attr/colorOnPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <Button
-                android:id="@+id/btnSelectVideo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/string_131" />
-
-            <CheckBox
-                android:id="@+id/cbReverseVideo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:checked="true"
-                android:text="@string/string_122" />
-                
-            <CheckBox
-                android:id="@+id/cbReverseAudio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:checked="true"
-                android:text="@string/string_138" />
-
-            <Button
-                android:id="@+id/btnApply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/btn_apply" />
-
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="@string/string_65" app:titleTextColor="?attr/colorOnPrimary" app:navigationIcon="@android:drawable/ic_menu_revert" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <Button android:id="@+id/btnSelectVideo" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_131" android:minHeight="48dp" />
+            <CheckBox android:id="@+id/cbReverseVideo" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:checked="true" android:text="@string/string_122" android:minHeight="48dp" android:minWidth="48dp" />
+            <CheckBox android:id="@+id/cbReverseAudio" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:checked="true" android:text="@string/string_138" android:minHeight="48dp" android:minWidth="48dp" />
+            <Button android:id="@+id/btnApply" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/btn_apply" android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

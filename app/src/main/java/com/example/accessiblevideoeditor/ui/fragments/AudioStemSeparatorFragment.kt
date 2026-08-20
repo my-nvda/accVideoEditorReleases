@@ -192,8 +192,8 @@ class AudioStemSeparatorFragment : Fragment() {
             uploadConn.requestMethod = "POST"
             uploadConn.doOutput = true
             uploadConn.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
-            uploadConn.connectTimeout = 60000
-            uploadConn.readTimeout = 60000
+            uploadConn.connectTimeout = 180000
+            uploadConn.readTimeout = 180000
             
             uploadConn.outputStream.use { os ->
                 val writer = os.writer(Charsets.UTF_8)
@@ -232,8 +232,8 @@ class AudioStemSeparatorFragment : Fragment() {
             predictConn.requestMethod = "POST"
             predictConn.doOutput = true
             predictConn.setRequestProperty("Content-Type", "application/json")
-            predictConn.connectTimeout = 180000 // 3 minutes timeout for remote processing
-            predictConn.readTimeout = 180000
+            predictConn.connectTimeout = 600000 // 10 minutes timeout for remote processing
+            predictConn.readTimeout = 600000
             
             val payloadObj = org.json.JSONObject().apply {
                 val dataArray = org.json.JSONArray().apply {
@@ -266,8 +266,8 @@ class AudioStemSeparatorFragment : Fragment() {
                     val downloadUrl = java.net.URL(downloadUrlStr)
                     val downloadConn = downloadUrl.openConnection() as java.net.HttpURLConnection
                     downloadConn.requestMethod = "GET"
-                    downloadConn.connectTimeout = 30000
-                    downloadConn.readTimeout = 30000
+                    downloadConn.connectTimeout = 120000
+                    downloadConn.readTimeout = 120000
                     
                     if (downloadConn.responseCode == java.net.HttpURLConnection.HTTP_OK) {
                         java.io.File(outputPath).outputStream().use { fos ->
@@ -381,8 +381,8 @@ class AudioStemSeparatorFragment : Fragment() {
                 val url = java.net.URL("https://iqbalzz-vocals-instrumentals.hf.space/")
                 val conn = url.openConnection() as java.net.HttpURLConnection
                 conn.requestMethod = "GET"
-                conn.connectTimeout = 5000
-                conn.readTimeout = 5000
+                conn.connectTimeout = 30000
+                conn.readTimeout = 30000
                 conn.responseCode // Just trigger connection
             } catch (_: Exception) {}
         }

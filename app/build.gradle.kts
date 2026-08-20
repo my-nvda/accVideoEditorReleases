@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 115
-        versionName = "2.9.7"
+        versionCode = 117
+        versionName = "26.0"
     }
 
     val localProperties = Properties()
@@ -60,6 +60,9 @@ android {
     lint {
         checkReleaseBuilds = false
         abortOnError = false
+        disable += setOf(
+            "MissingTranslation"
+        )
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -80,12 +83,6 @@ android {
       }
     }
 
-    lint {
-        disable += setOf(
-            "MissingTranslation"
-        )
-        abortOnError = true
-    }
 }
 
 kotlin {
@@ -94,6 +91,7 @@ kotlin {
 
 dependencies {
     implementation("com.google.ai.client.generativeai:generativeai:0.8.0")
+    implementation("com.google.mlkit:segmentation-selfie:16.0.0-beta6")
 
   // Core Android dependencies
   implementation(libs.androidx.core.ktx)
@@ -120,6 +118,7 @@ dependencies {
   
   // FFmpeg for Media Processing
   implementation(libs.ffmpeg.kit.full)
+  implementation(libs.smart.exception)
 
   // Local DeepFilterNet3 AI Noise Reduction
   implementation("io.github.kaleyravideo:android-deepfilternet:0.0.8")

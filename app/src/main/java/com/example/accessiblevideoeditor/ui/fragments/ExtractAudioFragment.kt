@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -121,7 +121,12 @@ class ExtractAudioFragment : Fragment() {
                             )
                         }
                         SoundManager.playSuccess()
-                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_87), Toast.LENGTH_SHORT).show()
+                        com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                            requireContext(),
+                            savedUri,
+                            "تم استخراج الصوت وحفظه في الاستوديو بنجاح!",
+                            mimeType
+                        )
                     } else {
                         SoundManager.playError()
                         Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_221), Toast.LENGTH_LONG).show()

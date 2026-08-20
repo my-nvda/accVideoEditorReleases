@@ -1,64 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="Accessible Video Editor"
-        app:titleTextColor="?attr/colorOnPrimary" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:padding="16dp"
-            android:useDefaultMargins="true"
-            android:alignmentMode="alignBounds">
-
-            <Button android:id="@+id/btnVideoEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnImageEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnWatermark" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnCreateBlankImage" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnVideoTrimmer" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnSmartCut" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAudioEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAudioStudio" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAiAnalysis" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnStt" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnOcr" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnFastConverter" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnBoostVolume" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnExtractAudio" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnCompressVideo" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnMergeVideos" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnReverseMedia" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnSlideshowMaker" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnTickerText" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnBatchProcess" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnSpeedControl" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnNoiseReduction" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnBackgroundMusic" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAudioNormalization" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAiSceneInspector" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAiVoiceDubbing" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAudioStemSeparator" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAutoShortsCreator" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnCinematicLutShaders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnAiSceneAudioDescription" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnSubtitlesOcrSrt" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-            <Button android:id="@+id/btnHistory" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-
-        </GridLayout>
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="Accessible Video Editor" app:titleTextColor="?attr/colorOnPrimary" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <TextView android:id="@+id/tvFavoritesHeader" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="الأدوات المفضلة ⭐" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="8dp" android:textColor="?attr/colorAccent" android:visibility="gone" />
+            <GridLayout android:id="@+id/gridFavorites" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:useDefaultMargins="true" android:alignmentMode="alignBounds" android:layout_marginBottom="16dp" android:visibility="gone" />
+            <TextView android:id="@+id/tvAllFeaturesHeader" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="جميع الأدوات 🛠️" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="8dp" android:textColor="?android:attr/textColorPrimary" />
+            <GridLayout android:id="@+id/gridLayoutAll" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:useDefaultMargins="true" android:alignmentMode="alignBounds">
+                <Button android:id="@+id/btnVideoEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnImageEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnWatermark" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnCreateBlankImage" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnVideoTrimmer" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnSmartCut" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAudioEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAudioStudio" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAiAnalysis" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnStt" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnOcr" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnFastConverter" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnBoostVolume" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnExtractAudio" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnCompressVideo" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnMergeVideos" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnReverseMedia" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnSlideshowMaker" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnTickerText" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnBatchProcess" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnSpeedControl" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnNoiseReduction" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnBackgroundMusic" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAudioNormalization" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAiSceneInspector" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAiVoiceDubbing" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAudioStemSeparator" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAutoShortsCreator" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnCinematicLutShaders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAiSceneAudioDescription" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnSubtitlesOcrSrt" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnHistory" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnProjectsDashboard" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnImageChroma" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+            </GridLayout>
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>

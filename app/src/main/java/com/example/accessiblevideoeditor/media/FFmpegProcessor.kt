@@ -27,50 +27,183 @@ object FFmpegProcessor {
         }
 
         // 2. Fallback: MediaMetadataRetriever
+        var retriever: android.media.MediaMetadataRetriever? = null
         try {
-            val retriever = android.media.MediaMetadataRetriever()
+            retriever = android.media.MediaMetadataRetriever()
             retriever.setDataSource(sourceMedia)
             val durStr = retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION)
             val durMs = durStr?.toFloatOrNull() ?: 0f
-            retriever.release()
             if (durMs > 0f) return durMs
         } catch (e: Exception) {
             e.printStackTrace()
+        } finally {
+            try {
+                retriever?.release()
+            } catch (_: Exception) {}
         }
 
         return 0f
     }
 
+    fun getVideoFrameRate(sourceMedia: String?): Float {
+        if (sourceMedia.isNullOrBlank()) return 30f
+        try {
+            val mediaInfo = com.arthenica.ffmpegkit.FFprobeKit.getMediaInformation(sourceMedia)
+            val streams = mediaInfo?.mediaInformation?.streams
+            if (streams != null) {
+                for (stream in streams) {
+                    if (stream.type == "video") {
+                        val avgFrameRate = stream.averageFrameRate
+                        if (!avgFrameRate.isNullOrBlank()) {
+                            if (avgFrameRate.contains("/")) {
+                                val parts = avgFrameRate.split("/")
+                                if (parts.size == 2) {
+                                    val num = parts[0].toFloatOrNull()
+                                    val den = parts[1].toFloatOrNull()
+                                    if (num != null && den != null && den > 0f) {
+                                        return num / den
+                                    }
+                                }
+                            } else {
+                                val fr = avgFrameRate.toFloatOrNull()
+                                if (fr != null && fr > 0f) {
+                                    return fr
+                                }
+                            }
+                        }
+                        val realFrameRate = stream.realFrameRate
+                        if (!realFrameRate.isNullOrBlank()) {
+                            if (realFrameRate.contains("/")) {
+                                val parts = realFrameRate.split("/")
+                                if (parts.size == 2) {
+                                    val num = parts[0].toFloatOrNull()
+                                    val den = parts[1].toFloatOrNull()
+                                    if (num != null && den != null && den > 0f) {
+                                        return num / den
+                                    }
+                                }
+                            } else {
+                                val fr = realFrameRate.toFloatOrNull()
+                                if (fr != null && fr > 0f) {
+                                    return fr
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        var retriever: android.media.MediaMetadataRetriever? = null
+        try {
+            retriever = android.media.MediaMetadataRetriever()
+            retriever.setDataSource(sourceMedia)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                val fpsStr = retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE)
+                val fps = fpsStr?.toFloatOrNull()
+                if (fps != null && fps > 0f) return fps
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                retriever?.release()
+            } catch (_: Exception) {}
+        }
+
+        return 30f
+    }
+
     private fun injectQualitySettings(commandArgs: Array<String>): Array<String> {
         val quality = com.example.accessiblevideoeditor.ui.SettingsManager.exportQuality
-        if (quality == "high") return commandArgs
-        
         val list = commandArgs.toMutableList()
+        
         val cvIdx = list.indexOf("-c:v")
-        if (cvIdx != -1 && cvIdx + 1 < list.size && list[cvIdx + 1] == "mpeg4") {
-            val qvIdx = list.indexOf("-q:v")
-            val bvIdx = list.indexOf("-b:v")
-            val targetVBitrate = if (quality == "medium") "1.5M" else "600k"
-            
-            if (qvIdx != -1 && qvIdx + 1 < list.size) {
-                list[qvIdx] = "-b:v"
-                list[qvIdx + 1] = targetVBitrate
-            } else if (bvIdx != -1 && bvIdx + 1 < list.size) {
-                list[bvIdx + 1] = targetVBitrate
-            } else {
-                list.add(cvIdx + 2, "-b:v")
-                list.add(cvIdx + 3, targetVBitrate)
-            }
-            
-            val caIdx = list.indexOf("-c:a")
-            if (caIdx != -1 && caIdx + 1 < list.size && list[caIdx + 1] == "aac") {
-                val baIdx = list.indexOf("-b:a")
-                val targetABitrate = if (quality == "medium") "128k" else "96k"
-                if (baIdx != -1 && baIdx + 1 < list.size) {
-                    list[baIdx + 1] = targetABitrate
+        if (cvIdx != -1 && cvIdx + 1 < list.size) {
+            val codec = list[cvIdx + 1]
+            if (codec == "mpeg4" || codec == "libx264") {
+                // 1. Force codec to libx264
+                list[cvIdx + 1] = "libx264"
+                
+                // 2. Determine target CRF based on quality setting
+                val targetCrf = when (quality) {
+                    "high" -> "18" // Visually lossless, extremely high quality
+                    "medium" -> "23" // Standard high quality (FFmpeg default)
+                    "low" -> "28" // Acceptable quality, smaller size
+                    else -> "18"
+                }
+                
+                // 3. Remove conflicting video quality or bitrate parameters (-q:v or -b:v)
+                var i = 0
+                while (i < list.size) {
+                    val arg = list[i]
+                    if (arg == "-q:v" || arg == "-b:v") {
+                        list.removeAt(i) // remove option
+                        if (i < list.size) {
+                            list.removeAt(i) // remove its value
+                        }
+                    } else {
+                        i++
+                    }
+                }
+                
+                // 4. Inject or update -crf
+                val crfIdx = list.indexOf("-crf")
+                if (crfIdx != -1 && crfIdx + 1 < list.size) {
+                    list[crfIdx + 1] = targetCrf
                 } else {
-                    list.add(caIdx + 2, "-b:a")
-                    list.add(caIdx + 3, targetABitrate)
+                    val newCvIdx = list.indexOf("-c:v")
+                    if (newCvIdx != -1) {
+                        list.add(newCvIdx + 2, "-crf")
+                        list.add(newCvIdx + 3, targetCrf)
+                    }
+                }
+                
+                // 5. Inject or update -preset ultrafast for high-speed multi-core rendering
+                val presetIdx = list.indexOf("-preset")
+                if (presetIdx != -1 && presetIdx + 1 < list.size) {
+                    list[presetIdx + 1] = "ultrafast"
+                } else {
+                    val newCvIdx = list.indexOf("-c:v")
+                    if (newCvIdx != -1) {
+                        list.add(newCvIdx + 2, "-preset")
+                        list.add(newCvIdx + 3, "ultrafast")
+                    }
+                }
+                
+                // 6. Inject or update -threads 0
+                val threadsIdx = list.indexOf("-threads")
+                if (threadsIdx != -1 && threadsIdx + 1 < list.size) {
+                    list[threadsIdx + 1] = "0"
+                } else {
+                    val newCvIdx = list.indexOf("-c:v")
+                    if (newCvIdx != -1) {
+                        list.add(newCvIdx + 2, "-threads")
+                        list.add(newCvIdx + 3, "0")
+                    }
+                }
+            }
+        }
+        
+        // 7. Audio quality adjustment
+        val caIdx = list.indexOf("-c:a")
+        if (caIdx != -1 && caIdx + 1 < list.size && list[caIdx + 1] == "aac") {
+            val baIdx = list.indexOf("-b:a")
+            val targetABitrate = when (quality) {
+                "high" -> "192k"
+                "medium" -> "128k"
+                "low" -> "96k"
+                else -> "192k"
+            }
+            if (baIdx != -1 && baIdx + 1 < list.size) {
+                list[baIdx + 1] = targetABitrate
+            } else {
+                val newCaIdx = list.indexOf("-c:a")
+                if (newCaIdx != -1) {
+                    list.add(newCaIdx + 2, "-b:a")
+                    list.add(newCaIdx + 3, targetABitrate)
                 }
             }
         }
@@ -83,7 +216,8 @@ object FFmpegProcessor {
         totalDurationMs: Float? = null,
         progressOffset: Float = 0f,
         progressScale: Float = 1.0f,
-        logCollector: ((String) -> Unit)? = null
+        logCollector: ((String) -> Unit)? = null,
+        onProgress: ((Int) -> Unit)? = null
     ): Boolean = kotlinx.coroutines.suspendCancellableCoroutine { continuation ->
         val finalCommandArgs = injectQualitySettings(commandArgs)
         var durationMs = totalDurationMs ?: getMediaDurationMs(sourceVideo)
@@ -100,6 +234,7 @@ object FFmpegProcessor {
                     if (isSuccess) {
                         val finalPercent = (progressOffset + (100f * progressScale)).coerceIn(0f, 100f)
                         ProcessingManager.updateProgress(finalPercent / 100f, "")
+                        onProgress?.invoke(finalPercent.toInt())
                     } else {
                         val commandStr = finalCommandArgs.joinToString(" ")
                         val outputStr = session.allLogsAsString ?: ""
@@ -171,6 +306,7 @@ object FFmpegProcessor {
                 }
 
                 ProcessingManager.updateProgress(percentage / 100f, etaMessage)
+                onProgress?.invoke(percentage.toInt())
             }
         )
         
@@ -244,39 +380,40 @@ object FFmpegProcessor {
             "-map", "[out]",
             "-map", "0:a?",
             "-c:a", "aac",
-            "-c:v", "mpeg4",
-            "-q:v", "2",
+            "-c:v", "libx264",
+            "-preset", "ultrafast",
+            "-crf", "18",
+            "-threads", "0",
             "-pix_fmt", "yuv420p",
             outputPath
         )
         
-        // 3. Execute Async to get statistics
-        var resultLog = "SUCCESS"
-        val latch = java.util.concurrent.CountDownLatch(1)
-        
-        FFmpegKit.executeWithArgumentsAsync(
-            commandArgs,
-            { session -> // Complete Callback
-                if (!ReturnCode.isSuccess(session.returnCode)) {
-                    resultLog = session.allLogsAsString ?: "Unknown FFmpeg Error"
+        return@withContext kotlinx.coroutines.suspendCancellableCoroutine<String> { continuation ->
+            val session = FFmpegKit.executeWithArgumentsAsync(
+                commandArgs,
+                { completedSession ->
+                    if (continuation.isActive) {
+                        if (ReturnCode.isSuccess(completedSession.returnCode)) {
+                            continuation.resumeWith(Result.success("SUCCESS"))
+                        } else {
+                            val log = completedSession.allLogsAsString ?: "Unknown FFmpeg Error"
+                            continuation.resumeWith(Result.success(log))
+                        }
+                    }
+                },
+                { log -> },
+                { statistics ->
+                    val timeProcessedMs = statistics.time
+                    var percentage = ((timeProcessedMs.toFloat() / durationMs) * 100).toInt()
+                    percentage = percentage.coerceIn(0, 100)
+                    onProgress(percentage)
                 }
-                latch.countDown()
-            },
-            { log -> }, // Log Callback
-            { statistics -> // Statistics Callback
-                val timeProcessedMs = statistics.time
-                var percentage = ((timeProcessedMs.toFloat() / durationMs) * 100).toInt()
-                if (percentage < 0) percentage = 0
-                if (percentage > 100) percentage = 100
-                onProgress(percentage)
+            )
+            
+            continuation.invokeOnCancellation {
+                FFmpegKit.cancel(session.sessionId)
             }
-        )
-        
-        val finished = latch.await(20, java.util.concurrent.TimeUnit.MINUTES)
-        if (!finished) {
-            resultLog = "FFmpeg timed out after 20 minutes"
         }
-        return@withContext resultLog
     }
 
     /**
@@ -370,7 +507,7 @@ object FFmpegProcessor {
      * Compresses the video by reducing bitrate and re-encoding.
      */
     suspend fun compressVideo(sourceVideo: String, outputPath: String): Boolean = withContext(Dispatchers.IO) {
-        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-map", "0:v", "-map", "0:a?", "-c:v", "mpeg4", "-b:v", "1M", "-c:a", "aac", "-b:a", "128k", outputPath)
+        val commandArgs = arrayOf("-y", "-threads", "0", "-i", sourceVideo, "-map", "0:v", "-map", "0:a?", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "28", "-c:a", "aac", "-b:a", "128k", outputPath)
         executeWithProgress(commandArgs, sourceVideo)
     }
 
@@ -378,7 +515,7 @@ object FFmpegProcessor {
      * Changes video resolution/quality. 
      */
     suspend fun changeQuality(sourceVideo: String, outputPath: String, width: Int, height: Int): Boolean = withContext(Dispatchers.IO) {
-        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-vf", "scale=$width:$height", "-map", "0:v", "-map", "0:a?", "-c:v", "mpeg4", "-c:a", "copy", outputPath)
+        val commandArgs = arrayOf("-y", "-threads", "0", "-i", sourceVideo, "-vf", "scale=$width:$height", "-map", "0:v", "-map", "0:a?", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "copy", outputPath)
         executeWithProgress(commandArgs, sourceVideo)
     }
 
@@ -388,6 +525,7 @@ object FFmpegProcessor {
     suspend fun extractAudioToWav(sourceVideo: String, outputPath: String): Boolean = withContext(Dispatchers.IO) {
         val commandArgs = arrayOf(
             "-y",
+            "-threads", "0",
             "-i", sourceVideo,
             "-vn",
             "-acodec", "pcm_s16le",
@@ -419,7 +557,7 @@ object FFmpegProcessor {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        val commandArgs = arrayOf("-y", "-f", "concat", "-safe", "0", "-i", concatListFile, "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac", outputPath)
+        val commandArgs = arrayOf("-y", "-threads", "0", "-f", "concat", "-safe", "0", "-i", concatListFile, "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "aac", outputPath)
         executeWithProgress(commandArgs, totalDurationMs = if (totalMs > 0f) totalMs else null)
     }
 
@@ -429,9 +567,9 @@ object FFmpegProcessor {
      */
     suspend fun reverseMedia(sourceMedia: String, outputPath: String, isAudioOnly: Boolean): Boolean = withContext(Dispatchers.IO) {
         val commandArgs = if (isAudioOnly) {
-            arrayOf("-y", "-i", sourceMedia, "-af", "areverse", outputPath)
+            arrayOf("-y", "-threads", "0", "-i", sourceMedia, "-af", "areverse", outputPath)
         } else {
-            arrayOf("-y", "-i", sourceMedia, "-vf", "reverse", "-af", "areverse", "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac", outputPath)
+            arrayOf("-y", "-threads", "0", "-i", sourceMedia, "-vf", "reverse", "-af", "areverse", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "aac", outputPath)
         }
         executeWithProgress(commandArgs, sourceMedia)
     }
@@ -446,7 +584,7 @@ object FFmpegProcessor {
         val vFilter = "fade=t=in:st=0:d=$fadeDurationSec,fade=t=out:st=$fadeOutStart:d=$fadeDurationSec"
         val aFilter = "afade=t=in:st=0:d=$fadeDurationSec,afade=t=out:st=$fadeOutStart:d=$fadeDurationSec"
         
-        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-vf", vFilter, "-af", aFilter, "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac", outputPath)
+        val commandArgs = arrayOf("-y", "-threads", "0", "-i", sourceVideo, "-vf", vFilter, "-af", aFilter, "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "aac", outputPath)
         executeWithProgress(commandArgs, sourceVideo)
     }
 
@@ -485,8 +623,9 @@ object FFmpegProcessor {
                 "-i", concatFile,
                 "-i", audioFile,
                 "-vf", scaleFilter,
-                "-c:v", "mpeg4",
-                "-q:v", "2",
+                "-c:v", "libx264",
+                "-preset", "ultrafast",
+                "-crf", "18",
                 "-c:a", "aac",
                 "-shortest",
                 outputPath
@@ -498,8 +637,9 @@ object FFmpegProcessor {
                 "-safe", "0",
                 "-i", concatFile,
                 "-vf", scaleFilter,
-                "-c:v", "mpeg4",
-                "-q:v", "2",
+                "-c:v", "libx264",
+                "-preset", "ultrafast",
+                "-crf", "18",
                 outputPath
             )
         }
@@ -527,7 +667,7 @@ object FFmpegProcessor {
             "center" -> "overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2"
             else -> "overlay=10:10"
         }
-        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-i", logoPath, "-filter_complex", filter, "-c:v", "mpeg4", "-q:v", "2", "-c:a", "copy", outputPath)
+        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-i", logoPath, "-filter_complex", filter, "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "copy", outputPath)
         executeWithProgress(commandArgs, sourceVideo)
     }
 
@@ -537,7 +677,7 @@ object FFmpegProcessor {
     suspend fun addTickerText(sourceVideo: String, text: String, speed: Int, color: String, fontSize: Int, fontFile: String, outputPath: String): Boolean = withContext(Dispatchers.IO) {
         val escapedText = text.replace("'", "\\'").replace(":", "\\:")
         val drawtext = "drawtext=fontfile='$fontFile':text='$escapedText':y=h-line_h-20:x=w-(t*$speed):fontcolor=$color:fontsize=$fontSize:shadowcolor=black:shadowx=2:shadowy=2"
-        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-vf", drawtext, "-c:v", "mpeg4", "-q:v", "2", "-c:a", "copy", outputPath)
+        val commandArgs = arrayOf("-y", "-i", sourceVideo, "-vf", drawtext, "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "copy", outputPath)
         executeWithProgress(commandArgs, sourceVideo)
     }
 
@@ -627,7 +767,7 @@ object FFmpegProcessor {
                 "-y", "-i", sourceVideo, 
                 "-filter_complex", filterComplex.toString(),
                 "-map", "[outv]", "-map", "[outa]",
-                "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac",
+                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "aac",
                 outputPath
             )
         } else {
@@ -635,7 +775,7 @@ object FFmpegProcessor {
                 "-y", "-i", sourceVideo, 
                 "-filter_complex", filterComplex.toString(),
                 "-map", "[outv]",
-                "-c:v", "mpeg4", "-q:v", "2",
+                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18",
                 outputPath
             )
         }

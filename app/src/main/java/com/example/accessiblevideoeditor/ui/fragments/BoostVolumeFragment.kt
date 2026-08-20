@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -89,11 +89,16 @@ class BoostVolumeFragment : Fragment() {
                     ProcessingManager.stopProcessing()
                     if (success) {
                         SoundManager.playSuccess()
-                        Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_87), Toast.LENGTH_SHORT).show()
                         val finalUri = MediaUtils.saveVideoToGallery(requireContext(), outputFile, "boosted_video.mp4", "video/mp4")
                         if (finalUri != null) {
                             HistoryManager.saveToHistory(requireContext(), com.example.accessiblevideoeditor.media.HistoryItem(uriString = finalUri.toString(), name = "boosted_video.mp4", type = "video", timestamp = System.currentTimeMillis()))
                         }
+                        com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                            requireContext(),
+                            finalUri,
+                            AppStrings.get(requireContext(), R.string.string_87),
+                            "video/mp4"
+                        )
                     } else {
                         SoundManager.playError()
                         Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_89), Toast.LENGTH_SHORT).show()

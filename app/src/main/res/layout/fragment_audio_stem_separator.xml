@@ -1,139 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="@string/title_audio_stem_separator"
-        app:titleTextColor="?attr/colorOnPrimary" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    <TextView
-                        android:id="@+id/tvModelStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_model_status_checking"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnDownloadModel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/btn_download_separator_model"
-                        android:visibility="gone" />
-
-                    <ProgressBar
-                        android:id="@+id/pbModelDownload"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:visibility="gone" />
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="@string/title_audio_stem_separator" app:titleTextColor="?attr/colorOnPrimary" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="12dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:id="@+id/tvModelStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_model_status_checking" android:textSize="14sp" android:textStyle="bold" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnDownloadModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/btn_download_separator_model" android:visibility="gone" android:minHeight="48dp" />
+                    <ProgressBar android:id="@+id/pbModelDownload" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:max="100" android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSelectAudio"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="@string/btn_select_audio_file" />
-
-            <TextView
-                android:id="@+id/tvSelectedAudio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_no_file_selected"
-                android:textSize="14sp"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_processing_engine"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <RadioGroup
-                android:id="@+id/rgEngineChoice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-                <RadioButton
-                    android:id="@+id/rbEngineCloud"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/engine_cloud" />
-                <RadioButton
-                    android:id="@+id/rbEngineLocal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/engine_local" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnSelectAudio" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/btn_select_audio_file" android:minHeight="48dp" />
+            <TextView android:id="@+id/tvSelectedAudio" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_no_file_selected" android:textSize="14sp" android:layout_marginBottom="16dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_processing_engine" android:textSize="16sp" android:textStyle="bold" android:layout_marginBottom="8dp" android:id="@+id/tvLabel_rgEngineChoice" android:labelFor="@id/rgEngineChoice" />
+            <RadioGroup android:id="@+id/rgEngineChoice" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:contentDescription="@string/label_processing_engine">
+                <RadioButton android:id="@+id/rbEngineCloud" android:layout_width="match_parent" android:layout_height="wrap_content" android:checked="true" android:text="@string/engine_cloud" android:minHeight="48dp" android:minWidth="48dp" />
+                <RadioButton android:id="@+id/rbEngineLocal" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/engine_local" android:minHeight="48dp" android:minWidth="48dp" />
             </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_separation_mode"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <RadioGroup
-                android:id="@+id/rgSeparatorMode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-                <RadioButton
-                    android:id="@+id/rbSeparateVocals"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/mode_vocals" />
-                <RadioButton
-                    android:id="@+id/rbSeparateMusic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mode_instruments" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_separation_mode" android:textSize="16sp" android:textStyle="bold" android:layout_marginBottom="8dp" android:id="@+id/tvLabel_rgSeparatorMode" android:labelFor="@id/rgSeparatorMode" />
+            <RadioGroup android:id="@+id/rgSeparatorMode" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:contentDescription="@string/label_separation_mode">
+                <RadioButton android:id="@+id/rbSeparateVocals" android:layout_width="match_parent" android:layout_height="wrap_content" android:checked="true" android:text="@string/mode_vocals" android:minHeight="48dp" android:minWidth="48dp" />
+                <RadioButton android:id="@+id/rbSeparateMusic" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/mode_instruments" android:minHeight="48dp" android:minWidth="48dp" />
             </RadioGroup>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnProcessSeparation"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="@string/btn_start_separation" />
-
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnProcessSeparation" android:layout_width="match_parent" android:layout_height="60dp" android:text="@string/btn_start_separation" android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

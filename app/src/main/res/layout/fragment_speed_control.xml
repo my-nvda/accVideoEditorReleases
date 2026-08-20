@@ -1,65 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="@string/title_speed_control"
-        app:titleTextColor="?attr/colorOnPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <Button
-                android:id="@+id/btnSelectMedia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/string_47" />
-
-            <TextView
-                android:id="@+id/tvSelectedFile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/lblSpeed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/label_speed"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spinnerSpeed"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp" />
-
-            <Button
-                android:id="@+id/btnApply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:text="@string/btn_apply" />
-
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="@string/title_speed_control" app:titleTextColor="?attr/colorOnPrimary" app:navigationIcon="@android:drawable/ic_menu_revert" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <Button android:id="@+id/btnSelectMedia" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_47" android:minHeight="48dp" />
+            <TextView android:id="@+id/tvSelectedFile" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:visibility="gone" />
+            <TextView android:id="@+id/lblSpeed" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/label_speed" android:textSize="16sp" android:textStyle="bold" android:labelFor="@id/spinnerSpeed" />
+            <Spinner android:id="@+id/spinnerSpeed" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:contentDescription="@string/label_speed" />
+            <Button android:id="@+id/btnApply" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:text="@string/btn_apply" android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

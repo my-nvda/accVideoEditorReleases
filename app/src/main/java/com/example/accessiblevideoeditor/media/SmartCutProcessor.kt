@@ -136,7 +136,7 @@ object SmartCutProcessor {
                 "-y", "-i", inputPath, 
                 "-filter_complex", filterBuilder.toString(),
                 "-map", "[outv]", "-map", "[outa]",
-                "-c:v", "mpeg4", "-q:v", "2", "-c:a", "aac",
+                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-c:a", "aac",
                 outputPath
             )
             

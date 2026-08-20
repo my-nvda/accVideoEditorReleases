@@ -1,274 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="@string/string_133"
-        app:titleTextColor="?attr/colorOnPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Sounds Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_96"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchStartupSound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_82" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchProcessingSound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_111" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchSuccessSound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_130" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchErrorSound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/string_136" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
-                android:background="?android:attr/listDivider" />
-
-            <!-- AI Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_196"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/string_197">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etGeminiApiKey"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="@string/string_133" app:titleTextColor="?attr/colorOnPrimary" app:navigationIcon="@android:drawable/ic_menu_revert" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_96" android:textAppearance="?attr/textAppearanceTitleMedium" />
+            <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchStartupSound" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_82" />
+            <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchProcessingSound" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_111" />
+            <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchSuccessSound" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_130" />
+            <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchErrorSound" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:text="@string/string_136" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginBottom="16dp" android:background="?android:attr/listDivider" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_196" android:textAppearance="?attr/textAppearanceTitleMedium" />
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.FilledBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:hint="@string/string_197">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGeminiApiKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/tvLabelGeminiModel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/string_198"
-                android:labelFor="@id/spGeminiModel"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:layout_marginBottom="4dp" />
-            <Spinner
-                android:id="@+id/spGeminiModel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:minHeight="48dp"
-                android:contentDescription="@string/string_198" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
-                android:background="?android:attr/listDivider" />
-
-            <!-- UI/Theme Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_100"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchDarkMode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_109" />
-
-            <TextView
-                android:id="@+id/tvLabelLanguage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/string_17"
-                android:labelFor="@id/spLanguage"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:layout_marginBottom="4dp" />
-            <Spinner
-                android:id="@+id/spLanguage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:minHeight="48dp"
-                android:contentDescription="@string/string_17" />
-            <TextView
-                android:id="@+id/tvLabelExportQuality"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_export_quality"
-                android:labelFor="@id/spExportQuality"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:layout_marginBottom="4dp" />
-            <Spinner
-                android:id="@+id/spExportQuality"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:minHeight="48dp"
-                android:contentDescription="@string/label_export_quality" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
-                android:background="?android:attr/listDivider" />
-
-            <!-- Error Logger Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/title_troubleshooting"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnViewErrorLog"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/btn_view_error_log"
-                style="@style/Widget.Material3.Button.TonalButton" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
-                android:background="?android:attr/listDivider" />
-
-            <!-- Device ID Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/title_device_id"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCopyDeviceId"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/btn_copy_device_id"
-                style="@style/Widget.Material3.Button.TonalButton" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
-                android:background="?android:attr/listDivider" />
-
-            <!-- About / Extra Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_87"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCheckUpdates"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_48" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnHelp"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_105" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnVolunteerTranslation"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_239" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEmail"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_27" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnWhatsApp"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_61" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnTwitter"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_148" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnFacebook"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/string_144" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPrivacyPolicy"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/string_privacy_policy" />
-
+            <TextView android:id="@+id/tvLabelGeminiModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_198" android:labelFor="@id/spGeminiModel" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginBottom="4dp" />
+            <Spinner android:id="@+id/spGeminiModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:minHeight="48dp" android:contentDescription="@string/string_198" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginBottom="16dp" android:background="?android:attr/listDivider" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_100" android:textAppearance="?attr/textAppearanceTitleMedium" />
+            <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchDarkMode" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_109" />
+            <TextView android:id="@+id/tvLabelLanguage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_17" android:labelFor="@id/spLanguage" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginBottom="4dp" />
+            <Spinner android:id="@+id/spLanguage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:minHeight="48dp" android:contentDescription="@string/string_17" />
+            <TextView android:id="@+id/tvLabelExportQuality" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_export_quality" android:labelFor="@id/spExportQuality" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginBottom="4dp" />
+            <Spinner android:id="@+id/spExportQuality" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:minHeight="48dp" android:contentDescription="@string/label_export_quality" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginBottom="16dp" android:background="?android:attr/listDivider" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/title_troubleshooting" android:textAppearance="?attr/textAppearanceTitleMedium" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnViewErrorLog" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="8dp" android:text="@string/btn_view_error_log" style="@style/Widget.Material3.Button.TonalButton" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnUserStats" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="16dp" android:text="إحصائيات استخدام الأدوات 📊" style="@style/Widget.Material3.Button.TonalButton" android:minHeight="48dp" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginBottom="16dp" android:background="?android:attr/listDivider" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/title_device_id" android:textAppearance="?attr/textAppearanceTitleMedium" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCopyDeviceId" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="16dp" android:text="@string/btn_copy_device_id" style="@style/Widget.Material3.Button.TonalButton" android:minHeight="48dp" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginBottom="16dp" android:background="?android:attr/listDivider" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_87" android:textAppearance="?attr/textAppearanceTitleMedium" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCheckUpdates" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="8dp" android:text="@string/string_48" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnHelp" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="8dp" android:text="@string/string_105" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnVolunteerTranslation" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="8dp" android:text="@string/string_239" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnEmail" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="8dp" android:text="@string/string_27" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnWhatsApp" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="8dp" android:text="@string/string_61" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnTwitter" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="8dp" android:text="@string/string_148" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnFacebook" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="8dp" android:text="@string/string_144" android:minHeight="48dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnPrivacyPolicy" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginBottom="16dp" android:text="@string/string_privacy_policy" android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

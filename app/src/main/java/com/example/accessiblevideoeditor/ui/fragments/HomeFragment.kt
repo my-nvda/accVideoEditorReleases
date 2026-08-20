@@ -94,6 +94,7 @@ class HomeFragment : Fragment() {
         super.onResume()
         enabledFeatures.clear()
         checkRemoteCloudConfig()
+        updateFavoritesGrid()
     }
 
     private fun updateButtonTexts() {
@@ -134,6 +135,8 @@ class HomeFragment : Fragment() {
             binding.btnSubtitlesOcrSrt.text = AppStrings.get(context, R.string.btn_subtitles_ocr_srt)
 
             binding.btnHistory.text = AppStrings.get(context, R.string.string_116)
+            binding.btnProjectsDashboard.text = AppStrings.get(context, R.string.btn_projects_dashboard)
+            binding.btnImageChroma.text = AppStrings.get(context, R.string.img_bg_removal_title)
             binding.topAppBar.menu?.findItem(R.id.action_settings)?.title = AppStrings.get(context, R.string.string_133)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -200,6 +203,51 @@ class HomeFragment : Fragment() {
             binding.btnSubtitlesOcrSrt.setOnClickListener { handleFeatureClick("btnSubtitlesOcrSrt", R.id.action_homeFragment_to_subtitlesOcrSrtFragment, it) }
 
             binding.btnHistory.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_historyFragment) }
+            binding.btnProjectsDashboard.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_projectsDashboardFragment) }
+            binding.btnImageChroma.setOnClickListener { navigateWithFocus(it, R.id.action_homeFragment_to_imageChromaFragment) }
+
+            // Bind long clicks for favorites selection
+            val mainButtons = listOf(
+                binding.btnVideoEditor to "btnVideoEditor",
+                binding.btnImageEditor to "btnImageEditor",
+                binding.btnWatermark to "btnWatermark",
+                binding.btnCreateBlankImage to "btnCreateBlankImage",
+                binding.btnVideoTrimmer to "btnVideoTrimmer",
+                binding.btnSmartCut to "btnSmartCut",
+                binding.btnAudioEditor to "btnAudioEditor",
+                binding.btnAudioStudio to "btnAudioStudio",
+                binding.btnAiAnalysis to "btnAiAnalysis",
+                binding.btnStt to "btnStt",
+                binding.btnOcr to "btnOcr",
+                binding.btnFastConverter to "btnFastConverter",
+                binding.btnBoostVolume to "btnBoostVolume",
+                binding.btnExtractAudio to "btnExtractAudio",
+                binding.btnCompressVideo to "btnCompressVideo",
+                binding.btnMergeVideos to "btnMergeVideos",
+                binding.btnReverseMedia to "btnReverseMedia",
+                binding.btnSlideshowMaker to "btnSlideshowMaker",
+                binding.btnTickerText to "btnTickerText",
+                binding.btnBatchProcess to "btnBatchProcess",
+                binding.btnSpeedControl to "btnSpeedControl",
+                binding.btnNoiseReduction to "btnNoiseReduction",
+                binding.btnBackgroundMusic to "btnBackgroundMusic",
+                binding.btnAudioNormalization to "btnAudioNormalization",
+                binding.btnAiSceneInspector to "btnAiSceneInspector",
+                binding.btnAiVoiceDubbing to "btnAiVoiceDubbing",
+                binding.btnAudioStemSeparator to "btnAudioStemSeparator",
+                binding.btnAutoShortsCreator to "btnAutoShortsCreator",
+                binding.btnCinematicLutShaders to "btnCinematicLutShaders",
+                binding.btnAiSceneAudioDescription to "btnAiSceneAudioDescription",
+                binding.btnSubtitlesOcrSrt to "btnSubtitlesOcrSrt"
+            )
+            for ((btn, featureId) in mainButtons) {
+                btn.setOnLongClickListener {
+                    showFavoritesDialog(featureId)
+                    true
+                }
+            }
+
+            updateFavoritesGrid()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -242,6 +290,11 @@ class HomeFragment : Fragment() {
                                 enabledFeatures.add(id)
                             }
                         }
+
+                        // Show pending announcements
+                        for (ann in result.pendingAnnouncements) {
+                            showAnnouncementDialog(currentContext, ann)
+                        }
                     } else {
                         enabledFeatures.clear()
                     }
@@ -269,5 +322,172 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun getFeatureStringRes(featureId: String): Int {
+        return when (featureId) {
+            "btnVideoEditor" -> R.string.string_112
+            "btnImageEditor" -> R.string.string_128
+            "btnWatermark" -> R.string.string_74
+            "btnCreateBlankImage" -> R.string.string_271
+            "btnVideoTrimmer" -> R.string.string_94
+            "btnSmartCut" -> R.string.string_45
+            "btnAudioEditor" -> R.string.string_102
+            "btnAudioStudio" -> R.string.string_55
+            "btnAiAnalysis" -> R.string.string_31
+            "btnStt" -> R.string.string_63
+            "btnOcr" -> R.string.string_20
+            "btnFastConverter" -> R.string.string_59
+            "btnBoostVolume" -> R.string.string_86
+            "btnExtractAudio" -> R.string.string_41
+            "btnCompressVideo" -> R.string.string_125
+            "btnMergeVideos" -> R.string.string_75
+            "btnReverseMedia" -> R.string.string_68
+            "btnSlideshowMaker" -> R.string.string_80
+            "btnTickerText" -> R.string.string_52
+            "btnBatchProcess" -> R.string.string_32
+            "btnSpeedControl" -> R.string.btn_speed_control
+            "btnNoiseReduction" -> R.string.btn_noise_reduction
+            "btnBackgroundMusic" -> R.string.btn_background_music
+            "btnAudioNormalization" -> R.string.btn_audio_normalization
+            "btnAiSceneInspector" -> R.string.btn_ai_scene_inspector
+            "btnAiVoiceDubbing" -> R.string.btn_ai_voice_dubbing
+            "btnAudioStemSeparator" -> R.string.btn_audio_stem_separator
+            "btnAutoShortsCreator" -> R.string.btn_auto_shorts_creator
+            "btnCinematicLutShaders" -> R.string.btn_cinematic_lut_shaders
+            "btnAiSceneAudioDescription" -> R.string.btn_ai_scene_audio_description
+            "btnSubtitlesOcrSrt" -> R.string.btn_subtitles_ocr_srt
+            else -> 0
+        }
+    }
+
+    private fun getFeatureActionId(featureId: String): Int {
+        return when (featureId) {
+            "btnVideoEditor" -> R.id.action_homeFragment_to_videoEditorFragment
+            "btnVideoTrimmer" -> R.id.action_homeFragment_to_videoTrimmerFragment
+            "btnSmartCut" -> R.id.action_homeFragment_to_smartCutFragment
+            "btnMergeVideos" -> R.id.action_homeFragment_to_mergeVideosFragment
+            "btnReverseMedia" -> R.id.action_homeFragment_to_reverseMediaFragment
+            "btnAudioEditor" -> R.id.action_homeFragment_to_audioEditorFragment
+            "btnAudioStudio" -> R.id.action_homeFragment_to_audioStudioFragment
+            "btnExtractAudio" -> R.id.action_homeFragment_to_extractAudioFragment
+            "btnBoostVolume" -> R.id.action_homeFragment_to_boostVolumeFragment
+            "btnCompressVideo" -> R.id.action_homeFragment_to_compressVideoFragment
+            "btnImageEditor" -> R.id.action_homeFragment_to_imageEditorFragment
+            "btnWatermark" -> R.id.action_homeFragment_to_watermarkFragment
+            "btnCreateBlankImage" -> R.id.action_homeFragment_to_createBlankImageFragment
+            "btnSlideshowMaker" -> R.id.action_homeFragment_to_slideshowMakerFragment
+            "btnTickerText" -> R.id.action_homeFragment_to_tickerTextFragment
+            "btnAiAnalysis" -> R.id.action_homeFragment_to_aiAnalysisFragment
+            "btnStt" -> R.id.action_homeFragment_to_sttFragment
+            "btnOcr" -> R.id.action_homeFragment_to_ocrFragment
+            "btnBatchProcess" -> R.id.action_homeFragment_to_batchProcessFragment
+            "btnFastConverter" -> R.id.action_homeFragment_to_fastConverterFragment
+            "btnSpeedControl" -> R.id.action_homeFragment_to_speedControlFragment
+            "btnNoiseReduction" -> R.id.action_homeFragment_to_noiseReductionFragment
+            "btnBackgroundMusic" -> R.id.action_homeFragment_to_backgroundMusicFragment
+            "btnAudioNormalization" -> R.id.action_homeFragment_to_audioNormalizationFragment
+            "btnAiSceneInspector" -> R.id.action_homeFragment_to_aiSceneInspectorFragment
+            "btnAiVoiceDubbing" -> R.id.action_homeFragment_to_aiVoiceDubbingFragment
+            "btnAudioStemSeparator" -> R.id.action_homeFragment_to_audioStemSeparatorFragment
+            "btnAutoShortsCreator" -> R.id.action_homeFragment_to_autoShortsCreatorFragment
+            "btnCinematicLutShaders" -> R.id.action_homeFragment_to_cinematicLutShadersFragment
+            "btnAiSceneAudioDescription" -> R.id.action_homeFragment_to_aiSceneAudioDescriptionFragment
+            "btnSubtitlesOcrSrt" -> R.id.action_homeFragment_to_subtitlesOcrSrtFragment
+            else -> 0
+        }
+    }
+
+    private fun getFeatureLabelText(context: android.content.Context, featureId: String): String {
+        val resId = getFeatureStringRes(featureId)
+        if (resId == 0) return ""
+        return AppStrings.get(context, resId)
+    }
+
+    private fun showFavoritesDialog(featureId: String) {
+        val context = context ?: return
+        val prefs = context.getSharedPreferences("HomePrefs", android.content.Context.MODE_PRIVATE)
+        val favorites = prefs.getStringSet("favorites_set", emptySet())?.toMutableSet() ?: mutableSetOf()
+        
+        val isFavorite = favorites.contains(featureId)
+        val featureName = getFeatureLabelText(context, featureId)
+        
+        val dialogTitle = if (isFavorite) "إزالة من المفضلة ⭐" else "إضافة إلى المفضلة ⭐"
+        val dialogMessage = if (isFavorite) {
+            "هل تريد إزالة أداة \"$featureName\" من قائمة المفضلة؟"
+        } else {
+            "هل تريد إضافة أداة \"$featureName\" إلى قائمة المفضلة في أعلى الشاشة الرئيسية؟"
+        }
+        
+        MaterialAlertDialogBuilder(context)
+            .setTitle(dialogTitle)
+            .setMessage(dialogMessage)
+            .setPositiveButton("نعم") { dialog, _ ->
+                if (isFavorite) {
+                    favorites.remove(featureId)
+                } else {
+                    favorites.add(featureId)
+                }
+                prefs.edit().putStringSet("favorites_set", favorites).apply()
+                updateFavoritesGrid()
+                dialog.dismiss()
+            }
+            .setNegativeButton("إلغاء") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun updateFavoritesGrid() {
+        val context = context ?: return
+        binding.gridFavorites.removeAllViews()
+        
+        val prefs = context.getSharedPreferences("HomePrefs", android.content.Context.MODE_PRIVATE)
+        val favorites = prefs.getStringSet("favorites_set", emptySet()) ?: emptySet()
+        
+        if (favorites.isEmpty()) {
+            binding.gridFavorites.visibility = View.GONE
+            binding.tvFavoritesHeader.visibility = View.GONE
+        } else {
+            binding.gridFavorites.visibility = View.VISIBLE
+            binding.tvFavoritesHeader.visibility = View.VISIBLE
+            
+            for (featureId in allFeatures) {
+                if (favorites.contains(featureId)) {
+                    val btn = com.google.android.material.button.MaterialButton(context).apply {
+                        val params = android.widget.GridLayout.LayoutParams().apply {
+                            width = 0
+                            height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                            columnSpec = android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f)
+                        }
+                        layoutParams = params
+                        text = getFeatureLabelText(context, featureId)
+                        setOnClickListener {
+                            val actionId = getFeatureActionId(featureId)
+                            handleFeatureClick(featureId, actionId, it)
+                        }
+                        setOnLongClickListener {
+                            showFavoritesDialog(featureId)
+                            true
+                        }
+                    }
+                    binding.gridFavorites.addView(btn)
+                }
+            }
+        }
+    }
+
+    private fun showAnnouncementDialog(context: android.content.Context, ann: com.example.accessiblevideoeditor.ui.CloudAnnouncementItem) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(ann.title)
+            .setMessage(ann.message)
+            .setPositiveButton("موافق") { dialog, _ ->
+                dialog.dismiss()
+                CloudConfigManager.markAnnouncementAsShown(context, ann.id)
+            }
+            .setOnCancelListener {
+                CloudConfigManager.markAnnouncementAsShown(context, ann.id)
+            }
+            .show()
     }
 }

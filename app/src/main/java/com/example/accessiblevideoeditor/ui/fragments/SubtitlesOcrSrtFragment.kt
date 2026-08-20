@@ -111,14 +111,14 @@ class SubtitlesOcrSrtFragment : Fragment() {
                         
                         if (tempVideo != null && tempVideo.exists() && tempSrt.exists()) {
                             val outputPath = currentContext.cacheDir.absolutePath + "/burned_sub_${System.currentTimeMillis()}.mp4"
-                            val command = arrayOf(
-                                "-y",
-                                "-i", tempVideo.absolutePath,
-                                "-vf", "subtitles='${tempSrt.absolutePath}'",
-                                "-c:v", "mpeg4", "-q:v", "3",
-                                "-c:a", "copy",
-                                outputPath
-                            )
+                             val command = arrayOf(
+                                 "-y",
+                                 "-i", tempVideo.absolutePath,
+                                 "-vf", "subtitles='${tempSrt.absolutePath}'",
+                                 "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18",
+                                 "-c:a", "copy",
+                                 outputPath
+                             )
                             val res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
                             if (res) {
                                 com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "video/mp4")

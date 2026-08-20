@@ -292,4 +292,53 @@
 
     <string name="btn_apply">החל</string>
     <string name="btn_apply_changes">החל שינויים</string>
+
+    <string name="btn_projects_dashboard">סטודיו פרויקטים</string>
+    <string name="btn_new_project">פרויקט חדש</string>
+    <string name="label_recent_projects">פרויקטים אחרונים</string>
+    <string name="msg_no_projects">לא נמצאו פרויקטים. לחץ על פרויקט חדש כדי להתחיל!</string>
+    <string name="menu_rename">שנה שם</string>
+    <string name="menu_duplicate">שכפל</string>
+    <string name="menu_delete">מחק</string>
+    <string name="dialog_rename_title">שנה שם פרויקט</string>
+    <string name="dialog_delete_title">מחק פרויקט</string>
+    <string name="dialog_delete_message">האם אתה בטוח שברצונך למחוק פרויקט זה?</string>
+    <string name="btn_export_project">ייצא פרויקט</string>
+    <string name="btn_add_action">הוסף פעולת עריכה</string>
+    <string name="label_active_layers">שכבות פרויקט פעילות</string>
+    <string name="msg_project_saved">הפרויקט נשמר בהצלחה</string>
+    <string name="label_trim_action">גזור טווח וידאו</string>
+    <string name="label_text_action">שכבות טקסט</string>
+    <string name="label_watermark_action">סימן מים</string>
+    <string name="label_speed_action">מהירות ועוצמת קול</string>
+    <string name="btn_save_project">שמור פרויקט</string>
+
+
+    <string name="msg_error_project_id_missing">שגיאה: מזהה פרויקט חסר</string>
+    <string name="msg_error_project_not_found">שגיאה: הפרויקט לא נמצא</string>
+    <string name="label_disabled">מבוטל</string>
+    <string name="msg_no_text_overlays">אין שכבות טקסט</string>
+    <string name="label_layers">שכבות</string>
+    <string name="label_speed">מהירות</string>
+    <string name="label_volume">עוצמת קול</string>
+    <string name="btn_set_start_current">קבע התחלה למיקום הנוכחי</string>
+    <string name="btn_set_end_current">קבע סוף למיקום הנוכחי</string>
+    <string name="label_start_time">זמן התחלה:</string>
+    <string name="label_end_time">זמן סיום:</string>
+    <string name="btn_add_new_text">+ הוסף שכבת טקסט חדשה</string>
+    <string name="msg_no_text_added">לא נוספו שכבות טקסט</string>
+    <string name="dialog_add_text_title">הוסף שכבת טקסט</string>
+    <string name="hint_enter_text_content">הזן תוכן טקסט</string>
+    <string name="hint_start_time_eg">זמן התחלה (לדוגמה 00:05)</string>
+    <string name="hint_end_time_eg">זמן סיום (לדוגמה 00:15)</string>
+    <string name="btn_set_current_position">קבע למיקום הנוכחי</string>
+    <string name="label_text_content">תוכן הטקסט:</string>
+    <string name="btn_choose_watermark_image">בחר תמונת סימן מים</string>
+    <string name="label_watermark_position">מיקום סימן מים:</string>
+    <string name="label_speed_multiplier">מכפיל מהירות:</string>
+    <string name="label_volume_level">עוצמת שמע:</string>
+    <string name="label_mute">0% (השתק)</string>
+    <string name="msg_error_project_render_failed">שגיאה: יצירת הפרויקט נכשלה.</string>
+    <string name="msg_project_export_success">הפרויקט נוצר ונשמר בגלריה בהצלחה!</string>
+
 </resources>

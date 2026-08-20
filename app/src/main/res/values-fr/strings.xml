@@ -288,4 +288,53 @@
 
     <string name="btn_apply">Appliquer</string>
     <string name="btn_apply_changes">Appliquer les modifications</string>
+
+    <string name="btn_projects_dashboard">Studio de Projets</string>
+    <string name="btn_new_project">Nouveau Projet</string>
+    <string name="label_recent_projects">Projets Récents</string>
+    <string name="msg_no_projects">Aucun projet trouvé. Cliquez sur Nouveau Projet pour commencer!</string>
+    <string name="menu_rename">Renommer</string>
+    <string name="menu_duplicate">Dupliquer</string>
+    <string name="menu_delete">Supprimer</string>
+    <string name="dialog_rename_title">Renommer le projet</string>
+    <string name="dialog_delete_title">Supprimer le projet</string>
+    <string name="dialog_delete_message">Êtes-vous sûr de vouloir supprimer ce projet?</string>
+    <string name="btn_export_project">Exporter le projet</string>
+    <string name="btn_add_action">Ajouter une action d\'édition</string>
+    <string name="label_active_layers">Calques actifs du projet</string>
+    <string name="msg_project_saved">Projet enregistré avec succès</string>
+    <string name="label_trim_action">Découper la plage vidéo</string>
+    <string name="label_text_action">Superpositions de texte</string>
+    <string name="label_watermark_action">Filigrane</string>
+    <string name="label_speed_action">Vitesse et Volume</string>
+    <string name="btn_save_project">Enregistrer le projet</string>
+
+
+    <string name="msg_error_project_id_missing">Erreur : ID de projet manquant</string>
+    <string name="msg_error_project_not_found">Erreur : Projet non trouvé</string>
+    <string name="label_disabled">Désactivé</string>
+    <string name="msg_no_text_overlays">Aucune superposition de texte</string>
+    <string name="label_layers">calques</string>
+    <string name="label_speed">Vitesse</string>
+    <string name="label_volume">Volume</string>
+    <string name="btn_set_start_current">Définir le début à la position actuelle</string>
+    <string name="btn_set_end_current">Définir la fin à la position actuelle</string>
+    <string name="label_start_time">Temps de début :</string>
+    <string name="label_end_time">Temps de fin :</string>
+    <string name="btn_add_new_text">+ Ajouter un calque de texte</string>
+    <string name="msg_no_text_added">Aucun calque de texte ajouté</string>
+    <string name="dialog_add_text_title">Ajouter une superposition de texte</string>
+    <string name="hint_enter_text_content">Entrez le contenu du texte</string>
+    <string name="hint_start_time_eg">Temps de début (ex : 00:05)</string>
+    <string name="hint_end_time_eg">Temps de fin (ex : 00:15)</string>
+    <string name="btn_set_current_position">Définir à la position actuelle</string>
+    <string name="label_text_content">Contenu du texte :</string>
+    <string name="btn_choose_watermark_image">Choisir l\'image du filigrane</string>
+    <string name="label_watermark_position">Position du filigrane :</string>
+    <string name="label_speed_multiplier">Multiplicateur de vitesse :</string>
+    <string name="label_volume_level">Niveau de volume :</string>
+    <string name="label_mute">0% (Muet)</string>
+    <string name="msg_error_project_render_failed">Erreur : Le rendu du projet a échoué.</string>
+    <string name="msg_project_export_success">Le projet a été rendu et enregistré avec succès !</string>
+
 </resources>

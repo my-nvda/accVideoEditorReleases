@@ -72,18 +72,19 @@ class SmartCutFragment : Fragment() {
     }
 
     private fun processVideo(uri: Uri, silenceThreshold: Int, minSilenceDuration: Float) {
+        val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val tempFile = MediaUtils.copyUriToTempFile(requireContext(), uri, "temp_video_${System.currentTimeMillis()}.mp4")
+                val tempFile = MediaUtils.copyUriToTempFile(appContext, uri, "temp_video_${System.currentTimeMillis()}.mp4")
                 val input = tempFile?.absolutePath
                 if (input != null) {
                     withContext(Dispatchers.Main) {
-                        ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_42))
+                        ProcessingManager.startProcessing(AppStrings.get(appContext, R.string.string_42))
                     }
-                    val outputPath = requireContext().cacheDir.absolutePath + "/smartcut_${System.currentTimeMillis()}.mp4"
+                    val outputPath = appContext.cacheDir.absolutePath + "/smartcut_${System.currentTimeMillis()}.mp4"
                     
                     val success = SmartCutProcessor.removeSilence(
-                        context = requireContext(),
+                        context = appContext,
                         inputPath = input,
                         outputPath = outputPath,
                         thresholdDb = silenceThreshold,
@@ -91,13 +92,17 @@ class SmartCutFragment : Fragment() {
                     )
                     
                     if (success) {
-                        FileUtils.saveToGallery(requireContext(), File(outputPath), "video/mp4")
+                        FileUtils.saveToGallery(appContext, File(outputPath), "video/mp4")
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_240), Toast.LENGTH_SHORT).show()
+                            if (isAdded) {
+                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_240), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_241), Toast.LENGTH_LONG).show()
+                            if (isAdded) {
+                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_241), Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }

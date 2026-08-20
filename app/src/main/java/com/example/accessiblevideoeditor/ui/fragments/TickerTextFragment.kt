@@ -112,8 +112,9 @@ class TickerTextFragment : Fragment() {
                         "-i", inputPath,
                         "-i", pngFile.absolutePath,
                         "-filter_complex", filterComplex,
-                        "-c:v", "mpeg4",
-                        "-q:v", "2",
+                        "-c:v", "libx264",
+                        "-preset", "ultrafast",
+                        "-crf", "18",
                         "-c:a", "copy",
                         outputPath
                     )

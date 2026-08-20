@@ -81,22 +81,23 @@ class MergeVideosFragment : Fragment() {
     }
 
     private fun processVideos(uris: List<Uri>, transitionType: Int) {
+        val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val inputs = uris.mapIndexedNotNull { index, uri ->
-                    MediaUtils.copyUriToTempFile(requireContext(), uri, "merge_temp_${System.currentTimeMillis()}_$index.mp4")?.absolutePath
+                    MediaUtils.copyUriToTempFile(appContext, uri, "merge_temp_${System.currentTimeMillis()}_$index.mp4")?.absolutePath
                 }
                 
                 if (inputs.size > 1) {
                     withContext(Dispatchers.Main) {
-                        ProcessingManager.startProcessing(AppStrings.get(requireContext(), R.string.string_92))
+                        ProcessingManager.startProcessing(AppStrings.get(appContext, R.string.string_92))
                         ProcessingManager.updateJob(coroutineContext[kotlinx.coroutines.Job])
                     }
-                    val outputPath = requireContext().cacheDir.absolutePath + "/merged_${System.currentTimeMillis()}.mp4"
+                    val outputPath = appContext.cacheDir.absolutePath + "/merged_${System.currentTimeMillis()}.mp4"
                     
                     val hasAudioList = inputs.map { path ->
                         val info = com.arthenica.ffmpegkit.FFprobeKit.getMediaInformation(path)
-                        info.mediaInformation?.streams?.any { it.type == "audio" } ?: false
+                        info?.mediaInformation?.streams?.any { it.type == "audio" } ?: false
                     }
 
                     var totalMs = 0f
@@ -137,7 +138,7 @@ class MergeVideosFragment : Fragment() {
                             filterParts.append("[$index:v]scale=$targetWidth:$targetHeight:force_original_aspect_ratio=increase,crop=$targetWidth:$targetHeight,setsar=1,fps=30$fadeFilter[v$index];")
                         } else {
                             filterParts.append("[$index:v]split[bg$index][fg$index];")
-                            filterParts.append("[bg$index]scale=$targetWidth:$targetHeight:force_original_aspect_ratio=increase,crop=$targetWidth:$targetHeight,boxblur=20:20[bgblur$index];")
+                            filterParts.append("[bg$index]scale=$targetWidth:$targetHeight:force_original_aspect_ratio=increase,crop=$targetWidth:$targetHeight,boxblur=20:2[bgblur$index];")
                             filterParts.append("[fg$index]scale=$targetWidth:$targetHeight:force_original_aspect_ratio=decrease[fgscale$index];")
                             filterParts.append("[bgblur$index][fgscale$index]overlay=(W-w)/2:(H-h)/2,setsar=1,fps=30$fadeFilter[v$index];")
                         }
@@ -145,7 +146,7 @@ class MergeVideosFragment : Fragment() {
                         if (hasAudio) {
                             filterParts.append("[$index:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a$index];")
                         } else {
-                            filterParts.append("anullsrc=r=44100:cl=stereo:d=$segDur[a$index];")
+                            filterParts.append("anullsrc=r=44100:cl=stereo:d=$segDur,aformat=sample_fmts=fltp:channel_layouts=stereo[a$index];")
                         }
                         concatParts.append("[v$index][a$index]")
                     }
@@ -159,7 +160,7 @@ class MergeVideosFragment : Fragment() {
                         listOf(
                             "-filter_complex", filterParts.toString(),
                             "-map", "[outv]", "-map", "[outa]",
-                            "-c:v", "mpeg4", "-q:v", "2",
+                            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18",
                             "-c:a", "aac", "-b:a", "192k",
                             outputPath
                         )
@@ -167,13 +168,17 @@ class MergeVideosFragment : Fragment() {
                     
                     val success = FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray(), totalDurationMs = if (totalMs > 0f) totalMs else null)
                     if (success) {
-                        FileUtils.saveToGallery(requireContext(), File(outputPath), "video/mp4")
+                        FileUtils.saveToGallery(appContext, File(outputPath), "video/mp4")
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_240), Toast.LENGTH_SHORT).show()
+                            if (isAdded) {
+                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_240), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_241), Toast.LENGTH_LONG).show()
+                            if (isAdded) {
+                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_241), Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }

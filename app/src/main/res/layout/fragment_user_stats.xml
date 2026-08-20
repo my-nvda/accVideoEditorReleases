@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="إحصائيات الاستخدام" app:titleTextColor="?attr/colorOnPrimary" app:navigationIcon="@android:drawable/ic_menu_revert" app:navigationContentDescription="@string/string_246" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="معدل استخدامك للأدوات محلياً 📊" android:textSize="20sp" android:textStyle="bold" android:textColor="?attr/colorAccent" android:layout_marginBottom="16dp" android:textAlignment="viewStart" />
+            <TextView android:id="@+id/tvEmptyPlaceholder" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="لم يتم تسجيل أي نشاط بعد. ابدأ باستخدام أدوات التطبيق لترى إحصائياتك هنا!" android:textSize="16sp" android:textColor="?android:attr/textColorSecondary" android:layout_marginTop="20dp" android:gravity="center" android:visibility="gone" />
+            <LinearLayout android:id="@+id/containerStats" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnClearStats" android:layout_width="match_parent" android:layout_height="60dp" android:layout_marginTop="24dp" android:text="إعادة تعيين إحصائيات الاستخدام 🔄" android:contentDescription="إعادة تعيين وإلغاء جميع إحصائيات استخدام الأدوات" style="@style/Widget.Material3.Button.TonalButton" android:minHeight="48dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

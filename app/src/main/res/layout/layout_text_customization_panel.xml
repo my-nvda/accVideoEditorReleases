@@ -1,182 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
-
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etTextContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/string_104" />
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
+    <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.FilledBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTextContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/string_104" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/tvLabelTextColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_label_text_color"
-        android:labelFor="@id/spTextColor" />
-    <Spinner
-        android:id="@+id/spTextColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/string_label_text_color" />
-
-    <TextView
-        android:id="@+id/tvLabelBgColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_label_bg_color"
-        android:labelFor="@id/spBgColor" />
-    <Spinner
-        android:id="@+id/spBgColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/string_label_bg_color" />
-
-    <TextView
-        android:id="@+id/tvLabelShadowColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_label_shadow_color"
-        android:labelFor="@id/spShadowColor" />
-    <Spinner
-        android:id="@+id/spShadowColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/string_label_shadow_color" />
-        
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_64" />
-    <SeekBar
-        android:id="@+id/slTextSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/string_64"
-        android:min="12"
-        android:max="120"
-        android:progress="60" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_185" />
-    <SeekBar
-        android:id="@+id/slShadowRadius"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/string_185"
-        android:min="0"
-        android:max="50"
-        android:progress="10" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_186" />
-    <SeekBar
-        android:id="@+id/slShadowDx"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/string_186"
-        android:min="-50"
-        android:max="50"
-        android:progress="5" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_187" />
-    <SeekBar
-        android:id="@+id/slShadowDy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/string_187"
-        android:min="-50"
-        android:max="50"
-        android:progress="5" />
-
-    <TextView
-        android:id="@+id/tvLabelFontFamily"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_label_font_family"
-        android:labelFor="@id/spFontFamily" />
-    <Spinner
-        android:id="@+id/spFontFamily"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/string_label_font_family" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_129" />
-    <RadioGroup
-        android:id="@+id/rgPosition"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
-        <RadioButton
-            android:id="@+id/rbPosTop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/string_155" />
-        <RadioButton
-            android:id="@+id/rbPosCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/string_158"
-            android:checked="true" />
-        <RadioButton
-            android:id="@+id/rbPosBottom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/string_157" />
+    <TextView android:id="@+id/tvLabelTextColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_label_text_color" android:labelFor="@id/spTextColor" />
+    <Spinner android:id="@+id/spTextColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:contentDescription="@string/string_label_text_color" />
+    <TextView android:id="@+id/tvLabelBgColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_label_bg_color" android:labelFor="@id/spBgColor" />
+    <Spinner android:id="@+id/spBgColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:contentDescription="@string/string_label_bg_color" />
+    <TextView android:id="@+id/tvLabelShadowColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_label_shadow_color" android:labelFor="@id/spShadowColor" />
+    <Spinner android:id="@+id/spShadowColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:contentDescription="@string/string_label_shadow_color" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_64" />
+    <SeekBar android:id="@+id/slTextSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:contentDescription="@string/string_64" android:min="12" android:max="120" android:progress="60" android:minHeight="48dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_185" />
+    <SeekBar android:id="@+id/slShadowRadius" android:layout_width="match_parent" android:layout_height="wrap_content" android:contentDescription="@string/string_185" android:min="0" android:max="50" android:progress="10" android:minHeight="48dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_186" />
+    <SeekBar android:id="@+id/slShadowDx" android:layout_width="match_parent" android:layout_height="wrap_content" android:contentDescription="@string/string_186" android:min="-50" android:max="50" android:progress="5" android:minHeight="48dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_187" />
+    <SeekBar android:id="@+id/slShadowDy" android:layout_width="match_parent" android:layout_height="wrap_content" android:contentDescription="@string/string_187" android:min="-50" android:max="50" android:progress="5" android:minHeight="48dp" />
+    <TextView android:id="@+id/tvLabelFontFamily" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_label_font_family" android:labelFor="@id/spFontFamily" />
+    <Spinner android:id="@+id/spFontFamily" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:contentDescription="@string/string_label_font_family" />
+    <TextView android:id="@+id/tvLabelPosition" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_129" android:labelFor="@id/rgPosition" />
+    <RadioGroup android:id="@+id/rgPosition" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="16dp" android:contentDescription="@string/string_129">
+        <RadioButton android:id="@+id/rbPosTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/string_155" android:minHeight="48dp" android:minWidth="48dp" />
+        <RadioButton android:id="@+id/rbPosCenter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/string_158" android:checked="true" android:minHeight="48dp" android:minWidth="48dp" />
+        <RadioButton android:id="@+id/rbPosBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/string_157" android:minHeight="48dp" android:minWidth="48dp" />
     </RadioGroup>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_188" />
-    <RadioGroup
-        android:id="@+id/rgAlignment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
-        <RadioButton
-            android:id="@+id/rbAlignLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/string_190" />
-        <RadioButton
-            android:id="@+id/rbAlignCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/string_158"
-            android:checked="true" />
-        <RadioButton
-            android:id="@+id/rbAlignRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/string_191" />
+    <TextView android:id="@+id/tvLabelAlignment" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_188" android:labelFor="@id/rgAlignment" />
+    <RadioGroup android:id="@+id/rgAlignment" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="16dp" android:contentDescription="@string/string_188">
+        <RadioButton android:id="@+id/rbAlignLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/string_190" android:minHeight="48dp" android:minWidth="48dp" />
+        <RadioButton android:id="@+id/rbAlignCenter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/string_158" android:checked="true" android:minHeight="48dp" android:minWidth="48dp" />
+        <RadioButton android:id="@+id/rbAlignRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/string_191" android:minHeight="48dp" android:minWidth="48dp" />
     </RadioGroup>
-
 </LinearLayout>

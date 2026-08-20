@@ -144,12 +144,20 @@ class VideoTrimmerFragment : Fragment() {
                     
                     // 3. Save to Gallery
                     if (success) {
-                        MediaUtils.saveVideoToGallery(
+                        val savedUri = MediaUtils.saveVideoToGallery(
                             requireContext(),
                             outputFile,
                             "AccessibleEditor_Trim_${System.currentTimeMillis()}.mp4"
                         )
                         SoundManager.playSuccess()
+                        withContext(Dispatchers.Main) {
+                            com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                requireContext(),
+                                savedUri,
+                                "تم قص وتصدير الفيديو بنجاح وحفظه في الاستوديو!",
+                                "video/mp4"
+                            )
+                        }
                     } else {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()

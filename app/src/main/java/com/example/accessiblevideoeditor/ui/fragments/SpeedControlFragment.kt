@@ -116,7 +116,7 @@ class SpeedControlFragment : Fragment() {
                             commandArgs.addAll(listOf(
                                 "-filter_complex", filter,
                                 "-map", "[v]", "-map", "[a]",
-                                "-c:v", "mpeg4", "-q:v", "2",
+                                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18",
                                 "-c:a", "aac", "-b:a", "192k",
                                 outputPath
                             ))
@@ -125,7 +125,7 @@ class SpeedControlFragment : Fragment() {
                             commandArgs.addAll(listOf(
                                 "-filter_complex", filter,
                                 "-map", "[v]",
-                                "-c:v", "mpeg4", "-q:v", "2",
+                                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18",
                                 outputPath
                             ))
                         }

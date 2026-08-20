@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -114,10 +114,18 @@ class AudioEditorFragment : Fragment() {
                         outputPath = outputFile.absolutePath
                     )
                     if (success) {
-                        MediaUtils.saveVideoToGallery(
+                        val savedUri = MediaUtils.saveVideoToGallery(
                             requireContext(), outputFile, "AccessibleEditor_NoAudio_${System.currentTimeMillis()}.mp4"
                         )
                         SoundManager.playSuccess()
+                        withContext(Dispatchers.Main) {
+                            com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                requireContext(),
+                                savedUri,
+                                "تم حذف الصوت من الفيديو وتصديره بنجاح!",
+                                "video/mp4"
+                            )
+                        }
                     } else {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()
@@ -149,10 +157,18 @@ class AudioEditorFragment : Fragment() {
                         outputPath = outputFile.absolutePath
                     )
                     if (success) {
-                        MediaUtils.saveVideoToGallery(
+                        val savedUri = MediaUtils.saveVideoToGallery(
                             requireContext(), outputFile, "AccessibleEditor_MergedAudio_${System.currentTimeMillis()}.mp4"
                         )
                         SoundManager.playSuccess()
+                        withContext(Dispatchers.Main) {
+                            com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                requireContext(),
+                                savedUri,
+                                "تم استبدال صوت الفيديو وتصديره بنجاح!",
+                                "video/mp4"
+                            )
+                        }
                     } else {
                         withContext(Dispatchers.Main) { Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show() }
                     }
@@ -182,10 +198,18 @@ class AudioEditorFragment : Fragment() {
                         outputPath = outputFile.absolutePath
                     )
                     if (success) {
-                        MediaUtils.saveVideoToGallery(
+                        val savedUri = MediaUtils.saveVideoToGallery(
                             requireContext(), outputFile, "AccessibleEditor_MixedAudio_${System.currentTimeMillis()}.mp4"
                         )
                         SoundManager.playSuccess()
+                        withContext(Dispatchers.Main) {
+                            com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                requireContext(),
+                                savedUri,
+                                "تم دمج وخلط الأصوات وتصدير الفيديو بنجاح!",
+                                "video/mp4"
+                            )
+                        }
                     } else {
                         withContext(Dispatchers.Main) { Toast.makeText(requireContext(), com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show() }
                     }
