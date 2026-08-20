@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدير إصدارات ومستودعات GitHub</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js for premium analytics visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="glass-container">
+        <!-- Header / Repo Selector -->
+        <header class="app-header">
+            <div class="header-main">
+                <div class="logo-area">
+                    <span class="logo-icon">🚀</span>
+                    <h1>بوابة إدارة الإصدارات الموحدة</h1>
+                </div>
+                
+                <div class="repo-selection-card">
+                    <label for="repo-select">المستودع النشط:</label>
+                    <div class="select-container">
+                        <select id="repo-select" name="active_repository"></select>
+                    </div>
+                    <div class="repo-actions">
+                        <button id="btn-add-repo" title="إضافة مستودع جديد" class="btn-icon">➕</button>
+                        <button id="btn-edit-repo" title="تعديل بيانات المستودع" class="btn-icon">✏️</button>
+                        <button id="btn-delete-repo" title="حذف المستودع" class="btn-icon btn-danger">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <!-- Navigation Sidebar (Tabs) -->
+            <nav class="tab-navigation">
+                <button class="tab-btn active" id="tab-cloud-config" onclick="switchTab('cloud-config')">
+                    <span class="btn-icon-tab">☁️</span>
+                    <span>الإعدادات السحابية</span>
+                </button>
+                <button class="tab-btn" id="tab-app-update" onclick="switchTab('app-update')">
+                    <span class="btn-icon-tab">🔄</span>
+                    <span>تحديث التطبيق</span>
+                </button>
+                <button class="tab-btn" id="tab-tags-manager" onclick="switchTab('tags-manager')">
+                    <span class="btn-icon-tab">🏷️</span>
+                    <span>إدارة الـ Tags</span>
+                </button>
+                <button class="tab-btn" id="tab-source-manager" onclick="switchTab('source-manager')">
+                    <span class="btn-icon-tab">💻</span>
+                    <span>الكود المصدري</span>
+                </button>
+                <button class="tab-btn" id="tab-announcements" onclick="switchTab('announcements')">
+                    <span class="btn-icon-tab">📢</span>
+                    <span>الإعلانات العامة</span>
+                </button>
+                <button class="tab-btn" id="tab-analytics" onclick="switchTab('analytics')">
+                    <span class="btn-icon-tab">📊</span>
+                    <span>الإحصائيات والبحث</span>
+                </button>
+                <button class="tab-btn" id="tab-crashes" onclick="switchTab('crashes')">
+                    <span class="btn-icon-tab">⚠️</span>
+                    <span>سجلات الأعطال</span>
+                </button>
+            </nav>
+
+            <!-- Dynamic Workspace Area -->
+            <main class="content-area">
+                <!-- Tab 1: Cloud Config -->
+                <section id="panel-cloud-config" class="tab-panel active">
+                    <div class="panel-header">
+                        <h2>الأجهزة المصرح لها والميزات السحابية</h2>
+                        <p class="panel-desc">أضف معرفات الأجهزة وتحكّم في الميزات المتاحة لكل جهاز على حدة.</p>
+                    </div>
+                    
+                    <!-- GitHub API Configuration for Telemetry & Crashes -->
+                    <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap; text-align: right; direction: rtl;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="github-token" style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 5px;">رمز وصول GitHub (Token):</label>
+                            <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx" style="width: 100%; padding: 8px 12px; border-radius: 6px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff;">
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="github-repo" style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 5px;">مستودع الرفع للتقارير (owner/repo):</label>
+                            <input type="text" id="github-repo" placeholder="owner/repo" style="width: 100%; padding: 8px 12px; border-radius: 6px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff;">
+                        </div>
+                    </div>
+                    
+                    <div id="device-list" class="device-list">
+                        <!-- Device items loaded dynamically -->
+                    </div>
+                    
+                    <div class="panel-actions">
+                        <button id="add-device-row" class="btn btn-secondary">إضافة جهاز جديد +</button>
+                        <div class="save-actions">
+                            <button id="save-config-local" class="btn btn-primary">حفظ محلياً 💾</button>
+                            <button id="save-config-cloud" class="btn btn-accent">حفظ ورفع للسحابة 📤</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 2: App Update -->
+                <section id="panel-app-update" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>تحديث التطبيق المرفوع</h2>
+                        <p class="panel-desc">تعديل ملف تحديث التطبيق ورفع حزمة الـ APK الجديدة.</p>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="update-vc">رقم الإصدار (Version Code):</label>
+                            <input type="number" id="update-vc" placeholder="مثال: 25">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-vn">اسم الإصدار (Version Name):</label>
+                            <input type="text" id="update-vn" placeholder="مثال: v2.4.5">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="update-url">رابط تحميل ملف APK المباشر:</label>
+                            <input type="url" id="update-url" placeholder="https://github.com/...">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="update-notes">ملاحظات الإصدار الجديد (Release Notes):</label>
+                            <textarea id="update-notes" rows="6" placeholder="اكتب ميزات التحديث الجديد هنا..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="panel-actions">
+                        <div class="save-actions" style="margin-right: auto;">
+                            <button id="save-update-local" class="btn btn-primary">حفظ محلياً 💾</button>
+                            <button id="save-update-cloud" class="btn btn-accent">حفظ ورفع التحديث للسحابة 📤</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 5: Announcements -->
+                <section id="panel-announcements" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>إرسال وإدارة الإعلانات العامة</h2>
+                        <p class="panel-desc">أضف إعلانات جديدة تظهر للمستخدمين على هواتفهم كإشعارات.</p>
+                    </div>
+                    
+                    <div id="announcements-list" class="announcements-list" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px;">
+                        <!-- Announcements loaded dynamically -->
+                    </div>
+
+                    <div class="panel-actions">
+                        <button id="add-announcement-row" class="btn btn-secondary">إضافة إعلان جديد +</button>
+                        <div class="save-actions">
+                            <button id="save-announcements-local" class="btn btn-primary">حفظ محلياً 💾</button>
+                            <button id="save-announcements-cloud" class="btn btn-accent">حفظ ورفع للسحابة 📤</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 3: Git Tags -->
+                <section id="panel-tags-manager" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>إدارة وسوم الإصدارات (Git Tags)</h2>
+                        <p class="panel-desc">إنشاء وسوم جديدة ورفعها للإصدارات أو حذفها من السحابة.</p>
+                    </div>
+
+                    <div class="form-grid" style="margin-bottom: 25px;">
+                        <div class="form-group">
+                            <label for="tag-name">اسم الوسم الجديد (Tag Name):</label>
+                            <input type="text" id="tag-name" placeholder="مثال: v2.5.0">
+                        </div>
+                        <div class="form-group">
+                            <label for="tag-message">وصف الإصدار (أو رسالة التاج):</label>
+                            <input type="text" id="tag-message" placeholder="مثال: Release Version 2.5.0">
+                        </div>
+                        <div class="form-group full-width" style="margin-top: 10px;">
+                            <button id="btn-create-tag" class="btn btn-accent">إنشاء ورفع التاج للسحابة 🏷️</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 4: Source Code -->
+                <section id="panel-source-manager" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>إرسال تعديلات الكود المصدري</h2>
+                        <p class="panel-desc">توثيق وحفظ كافة التعديلات البرمجية للمستودع النشط ورفعها فوراً.</p>
+                    </div>
+
+                    <div class="form-grid" style="margin-bottom: 20px;">
+                        <div class="form-group full-width">
+                            <label for="commit-message">رسالة التحديث (Commit Message):</label>
+                            <input type="text" id="commit-message" placeholder="مثال: إصلاح أخطاء الترجمة في الشاشات المختلفة">
+                        </div>
+                        <div class="form-group full-width" style="margin-top: 10px;">
+                            <button id="btn-push-source" class="btn btn-accent">رفع وحفظ التعديلات إلى GitHub 💻</button>
+                        </div>
+                    </div>
+
+                    <div class="console-log-container">
+                        <h3>سجل عمليات الرفع والـ Git:</h3>
+                        <pre id="git-log-output" class="console-box">جاهز...</pre>
+                    </div>
+                </section>
+
+                <!-- Tab 6: Analytics & Search -->
+                <section id="panel-analytics" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>لوحة إحصائيات الأجهزة والبحث الذكي</h2>
+                        <p class="panel-desc">شاهد الميزات الأكثر شعبية، آخر ظهور للأجهزة، وابحث عن أي جهاز لتعديل صلاحياته.</p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="analytics-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div class="glass-card" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; text-align: center;">
+                            <h3 style="font-size: 14px; color: var(--text-secondary); margin-bottom: 5px;">إجمالي الأجهزة المفعّلة</h3>
+                            <span id="stats-total-devices" style="font-size: 32px; font-weight: bold; color: var(--accent);">0</span>
+                        </div>
+                        <div class="glass-card" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; text-align: center;">
+                            <h3 style="font-size: 14px; color: var(--text-secondary); margin-bottom: 5px;">الخدمة الأكثر طلباً</h3>
+                            <span id="stats-top-feature" style="font-size: 18px; font-weight: bold; color: #10B981;">لا يوجد بيانات</span>
+                        </div>
+                        <div class="glass-card" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; text-align: center;">
+                            <h3 style="font-size: 14px; color: var(--text-secondary); margin-bottom: 5px;">الأعطال غير المحلولة</h3>
+                            <span id="stats-active-crashes" style="font-size: 32px; font-weight: bold; color: #EF4444;">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Top Tools Visual Chart -->
+                    <div class="glass-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 15px; text-align: right; font-family: 'Tajawal', sans-serif;">الميزات والخدمات الأكثر طلباً 📈</h3>
+                        <div style="position: relative; height: 260px; width: 100%;">
+                            <canvas id="topToolsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="search-bar-wrapper" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="analytics-search" placeholder="🔍 ابحث عن أي جهاز بالاسم أو بالـ Device ID للوصول وتعديل صلاحياته فوراً..." style="flex: 1; min-width: 250px; padding: 12px 18px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff;" oninput="onAnalyticsSearch(this.value)">
+                        <button id="btn-analytics-refresh" class="btn btn-secondary" style="padding: 12px 20px; white-space: nowrap;">تحديث من السحابة 🔄</button>
+                        <button id="btn-analytics-export-csv" class="btn btn-secondary" style="padding: 12px 20px; white-space: nowrap;" onclick="exportAnalyticsCSV()">تصدير CSV 📥</button>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary); cursor: pointer; white-space: nowrap; user-select: none;">
+                            <input type="checkbox" id="analytics-auto-sync" onchange="toggleAnalyticsAutoSync(this.checked)" style="accent-color: var(--accent); width: 16px; height: 16px;">
+                            <span>تحديث تلقائي صامت (كل دقيقة) ⏰</span>
+                        </label>
+                    </div>
+
+                    <!-- Devices Analytics Table/List -->
+                    <div class="table-wrapper" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; overflow: hidden;">
+                        <div id="analytics-device-list" style="display: flex; flex-direction: column; gap: 1px; background: rgba(255,255,255,0.05);">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 7: Crash Explorer -->
+                <section id="panel-crashes" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>مستكشف سجلات الأعطال والانهيارات عن بُعد</h2>
+                        <p class="panel-desc">استعرض تفاصيل وأسباب الانهيارات مع الـ Stack Trace لجميع الأجهزة المنهارة.</p>
+                    </div>
+
+                    <div id="crashes-list" style="display: flex; flex-direction: column; gap: 20px;">
+                        <!-- Crash cards loaded dynamically -->
+                    </div>
+                </section>
+            </main>
+
+            <!-- Dynamic Split Sidebar (Local vs GitHub Files/Tags) -->
+            <aside class="sidebar-split">
+                <div class="split-section">
+                    <h3 id="sidebar-local-title">الملفات المحلية (على جهازي):</h3>
+                    <div class="list-wrapper">
+                        <ul id="list-local" class="split-list">
+                            <!-- Local items -->
+                        </ul>
+                    </div>
+                    <div class="split-actions">
+                        <button id="btn-edit-selected" class="btn btn-small">تعديل ✏️</button>
+                        <button id="btn-delete-local" class="btn btn-small btn-danger">حذف محلياً 🗑️</button>
+                    </div>
+                </div>
+
+                <div class="split-section border-top">
+                    <h3 id="sidebar-remote-title">الملفات على GitHub (السحاب):</h3>
+                    <div class="list-wrapper">
+                        <ul id="list-remote" class="split-list">
+                            <!-- Remote items -->
+                        </ul>
+                    </div>
+                    <div class="split-actions">
+                        <button id="btn-delete-remote" class="btn btn-small btn-danger full-width">حذف من GitHub ☁️</button>
+                    </div>
+                </div>
+
+                <!-- Global Sidebar Sync Controls -->
+                <div class="sidebar-sync">
+                    <button id="btn-git-pull" class="btn btn-secondary btn-full">جلب من GitHub 🔄</button>
+                    <button id="btn-refresh-lists" class="btn btn-secondary btn-full">تحديث القوائم 🔄</button>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Modal 1: Add/Edit Repo -->
+    <div id="repo-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="repo-modal-title">إضافة مستودع جديد</h2>
+            <div class="form-group">
+                <label for="modal-repo-name">اسم المستودع:</label>
+                <input type="text" id="modal-repo-name" placeholder="مثال: مستودع الفيديوهات">
+            </div>
+            <div id="repo-url-group" class="form-group">
+                <label for="modal-repo-url">رابط مستودع GitHub (HTTPS):</label>
+                <input type="url" id="modal-repo-url" placeholder="https://github.com/...">
+            </div>
+            <div id="repo-path-group" class="form-group" style="display: none;">
+                <label for="modal-repo-path">المسار المحلي للمجلد:</label>
+                <input type="text" id="modal-repo-path">
+            </div>
+            <div class="modal-buttons">
+                <button id="btn-repo-modal-submit" class="btn btn-accent">حفظ واستنساخ</button>
+                <button onclick="closeModal('repo-modal')" class="btn btn-secondary">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Feature Selection (Granular Checkboxes) -->
+    <div id="features-modal" class="modal">
+        <div class="modal-content modal-large">
+            <h2>تحديد ميزات جهاز: <span id="features-modal-device-name"></span></h2>
+            <p>اختر الميزات السحابية المسموح لهذا الجهاز بالوصول إليها:</p>
+            <div class="features-checklist-grid" id="modal-features-checklist">
+                <!-- Checkboxes populated dynamically -->
+            </div>
+            <div class="modal-buttons">
+                <button id="btn-features-modal-save" class="btn btn-accent">حفظ وموافق</button>
+                <button onclick="closeModal('features-modal')" class="btn btn-secondary">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: File Text Editor -->
+    <div id="editor-modal" class="modal">
+        <div class="modal-content modal-large">
+            <h2>تعديل ملف: <span id="editor-modal-filename"></span></h2>
+            <div class="editor-container">
+                <textarea id="editor-textarea" rows="18"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button id="btn-editor-save" class="btn btn-accent">حفظ التغييرات</button>
+                <button onclick="closeModal('editor-modal')" class="btn btn-secondary">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
