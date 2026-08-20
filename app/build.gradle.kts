@@ -15,6 +15,9 @@ android {
         targetSdk = 36
         versionCode = 118
         versionName = "26.1"
+        ndk {
+            abiFilters += setOf("arm64-v8a", "armeabi-v7a", "x86_64")
+        }
     }
 
     val localProperties = Properties()
@@ -44,7 +47,7 @@ android {
             isMinifyEnabled = false
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
