@@ -36,7 +36,7 @@ object TelemetryManager {
             
             com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance()
                 .log("User tapped feature: $featureId")
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             e.printStackTrace()
         }
     }

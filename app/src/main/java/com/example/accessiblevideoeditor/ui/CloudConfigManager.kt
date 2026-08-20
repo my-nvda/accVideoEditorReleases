@@ -46,13 +46,14 @@ object CloudConfigManager {
             githubProxyUrl = prefs?.getString("github_proxy_url", "") ?: ""
         }
         try {
+            com.google.firebase.FirebaseApp.initializeApp(context.applicationContext)
             val remoteConfig = com.google.firebase.remoteconfig.FirebaseRemoteConfig.getInstance()
             val configSettings = com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(3600)
                 .build()
             remoteConfig.setConfigSettingsAsync(configSettings)
             remoteConfig.fetchAndActivate()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             e.printStackTrace()
         }
     }

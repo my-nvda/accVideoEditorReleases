@@ -85,7 +85,7 @@ class CrashReporter(
                 CoroutineScope(Dispatchers.IO).launch {
                     uploadCachedCrashes(context.applicationContext)
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 e.printStackTrace()
             }
         }

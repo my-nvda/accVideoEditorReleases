@@ -63,12 +63,14 @@ class MainActivity : AppCompatActivity() {
         defaultHandler?.uncaughtException(thread, throwable)
     }
 
-    // Initialize Managers
-    com.example.accessiblevideoeditor.telemetry.CrashReporter.init(this)
-    com.example.accessiblevideoeditor.ui.SettingsManager.init(this)
-    SoundManager.init(this)
-    SoundManager.playStartup()
-    ProcessingManager.init(this)
+    // Initialize Managers safely
+    try { com.example.accessiblevideoeditor.telemetry.CrashReporter.init(this) } catch (_: Throwable) {}
+    try { com.example.accessiblevideoeditor.ui.SettingsManager.init(this) } catch (_: Throwable) {}
+    try {
+        SoundManager.init(this)
+        SoundManager.playStartup()
+    } catch (_: Throwable) {}
+    try { ProcessingManager.init(this) } catch (_: Throwable) {}
 
     // Disable screen sleep
     window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
