@@ -439,7 +439,7 @@ class MainActivity : AppCompatActivity() {
                   }
               }
           }
-      } catch (e: Exception) {
+      } catch (e: Throwable) {
           e.printStackTrace()
       }
   }

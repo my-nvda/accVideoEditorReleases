@@ -40,8 +40,8 @@ object ErrorLogger {
                         recordException(throwable)
                     }
                 }
-            } catch (_: Exception) {}
-        } catch (e: Exception) {
+            } catch (_: Throwable) {}
+        } catch (e: Throwable) {
             e.printStackTrace()
         }
     }

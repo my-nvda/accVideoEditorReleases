@@ -13,11 +13,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 118
-        versionName = "26.1"
-        ndk {
-            abiFilters += setOf("arm64-v8a", "armeabi-v7a", "x86_64")
-        }
+        versionCode = 119
+        versionName = "26.2"
     }
 
     val localProperties = Properties()
@@ -47,7 +44,7 @@ android {
             isMinifyEnabled = false
         }
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
