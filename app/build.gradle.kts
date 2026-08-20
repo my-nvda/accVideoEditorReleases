@@ -15,6 +15,9 @@ android {
         targetSdk = 36
         versionCode = 119
         versionName = "26.2"
+        ndk {
+            abiFilters += setOf("arm64-v8a", "armeabi-v7a")
+        }
     }
 
     val localProperties = Properties()
