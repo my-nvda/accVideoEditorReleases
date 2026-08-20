@@ -32,15 +32,6 @@ object ErrorLogger {
             """.trimIndent()
 
             logFile.appendText(logEntry)
-
-            try {
-                com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().apply {
-                    log("[$tag] $message")
-                    if (throwable != null) {
-                        recordException(throwable)
-                    }
-                }
-            } catch (_: Throwable) {}
         } catch (e: Throwable) {
             e.printStackTrace()
         }

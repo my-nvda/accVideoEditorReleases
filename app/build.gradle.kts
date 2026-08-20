@@ -3,7 +3,6 @@ import java.util.Properties
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.serialization)
-  id("com.google.gms.google-services")
 }
 
 android {
@@ -13,8 +12,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 119
-        versionName = "26.2"
+        versionCode = 120
+        versionName = "26.3"
         ndk {
             abiFilters += setOf("arm64-v8a", "armeabi-v7a")
         }
@@ -95,13 +94,6 @@ kotlin {
 }
 
 dependencies {
-    // Firebase SDK (BoM & Suite)
-    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-messaging")
-    implementation("com.google.firebase:firebase-config")
-
     implementation("com.google.ai.client.generativeai:generativeai:0.8.0")
     implementation("com.google.mlkit:segmentation-selfie:16.0.0-beta6")
 

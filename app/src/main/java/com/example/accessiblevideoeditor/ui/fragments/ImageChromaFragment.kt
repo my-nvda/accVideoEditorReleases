@@ -187,8 +187,8 @@ class ImageChromaFragment : Fragment() {
                 val pixels = IntArray(width * height)
                 mutableBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
 
-                val greenColor = 0xFF00FF00.toInt()
-                val blueColor = 0xFF0000FF.toInt()
+                val lowThreshold = 0.20f
+                val highThreshold = 0.80f
 
                 for (y in 0 until height) {
                     val maskY = (y * maskHeight) / height
@@ -197,19 +197,58 @@ class ImageChromaFragment : Fragment() {
                     for (x in 0 until width) {
                         val maskX = (x * maskWidth) / width
                         val confidence = maskFloats[maskRowOffset + maskX]
-                        if (confidence <= 0.5f) {
-                            val i = rowOffset + x
+                        val i = rowOffset + x
+                        val origPixel = pixels[i]
+
+                        // Normalized subject alpha (0.0 = full background, 1.0 = full subject)
+                        val subjectAlpha = ((confidence - lowThreshold) / (highThreshold - lowThreshold)).coerceIn(0.0f, 1.0f)
+                        val bgAlpha = 1.0f - subjectAlpha
+
+                        if (subjectAlpha < 1.0f) {
                             when (selectedMode) {
-                                "transparent" -> pixels[i] = 0x00000000
-                                "blue_screen" -> pixels[i] = blueColor
-                                "custom_bg" -> {
-                                    if (bgPixels != null) {
-                                        pixels[i] = bgPixels[i]
-                                    } else {
-                                        pixels[i] = greenColor
-                                    }
+                                "transparent" -> {
+                                    val origA = (origPixel ushr 24) and 0xFF
+                                    val finalA = (origA * subjectAlpha).toInt().coerceIn(0, 255)
+                                    pixels[i] = (finalA shl 24) or (origPixel and 0x00FFFFFF)
                                 }
-                                else -> pixels[i] = greenColor // green_screen
+                                "blue_screen" -> {
+                                    val origR = (origPixel ushr 16) and 0xFF
+                                    val origG = (origPixel ushr 8) and 0xFF
+                                    val origB = origPixel and 0xFF
+
+                                    val r = (origR * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
+                                    val g = (origG * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
+                                    val b = (origB * subjectAlpha + 255 * bgAlpha).toInt().coerceIn(0, 255)
+
+                                    pixels[i] = (0xFF shl 24) or (r shl 16) or (g shl 8) or b
+                                }
+                                "custom_bg" -> {
+                                    val targetBgPixel = if (bgPixels != null) bgPixels[i] else 0xFF00FF00.toInt()
+                                    val origR = (origPixel ushr 16) and 0xFF
+                                    val origG = (origPixel ushr 8) and 0xFF
+                                    val origB = origPixel and 0xFF
+
+                                    val bgR = (targetBgPixel ushr 16) and 0xFF
+                                    val bgG = (targetBgPixel ushr 8) and 0xFF
+                                    val bgB = targetBgPixel and 0xFF
+
+                                    val r = (origR * subjectAlpha + bgR * bgAlpha).toInt().coerceIn(0, 255)
+                                    val g = (origG * subjectAlpha + bgG * bgAlpha).toInt().coerceIn(0, 255)
+                                    val b = (origB * subjectAlpha + bgB * bgAlpha).toInt().coerceIn(0, 255)
+
+                                    pixels[i] = (0xFF shl 24) or (r shl 16) or (g shl 8) or b
+                                }
+                                else -> { // green_screen
+                                    val origR = (origPixel ushr 16) and 0xFF
+                                    val origG = (origPixel ushr 8) and 0xFF
+                                    val origB = origPixel and 0xFF
+
+                                    val r = (origR * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
+                                    val g = (origG * subjectAlpha + 255 * bgAlpha).toInt().coerceIn(0, 255)
+                                    val b = (origB * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
+
+                                    pixels[i] = (0xFF shl 24) or (r shl 16) or (g shl 8) or b
+                                }
                             }
                         }
                     }
