@@ -176,29 +176,41 @@ class ImageChromaFragment : Fragment() {
                 val task = segmenter.process(inputImage)
                 val mask = Tasks.await(task) as com.google.mlkit.vision.segmentation.SegmentationMask
 
-                val pixels = IntArray(width * height)
-                mutableBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-
+                val maskWidth = mask.width
+                val maskHeight = mask.height
                 val maskBuffer = mask.buffer
                 maskBuffer.rewind()
+
+                val maskFloats = FloatArray(maskWidth * maskHeight)
+                maskBuffer.asFloatBuffer().get(maskFloats)
+
+                val pixels = IntArray(width * height)
+                mutableBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
 
                 val greenColor = 0xFF00FF00.toInt()
                 val blueColor = 0xFF0000FF.toInt()
 
-                for (i in pixels.indices) {
-                    val confidence = maskBuffer.float
-                    if (confidence <= 0.5f) {
-                        when (selectedMode) {
-                            "transparent" -> pixels[i] = 0x00000000
-                            "blue_screen" -> pixels[i] = blueColor
-                            "custom_bg" -> {
-                                if (bgPixels != null) {
-                                    pixels[i] = bgPixels[i]
-                                } else {
-                                    pixels[i] = greenColor
+                for (y in 0 until height) {
+                    val maskY = (y * maskHeight) / height
+                    val rowOffset = y * width
+                    val maskRowOffset = maskY * maskWidth
+                    for (x in 0 until width) {
+                        val maskX = (x * maskWidth) / width
+                        val confidence = maskFloats[maskRowOffset + maskX]
+                        if (confidence <= 0.5f) {
+                            val i = rowOffset + x
+                            when (selectedMode) {
+                                "transparent" -> pixels[i] = 0x00000000
+                                "blue_screen" -> pixels[i] = blueColor
+                                "custom_bg" -> {
+                                    if (bgPixels != null) {
+                                        pixels[i] = bgPixels[i]
+                                    } else {
+                                        pixels[i] = greenColor
+                                    }
                                 }
+                                else -> pixels[i] = greenColor // green_screen
                             }
-                            else -> pixels[i] = greenColor // green_screen
                         }
                     }
                 }

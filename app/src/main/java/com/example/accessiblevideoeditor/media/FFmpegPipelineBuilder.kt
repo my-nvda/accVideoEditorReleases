@@ -136,17 +136,7 @@ object FFmpegPipelineBuilder {
             lastStreamName = nextStream
         }
 
-        // B. Background Removal / Chroma Key (if enabled)
-        if (project.backgroundRemovalEnabled) {
-            val keyColor = when (project.backgroundRemovalType) {
-                "green_screen" -> "0x00FF00"
-                "blue_screen" -> "0x0000FF"
-                else -> "0x00FF00" // auto/green default
-            }
-            val nextStream = "[vchroma]"
-            filterChains.add("$lastStreamName chromakey=$keyColor:0.15:0.2$nextStream")
-            lastStreamName = nextStream
-        }
+        // B. Background Removal (handled upstream in preprocessing via SelfieBackgroundRemover)
 
         // C. Color Filters & Adjustments (Brightness, Contrast, Saturation, Presets)
         val eqFilters = mutableListOf<String>()
