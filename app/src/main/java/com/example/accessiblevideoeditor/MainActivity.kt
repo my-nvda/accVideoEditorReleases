@@ -98,13 +98,6 @@ class MainActivity : AppCompatActivity() {
         } catch (_: Exception) {}
     }
 
-    // Request notification permission if Android 13+
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-        if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
-        }
-    }
-
     setContentView(R.layout.activity_main)
 
     setupProcessingOverlay()
@@ -112,6 +105,7 @@ class MainActivity : AppCompatActivity() {
     findViewById<View>(R.id.nav_host_fragment).post {
         handleUpdateIntent(intent)
         handleShareIntent(intent)
+        showWelcomeNotificationDialog()
     }
     
         // Register global fragment lifecycle callbacks for accessibility focus
@@ -418,6 +412,35 @@ class MainActivity : AppCompatActivity() {
               releaseNotes = ""
           )
           com.example.accessiblevideoeditor.updater.AppUpdater.startDownloadWithProgress(this, info)
+      }
+  }
+
+  private fun showWelcomeNotificationDialog() {
+      if (isFinishing || isDestroyed) return
+      try {
+          if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+              if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                  val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+                  val alreadyShown = prefs.getBoolean("has_shown_welcome_notif_dialog", false)
+                  if (!alreadyShown) {
+                      prefs.edit().putBoolean("has_shown_welcome_notif_dialog", true).apply()
+                      com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                          .setTitle(com.example.accessiblevideoeditor.ui.AppStrings.get(this, R.string.welcome_dialog_title))
+                          .setMessage(com.example.accessiblevideoeditor.ui.AppStrings.get(this, R.string.welcome_dialog_message))
+                          .setPositiveButton(com.example.accessiblevideoeditor.ui.AppStrings.get(this, R.string.welcome_dialog_positive)) { dialog, _ ->
+                              dialog.dismiss()
+                              requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
+                          }
+                          .setNegativeButton(com.example.accessiblevideoeditor.ui.AppStrings.get(this, R.string.welcome_dialog_negative)) { dialog, _ ->
+                              dialog.dismiss()
+                          }
+                          .setCancelable(false)
+                          .show()
+                  }
+              }
+          }
+      } catch (e: Exception) {
+          e.printStackTrace()
       }
   }
 

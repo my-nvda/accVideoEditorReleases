@@ -1,6 +1,17 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in C:\Users\AHMED\AppData\Local\Android\Sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and analysis rules here.
+# Keep all app classes, activities, fragments, and models
+-keep class com.example.accessiblevideoeditor.** { *; }
+-keepclassmembers class com.example.accessiblevideoeditor.** { *; }
 
-# ML Kit and other libraries package their own rules, but we can add any custom keep rules here.
+# Keep Navigation Component classes
+-keep class androidx.navigation.** { *; }
+-keepclassmembers class androidx.navigation.** { *; }
+
+# Keep ML Kit Selfie Segmentation
+-keep class com.google.mlkit.** { *; }
+-keep class com.google.android.gms.** { *; }
+
+# Keep FFmpegKit
+-keep class com.arthenica.ffmpegkit.** { *; }
+
+# Keep ExoPlayer / Media3
+-keep class androidx.media3.** { *; }

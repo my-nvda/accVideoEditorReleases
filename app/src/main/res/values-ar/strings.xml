@@ -632,4 +632,10 @@
     <string name="label_no_bg_selected">لم يتم اختيار صورة خلفية بعد</string>
     <string name="bg_removal_fps_label">معدل إطارات معالجة الفيديو (FPS):</string>
     <string name="fps_auto">تلقائي (الكشف عن إطارات الفيديو)</string>
+
+    <!-- Welcome Notification Dialog Strings -->
+    <string name="welcome_dialog_title">مرحباً بك في Accessible Video Editor!</string>
+    <string name="welcome_dialog_message">يسعدنا انضمامك لتطبيق محرر الفيديو الميسّر! للحصول على أحدث التحديثات والتنبيهات المباشرة وإشعارات التقدّم في المعالجة، يرجى تفعيل الإشعارات.</string>
+    <string name="welcome_dialog_positive">تفعيل الإشعارات الآن</string>
+    <string name="welcome_dialog_negative">متابعة بدون إشعارات</string>
 </resources>

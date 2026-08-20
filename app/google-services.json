@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1052778030127",
+    "project_id": "accessiblevideoeditor-dc60f",
+    "storage_bucket": "accessiblevideoeditor-dc60f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052778030127:android:51afa09127edfbf6d112da",
+        "android_client_info": {
+          "package_name": "com.example.accessiblevideoeditor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7XUzu4ZSqZm1o43QeZVS9Gw_67aqTdWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

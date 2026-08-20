@@ -635,4 +635,10 @@ customization, smart cutting, and more.</string>
     <string name="label_no_bg_selected">No background image selected</string>
     <string name="bg_removal_fps_label">Video Processing Frame Rate (FPS):</string>
     <string name="fps_auto">Auto Detect Original FPS</string>
+
+    <!-- Welcome Notification Dialog Strings -->
+    <string name="welcome_dialog_title">Welcome to Accessible Video Editor!</string>
+    <string name="welcome_dialog_message">We are glad to have you! To receive important processing updates and notifications, please allow enabling notifications.</string>
+    <string name="welcome_dialog_positive">Enable Notifications</string>
+    <string name="welcome_dialog_negative">Continue Without Notifications</string>
 </resources>
