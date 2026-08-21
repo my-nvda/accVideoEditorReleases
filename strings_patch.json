@@ -580,7 +580,7 @@
     "btn_new_project": "مشروع جديد",
     "label_recent_projects": "المشاريع الأخيرة",
     "msg_no_projects": "لا توجد مشاريع حالية. اضغط على مشروع جديد للبدء!",
-    "menu_rename": "إعادة تسمية",
+    "menu_rename": "ضبط الخيارات",
     "menu_duplicate": "تكرار",
     "menu_delete": "حذف",
     "dialog_rename_title": "إعادة تسمية المشروع",
@@ -640,5 +640,5 @@
     "welcome_dialog_positive": "تفعيل الإشعارات الآن",
     "welcome_dialog_negative": "متابعة بدون إشعارات"
   },
-  "version": 9
+  "version": 11
 }
