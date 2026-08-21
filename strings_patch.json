@@ -333,7 +333,7 @@
     "title_ai_scene_inspector": "مستكشف ومشرح مشاهد الفيديو",
     "btn_analyze_scenes": "تحليل وتشريح المشاهد",
     "btnVideoEditor": "كتابة نص على الفيديو",
-    "btnImageEditor": "محرر الصور",
+    "btnImageEditor": "كتابة النصوص على الصور",
     "btnWatermark": "إضافة علامة مائية ونصوص",
     "btnCreateBlankImage": "إنشاء صورة ملونة فارغة",
     "btnVideoTrimmer": "قص الفيديو المحدد",
@@ -640,5 +640,5 @@
     "welcome_dialog_positive": "تفعيل الإشعارات الآن",
     "welcome_dialog_negative": "متابعة بدون إشعارات"
   },
-  "version": 6
+  "version": 7
 }
