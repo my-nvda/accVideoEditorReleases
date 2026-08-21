@@ -14,7 +14,7 @@ object AppStrings {
      * Call this as early as possible (Application.onCreate or before setContentView).
      */
     fun loadCustomStrings(context: Context) {
-        val currentLang = LanguageManager.getCurrentLanguageCode()
+        val currentLang = LanguageManager.getCurrentLanguageCode(context)
         val file = File(context.filesDir, "custom_lang_$currentLang.json")
         if (file.exists()) {
             try {

@@ -62,7 +62,7 @@ class SettingsFragment : Fragment() {
         val langAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, languages)
         langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spLanguage.adapter = langAdapter
-        val currentLangIndex = LanguageManager.supportedLanguages.indexOfFirst { it.first == LanguageManager.getCurrentLanguageCode() }
+        val currentLangIndex = LanguageManager.supportedLanguages.indexOfFirst { it.first == LanguageManager.getCurrentLanguageCode(requireContext()) }
         if (currentLangIndex >= 0) binding.spLanguage.setSelection(currentLangIndex)
 
         // Setup Export Quality Spinner
@@ -111,8 +111,9 @@ class SettingsFragment : Fragment() {
         binding.spLanguage.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedCode = LanguageManager.supportedLanguages[position].first
-                if (selectedCode != LanguageManager.getCurrentLanguageCode()) {
-                    LanguageManager.setLanguage(selectedCode)
+                val safeContext = context ?: return
+                if (selectedCode != LanguageManager.getCurrentLanguageCode(safeContext)) {
+                    LanguageManager.setLanguage(safeContext, selectedCode)
                 }
             }
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}

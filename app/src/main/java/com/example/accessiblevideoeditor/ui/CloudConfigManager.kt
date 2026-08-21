@@ -91,7 +91,7 @@ object CloudConfigManager {
                         val stringsJsonStr = stringsConn.inputStream.bufferedReader().use { it.readText() }
                         val map = mutableMapOf<String, String>()
                         var serverVersion = -1
-                        val currentLang = LanguageManager.getCurrentLanguageCode()
+                        val currentLang = LanguageManager.getCurrentLanguageCode(context)
 
                         try {
                             val stringsRoot = JSONObject(stringsJsonStr)
