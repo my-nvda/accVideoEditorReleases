@@ -35,10 +35,9 @@ object AppStrings {
     }
 
     /**
-     * Programmatic helper for code that needs a translated string directly.
-     * Prefers cloud translation, falls back to APK string.
+     * Helper to get string directly without fallback, returning null if not found.
      */
-    fun get(context: Context, id: Int, vararg formatArgs: Any): String {
+    fun getDirect(context: Context, id: Int, vararg formatArgs: Any): String? {
         customStrings?.let { strings ->
             try {
                 val name = context.resources.getResourceEntryName(id)
@@ -50,14 +49,24 @@ object AppStrings {
                     return str
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                // Ignore to allow fallback
             }
         }
-        @Suppress("SpreadOperator")
-        return if (formatArgs.isNotEmpty()) {
-            context.getString(id, *formatArgs)
-        } else {
-            context.getString(id)
+        return null
+    }
+
+    /**
+     * Programmatic helper for code that needs a translated string directly.
+     * Prefers cloud translation, falls back to APK string.
+     */
+    fun get(context: Context, id: Int, vararg formatArgs: Any): String {
+        return getDirect(context, id, *formatArgs) ?: run {
+            @Suppress("SpreadOperator")
+            if (formatArgs.isNotEmpty()) {
+                context.getString(id, *formatArgs)
+            } else {
+                context.getString(id)
+            }
         }
     }
 }

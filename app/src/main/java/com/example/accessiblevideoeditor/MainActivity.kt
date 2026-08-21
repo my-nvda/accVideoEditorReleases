@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
    */
   override fun attachBaseContext(newBase: Context) {
       AppStrings.loadCustomStrings(newBase)
-      super.attachBaseContext(newBase)
+      super.attachBaseContext(com.example.accessiblevideoeditor.ui.AppStringContext(newBase))
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +87,12 @@ class MainActivity : AppCompatActivity() {
 
     // Clean up temporary files in cache directory on startup in background
     lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+        try {
+            if (com.google.firebase.FirebaseApp.getApps(applicationContext).isEmpty()) {
+                com.google.firebase.FirebaseApp.initializeApp(applicationContext)
+            }
+            com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("all")
+        } catch (_: Throwable) {}
         try {
             val thirtyMinutesAgo = System.currentTimeMillis() - 30 * 60 * 1000L
             cacheDir.listFiles()?.forEach { file ->

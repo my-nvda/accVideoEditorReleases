@@ -25,6 +25,20 @@ object TelemetryManager {
         val prefs = getPrefs(context)
         val current = prefs.getInt(PREFIX_CLICK + featureId, 0)
         prefs.edit().putInt(PREFIX_CLICK + featureId, current + 1).apply()
+
+        try {
+            val bundle = android.os.Bundle().apply {
+                putString(com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_ID, featureId)
+                putString(com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_NAME, featureId)
+            }
+            com.google.firebase.analytics.FirebaseAnalytics.getInstance(context)
+                .logEvent(com.google.firebase.analytics.FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            
+            com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance()
+                .log("User tapped feature: $featureId")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 
     fun getUsageStatistics(context: Context): JSONObject {

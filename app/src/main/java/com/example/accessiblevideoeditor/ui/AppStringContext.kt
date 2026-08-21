@@ -1,8 +1,16 @@
 package com.example.accessiblevideoeditor.ui
 
-// This class has been intentionally removed.
-// AppStringContext previously wrapped the Activity context and replaced its Resources with
-// AppStringResources. This caused Material3 theme attribute resolution failures
-// (colorContainer, colorOnPrimary, etc.) leading to InflateException crashes on all screens.
-//
-// Translation is now handled purely via AppStrings.get(context, resId) at the call site.
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.res.Resources
+
+class AppStringContext(base: Context) : ContextWrapper(base) {
+    private var customResources: Resources? = null
+
+    override fun getResources(): Resources {
+        if (customResources == null) {
+            customResources = AppCustomResources(super.getResources(), this)
+        }
+        return customResources!!
+    }
+}

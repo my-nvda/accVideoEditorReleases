@@ -45,6 +45,20 @@ object CloudConfigManager {
             githubRepo = prefs?.getString("github_repo", "") ?: ""
             githubProxyUrl = prefs?.getString("github_proxy_url", "") ?: ""
         }
+        try {
+            if (com.google.firebase.FirebaseApp.getApps(context.applicationContext).isEmpty()) {
+                com.google.firebase.FirebaseApp.initializeApp(context.applicationContext)
+            }
+            com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("all")
+            val remoteConfig = com.google.firebase.remoteconfig.FirebaseRemoteConfig.getInstance()
+            val configSettings = com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build()
+            remoteConfig.setConfigSettingsAsync(configSettings)
+            remoteConfig.fetchAndActivate()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 
     suspend fun checkCloudConfig(context: Context): CloudConfigResult = withContext(Dispatchers.IO) {

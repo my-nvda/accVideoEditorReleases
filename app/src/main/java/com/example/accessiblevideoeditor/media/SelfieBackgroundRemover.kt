@@ -122,16 +122,79 @@ object SelfieBackgroundRemover {
                     val pixels = IntArray(width * height)
                     mutableBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
 
+                    // 1. Erosion to contract the mask slightly (radius = 1 pixel on 256x256 mask)
+                    val erodedMask = FloatArray(maskWidth * maskHeight)
+                    val erodeRadius = 1
+                    for (my in 0 until maskHeight) {
+                        val myOffset = my * maskWidth
+                        for (mx in 0 until maskWidth) {
+                            var minVal = 1.0f
+                            for (dy in -erodeRadius..erodeRadius) {
+                                val ny = (my + dy).coerceIn(0, maskHeight - 1)
+                                val nyOffset = ny * maskWidth
+                                for (dx in -erodeRadius..erodeRadius) {
+                                    val nx = (mx + dx).coerceIn(0, maskWidth - 1)
+                                    val v = maskFloats[nyOffset + nx]
+                                    if (v < minVal) {
+                                        minVal = v
+                                    }
+                                }
+                            }
+                            erodedMask[myOffset + mx] = minVal
+                        }
+                    }
+
+                    // 2. Box Blur to smooth out the mask's edges
+                    val processedMask = FloatArray(maskWidth * maskHeight)
+                    val blurRadius = 1
+                    for (my in 0 until maskHeight) {
+                        val myOffset = my * maskWidth
+                        for (mx in 0 until maskWidth) {
+                            var sum = 0.0f
+                            var count = 0
+                            for (dy in -blurRadius..blurRadius) {
+                                val ny = (my + dy).coerceIn(0, maskHeight - 1)
+                                val nyOffset = ny * maskWidth
+                                for (dx in -blurRadius..blurRadius) {
+                                    val nx = (mx + dx).coerceIn(0, maskWidth - 1)
+                                    sum += erodedMask[nyOffset + nx]
+                                    count++
+                                }
+                            }
+                            processedMask[myOffset + mx] = sum / count
+                        }
+                    }
+
                     val lowThreshold = 0.20f
                     val highThreshold = 0.80f
+                    val xFactor = (maskWidth - 1).toFloat() / width.coerceAtLeast(1)
+                    val yFactor = (maskHeight - 1).toFloat() / height.coerceAtLeast(1)
 
+                    // 3. Bilinear Interpolation mapping from high-res image to low-res mask
                     for (y in 0 until height) {
-                        val maskY = (y * maskHeight) / height
+                        val gy = y * yFactor
+                        val y0 = gy.toInt()
+                        val y1 = (y0 + 1).coerceAtMost(maskHeight - 1)
+                        val dy = gy - y0
+                        val y0Offset = y0 * maskWidth
+                        val y1Offset = y1 * maskWidth
                         val rowOffset = y * width
-                        val maskRowOffset = maskY * maskWidth
+
                         for (x in 0 until width) {
-                            val maskX = (x * maskWidth) / width
-                            val confidence = maskFloats[maskRowOffset + maskX]
+                            val gx = x * xFactor
+                            val x0 = gx.toInt()
+                            val x1 = (x0 + 1).coerceAtMost(maskWidth - 1)
+                            val dx = gx - x0
+
+                            val val00 = processedMask[y0Offset + x0]
+                            val val10 = processedMask[y0Offset + x1]
+                            val val01 = processedMask[y1Offset + x0]
+                            val val11 = processedMask[y1Offset + x1]
+
+                            val top = val00 * (1.0f - dx) + val10 * dx
+                            val bottom = val01 * (1.0f - dx) + val11 * dx
+                            val confidence = top * (1.0f - dy) + bottom * dy
+
                             val i = rowOffset + x
                             val origPixel = pixels[i]
 
@@ -140,48 +203,47 @@ object SelfieBackgroundRemover {
                             val bgAlpha = 1.0f - subjectAlpha
 
                             if (subjectAlpha < 1.0f) {
+                                // Extract original channels
+                                var cleanR = (origPixel ushr 16) and 0xFF
+                                var cleanG = (origPixel ushr 8) and 0xFF
+                                var cleanB = origPixel and 0xFF
+
+                                // 4. Dynamic Spill Suppression on subject edges
+                                if (cleanG > cleanR && cleanG > cleanB) {
+                                    val avg = (cleanR + cleanB) / 2
+                                    cleanG = (cleanG * subjectAlpha + avg * (1.0f - subjectAlpha)).toInt().coerceIn(0, 255)
+                                } else if (cleanB > cleanR && cleanB > cleanG) {
+                                    val avg = (cleanR + cleanG) / 2
+                                    cleanB = (cleanB * subjectAlpha + avg * (1.0f - subjectAlpha)).toInt().coerceIn(0, 255)
+                                }
+
                                 when (bgType) {
                                     "transparent" -> {
                                         val origA = (origPixel ushr 24) and 0xFF
                                         val finalA = (origA * subjectAlpha).toInt().coerceIn(0, 255)
-                                        pixels[i] = (finalA shl 24) or (origPixel and 0x00FFFFFF)
+                                        pixels[i] = (finalA shl 24) or (cleanR shl 16) or (cleanG shl 8) or cleanB
                                     }
                                     "blue_screen" -> {
-                                        val origR = (origPixel ushr 16) and 0xFF
-                                        val origG = (origPixel ushr 8) and 0xFF
-                                        val origB = origPixel and 0xFF
-
-                                        val r = (origR * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
-                                        val g = (origG * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
-                                        val b = (origB * subjectAlpha + 255 * bgAlpha).toInt().coerceIn(0, 255)
-
+                                        val r = (cleanR * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
+                                        val g = (cleanG * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
+                                        val b = (cleanB * subjectAlpha + 255 * bgAlpha).toInt().coerceIn(0, 255)
                                         pixels[i] = (0xFF shl 24) or (r shl 16) or (g shl 8) or b
                                     }
                                     "custom_bg" -> {
                                         val targetBgPixel = if (bgPixels != null) bgPixels[i] else 0xFF00FF00.toInt()
-                                        val origR = (origPixel ushr 16) and 0xFF
-                                        val origG = (origPixel ushr 8) and 0xFF
-                                        val origB = origPixel and 0xFF
-
                                         val bgR = (targetBgPixel ushr 16) and 0xFF
                                         val bgG = (targetBgPixel ushr 8) and 0xFF
                                         val bgB = targetBgPixel and 0xFF
 
-                                        val r = (origR * subjectAlpha + bgR * bgAlpha).toInt().coerceIn(0, 255)
-                                        val g = (origG * subjectAlpha + bgG * bgAlpha).toInt().coerceIn(0, 255)
-                                        val b = (origB * subjectAlpha + bgB * bgAlpha).toInt().coerceIn(0, 255)
-
+                                        val r = (cleanR * subjectAlpha + bgR * bgAlpha).toInt().coerceIn(0, 255)
+                                        val g = (cleanG * subjectAlpha + bgG * bgAlpha).toInt().coerceIn(0, 255)
+                                        val b = (cleanB * subjectAlpha + bgB * bgAlpha).toInt().coerceIn(0, 255)
                                         pixels[i] = (0xFF shl 24) or (r shl 16) or (g shl 8) or b
                                     }
                                     else -> { // auto_subject / green_screen
-                                        val origR = (origPixel ushr 16) and 0xFF
-                                        val origG = (origPixel ushr 8) and 0xFF
-                                        val origB = origPixel and 0xFF
-
-                                        val r = (origR * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
-                                        val g = (origG * subjectAlpha + 255 * bgAlpha).toInt().coerceIn(0, 255)
-                                        val b = (origB * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
-
+                                        val r = (cleanR * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
+                                        val g = (cleanG * subjectAlpha + 255 * bgAlpha).toInt().coerceIn(0, 255)
+                                        val b = (cleanB * subjectAlpha + 0 * bgAlpha).toInt().coerceIn(0, 255)
                                         pixels[i] = (0xFF shl 24) or (r shl 16) or (g shl 8) or b
                                     }
                                 }
