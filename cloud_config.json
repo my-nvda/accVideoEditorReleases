@@ -32,7 +32,16 @@
     "btnAiSceneAudioDescription",
     "btnSubtitlesOcrSrt"
   ],
-  "newFeatures": [],
+  "newFeatures": [
+    {
+      "id": "cleanunet_fp16",
+      "featureId": "cleanunet_fp16",
+      "title": "CleanUNet FP16 AI Noise Reduction Model",
+      "description": "High-fidelity studio quality speech enhancement model (90MB)",
+      "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/models/cleanunet_fp16.tar.bz2",
+      "version": 1
+    }
+  ],
   "featurePatches": [],
   "whitelistedDevices": {
     "btnVideoEditor": [
