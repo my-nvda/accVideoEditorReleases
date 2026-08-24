@@ -40,6 +40,14 @@
       "description": "High-fidelity studio quality speech enhancement model (90MB)",
       "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/cleanunet_fp16.tar.bz2",
       "version": 1
+    },
+    {
+      "id": "resemble_enhance_fp32",
+      "featureId": "resemble_enhance_fp32",
+      "title": "AI Studio (Resemble Enhance) Speech Enhancement Model",
+      "description": "High-fidelity generative studio speech enhancement model (49MB)",
+      "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/resemble_enhance_fp32.tar.bz2",
+      "version": 1
     }
   ],
   "featurePatches": [],
@@ -312,6 +320,10 @@
   "aiModelsConfig": {
     "cleanunet_fp16": {
       "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/cleanunet_fp16.tar.bz2",
+      "version": 1
+    },
+    "resemble_enhance_fp32": {
+      "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/resemble_enhance_fp32.tar.bz2",
       "version": 1
     }
   },
