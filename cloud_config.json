@@ -309,6 +309,12 @@
     {"value": "wave", "name": "wave (حركة موجية تموجية 🌊)"},
     {"value": "rotate_in", "name": "rotate_in (دوران حلزوني للداخل 🌀)"}
   ],
+  "aiModelsConfig": {
+    "cleanunet_fp16": {
+      "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/cleanunet_fp16.tar.bz2",
+      "version": 1
+    }
+  },
   "announcements": [
     {
       "id": "ann_1786607347636",
