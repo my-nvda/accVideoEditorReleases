@@ -289,6 +289,26 @@
     "token": "Uks4eGQwcDhIZjBDdkJva29NWUdqQ3p5UXhMc1MxeElyaXpFX3BoZw==",
     "repo": "my-nvda/AccessibleVideoEditor"
   },
+  "textAnimations": [
+    {"value": "none", "name": "none (بدون حركة)"},
+    {"value": "fade_in", "name": "fade_in (ظهور وتلاشي ناعم 🌟)"},
+    {"value": "fade_out", "name": "fade_out (تلاشي ختامي تدريجي 🌑)"},
+    {"value": "fade_in_out", "name": "fade_in_out (ظهور ناعم وتلاشي ختامي 🌅)"},
+    {"value": "slide_up", "name": "slide_up (انزلاق صاعد من الأسفل ⬆️)"},
+    {"value": "slide_down", "name": "slide_down (انزلاق هابط من الأعلى ⬇️)"},
+    {"value": "slide_left", "name": "slide_left (انزلاق جانبي لليسار ⬅️)"},
+    {"value": "slide_right", "name": "slide_right (انزلاق جانبي لليمين ➡️)"},
+    {"value": "zoom_in", "name": "zoom_in (انبثاق وتكبير مفاجئ 💥)"},
+    {"value": "elastic_zoom", "name": "elastic_zoom (تكبير مرن ممتد 🪀)"},
+    {"value": "pulse", "name": "pulse (نبض متكرر 💓)"},
+    {"value": "typewriter", "name": "typewriter (آلة كاتبة ⌨️)"},
+    {"value": "bounce_in", "name": "bounce_in (ارتطام مرن ومطاطي 🏀)"},
+    {"value": "mask_reveal", "name": "mask_reveal (ظهور سينمائي خلف قناع 🎬)"},
+    {"value": "blink", "name": "blink (وميض سريع متقطع 💡)"},
+    {"value": "flicker", "name": "flicker (تأثير تشويش كهربائي ⚡)"},
+    {"value": "wave", "name": "wave (حركة موجية تموجية 🌊)"},
+    {"value": "rotate_in", "name": "rotate_in (دوران حلزوني للداخل 🌀)"}
+  ],
   "announcements": [
     {
       "id": "ann_1786607347636",
