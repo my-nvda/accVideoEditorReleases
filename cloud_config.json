@@ -53,201 +53,201 @@
   "featurePatches": [],
   "whitelistedDevices": {
     "btnVideoEditor": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnImageEditor": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnWatermark": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnCreateBlankImage": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnVideoTrimmer": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnSmartCut": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAudioEditor": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAudioStudio": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAiAnalysis": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnStt": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8"
     ],
     "btnOcr": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnFastConverter": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnBoostVolume": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnExtractAudio": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnCompressVideo": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnMergeVideos": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnReverseMedia": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnSlideshowMaker": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnTickerText": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnBatchProcess": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnSpeedControl": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnNoiseReduction": [
-      "0cc728c8b1b11b76"
+      "062c80e6a4faab64"
     ],
     "btnBackgroundMusic": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAudioNormalization": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAiSceneInspector": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAiVoiceDubbing": [
-      "0cc728c8b1b11b76"
+      "062c80e6a4faab64"
     ],
     "btnAudioStemSeparator": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAutoShortsCreator": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnCinematicLutShaders": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "e0c9ef4bd15c7752"
     ],
     "btnAiSceneAudioDescription": [
-      "0cc728c8b1b11b76"
+      "062c80e6a4faab64"
     ],
     "btnSubtitlesOcrSrt": [
-      "0cc728c8b1b11b76",
+      "062c80e6a4faab64",
       "58df865bb003bac8"
     ]
   },
@@ -285,7 +285,7 @@
     "btnSubtitlesOcrSrt": "مستخرج وقارئ الترجمات الشاشاتية SRT"
   },
   "deviceNames": {
-    "0cc728c8b1b11b76": "ahmed salah",
+    "062c80e6a4faab64": "ahmed salah",
     "0dddefbf349537f7": "hosam ali",
     "36aa4cd0ca16f745": "omar alganzoury",
     "58df865bb003bac8": "ramez maged",
