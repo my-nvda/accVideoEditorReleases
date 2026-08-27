@@ -53,201 +53,201 @@
   "featurePatches": [],
   "whitelistedDevices": {
     "btnVideoEditor": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnImageEditor": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnWatermark": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnCreateBlankImage": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnVideoTrimmer": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnSmartCut": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAudioEditor": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAudioStudio": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAiAnalysis": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnStt": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8"
     ],
     "btnOcr": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnFastConverter": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnBoostVolume": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnExtractAudio": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnCompressVideo": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnMergeVideos": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnReverseMedia": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnSlideshowMaker": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnTickerText": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnBatchProcess": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnSpeedControl": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnNoiseReduction": [
-      "062c80e6a4faab64"
+      "0cc728c8b1b11b76"
     ],
     "btnBackgroundMusic": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAudioNormalization": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAiSceneInspector": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAiVoiceDubbing": [
-      "062c80e6a4faab64"
+      "0cc728c8b1b11b76"
     ],
     "btnAudioStemSeparator": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAutoShortsCreator": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
       "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnCinematicLutShaders": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "e0c9ef4bd15c7752"
     ],
     "btnAiSceneAudioDescription": [
-      "062c80e6a4faab64"
+      "0cc728c8b1b11b76"
     ],
     "btnSubtitlesOcrSrt": [
-      "062c80e6a4faab64",
+      "0cc728c8b1b11b76",
       "58df865bb003bac8"
     ]
   },
@@ -285,7 +285,7 @@
     "btnSubtitlesOcrSrt": "مستخرج وقارئ الترجمات الشاشاتية SRT"
   },
   "deviceNames": {
-    "062c80e6a4faab64": "ahmed salah",
+    "0cc728c8b1b11b76": "ahmed salah",
     "0dddefbf349537f7": "hosam ali",
     "36aa4cd0ca16f745": "omar alganzoury",
     "58df865bb003bac8": "ramez maged",
@@ -298,24 +298,78 @@
     "repo": "my-nvda/AccessibleVideoEditor"
   },
   "textAnimations": [
-    {"value": "none", "name": "none (بدون حركة)"},
-    {"value": "fade_in", "name": "fade_in (ظهور وتلاشي ناعم 🌟)"},
-    {"value": "fade_out", "name": "fade_out (تلاشي ختامي تدريجي 🌑)"},
-    {"value": "fade_in_out", "name": "fade_in_out (ظهور ناعم وتلاشي ختامي 🌅)"},
-    {"value": "slide_up", "name": "slide_up (انزلاق صاعد من الأسفل ⬆️)"},
-    {"value": "slide_down", "name": "slide_down (انزلاق هابط من الأعلى ⬇️)"},
-    {"value": "slide_left", "name": "slide_left (انزلاق جانبي لليسار ⬅️)"},
-    {"value": "slide_right", "name": "slide_right (انزلاق جانبي لليمين ➡️)"},
-    {"value": "zoom_in", "name": "zoom_in (انبثاق وتكبير مفاجئ 💥)"},
-    {"value": "elastic_zoom", "name": "elastic_zoom (تكبير مرن ممتد 🪀)"},
-    {"value": "pulse", "name": "pulse (نبض متكرر 💓)"},
-    {"value": "typewriter", "name": "typewriter (آلة كاتبة ⌨️)"},
-    {"value": "bounce_in", "name": "bounce_in (ارتطام مرن ومطاطي 🏀)"},
-    {"value": "mask_reveal", "name": "mask_reveal (ظهور سينمائي خلف قناع 🎬)"},
-    {"value": "blink", "name": "blink (وميض سريع متقطع 💡)"},
-    {"value": "flicker", "name": "flicker (تأثير تشويش كهربائي ⚡)"},
-    {"value": "wave", "name": "wave (حركة موجية تموجية 🌊)"},
-    {"value": "rotate_in", "name": "rotate_in (دوران حلزوني للداخل 🌀)"}
+    {
+      "value": "none",
+      "name": "none (بدون حركة)"
+    },
+    {
+      "value": "fade_in",
+      "name": "fade_in (ظهور وتلاشي ناعم 🌟)"
+    },
+    {
+      "value": "fade_out",
+      "name": "fade_out (تلاشي ختامي تدريجي 🌑)"
+    },
+    {
+      "value": "fade_in_out",
+      "name": "fade_in_out (ظهور ناعم وتلاشي ختامي 🌅)"
+    },
+    {
+      "value": "slide_up",
+      "name": "slide_up (انزلاق صاعد من الأسفل ⬆️)"
+    },
+    {
+      "value": "slide_down",
+      "name": "slide_down (انزلاق هابط من الأعلى ⬇️)"
+    },
+    {
+      "value": "slide_left",
+      "name": "slide_left (انزلاق جانبي لليسار ⬅️)"
+    },
+    {
+      "value": "slide_right",
+      "name": "slide_right (انزلاق جانبي لليمين ➡️)"
+    },
+    {
+      "value": "zoom_in",
+      "name": "zoom_in (انبثاق وتكبير مفاجئ 💥)"
+    },
+    {
+      "value": "elastic_zoom",
+      "name": "elastic_zoom (تكبير مرن ممتد 🪀)"
+    },
+    {
+      "value": "pulse",
+      "name": "pulse (نبض متكرر 💓)"
+    },
+    {
+      "value": "typewriter",
+      "name": "typewriter (آلة كاتبة ⌨️)"
+    },
+    {
+      "value": "bounce_in",
+      "name": "bounce_in (ارتطام مرن ومطاطي 🏀)"
+    },
+    {
+      "value": "mask_reveal",
+      "name": "mask_reveal (ظهور سينمائي خلف قناع 🎬)"
+    },
+    {
+      "value": "blink",
+      "name": "blink (وميض سريع متقطع 💡)"
+    },
+    {
+      "value": "flicker",
+      "name": "flicker (تأثير تشويش كهربائي ⚡)"
+    },
+    {
+      "value": "wave",
+      "name": "wave (حركة موجية تموجية 🌊)"
+    },
+    {
+      "value": "rotate_in",
+      "name": "rotate_in (دوران حلزوني للداخل 🌀)"
+    }
   ],
   "aiModelsConfig": {
     "cleanunet_fp16": {
