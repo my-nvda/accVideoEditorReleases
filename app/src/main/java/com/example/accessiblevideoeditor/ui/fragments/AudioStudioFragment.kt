@@ -325,7 +325,12 @@ class AudioStudioFragment : Fragment() {
                         val savedUri = FileUtils.saveToGallery(requireContext(), File(finalOutputPath), mime)
                         if (savedUri != null) {
                             SoundManager.playSuccess()
-                            Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_182), Toast.LENGTH_SHORT).show()
+                            com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                requireContext(),
+                                savedUri,
+                                AppStrings.get(requireContext(), R.string.string_182),
+                                mime
+                            )
                             selectedMediaUri = savedUri
                             updateActionButtons()
                         }
@@ -362,7 +367,12 @@ class AudioStudioFragment : Fragment() {
                             val savedUri = FileUtils.saveToGallery(requireContext(), File(outputPath), "audio/mpeg")
                             if (savedUri != null) {
                                 SoundManager.playSuccess()
-                                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_182), Toast.LENGTH_LONG).show()
+                                com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                    requireContext(),
+                                    savedUri,
+                                    AppStrings.get(requireContext(), R.string.string_182),
+                                    "audio/mpeg"
+                                )
                             } else {
                                 SoundManager.playError()
                                 Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()
@@ -401,7 +411,12 @@ class AudioStudioFragment : Fragment() {
                             val savedUri = FileUtils.saveToGallery(requireContext(), File(outputPath), "audio/mpeg")
                             if (savedUri != null) {
                                 SoundManager.playSuccess()
-                                Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_182), Toast.LENGTH_LONG).show()
+                                com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                    requireContext(),
+                                    savedUri,
+                                    AppStrings.get(requireContext(), R.string.string_182),
+                                    "audio/mpeg"
+                                )
                             } else {
                                 SoundManager.playError()
                                 Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_183), Toast.LENGTH_LONG).show()

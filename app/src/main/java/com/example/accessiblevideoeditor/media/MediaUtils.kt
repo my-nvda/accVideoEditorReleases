@@ -145,6 +145,28 @@ object MediaUtils {
     }
 
     /**
+     * Copies a URI to a permanent projects directory so we preserve access permanently.
+     */
+    fun copyUriToProjectsDir(context: Context, uri: Uri, destFileName: String): File? {
+        try {
+            val projectsDir = File(context.filesDir, "projects")
+            if (!projectsDir.exists()) {
+                projectsDir.mkdirs()
+            }
+            val destFile = File(projectsDir, destFileName)
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                destFile.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            return destFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
+
+    /**
      * Replaces the extension of a file path with .mp4
      */
     fun replaceExtensionWithMp4(path: String): String {

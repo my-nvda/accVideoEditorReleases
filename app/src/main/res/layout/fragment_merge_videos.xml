@@ -5,6 +5,10 @@
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
             <Button android:id="@+id/btnSelectVideos" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_54" android:minHeight="48dp" />
             <TextView android:id="@+id/tvSelectedCount" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:gravity="center" android:text="" android:visibility="gone" />
+            
+            <TextView android:id="@+id/tvVideosOrderHeader" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="ترتيب الفيديوهات المحددة:" android:textSize="16sp" android:textStyle="bold" android:visibility="gone" />
+            <LinearLayout android:id="@+id/layoutVideoList" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="8dp" />
+
             <TextView android:id="@+id/lblTransition" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/label_transition" android:textSize="16sp" android:textStyle="bold" android:labelFor="@id/spinnerTransition" />
             <Spinner android:id="@+id/spinnerTransition" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:contentDescription="@string/label_transition" />
             <Button android:id="@+id/btnApply" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/btn_apply" android:minHeight="48dp" />

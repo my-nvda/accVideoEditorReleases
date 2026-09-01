@@ -26,6 +26,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val allFeatures = setOf(
+        "btnAccessibleCamera",
         "btnVideoEditor",
         "btnImageEditor",
         "btnWatermark",
@@ -101,6 +102,7 @@ class HomeFragment : Fragment() {
         val context = context ?: return
         try {
             binding.btnVideoEditor.text = AppStrings.get(context, R.string.string_112)
+            binding.btnAccessibleCamera.text = AppStrings.get(context, R.string.btn_accessible_camera)
             binding.btnImageEditor.text = AppStrings.get(context, R.string.string_128)
             binding.btnWatermark.text = AppStrings.get(context, R.string.string_74)
             binding.btnCreateBlankImage.text = AppStrings.get(context, R.string.string_271)
@@ -168,6 +170,7 @@ class HomeFragment : Fragment() {
             }
             
             // Main Navigation clicks
+            binding.btnAccessibleCamera.setOnClickListener { handleFeatureClick("btnAccessibleCamera", R.id.action_homeFragment_to_accessibleCameraFragment, it) }
             binding.btnVideoEditor.setOnClickListener { handleFeatureClick("btnVideoEditor", R.id.action_homeFragment_to_videoEditorFragment, it) }
             binding.btnVideoTrimmer.setOnClickListener { handleFeatureClick("btnVideoTrimmer", R.id.action_homeFragment_to_videoTrimmerFragment, it) }
             binding.btnSmartCut.setOnClickListener { handleFeatureClick("btnSmartCut", R.id.action_homeFragment_to_smartCutFragment, it) }
@@ -208,6 +211,7 @@ class HomeFragment : Fragment() {
 
             // Bind long clicks for favorites selection
             val mainButtons = listOf(
+                binding.btnAccessibleCamera to "btnAccessibleCamera",
                 binding.btnVideoEditor to "btnVideoEditor",
                 binding.btnImageEditor to "btnImageEditor",
                 binding.btnWatermark to "btnWatermark",
@@ -248,6 +252,7 @@ class HomeFragment : Fragment() {
             }
 
             updateFavoritesGrid()
+            checkForProjectRecovery()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -268,9 +273,7 @@ class HomeFragment : Fragment() {
                         return@withContext
                     }
 
-                    if (result.pendingDownloads.isNotEmpty()) {
-                        Toast.makeText(currentContext, AppStrings.get(currentContext, R.string.msg_new_features_download), Toast.LENGTH_LONG).show()
-                    }
+                    // Pending downloads toast removed at startup
 
                     if (result.isSuccess) {
                         enabledFeatures.clear()
@@ -326,6 +329,7 @@ class HomeFragment : Fragment() {
 
     private fun getFeatureStringRes(featureId: String): Int {
         return when (featureId) {
+            "btnAccessibleCamera" -> R.string.btn_accessible_camera
             "btnVideoEditor" -> R.string.string_112
             "btnImageEditor" -> R.string.string_128
             "btnWatermark" -> R.string.string_74
@@ -363,6 +367,7 @@ class HomeFragment : Fragment() {
 
     private fun getFeatureActionId(featureId: String): Int {
         return when (featureId) {
+            "btnAccessibleCamera" -> R.id.action_homeFragment_to_accessibleCameraFragment
             "btnVideoEditor" -> R.id.action_homeFragment_to_videoEditorFragment
             "btnVideoTrimmer" -> R.id.action_homeFragment_to_videoTrimmerFragment
             "btnSmartCut" -> R.id.action_homeFragment_to_smartCutFragment
@@ -489,5 +494,43 @@ class HomeFragment : Fragment() {
                 CloudConfigManager.markAnnouncementAsShown(context, ann.id)
             }
             .show()
+    }
+
+    private fun checkForProjectRecovery() {
+        val currentContext = context ?: return
+        val prefs = currentContext.getSharedPreferences("CameraPrefs", android.content.Context.MODE_PRIVATE)
+        val cleanExit = prefs.getBoolean("last_project_clean_exit", true)
+        val lastProjectId = prefs.getString("last_open_project_id", null)
+
+        if (!cleanExit && !lastProjectId.isNullOrBlank()) {
+            val proj = com.example.accessiblevideoeditor.data.UnifiedProjectManager.getProject(currentContext, lastProjectId)
+            if (proj != null) {
+                androidx.appcompat.app.AlertDialog.Builder(currentContext)
+                    .setTitle("استعادة المشروع 🛠️")
+                    .setMessage("لقد تم إغلاق التطبيق فجأة أثناء تعديل المشروع: '${proj.name}'. هل ترغب في استعادة حالة المشروع واستكمال العمل عليه؟")
+                    .setPositiveButton("نعم، استعادة") { dialog, _ ->
+                        dialog.dismiss()
+                        prefs.edit().putBoolean("last_project_clean_exit", true).apply()
+                        val bundle = android.os.Bundle().apply {
+                            putString("projectId", lastProjectId)
+                        }
+                        try {
+                            findNavController().navigate(R.id.action_homeFragment_to_unifiedWorkspaceFragment, bundle)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    .setNegativeButton("لا، ابدأ من جديد") { dialog, _ ->
+                        dialog.dismiss()
+                        prefs.edit().apply {
+                            putBoolean("last_project_clean_exit", true)
+                            putString("last_open_project_id", null)
+                            apply()
+                        }
+                    }
+                    .setCancelable(false)
+                    .show()
+            }
+        }
     }
 }

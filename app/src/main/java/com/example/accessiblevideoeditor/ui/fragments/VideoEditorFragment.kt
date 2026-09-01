@@ -38,6 +38,8 @@ class VideoEditorFragment : Fragment() {
     private var textOptions = TextRenderer.TextOptions(text = "")
     private val previewHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var previewRunnable: Runnable? = null
+    private var animValues: Array<String> = emptyArray()
+    private var shapeValues: Array<String> = emptyArray()
 
     private val videoPickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedVideoUri = uri
@@ -66,6 +68,8 @@ class VideoEditorFragment : Fragment() {
 
         exoPlayer = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.player = exoPlayer
+        binding.playerView.controllerShowTimeoutMs = 0
+        binding.playerView.showController()
 
         binding.btnSelectVideo.setOnClickListener {
             videoPickerLauncher.launch("video/*")
@@ -74,6 +78,19 @@ class VideoEditorFragment : Fragment() {
         TextCustomizationHelper(requireContext(), binding.textPanel) { newOptions ->
             textOptions = newOptions
         }
+
+        // Setup Video-Specific Animation & Shape Spinners
+        val textAnimsList = com.example.accessiblevideoeditor.ui.CloudConfigManager.getTextAnimations(requireContext())
+        val animOptions = textAnimsList.map { it.second }.toTypedArray()
+        animValues = textAnimsList.map { it.first }.toTypedArray()
+        binding.spAnimType.adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, animOptions)
+        binding.spAnimType.setSelection(0)
+
+        val shapeMasksList = com.example.accessiblevideoeditor.ui.CloudConfigManager.getShapeMasks(requireContext())
+        val shapeOptions = shapeMasksList.map { it.second }.toTypedArray()
+        shapeValues = shapeMasksList.map { it.first }.toTypedArray()
+        binding.spShapeMask.adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, shapeOptions)
+        binding.spShapeMask.setSelection(0)
 
         binding.btnSetStartTime.setOnClickListener {
             val player = exoPlayer
@@ -100,11 +117,8 @@ class VideoEditorFragment : Fragment() {
                 return@setOnClickListener
             }
             
-            val startSecs = parseTimeToSeconds(binding.etStartTime.text.toString())
-            val endSecs = parseTimeToSeconds(binding.etEndTime.text.toString())
-            
-            val startMs = startSecs * 1000L
-            val endMs = endSecs * 1000L
+            val startMs = parseTimeToMs(binding.etStartTime.text.toString())
+            val endMs = parseTimeToMs(binding.etEndTime.text.toString())
             
             val duration = player.duration
             val finalEndMs = if (endMs <= startMs) {
@@ -146,33 +160,52 @@ class VideoEditorFragment : Fragment() {
                 return@setOnClickListener
             }
             
-            processVideo(uri, startStr, endStr)
+            val selectedAnim = animValues[binding.spAnimType.selectedItemPosition]
+            val selectedShape = shapeValues[binding.spShapeMask.selectedItemPosition]
+            
+            com.example.accessiblevideoeditor.ui.ExportQualityDialogHelper.showQualityDialog(requireContext()) {
+                processVideo(uri, startStr, endStr, selectedAnim, selectedShape)
+            }
         }
     }
 
     private fun formatTime(ms: Long): String {
+        val millis = ms % 1000
         val seconds = (ms / 1000) % 60
         val minutes = (ms / (1000 * 60)) % 60
         val hours = (ms / (1000 * 60 * 60)) % 24
         return if (hours > 0) {
-            String.format(java.util.Locale.US, "%02d:%02d:%02d", hours, minutes, seconds)
+            String.format(java.util.Locale.US, "%02d:%02d:%02d.%03d", hours, minutes, seconds, millis)
         } else {
-            String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds)
+            String.format(java.util.Locale.US, "%02d:%02d.%03d", minutes, seconds, millis)
         }
     }
     
-    private fun parseTimeToSeconds(timeStr: String): Int {
-        if (timeStr.isBlank()) return 0
-        val parts = timeStr.split(":")
-        return when (parts.size) {
-            1 -> parts[0].trim().toIntOrNull() ?: 0
-            2 -> (parts[0].trim().toIntOrNull() ?: 0) * 60 + (parts[1].trim().toIntOrNull() ?: 0)
-            3 -> (parts[0].trim().toIntOrNull() ?: 0) * 3600 + (parts[1].trim().toIntOrNull() ?: 0) * 60 + (parts[2].trim().toIntOrNull() ?: 0)
-            else -> 0
+    private fun parseTimeToMs(timeStr: String): Long {
+        if (timeStr.isBlank()) return 0L
+        try {
+            val dotParts = timeStr.split(".")
+            val baseTime = dotParts[0].trim()
+            val msPart = if (dotParts.size > 1) dotParts[1].trim().padEnd(3, '0').take(3).toLongOrNull() ?: 0L else 0L
+            
+            val parts = baseTime.split(":")
+            val baseMs = when (parts.size) {
+                1 -> (parts[0].trim().toLongOrNull() ?: 0L) * 1000L
+                2 -> ((parts[0].trim().toLongOrNull() ?: 0L) * 60 + (parts[1].trim().toLongOrNull() ?: 0L)) * 1000L
+                3 -> ((parts[0].trim().toLongOrNull() ?: 0L) * 3600 + (parts[1].trim().toLongOrNull() ?: 0L) * 60 + (parts[2].trim().toLongOrNull() ?: 0L)) * 1000L
+                else -> 0L
+            }
+            return baseMs + msPart
+        } catch (_: Exception) {
+            return 0L
         }
     }
 
-    private fun processVideo(uri: Uri, startStr: String, endStr: String) {
+    private fun parseTimeToSecondsDouble(timeStr: String): Double {
+        return parseTimeToMs(timeStr) / 1000.0
+    }
+
+    private fun processVideo(uri: Uri, startStr: String, endStr: String, animationType: String, maskPreset: String) {
         SoundManager.playProcessing()
         val processMsg = com.example.accessiblevideoeditor.ui.AppStrings.get(requireContext(), R.string.string_28).replace(" %1\$s%%", "")
         ProcessingManager.startProcessing(processMsg)
@@ -193,8 +226,8 @@ class VideoEditorFragment : Fragment() {
                     TextRenderer.createOverlayPng(width, height, textOptions, overlayFile)
                     
                     // 4. Parse Times robustly
-                    val startSecs = parseTimeToSeconds(startStr)
-                    val endSecs = parseTimeToSeconds(endStr)
+                    val startSecs = parseTimeToSecondsDouble(startStr)
+                    val endSecs = parseTimeToSecondsDouble(endStr)
                     
                     // 5. Process with FFmpeg
                     val outputFile = File(requireContext().cacheDir, "output_video_${System.currentTimeMillis()}.mp4")
@@ -204,7 +237,9 @@ class VideoEditorFragment : Fragment() {
                         overlayPngPath = overlayFile.absolutePath,
                         startTimeInSeconds = startSecs,
                         endTimeInSeconds = endSecs,
-                        outputPath = outputFile.absolutePath
+                        outputPath = outputFile.absolutePath,
+                        animationType = animationType,
+                        maskPreset = maskPreset
                     ) { currentProgress ->
                         ProcessingManager.updateProgress(currentProgress / 100f)
                     }
@@ -241,6 +276,18 @@ class VideoEditorFragment : Fragment() {
             } finally {
                 ProcessingManager.stopProcessing()
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ProcessingManager.sharedMediaUri?.let { uri ->
+            selectedVideoUri = uri
+            ProcessingManager.sharedMediaUri = null
+            val mediaItem = MediaItem.fromUri(uri)
+            exoPlayer?.setMediaItem(mediaItem)
+            exoPlayer?.prepare()
+            exoPlayer?.play()
         }
     }
 

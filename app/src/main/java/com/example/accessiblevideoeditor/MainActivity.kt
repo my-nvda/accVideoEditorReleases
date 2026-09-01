@@ -72,8 +72,7 @@ class MainActivity : AppCompatActivity() {
     } catch (_: Throwable) {}
     try { ProcessingManager.init(this) } catch (_: Throwable) {}
 
-    // Disable screen sleep
-    window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    // Keep screen on is managed dynamically during active processing
 
     // Cleanup old update APK if it exists
     try {
@@ -309,6 +308,7 @@ class MainActivity : AppCompatActivity() {
     lifecycleScope.launch {
         ProcessingManager.state.collectLatest { state ->
             if (state.isProcessing) {
+                window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 overlay.visibility = View.VISIBLE
                 // Block screen reader from reaching content behind overlay
                 navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
@@ -336,11 +336,16 @@ class MainActivity : AppCompatActivity() {
 
                   // Send accessibility focus to the overlay title only once at startup
                   if (!wasProcessing) {
-                      tvTitle.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                      if (com.example.accessiblevideoeditor.ui.AccessibilityUtils.isAccessibilityEnabled(this@MainActivity)) {
+                          try {
+                              tvTitle.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                          } catch (_: Exception) {}
+                      }
                       tvTitle.requestFocus()
                       wasProcessing = true
                   }
               } else {
+                  window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                   overlay.visibility = View.GONE
                   // Restore screen reader access to content behind overlay
                   navHost.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
@@ -390,11 +395,83 @@ class MainActivity : AppCompatActivity() {
       if (navController != null) {
           try {
               if (mimeType.startsWith("video/")) {
-                  navController.navigate(R.id.videoEditorFragment)
+                  val options = arrayOf(
+                      "الكتابة والتعديل على الفيديو",
+                      "قص وتقصير الفيديو",
+                      "ضغط وتقليل حجم الفيديو",
+                      "استخراج الصوت من الفيديو",
+                      "عزل وتقليل الضوضاء",
+                      "تحويل الكلام إلى نص مكتوب"
+                  )
+                  val destinationIds = arrayOf(
+                      R.id.videoEditorFragment,
+                      R.id.videoTrimmerFragment,
+                      R.id.compressVideoFragment,
+                      R.id.extractAudioFragment,
+                      R.id.noiseReductionFragment,
+                      R.id.sttFragment
+                  )
+                  com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                      .setTitle("اختر العملية للفيديو المشترك")
+                      .setItems(options) { _, which ->
+                          try {
+                              navController.navigate(destinationIds[which])
+                          } catch (e: Exception) {
+                              e.printStackTrace()
+                          }
+                      }
+                      .setNegativeButton("إلغاء", null)
+                      .show()
               } else if (mimeType.startsWith("audio/")) {
-                  navController.navigate(R.id.audioEditorFragment)
+                  val options = arrayOf(
+                      "قص وتعديل الصوت (استوديو الصوت)",
+                      "تضخيم ورفع مستوى الصوت",
+                      "تطبيع وعزل الصوت",
+                      "فصل المسارات الصوتية",
+                      "عزل وتقليل الضوضاء",
+                      "تحويل الكلام إلى نص مكتوب"
+                  )
+                  val destinationIds = arrayOf(
+                      R.id.audioEditorFragment,
+                      R.id.boostVolumeFragment,
+                      R.id.audioNormalizationFragment,
+                      R.id.audioStemSeparatorFragment,
+                      R.id.noiseReductionFragment,
+                      R.id.sttFragment
+                  )
+                  com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                      .setTitle("اختر العملية للصوت المشترك")
+                      .setItems(options) { _, which ->
+                          try {
+                              navController.navigate(destinationIds[which])
+                          } catch (e: Exception) {
+                              e.printStackTrace()
+                          }
+                      }
+                      .setNegativeButton("إلغاء", null)
+                      .show()
               } else if (mimeType.startsWith("image/")) {
-                  navController.navigate(R.id.imageEditorFragment)
+                  val options = arrayOf(
+                      "تعديل الصورة وإضافة النصوص",
+                      "تفريغ الخلفية الكروما",
+                      "إنشاء صور مفرغة"
+                  )
+                  val destinationIds = arrayOf(
+                      R.id.imageEditorFragment,
+                      R.id.imageChromaFragment,
+                      R.id.createBlankImageFragment
+                  )
+                  com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                      .setTitle("اختر العملية للصورة المشتركة")
+                      .setItems(options) { _, which ->
+                          try {
+                              navController.navigate(destinationIds[which])
+                          } catch (e: Exception) {
+                              e.printStackTrace()
+                          }
+                      }
+                      .setNegativeButton("إلغاء", null)
+                      .show()
               }
           } catch (e: Exception) {
               e.printStackTrace()

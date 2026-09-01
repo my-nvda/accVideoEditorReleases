@@ -5,11 +5,188 @@
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
             <Button android:id="@+id/btnSelectMedia" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_47" android:minHeight="48dp" />
             <TextView android:id="@+id/tvSelectedFile" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:visibility="gone" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvAiRecommendation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="#F0F4C3"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="توصية الذكاء الاصطناعي للفحص:"
+                        android:textSize="13sp"
+                        android:textColor="#33691E"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvAiRecommendationText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text=""
+                        android:textSize="14sp"
+                        android:textColor="#1B5E20" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <TextView android:id="@+id/lblNoiseMode" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/label_noise_mode" android:textSize="16sp" android:textStyle="bold" android:labelFor="@id/spinnerNoiseMode" />
             <Spinner android:id="@+id/spinnerNoiseMode" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:contentDescription="@string/label_noise_mode" />
+
+            <TextView android:id="@+id/lblPresets" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="القوالب التلقائية الجاهزة (Presets)" android:textSize="16sp" android:textStyle="bold" android:labelFor="@id/spinnerPresets" />
+            <Spinner android:id="@+id/spinnerPresets" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:contentDescription="القوالب التلقائية الجاهزة" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvModelDownload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="12dp"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:id="@+id/tvModelStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_model_status_checking"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDownloadModel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/btn_download_cleanunet_model"
+                        android:visibility="gone"
+                        android:minHeight="48dp" />
+                    <ProgressBar
+                        android:id="@+id/pbModelDownload"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:max="100"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             <TextView android:id="@+id/lblNoiseLevel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/label_noise_level" android:textSize="16sp" android:textStyle="bold" android:labelFor="@id/spinnerNoiseLevel" />
             <Spinner android:id="@+id/spinnerNoiseLevel" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:contentDescription="@string/label_noise_level" />
-            <Button android:id="@+id/btnApply" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:text="@string/btn_apply" android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="خيارات تنقية الصوت الإضافية"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchEqBoost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="تعزيز نبرة وجودة الصوت (EQ Boost)"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="يعوض الترددات الحيوية المفقودة بعد التصفية لتوضيح نبرة المتحدث الطبيعية."
+                        android:textSize="12sp"
+                        android:textColor="#666666" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchMultiBand"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="التصفية متعددة النطاقات (Multi-Band)"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:text="تصفية الترددات كل على حدة لحماية خامة الصوت الطبيعية تماماً من التشوه. (متاح في نمط DSP المحرك المحلي، ويستغرق وقتاً أطول)."
+                        android:textSize="12sp"
+                        android:textColor="#666666" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchHarmonicExciter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="توليد الترددات المفقودة (Harmonic Exciter)"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:text="يولّد ترددات توافقية جديدة لم تكن موجودة لإعادة اللمعان والحيوية للصوت المكتوم. تقنية استوديو احترافية."
+                        android:textSize="12sp"
+                        android:textColor="#666666" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchDeReverb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="إلغاء صدى الغرفة (Room De-reverb)"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:text="تطبيق بوابات كتم وبتر لصدى الغرفة والترددات المنعكسة في القاعات الواسعة لتقريب الصوت البشري."
+                        android:textSize="12sp"
+                        android:textColor="#666666" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Button
+                android:id="@+id/btnPreview"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="استماع لمعاينة سريعة (20 ثانية)"
+                android:minHeight="48dp" />
+
+            <Button android:id="@+id/btnApply" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/btn_apply" android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

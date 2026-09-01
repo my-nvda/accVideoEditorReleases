@@ -220,6 +220,28 @@ object FFmpegProcessor {
         onProgress: ((Int) -> Unit)? = null
     ): Boolean = kotlinx.coroutines.suspendCancellableCoroutine { continuation ->
         val finalCommandArgs = injectQualitySettings(commandArgs)
+        
+        // Storage space check
+        val context = ProcessingManager.appContext
+        if (context != null) {
+            var isSpaceOk = true
+            if (!sourceVideo.isNullOrBlank()) {
+                val file = java.io.File(sourceVideo)
+                if (file.exists()) {
+                    isSpaceOk = com.example.accessiblevideoeditor.utils.StorageUtils.checkSpaceForInputFile(context, file, 1.5)
+                }
+            } else {
+                isSpaceOk = com.example.accessiblevideoeditor.utils.StorageUtils.isSpaceAvailable(context, 150 * 1024 * 1024L)
+            }
+            if (!isSpaceOk) {
+                com.example.accessiblevideoeditor.utils.StorageUtils.showLowSpaceWarning(context)
+                if (continuation.isActive) {
+                    continuation.resumeWith(Result.success(false))
+                }
+                return@suspendCancellableCoroutine
+            }
+        }
+
         var durationMs = totalDurationMs ?: getMediaDurationMs(sourceVideo)
         val startTime = System.currentTimeMillis()
         var maxPercentage = 0f
@@ -356,20 +378,73 @@ object FFmpegProcessor {
     suspend fun addTextOverlay(
         sourceVideo: String,
         overlayPngPath: String,
-        startTimeInSeconds: Int,
-        endTimeInSeconds: Int,
+        startTimeInSeconds: Double,
+        endTimeInSeconds: Double,
         outputPath: String,
+        animationType: String = "none",
+        maskPreset: String = "none",
         onProgress: (Int) -> Unit = {}
     ): String = withContext(Dispatchers.IO) {
         
-        // 1. Get Video Duration
+        // 1. Get Video Duration and dimensions
         val mediaInfo = com.arthenica.ffmpegkit.FFprobeKit.getMediaInformation(sourceVideo)
         val durationString = mediaInfo.mediaInformation?.duration
         val durationMs = (durationString?.toFloatOrNull() ?: 1f) * 1000f
 
-        // 2. Build Command
-        // 2. Build Command Array to avoid FFmpegKit string parsing issues with quotes and commas
-        val filterComplex = "[0:v][1:v]overlay=enable='between(t,$startTimeInSeconds,$endTimeInSeconds)':shortest=1[out]"
+        val (width, height) = getVideoDimensions(sourceVideo)
+
+        // 2. Build Filter Complex Chain
+        val filterChains = mutableListOf<String>()
+        var lastStreamName = "[0:v]"
+
+        // A. Apply Mask Preset (الأشكال)
+        when (maskPreset) {
+            "top_bottom_cinematic" -> {
+                val nextStream = "[vmask]"
+                val cropH = (height * 0.8f).toInt()
+                filterChains.add("$lastStreamName crop=w=$width:h=$cropH:x=0:y=(in_h-$cropH)/2,pad=w=$width:h=$height:x=0:y=(oh-ih)/2:color=black$nextStream")
+                lastStreamName = nextStream
+            }
+            "circle_center" -> {
+                val nextStream = "[vmask]"
+                filterChains.add("$lastStreamName vignette=angle=0.5$nextStream")
+                lastStreamName = nextStream
+            }
+        }
+
+        // B. Apply Text Overlay with Animation (تأثير النصوص)
+        val finalStartSec = maxOf(0.0, startTimeInSeconds)
+        val finalEndSec = maxOf(0.1, endTimeInSeconds)
+        val nextStream = "[out]"
+
+        var currentOverlayInput = "[1:v]"
+        val overlayFilter = when (animationType) {
+            "fade_in" -> {
+                val prepStream = "[fadev]"
+                filterChains.add("[1:v]fade=t=in:start_time=$finalStartSec:duration=0.5:alpha=1$prepStream")
+                currentOverlayInput = prepStream
+                "overlay=enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+            }
+            "zoom_in" -> {
+                val prepStream = "[zoomv]"
+                filterChains.add("[1:v]scale=eval=frame:w='iw*min(1,max(0,(t-$finalStartSec)/0.4))':h='ih*min(1,max(0,(t-$finalStartSec)/0.4))'$prepStream")
+                currentOverlayInput = prepStream
+                "overlay=x='(W-w)/2':y='(H-h)/2':enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+            }
+            "typewriter" -> {
+                // Slide right to avoid crop dynamic-size crash and emulate typewriter/slide transition
+                "overlay=x='if(lt(t,$finalStartSec+0.5), (t-$finalStartSec)*W/0.5 - W, 0)':enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+            }
+            "slide_up" -> "overlay=y='if(lt(t,$finalStartSec+0.4), H-(t-$finalStartSec)*H/0.4, 0)':enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+            "slide_down" -> "overlay=y='if(lt(t,$finalStartSec+0.4), (t-$finalStartSec)*H/0.4 - H, 0)':enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+            "slide_left" -> "overlay=x='if(lt(t,$finalStartSec+0.4), W-(t-$finalStartSec)*W/0.4, 0)':enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+            "bounce_in" -> "overlay=y='if(lt(t,$finalStartSec+0.5), (H - (t-$finalStartSec)*H/0.5 + sin((t-$finalStartSec)*15)*30), 0)':enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+            "mask_reveal" -> "overlay=y='if(lt(t,$finalStartSec+0.4), H*0.3-(t-$finalStartSec)*H*0.3/0.4, 0)':enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+            else -> "overlay=enable='between(t,$finalStartSec,$finalEndSec)':shortest=1"
+        }
+
+        filterChains.add("$lastStreamName$currentOverlayInput$overlayFilter$nextStream")
+        val filterComplex = filterChains.joinToString("; ")
         
         val commandArgs = arrayOf(
             "-y",
@@ -417,7 +492,7 @@ object FFmpegProcessor {
     }
 
     /**
-     * Trims a video without re-encoding.
+     * Trims a video with re-encoding to respect quality and ensure compatibility.
      */
     suspend fun trimVideo(
         sourceVideo: String,
@@ -425,7 +500,20 @@ object FFmpegProcessor {
         durationInSeconds: String,
         outputPath: String
     ): Boolean = withContext(Dispatchers.IO) {
-        val commandArgs = arrayOf("-y", "-ss", startTimeInSeconds, "-i", sourceVideo, "-t", durationInSeconds, "-c", "copy", outputPath)
+        val commandArgs = arrayOf(
+            "-y",
+            "-ss", startTimeInSeconds,
+            "-i", sourceVideo,
+            "-t", durationInSeconds,
+            "-map", "0:v",
+            "-map", "0:a?",
+            "-c:v", "libx264",
+            "-preset", "ultrafast",
+            "-crf", "23",
+            "-c:a", "aac",
+            "-b:a", "128k",
+            outputPath
+        )
         return@withContext executeWithProgress(commandArgs, sourceVideo)
     }
 
@@ -488,8 +576,21 @@ object FFmpegProcessor {
     /**
      * Extracts audio from video.
      */
-    suspend fun extractAudio(sourceVideo: String, outputPath: String, format: String = "m4a"): Boolean = withContext(Dispatchers.IO) {
-        val commandArgs = mutableListOf("-y", "-i", sourceVideo, "-vn")
+    suspend fun extractAudio(
+        sourceVideo: String,
+        outputPath: String,
+        format: String = "m4a",
+        startMs: Long = 0L,
+        endMs: Long = 0L
+    ): Boolean = withContext(Dispatchers.IO) {
+        val commandArgs = mutableListOf("-y")
+        if (startMs > 0L) {
+            commandArgs.addAll(arrayOf("-ss", (startMs / 1000.0).toString()))
+        }
+        if (endMs > startMs && endMs > 0L) {
+            commandArgs.addAll(arrayOf("-to", (endMs / 1000.0).toString()))
+        }
+        commandArgs.addAll(arrayOf("-i", sourceVideo, "-vn"))
         
         when (format.lowercase()) {
             "mp3" -> commandArgs.addAll(arrayOf("-c:a", "libmp3lame", "-q:a", "0"))
@@ -522,18 +623,28 @@ object FFmpegProcessor {
     /**
      * Extracts audio to WAV specifically for Speech-To-Text (16kHz, mono, PCM s16le).
      */
-    suspend fun extractAudioToWav(sourceVideo: String, outputPath: String): Boolean = withContext(Dispatchers.IO) {
-        val commandArgs = arrayOf(
-            "-y",
-            "-threads", "0",
+    suspend fun extractAudioToWav(
+        sourceVideo: String,
+        outputPath: String,
+        startMs: Long = 0L,
+        endMs: Long = 0L
+    ): Boolean = withContext(Dispatchers.IO) {
+        val commandArgs = mutableListOf("-y", "-threads", "0")
+        if (startMs > 0L) {
+            commandArgs.addAll(arrayOf("-ss", (startMs / 1000.0).toString()))
+        }
+        if (endMs > startMs && endMs > 0L) {
+            commandArgs.addAll(arrayOf("-to", (endMs / 1000.0).toString()))
+        }
+        commandArgs.addAll(arrayOf(
             "-i", sourceVideo,
             "-vn",
             "-acodec", "pcm_s16le",
             "-ar", "16000",
             "-ac", "1",
             outputPath
-        )
-        executeWithProgress(commandArgs, sourceVideo)
+        ))
+        executeWithProgress(commandArgs.toTypedArray(), sourceVideo)
     }
 
     /**

@@ -1,0 +1,35 @@
+string_240: Operation completed successfully
+string_241: An error occurred during video processing
+string_242: New update available
+string_243: Version %1$s is available for download.
+string_244: Tap to update now
+string_245: App Translation
+string_246: Go back
+string_247: Import
+string_248: Save and Apply
+string_249: Export
+string_250: Select target translation language
+string_251: Translate to: %1$s ▼
+string_252: Original text:
+string_253: Original text is: %1$s
+string_254: Input field for translating text: %1$s
+string_255: Translation
+string_256: Saved and applied successfully
+string_257: An error occurred while saving
+string_258: Translation exported successfully
+string_259: Failed to export translation
+string_260: Translation imported and applied
+string_261: Invalid file. Does not contain translation texts.
+string_262: An error occurred during import
+string_263: Section %1$s
+string_264: General texts
+string_265: Settings
+string_266: Tools and Media
+string_267: Video Player
+string_268: Help and About
+string_269: General Dialogs
+string_270: Create Blank Image
+string_rn_v2_4_4: v2.4.4\n- Added full localization support including Hebrew.\n- Introduced \'What\'s New\' screen in the Help section.\n- Revamped Volunteer Translation screen with dynamic strings and progress indicators.\n- Extracted remaining hardcoded strings for complete translation.
+string_rn_v2_4_3: v2.4.3\n- Fixed sharing screen issues and incorrect titles.\n- Resolved mojibake text corruption in settings.
+string_rn_v2_4_2: v2.4.2\n- Improved background audio extraction and video processing.\n- Enhanced Gemini AI error handling.
+string_rn_v2_4_5: v2.4.5\n- Unified progress windows across all screens for a consistent experience.\n- Fixed crashes when merging videos.\n- Enhanced AI Video Analysis by sending the complete video file directly.\n- Achieved 100% translation coverage for 11 languages.

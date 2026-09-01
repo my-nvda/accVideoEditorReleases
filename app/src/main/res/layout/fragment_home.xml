@@ -7,6 +7,8 @@
             <GridLayout android:id="@+id/gridFavorites" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:useDefaultMargins="true" android:alignmentMode="alignBounds" android:layout_marginBottom="16dp" android:visibility="gone" />
             <TextView android:id="@+id/tvAllFeaturesHeader" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="جميع الأدوات 🛠️" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="8dp" android:textColor="?android:attr/textColorPrimary" />
             <GridLayout android:id="@+id/gridLayoutAll" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:useDefaultMargins="true" android:alignmentMode="alignBounds">
+                <Button android:id="@+id/btnProjectsDashboard" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnAccessibleCamera" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnVideoEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnImageEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnWatermark" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
@@ -38,9 +40,8 @@
                 <Button android:id="@+id/btnCinematicLutShaders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnAiSceneAudioDescription" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnSubtitlesOcrSrt" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
-                <Button android:id="@+id/btnHistory" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
-                <Button android:id="@+id/btnProjectsDashboard" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnImageChroma" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnHistory" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
             </GridLayout>
         </LinearLayout>
     </ScrollView>

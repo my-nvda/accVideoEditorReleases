@@ -50,7 +50,7 @@ class SettingsFragment : Fragment() {
         binding.etGeminiApiKey.setText(SettingsManager.geminiApiKey)
 
         // Setup AI Model Spinner
-        val models = listOf("gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-pro", "gemini-3.0-flash", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash")
+        val models = com.example.accessiblevideoeditor.ui.CloudConfigManager.getGeminiModels(requireContext())
         val modelAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, models)
         modelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spGeminiModel.adapter = modelAdapter
@@ -58,11 +58,12 @@ class SettingsFragment : Fragment() {
         if (modelIndex >= 0) binding.spGeminiModel.setSelection(modelIndex)
 
         // Setup Language Spinner
-        val languages = LanguageManager.supportedLanguages.map { it.second }
+        val supportedLangs = com.example.accessiblevideoeditor.ui.CloudConfigManager.getSupportedLanguages(requireContext())
+        val languages = supportedLangs.map { it.second }
         val langAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, languages)
         langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spLanguage.adapter = langAdapter
-        val currentLangIndex = LanguageManager.supportedLanguages.indexOfFirst { it.first == LanguageManager.getCurrentLanguageCode(requireContext()) }
+        val currentLangIndex = supportedLangs.indexOfFirst { it.first == LanguageManager.getCurrentLanguageCode(requireContext()) }
         if (currentLangIndex >= 0) binding.spLanguage.setSelection(currentLangIndex)
 
         // Setup Export Quality Spinner
@@ -110,7 +111,7 @@ class SettingsFragment : Fragment() {
 
         binding.spLanguage.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedCode = LanguageManager.supportedLanguages[position].first
+                val selectedCode = supportedLangs[position].first
                 val safeContext = context ?: return
                 if (selectedCode != LanguageManager.getCurrentLanguageCode(safeContext)) {
                     LanguageManager.setLanguage(safeContext, selectedCode)
@@ -243,23 +244,23 @@ class SettingsFragment : Fragment() {
         
         binding.btnEmail.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:support@accessiblevideoeditor.com")
+                data = Uri.parse("mailto:salahfox29@gmail.com")
             }
             startActivity(Intent.createChooser(intent, "Email"))
         }
 
         binding.btnWhatsApp.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/1234567890"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/201010810808"))
             startActivity(intent)
         }
 
         binding.btnTwitter.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/YourAppHandler"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://x.com/MyNvda"))
             startActivity(intent)
         }
 
         binding.btnFacebook.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://facebook.com/YourAppPage"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://facebook.com/my.nvda"))
             startActivity(intent)
         }
 

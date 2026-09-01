@@ -13,4 +13,8 @@
         android:id="@+id/action_export"
         android:title="@string/string_249"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_sync"
+        android:title="@string/action_sync_cloud_from_local"
+        app:showAsAction="never" />
 </menu>

@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.accessiblevideoeditor.databinding.FragmentAudioStemSeparatorBinding
 import com.example.accessiblevideoeditor.ui.CloudConfigManager
+import com.example.accessiblevideoeditor.ui.ProcessingManager
 import com.example.accessiblevideoeditor.updater.BeepUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,7 +73,8 @@ class AudioStemSeparatorFragment : Fragment() {
                 }
             }
 
-            if (selectedAudioUri == null) {
+            val inputUri = selectedAudioUri
+            if (inputUri == null) {
                 Toast.makeText(currentContext, getString(R.string.msg_please_select_audio), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -80,96 +82,185 @@ class AudioStemSeparatorFragment : Fragment() {
             val separateVocals = binding.rbSeparateVocals.isChecked
             val modeStr = if (separateVocals) getString(R.string.label_vocals_arabic) else getString(R.string.label_instruments_arabic)
             
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
-                    if (isLocal) getString(R.string.msg_processing_local, modeStr)
-                    else getString(R.string.msg_processing_cloud, modeStr)
-                )
-                com.example.accessiblevideoeditor.ui.ProcessingManager.updateJob(coroutineContext[kotlinx.coroutines.Job])
-                
-                val inputUri = selectedAudioUri ?: return@launch
-                val outputPath = currentContext.cacheDir.absolutePath + "/separated_out_${System.currentTimeMillis()}.mp3"
-                
-                val success = if (isLocal) {
-                    withContext(Dispatchers.IO) {
-                        try {
-                            val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "sep_input")
-                            if (tempInput != null && tempInput.exists()) {
-                                // Advanced high-fidelity audio engineering filters:
-                                // Vocals: Natural speech range (100Hz-8000Hz), FFT denoiser, and dynamic noise gate to mute music during silence.
-                                // Instruments: Phase cancellation for stereo, fallback to multi-band formant notch filters to suppress voice formants (-30dB).
-                                val channels = getAudioChannelCount(currentContext, inputUri)
-                                val filter = if (separateVocals) {
-                                    "highpass=f=100,lowpass=f=8000,afftdn,agate=threshold=-30dB:ratio=2:range=-24dB"
+            val mimeType = currentContext.contentResolver.getType(inputUri)
+            val isVideo = mimeType?.startsWith("video/") == true 
+                         || inputUri.path?.endsWith(".mp4", ignoreCase = true) == true
+                         || inputUri.path?.endsWith(".mkv", ignoreCase = true) == true
+                         || inputUri.path?.endsWith(".3gp", ignoreCase = true) == true
+
+            startSeparationProcess(isVideo, isLocal, separateVocals, modeStr)
+        }
+    }
+
+    private fun startSeparationProcess(isVideo: Boolean, isLocal: Boolean, separateVocals: Boolean, modeStr: String) {
+        val currentContext = context ?: return
+        if (isVideo) {
+            val options = arrayOf("ملف صوتي (MP3)", "فيديو جديد بالصوت المعدل (MP4)")
+            AlertDialog.Builder(currentContext)
+                .setTitle("اختر نوع الملف الناتج")
+                .setItems(options) { _, which ->
+                    val exportAsVideo = (which == 1)
+                    executeSeparation(isLocal, separateVocals, modeStr, exportAsVideo)
+                }
+                .setNegativeButton("إلغاء", null)
+                .show()
+        } else {
+            executeSeparation(isLocal, separateVocals, modeStr, false)
+        }
+    }
+
+    private fun executeSeparation(isLocal: Boolean, separateVocals: Boolean, modeStr: String, exportAsVideo: Boolean) {
+        val currentContext = context ?: return
+        val inputUri = selectedAudioUri ?: return
+        
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            com.example.accessiblevideoeditor.ui.ProcessingManager.startProcessing(
+                if (isLocal) getString(R.string.msg_processing_local, modeStr)
+                else getString(R.string.msg_processing_cloud, modeStr)
+            )
+            com.example.accessiblevideoeditor.ui.ProcessingManager.updateJob(coroutineContext[kotlinx.coroutines.Job])
+            
+            val tempAudioOut = currentContext.cacheDir.absolutePath + "/separated_temp_${System.currentTimeMillis()}.mp3"
+            var savedUri: Uri? = null
+            
+            val success = if (isLocal) {
+                withContext(Dispatchers.IO) {
+                    try {
+                        val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "sep_input")
+                        if (tempInput != null && tempInput.exists()) {
+                            val channels = getAudioChannelCount(currentContext, inputUri)
+                            val filter = if (separateVocals) {
+                                "highpass=f=100,lowpass=f=8000,afftdn,agate=threshold=-30dB:ratio=2:range=-24dB"
+                            } else {
+                                if (channels > 1) {
+                                    "pan=stereo|c0=c0-c1|c1=c1-c0,bass=g=3"
+                                } else {
+                                    "bandreject=f=1000:width_type=h:w=800,bass=g=3"
+                                }
+                            }
+                            
+                            val command = arrayOf(
+                                "-y",
+                                "-i", tempInput.absolutePath,
+                                "-af", filter,
+                                "-c:a", "libmp3lame",
+                                "-q:a", "2",
+                                tempAudioOut
+                            )
+                            var res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
+                            if (!res) {
+                                val fallbackFilter = if (separateVocals) {
+                                    "highpass=f=120,lowpass=f=7000,afftdn"
                                 } else {
                                     if (channels > 1) {
-                                        "pan=stereo|c0=c0-c1|c1=c1-c0,bass=g=3"
+                                        "anequalizer=c0 f=500 w=400 g=-30|c0 f=2000 w=1500 g=-30|c1 f=500 w=400 g=-30|c1 f=2000 w=1500 g=-30"
                                     } else {
-                                        "bandreject=f=1000:width_type=h:w=800,bass=g=3"
+                                        "anequalizer=c0 f=500 w=400 g=-30|c0 f=2000 w=1500 g=-30"
                                     }
                                 }
-                                
-                                val command = arrayOf(
+                                val fallbackCommand = arrayOf(
                                     "-y",
                                     "-i", tempInput.absolutePath,
-                                    "-af", filter,
+                                    "-af", fallbackFilter,
                                     "-c:a", "libmp3lame",
                                     "-q:a", "2",
-                                    outputPath
+                                    tempAudioOut
                                 )
-                                var res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(command)
-                                if (!res) {
-                                    // Fallback filter using formants multi-band notch filters (works on Mono and Stereo)
-                                    val fallbackFilter = if (separateVocals) {
-                                        "highpass=f=120,lowpass=f=7000,afftdn"
-                                    } else {
-                                        if (channels > 1) {
-                                            "anequalizer=c0 f=500 w=400 g=-30|c0 f=2000 w=1500 g=-30|c1 f=500 w=400 g=-30|c1 f=2000 w=1500 g=-30"
-                                        } else {
-                                            "anequalizer=c0 f=500 w=400 g=-30|c0 f=2000 w=1500 g=-30"
-                                        }
-                                    }
-                                    val fallbackCommand = arrayOf(
+                                res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(fallbackCommand)
+                            }
+                            
+                            if (res) {
+                                if (exportAsVideo) {
+                                    val tempVideoOut = currentContext.cacheDir.absolutePath + "/sep_video_out_${System.currentTimeMillis()}.mp4"
+                                    val mergeCmd = arrayOf(
                                         "-y",
                                         "-i", tempInput.absolutePath,
-                                        "-af", fallbackFilter,
-                                        "-c:a", "libmp3lame",
-                                        "-q:a", "2",
-                                        outputPath
+                                        "-i", tempAudioOut,
+                                        "-map", "0:v",
+                                        "-map", "1:a",
+                                        "-c:v", "copy",
+                                        "-c:a", "aac",
+                                        "-shortest",
+                                        tempVideoOut
                                     )
-                                    res = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(fallbackCommand)
-                                }
-                                
-                                if (res) {
-                                    com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(outputPath), "audio/mp3")
-                                    true
+                                    val mergeSuccess = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(mergeCmd)
+                                    if (mergeSuccess) {
+                                        savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(tempVideoOut), "video/mp4")
+                                        true
+                                    } else {
+                                        false
+                                    }
                                 } else {
-                                    false
+                                    savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(tempAudioOut), "audio/mp3")
+                                    true
                                 }
                             } else {
                                 false
                             }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                        } else {
                             false
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        false
+                    }
+                }
+            } else {
+                val cloudSuccess = performCloudSeparation(currentContext, inputUri, separateVocals, tempAudioOut)
+                if (cloudSuccess) {
+                    if (exportAsVideo) {
+                        withContext(Dispatchers.IO) {
+                            try {
+                                val tempInput = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(currentContext, inputUri, "sep_input")
+                                if (tempInput != null && tempInput.exists()) {
+                                    val tempVideoOut = currentContext.cacheDir.absolutePath + "/sep_video_out_${System.currentTimeMillis()}.mp4"
+                                    val mergeCmd = arrayOf(
+                                        "-y",
+                                        "-i", tempInput.absolutePath,
+                                        "-i", tempAudioOut,
+                                        "-map", "0:v",
+                                        "-map", "1:a",
+                                        "-c:v", "copy",
+                                        "-c:a", "aac",
+                                        "-shortest",
+                                        tempVideoOut
+                                    )
+                                    val mergeSuccess = com.example.accessiblevideoeditor.media.FFmpegProcessor.executeWithProgress(mergeCmd)
+                                    if (mergeSuccess) {
+                                        savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(tempVideoOut), "video/mp4")
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                } else {
+                                    false
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                false
+                            }
+                        }
+                    } else {
+                        savedUri = com.example.accessiblevideoeditor.utils.FileUtils.saveToGallery(currentContext, java.io.File(tempAudioOut), "audio/mp3")
+                        true
                     }
                 } else {
-                    performCloudSeparation(currentContext, inputUri, separateVocals, outputPath)
+                    false
                 }
-                
-                com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
-                
-                if (success) {
-                    com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
-                    AlertDialog.Builder(currentContext)
-                        .setTitle(getString(R.string.msg_success_dialog_title))
-                        .setMessage(getString(R.string.msg_success_dialog_body, modeStr))
-                        .setPositiveButton(getString(R.string.btn_ok)) { d, _ -> d.dismiss() }
-                        .show()
-                } else {
-                    Toast.makeText(currentContext, getString(R.string.msg_failed_separation), Toast.LENGTH_SHORT).show()
-                }
+            }
+            
+            com.example.accessiblevideoeditor.ui.ProcessingManager.stopProcessing()
+            
+            if (success) {
+                com.example.accessiblevideoeditor.media.SoundManager.playSuccess()
+                com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                    currentContext,
+                    savedUri,
+                    getString(R.string.msg_success_dialog_body, modeStr),
+                    if (exportAsVideo) "video/mp4" else "audio/mp3"
+                )
+            } else {
+                Toast.makeText(currentContext, getString(R.string.msg_failed_separation), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -338,10 +429,11 @@ class AudioStemSeparatorFragment : Fragment() {
         binding.tvModelStatus.text = getString(R.string.msg_download_starting)
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            val dynamicUrl = com.example.accessiblevideoeditor.ui.CloudConfigManager.getAiModelDownloadInfo(currentContext, featureId).first
             val success = CloudConfigManager.downloadFeatureModel(
                 currentContext.applicationContext,
                 featureId,
-                downloadUrl
+                dynamicUrl
             ) { percent ->
                 if (_binding != null) {
                     binding.pbModelDownload.progress = percent
@@ -385,6 +477,15 @@ class AudioStemSeparatorFragment : Fragment() {
                 conn.readTimeout = 30000
                 conn.responseCode // Just trigger connection
             } catch (_: Exception) {}
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ProcessingManager.sharedMediaUri?.let { uri ->
+            selectedAudioUri = uri
+            ProcessingManager.sharedMediaUri = null
+            binding.tvSelectedAudio.text = getString(R.string.label_selected_file_path, uri.lastPathSegment ?: uri.toString())
         }
     }
 

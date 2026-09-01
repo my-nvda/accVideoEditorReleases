@@ -1,5 +1,6 @@
 package com.example.accessiblevideoeditor.ui.fragments
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -67,7 +68,11 @@ class UnifiedWorkspaceFragment : Fragment() {
         val currentContext = context ?: return@registerForActivityResult
         if (uri != null) {
             project?.let {
-                it.watermarkImagePath = uri.toString()
+                val ext = currentContext.contentResolver.getType(uri)?.split("/")?.lastOrNull() ?: "png"
+                val copiedFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToProjectsDir(
+                    currentContext, uri, "proj_watermark_${System.currentTimeMillis()}.$ext"
+                )
+                it.watermarkImagePath = copiedFile?.absolutePath ?: uri.toString()
                 it.watermarkEnabled = true
                 UnifiedProjectManager.saveProject(currentContext, it)
                 announceAccessibility("Watermark image selected successfully")
@@ -81,11 +86,12 @@ class UnifiedWorkspaceFragment : Fragment() {
         if (uri != null) {
             project?.let { proj ->
                 try {
-                    val tempFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToTempFile(
-                        currentContext, uri, "bg_image_${System.currentTimeMillis()}.png"
+                    val ext = currentContext.contentResolver.getType(uri)?.split("/")?.lastOrNull() ?: "png"
+                    val copiedFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToProjectsDir(
+                        currentContext, uri, "proj_bg_${System.currentTimeMillis()}.$ext"
                     )
-                    if (tempFile != null) {
-                        proj.backgroundRemovalCustomBgPath = tempFile.absolutePath
+                    if (copiedFile != null) {
+                        proj.backgroundRemovalCustomBgPath = copiedFile.absolutePath
                         UnifiedProjectManager.saveProject(currentContext, proj)
                         announceAccessibility("Background image chosen successfully")
                         android.widget.Toast.makeText(currentContext, "تم اختيار صورة الخلفية بنجاح", android.widget.Toast.LENGTH_SHORT).show()
@@ -124,6 +130,19 @@ class UnifiedWorkspaceFragment : Fragment() {
             return
         }
 
+        val prefs = currentContext.getSharedPreferences("CameraPrefs", Context.MODE_PRIVATE)
+        prefs.edit().apply {
+            putString("last_open_project_id", projectId)
+            putBoolean("last_project_clean_exit", false)
+            apply()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                saveAndExit()
+            }
+        })
+
         binding.topAppBar.title = project!!.name
         binding.topAppBar.setNavigationOnClickListener {
             saveAndExit()
@@ -132,6 +151,8 @@ class UnifiedWorkspaceFragment : Fragment() {
         // Initialize ExoPlayer
         exoPlayer = ExoPlayer.Builder(currentContext).build()
         binding.playerView.player = exoPlayer
+        binding.playerView.controllerShowTimeoutMs = 0
+        binding.playerView.showController()
 
         val videoUri = Uri.parse(project!!.videoPath)
         val mediaItem = MediaItem.fromUri(videoUri)
@@ -380,7 +401,7 @@ class UnifiedWorkspaceFragment : Fragment() {
                 showAddTextOverlayDialog { newText ->
                     proj.textOverlays.add(newText)
                     UnifiedProjectManager.saveProject(currentContext, proj)
-                    announceAccessibility("Subtitle layer added: ${newText.text}")
+                    announceAccessibility("Subtitle layer added: ${getPlainText(newText.text)}")
                     updateUI()
                     dialogInstance?.dismiss()
                     showTextOverlaysDialog()
@@ -414,9 +435,9 @@ class UnifiedWorkspaceFragment : Fragment() {
                     gravity = android.view.Gravity.CENTER_VERTICAL
                 }
                 val label = TextView(currentContext).apply {
-                    text = "${index + 1}. \"${textOverlay.text}\" (${formatTime(textOverlay.startTimeMs)} - ${formatTime(textOverlay.endTimeMs)}) [${textOverlay.animationType}]"
+                    text = "${index + 1}. \"${getPlainText(textOverlay.text)}\" (${formatTime(textOverlay.startTimeMs)} - ${formatTime(textOverlay.endTimeMs)}) [${textOverlay.animationType}]"
                     layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f)
-                    contentDescription = "Subtitle ${index + 1}: ${textOverlay.text}, from ${formatTime(textOverlay.startTimeMs)} to ${formatTime(textOverlay.endTimeMs)}, Animation: ${textOverlay.animationType}"
+                    contentDescription = "Subtitle ${index + 1}: ${getPlainText(textOverlay.text)}, from ${formatTime(textOverlay.startTimeMs)} to ${formatTime(textOverlay.endTimeMs)}, Animation: ${textOverlay.animationType}"
                 }
                 val btnEdit = MaterialButton(currentContext, null, com.google.android.material.R.style.Widget_Material3_Button_TonalButton).apply {
                     text = "✏️"
@@ -457,7 +478,10 @@ class UnifiedWorkspaceFragment : Fragment() {
             }
         }
 
-        builder.setView(outerLayout)
+        val scrollView = android.widget.ScrollView(currentContext).apply {
+            addView(outerLayout)
+        }
+        builder.setView(scrollView)
         builder.setPositiveButton(getString(R.string.btn_close)) { dialog, _ -> dialog.dismiss() }
         dialogInstance = builder.create()
         dialogInstance.show()
@@ -474,36 +498,39 @@ class UnifiedWorkspaceFragment : Fragment() {
         }
 
         val animSpinner = Spinner(currentContext)
-        val animOptions = arrayOf(
-            "fade_in (ظهور وتلاشي ناعم 🌟)",
-            "slide_up (انزلاق صاعد من الأسفل ⬆️)",
-            "slide_down (انزلاق هابط من الأعلى ⬇️)",
-            "slide_left (انزلاق جانبي ➡️)",
-            "zoom_in (انبثاق وتكبير مفاجئ 💥)",
-            "bounce_in (ارتطام مرن ومطاطي 🏀)",
-            "typewriter (آلة كاتبة ⌨️)",
-            "mask_reveal (ظهور سينمائي خلف قناع 🎬)",
-            "none (بدون حركة)"
-        )
-        val animValues = arrayOf(
-            "fade_in", "slide_up", "slide_down", "slide_left", "zoom_in", "bounce_in", "typewriter", "mask_reveal", "none"
-        )
-        animSpinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, animOptions)
+        val textAnimsList = com.example.accessiblevideoeditor.ui.CloudConfigManager.getTextAnimations(currentContext)
+        val animOptions = textAnimsList.map { it.second }.toTypedArray()
+        val animValues = textAnimsList.map { it.first }.toTypedArray()
+        val animAdapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, animOptions).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        animSpinner.adapter = animAdapter
+        val defaultAnimIdx = animValues.indexOf("fade_in").let { if (it >= 0) it else 0 }
+        animSpinner.setSelection(defaultAnimIdx)
 
         val colorSpinner = Spinner(currentContext)
         val colorNames = arrayOf("أبيض (#FFFFFF)", "أصفر (#FFFF00)", "أخضر (#00FF00)", "أزرق سماوي (#00FFFF)", "أحمر (#FF3333)")
         val colorValues = arrayOf("#FFFFFF", "#FFFF00", "#00FF00", "#00FFFF", "#FF3333")
-        colorSpinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, colorNames)
+        val colorAdapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, colorNames).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        colorSpinner.adapter = colorAdapter
 
         val posSpinner = Spinner(currentContext)
         val posNames = arrayOf("أسفل الفيديو (82%)", "منتصف الفيديو (50%)", "أعلى الفيديو (15%)")
         val posValues = arrayOf(0.82f, 0.50f, 0.15f)
-        posSpinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, posNames)
+        val posAdapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, posNames).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        posSpinner.adapter = posAdapter
 
         val sizeSpinner = Spinner(currentContext)
         val sizeNames = arrayOf("عادي (24)", "كبير (28)", "ضخم (32)", "عملاق (36)")
         val sizeValues = arrayOf(24, 28, 32, 36)
-        sizeSpinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, sizeNames)
+        val sizeAdapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, sizeNames).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        sizeSpinner.adapter = sizeAdapter
 
         val cbBackdrop = androidx.appcompat.widget.AppCompatCheckBox(currentContext).apply {
             text = "إضافة خلفية مظللة للنص (Box Backdrop) لضمان الوضوح"
@@ -572,10 +599,13 @@ class UnifiedWorkspaceFragment : Fragment() {
                     File(currentContext.cacheDir, "temp_stt_${System.currentTimeMillis()}.wav")
                 }
 
+                val trimStart = if (proj.trimEnabled) proj.trimStartMs else 0L
+                val trimEnd = if (proj.trimEnabled) proj.trimEndMs else 0L
+
                 val extractSuccess = if (isGemini) {
-                    FFmpegProcessor.extractAudio(realVideoPath, audioFile.absolutePath, "mp3")
+                    FFmpegProcessor.extractAudio(realVideoPath, audioFile.absolutePath, "mp3", startMs = trimStart, endMs = trimEnd)
                 } else {
-                    FFmpegProcessor.extractAudioToWav(realVideoPath, audioFile.absolutePath)
+                    FFmpegProcessor.extractAudioToWav(realVideoPath, audioFile.absolutePath, startMs = trimStart, endMs = trimEnd)
                 }
 
                 if (extractSuccess && audioFile.exists()) {
@@ -636,7 +666,13 @@ class UnifiedWorkspaceFragment : Fragment() {
                         }
                     }
 
-                    audioFile.delete()
+                    val totalDurMs = try {
+                        FFmpegProcessor.getMediaDurationMs(realVideoPath).toLong()
+                    } catch (_: Exception) {
+                        0L
+                    }
+
+                    try { audioFile.delete() } catch (_: Exception) {}
 
                     withContext(Dispatchers.Main) {
                         if (resultText.isNotBlank() && !resultText.startsWith("ERROR")) {
@@ -656,7 +692,7 @@ class UnifiedWorkspaceFragment : Fragment() {
                                     val end = obj.getLong("end")
                                     proj.textOverlays.add(
                                         TextOverlayConfig(
-                                            text = text,
+                                            text = applySemanticColoring(text),
                                             startTimeMs = start,
                                             endTimeMs = end,
                                             xPosPercent = 0.5f,
@@ -687,19 +723,19 @@ class UnifiedWorkspaceFragment : Fragment() {
                                     list
                                 }
 
-                                val totalDurMs = FFmpegProcessor.getMediaDurationMs(realVideoPath).toLong()
                                 val count = maxOf(1, sentences.size)
-                                val durationPerSentence = (totalDurMs / count).coerceIn(2000L, 5000L)
+                                val durationPerSentence = (totalDurMs / count).coerceAtLeast(1000L)
 
                                 proj.textOverlays.clear()
 
                                 var currentStart = 0L
                                 for (sentence in sentences) {
+                                    if (currentStart >= totalDurMs) break
                                     val chunkEnd = minOf(currentStart + durationPerSentence, totalDurMs)
 
                                     proj.textOverlays.add(
                                         TextOverlayConfig(
-                                            text = sentence,
+                                            text = applySemanticColoring(sentence),
                                             startTimeMs = currentStart,
                                             endTimeMs = chunkEnd,
                                             xPosPercent = 0.5f,
@@ -736,6 +772,34 @@ class UnifiedWorkspaceFragment : Fragment() {
         }
     }
 
+    private fun applySemanticColoring(text: String): String {
+        val words = text.split(" ")
+        val redWords = setOf("أفسدت", "أفسد", "انهيار", "آذيت", "آذى", "أذى", "ضعف", "حاجة", "أدوية", "انهدم", "هدمته", "أعدائه", "ضره", "الضرر", "خذلوني", "خذل", "الخذلان", "ألم", "الألم", "حزن", "الحزن")
+        val goldWords = setOf("أسامحك", "أسامح", "مسامحة", "أعتزل", "كرامتي", "الكرامة", "معروفه", "معروف", "المعروف", "الود", "ود", "ثقة", "أثق", "الصدفة", "قلوب", "القلوب", "القلب", "قلب")
+        val greenWords = setOf("الخير", "خير", "سلام", "السلام", "حب", "أحبهم", "الحب", "النجاح")
+
+        val resultWords = words.map { word ->
+            val cleaned = word.replace(Regex("[.,!؟?()،]"), "").trim()
+            when {
+                redWords.contains(cleaned) -> "<font color=\"#FF3333\"><b>$word</b></font>"
+                goldWords.contains(cleaned) -> "<font color=\"#FFD700\"><b>$word</b></font>"
+                greenWords.contains(cleaned) -> "<font color=\"#00FF00\"><b>$word</b></font>"
+                else -> word
+            }
+        }
+        return resultWords.joinToString(" ")
+    }
+
+    private fun getPlainText(text: String): String {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            android.text.Html.fromHtml(text, android.text.Html.FROM_HTML_MODE_LEGACY).toString()
+        } else {
+            @Suppress("DEPRECATION")
+            android.text.Html.fromHtml(text).toString()
+        }
+    }
+
+
     private fun showAddTextOverlayDialog(onAdd: (TextOverlayConfig) -> Unit) {
         val currentContext = context ?: return
         val builder = AlertDialog.Builder(currentContext)
@@ -748,10 +812,16 @@ class UnifiedWorkspaceFragment : Fragment() {
 
         val etText = EditText(currentContext).apply {
             hint = getString(R.string.hint_enter_text_content)
-            contentDescription = "Text content for subtitle"
+            contentDescription = getString(R.string.cd_text_content)
         }
-        val etStart = EditText(currentContext).apply { hint = getString(R.string.hint_start_time_eg) }
-        val etEnd = EditText(currentContext).apply { hint = getString(R.string.hint_end_time_eg) }
+        val etStart = EditText(currentContext).apply {
+            hint = getString(R.string.hint_start_time_eg)
+            contentDescription = getString(R.string.cd_start_time)
+        }
+        val etEnd = EditText(currentContext).apply {
+            hint = getString(R.string.hint_end_time_eg)
+            contentDescription = getString(R.string.cd_end_time)
+        }
 
         val btnSetStart = MaterialButton(currentContext).apply {
             text = getString(R.string.btn_set_current_position)
@@ -764,19 +834,13 @@ class UnifiedWorkspaceFragment : Fragment() {
         }
 
         val animSpinner = Spinner(currentContext)
-        val animOptions = arrayOf(
-            "none (بدون حركة)",
-            "fade_in (ظهور وتلاشي)",
-            "slide_up (انزلاق لأعلى)",
-            "slide_down (انزلاق لهابط)",
-            "slide_left (انزلاق جانبي)",
-            "zoom_in (انبثاق وتكبير)",
-            "bounce_in (ارتطام مطاطي)",
-            "typewriter (آلة كاتبة)",
-            "mask_reveal (ظهور سينمائي)"
-        )
-        val animValues = arrayOf("none", "fade_in", "slide_up", "slide_down", "slide_left", "zoom_in", "bounce_in", "typewriter", "mask_reveal")
-        animSpinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, animOptions)
+        val textAnimsList = com.example.accessiblevideoeditor.ui.CloudConfigManager.getTextAnimations(currentContext)
+        val animOptions = textAnimsList.map { it.second }.toTypedArray()
+        val animValues = textAnimsList.map { it.first }.toTypedArray()
+        val animAdapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, animOptions).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        animSpinner.adapter = animAdapter
 
         val cbBackdrop = androidx.appcompat.widget.AppCompatCheckBox(currentContext).apply {
             text = "إضافة خلفية مظللة للنص (Box Backdrop)"
@@ -795,15 +859,23 @@ class UnifiedWorkspaceFragment : Fragment() {
         layout.addView(animSpinner)
         layout.addView(cbBackdrop)
 
-        builder.setView(layout)
+        val scrollView = android.widget.ScrollView(currentContext).apply {
+            addView(layout)
+        }
+        builder.setView(scrollView)
         builder.setPositiveButton("Add") { dialog, _ ->
             val txt = etText.text.toString().trim()
             val startMs = parseTimeToMs(etStart.text.toString())
             val endMs = parseTimeToMs(etEnd.text.toString())
 
+            if (startMs >= endMs || startMs < 0) {
+                Toast.makeText(currentContext, "أوقات البداية والنهاية غير صالحة!", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+
             if (txt.isNotEmpty()) {
                 val overlay = TextOverlayConfig(
-                    text = txt,
+                    text = applySemanticColoring(txt),
                     startTimeMs = startMs,
                     endTimeMs = endMs,
                     animationType = animValues[animSpinner.selectedItemPosition],
@@ -828,11 +900,18 @@ class UnifiedWorkspaceFragment : Fragment() {
         }
 
         val etText = EditText(currentContext).apply {
-            setText(overlay.text)
+            setText(getPlainText(overlay.text))
             hint = getString(R.string.hint_enter_text_content)
+            contentDescription = getString(R.string.cd_text_content)
         }
-        val etStart = EditText(currentContext).apply { setText(formatTime(overlay.startTimeMs)) }
-        val etEnd = EditText(currentContext).apply { setText(formatTime(overlay.endTimeMs)) }
+        val etStart = EditText(currentContext).apply {
+            setText(formatTime(overlay.startTimeMs))
+            contentDescription = getString(R.string.cd_start_time)
+        }
+        val etEnd = EditText(currentContext).apply {
+            setText(formatTime(overlay.endTimeMs))
+            contentDescription = getString(R.string.cd_end_time)
+        }
 
         val btnSetStart = MaterialButton(currentContext).apply {
             text = getString(R.string.btn_set_current_position)
@@ -845,19 +924,13 @@ class UnifiedWorkspaceFragment : Fragment() {
         }
 
         val animSpinner = Spinner(currentContext)
-        val animOptions = arrayOf(
-            "none (بدون حركة)",
-            "fade_in (ظهور وتلاشي)",
-            "slide_up (انزلاق لأعلى)",
-            "slide_down (انزلاق لهابط)",
-            "slide_left (انزلاق جانبي)",
-            "zoom_in (انبثاق وتكبير)",
-            "bounce_in (ارتطام مطاطي)",
-            "typewriter (آلة كاتبة)",
-            "mask_reveal (ظهور سينمائي)"
-        )
-        val animValues = arrayOf("none", "fade_in", "slide_up", "slide_down", "slide_left", "zoom_in", "bounce_in", "typewriter", "mask_reveal")
-        animSpinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, animOptions)
+        val textAnimsList = com.example.accessiblevideoeditor.ui.CloudConfigManager.getTextAnimations(currentContext)
+        val animOptions = textAnimsList.map { it.second }.toTypedArray()
+        val animValues = textAnimsList.map { it.first }.toTypedArray()
+        val animAdapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, animOptions).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        animSpinner.adapter = animAdapter
         val currentAnimIdx = animValues.indexOf(overlay.animationType).let { if (it >= 0) it else 0 }
         animSpinner.setSelection(currentAnimIdx)
 
@@ -878,15 +951,23 @@ class UnifiedWorkspaceFragment : Fragment() {
         layout.addView(animSpinner)
         layout.addView(cbBackdrop)
 
-        builder.setView(layout)
+        val scrollView = android.widget.ScrollView(currentContext).apply {
+            addView(layout)
+        }
+        builder.setView(scrollView)
         builder.setPositiveButton("حفظ") { dialog, _ ->
             val txt = etText.text.toString().trim()
             val startMs = parseTimeToMs(etStart.text.toString())
             val endMs = parseTimeToMs(etEnd.text.toString())
 
+            if (startMs >= endMs || startMs < 0) {
+                Toast.makeText(currentContext, "أوقات البداية والنهاية غير صالحة!", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+
             if (txt.isNotEmpty()) {
                 val updated = overlay.copy(
-                    text = txt,
+                    text = applySemanticColoring(txt),
                     startTimeMs = startMs,
                     endTimeMs = endMs,
                     animationType = animValues[animSpinner.selectedItemPosition],
@@ -927,7 +1008,9 @@ class UnifiedWorkspaceFragment : Fragment() {
         )
 
         val spinnerType = Spinner(currentContext)
-        spinnerType.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, typeLabels)
+        spinnerType.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, typeLabels).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
         val currIdx = types.indexOf(proj.backgroundRemovalType)
         if (currIdx != -1) spinnerType.setSelection(currIdx)
         layout.addView(spinnerType)
@@ -986,7 +1069,9 @@ class UnifiedWorkspaceFragment : Fragment() {
             "60 FPS"
         )
         val spinnerFps = Spinner(currentContext)
-        spinnerFps.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, fpsLabels)
+        spinnerFps.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, fpsLabels).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
         val currFpsIdx = fpsOptions.indexOf(proj.backgroundRemovalFpsOption)
         if (currFpsIdx != -1) spinnerFps.setSelection(currFpsIdx)
         layout.addView(spinnerFps)
@@ -1022,7 +1107,9 @@ class UnifiedWorkspaceFragment : Fragment() {
 
         val spinner = Spinner(currentContext)
         val presets = arrayOf("none", "zoom_in_center", "pan_left_to_right")
-        spinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, presets)
+        spinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, presets).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
         val currIdx = presets.indexOf(proj.keyframePreset)
         if (currIdx != -1) spinner.setSelection(currIdx)
 
@@ -1054,7 +1141,9 @@ class UnifiedWorkspaceFragment : Fragment() {
 
         val spinnerPreset = Spinner(currentContext)
         val presets = arrayOf("none", "warm_cinematic", "cool_noir", "vivid_hdr", "vintage_sepia")
-        spinnerPreset.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, presets)
+        spinnerPreset.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, presets).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
         val currPresetIdx = presets.indexOf(proj.colorFilterPreset)
         if (currPresetIdx != -1) spinnerPreset.setSelection(currPresetIdx)
 
@@ -1093,7 +1182,9 @@ class UnifiedWorkspaceFragment : Fragment() {
         layout.addView(TextView(currentContext).apply { text = getString(R.string.label_watermark_position) })
         val positions = arrayOf("top_right", "top_left", "bottom_right", "bottom_left")
         val spinner = Spinner(currentContext)
-        spinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, positions)
+        spinner.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, positions).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
         val currIdx = positions.indexOf(proj.watermarkPosition)
         if (currIdx != -1) spinner.setSelection(currIdx)
         layout.addView(spinner)
@@ -1124,7 +1215,9 @@ class UnifiedWorkspaceFragment : Fragment() {
         layout.addView(TextView(currentContext).apply { text = getString(R.string.label_speed_multiplier) })
         val speeds = arrayOf("0.5", "1.0", "1.5", "2.0")
         val spinnerSpeed = Spinner(currentContext)
-        spinnerSpeed.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, speeds)
+        spinnerSpeed.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, speeds).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
         val currSpeedIdx = speeds.indexOf(proj.speedMultiplier.toString())
         if (currSpeedIdx != -1) spinnerSpeed.setSelection(currSpeedIdx)
         layout.addView(spinnerSpeed)
@@ -1132,7 +1225,9 @@ class UnifiedWorkspaceFragment : Fragment() {
         layout.addView(TextView(currentContext).apply { text = getString(R.string.label_volume_level) })
         val volumes = arrayOf(getString(R.string.label_mute), "50%", "100%", "150%", "200%")
         val spinnerVolume = Spinner(currentContext)
-        spinnerVolume.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, volumes)
+        spinnerVolume.adapter = ArrayAdapter(currentContext, android.R.layout.simple_spinner_item, volumes).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
         val currVolIdx = when (proj.volumeLevel) {
             0.0f -> 0
             0.5f -> 1
@@ -1225,6 +1320,11 @@ class UnifiedWorkspaceFragment : Fragment() {
         project?.let {
             UnifiedProjectManager.saveProject(currentContext, it)
         }
+        val prefs = currentContext.getSharedPreferences("CameraPrefs", Context.MODE_PRIVATE)
+        prefs.edit().apply {
+            putBoolean("last_project_clean_exit", true)
+            apply()
+        }
         try { findNavController().navigateUp() } catch (_: Exception) {}
     }
 
@@ -1247,25 +1347,34 @@ class UnifiedWorkspaceFragment : Fragment() {
     }
 
     private fun formatTime(ms: Long): String {
+        val millis = ms % 1000
         val seconds = (ms / 1000) % 60
         val minutes = (ms / (1000 * 60)) % 60
         val hours = (ms / (1000 * 60 * 60)) % 24
         return if (hours > 0) {
-            String.format(java.util.Locale.US, "%02d:%02d:%02d", hours, minutes, seconds)
+            String.format(java.util.Locale.US, "%02d:%02d:%02d.%03d", hours, minutes, seconds, millis)
         } else {
-            String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds)
+            String.format(java.util.Locale.US, "%02d:%02d.%03d", minutes, seconds, millis)
         }
     }
 
     private fun parseTimeToMs(timeStr: String): Long {
         if (timeStr.isBlank()) return 0L
-        val parts = timeStr.split(":")
-        val secs = when (parts.size) {
-            1 -> parts[0].trim().toIntOrNull() ?: 0
-            2 -> (parts[0].trim().toIntOrNull() ?: 0) * 60 + (parts[1].trim().toIntOrNull() ?: 0)
-            3 -> (parts[0].trim().toIntOrNull() ?: 0) * 3600 + (parts[1].trim().toIntOrNull() ?: 0) * 60 + (parts[2].trim().toIntOrNull() ?: 0)
-            else -> 0
+        try {
+            val dotParts = timeStr.split(".")
+            val baseTime = dotParts[0].trim()
+            val msPart = if (dotParts.size > 1) dotParts[1].trim().padEnd(3, '0').take(3).toLongOrNull() ?: 0L else 0L
+            
+            val parts = baseTime.split(":")
+            val baseMs = when (parts.size) {
+                1 -> (parts[0].trim().toLongOrNull() ?: 0L) * 1000L
+                2 -> ((parts[0].trim().toLongOrNull() ?: 0L) * 60 + (parts[1].trim().toLongOrNull() ?: 0L)) * 1000L
+                3 -> ((parts[0].trim().toLongOrNull() ?: 0L) * 3600 + (parts[1].trim().toLongOrNull() ?: 0L) * 60 + (parts[2].trim().toLongOrNull() ?: 0L)) * 1000L
+                else -> 0L
+            }
+            return baseMs + msPart
+        } catch (_: Exception) {
+            return 0L
         }
-        return secs * 1000L
     }
 }

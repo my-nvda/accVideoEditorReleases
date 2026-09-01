@@ -63,7 +63,9 @@ class CompressVideoFragment : Fragment() {
 
         binding.btnProcess.setOnClickListener {
             selectedUri?.let { uri ->
-                processVideo(uri)
+                com.example.accessiblevideoeditor.ui.ExportQualityDialogHelper.showQualityDialog(requireContext()) {
+                    processVideo(uri)
+                }
             }
         }
     }
@@ -95,7 +97,7 @@ class CompressVideoFragment : Fragment() {
                         com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
                             requireContext(),
                             finalUri,
-                            AppStrings.get(requireContext(), R.string.string_87),
+                            AppStrings.get(requireContext(), R.string.string_182),
                             "video/mp4"
                         )
                     } else {
@@ -109,6 +111,16 @@ class CompressVideoFragment : Fragment() {
                     SoundManager.playError()
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ProcessingManager.sharedMediaUri?.let { uri ->
+            selectedUri = uri
+            ProcessingManager.sharedMediaUri = null
+            binding.btnSelectFile.text = AppStrings.get(requireContext(), R.string.string_88)
+            binding.btnProcess.isEnabled = true
         }
     }
 

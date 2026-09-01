@@ -15,23 +15,55 @@ object AppStrings {
      */
     fun loadCustomStrings(context: Context) {
         val currentLang = LanguageManager.getCurrentLanguageCode(context)
-        val file = File(context.filesDir, "custom_lang_$currentLang.json")
-        if (file.exists()) {
+        val cloudFile = File(context.filesDir, "cloud_lang_$currentLang.json")
+        val localFile = File(context.filesDir, "local_lang_$currentLang.json")
+        
+        val mergedMap = mutableMapOf<String, String>()
+        
+        // 1. Load cloud translations (lower priority)
+        if (cloudFile.exists()) {
             try {
-                val json = JSONObject(file.readText(Charsets.UTF_8))
-                val map = mutableMapOf<String, String>()
+                val json = JSONObject(cloudFile.readText(Charsets.UTF_8))
                 for (key in json.keys()) {
-                    map[key] = json.getString(key)
+                    mergedMap[key] = json.getString(key)
                 }
-                customStrings = map
-                customStringsVersion++
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+        
+        // 2. Load local translations (higher priority, overrides cloud)
+        if (localFile.exists()) {
+            try {
+                val json = JSONObject(localFile.readText(Charsets.UTF_8))
+                for (key in json.keys()) {
+                    mergedMap[key] = json.getString(key)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        
+        // 3. Backward compatibility: If old custom_lang file exists and localFile doesn't, load it as local and rename/save it
+        val oldFile = File(context.filesDir, "custom_lang_$currentLang.json")
+        if (oldFile.exists() && !localFile.exists()) {
+            try {
+                val json = JSONObject(oldFile.readText(Charsets.UTF_8))
+                for (key in json.keys()) {
+                    mergedMap[key] = json.getString(key)
+                }
+                oldFile.renameTo(localFile)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (mergedMap.isNotEmpty()) {
+            customStrings = mergedMap
         } else {
             customStrings = null
-            customStringsVersion++
         }
+        customStringsVersion++
     }
 
     /**

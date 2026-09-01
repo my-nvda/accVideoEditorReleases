@@ -96,7 +96,7 @@ class BoostVolumeFragment : Fragment() {
                         com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
                             requireContext(),
                             finalUri,
-                            AppStrings.get(requireContext(), R.string.string_87),
+                            AppStrings.get(requireContext(), R.string.string_182),
                             "video/mp4"
                         )
                     } else {
@@ -110,6 +110,16 @@ class BoostVolumeFragment : Fragment() {
                     SoundManager.playError()
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ProcessingManager.sharedMediaUri?.let { uri ->
+            selectedUri = uri
+            ProcessingManager.sharedMediaUri = null
+            binding.btnSelectFile.text = AppStrings.get(requireContext(), R.string.string_88)
+            binding.btnProcess.isEnabled = true
         }
     }
 

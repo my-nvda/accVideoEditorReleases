@@ -76,6 +76,7 @@ class TextCustomizationHelper(
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 currentOptions = currentOptions.copy(textSizeSp = progress.toFloat())
                 notifyChange()
+                triggerHapticTick()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -85,6 +86,7 @@ class TextCustomizationHelper(
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 currentOptions = currentOptions.copy(shadowRadius = progress.toFloat())
                 notifyChange()
+                triggerHapticTick()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -94,6 +96,7 @@ class TextCustomizationHelper(
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 currentOptions = currentOptions.copy(shadowDx = progress.toFloat())
                 notifyChange()
+                triggerHapticTick()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -103,6 +106,7 @@ class TextCustomizationHelper(
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 currentOptions = currentOptions.copy(shadowDy = progress.toFloat())
                 notifyChange()
+                triggerHapticTick()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -179,5 +183,19 @@ class TextCustomizationHelper(
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         binding.spFontFamily.setSelection(0)
+    }
+
+    private fun triggerHapticTick() {
+        try {
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? android.os.Vibrator
+            if (vibrator != null) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    vibrator.vibrate(android.os.VibrationEffect.createOneShot(15, android.os.VibrationEffect.DEFAULT_AMPLITUDE))
+                } else {
+                    @Suppress("DEPRECATION")
+                    vibrator.vibrate(15)
+                }
+            }
+        } catch (_: java.lang.Exception) {}
     }
 }

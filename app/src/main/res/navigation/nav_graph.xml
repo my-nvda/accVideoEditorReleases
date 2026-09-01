@@ -23,6 +23,9 @@
             android:id="@+id/action_homeFragment_to_smartCutFragment"
             app:destination="@id/smartCutFragment" />
         <action
+            android:id="@+id/action_homeFragment_to_textBasedEditorFragment"
+            app:destination="@id/textBasedEditorFragment" />
+        <action
             android:id="@+id/action_homeFragment_to_mergeVideosFragment"
             app:destination="@id/mergeVideosFragment" />
         <action
@@ -121,6 +124,12 @@
         <action
             android:id="@+id/action_homeFragment_to_imageChromaFragment"
             app:destination="@id/imageChromaFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_accessibleCameraFragment"
+            app:destination="@id/accessibleCameraFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_unifiedWorkspaceFragment"
+            app:destination="@id/unifiedWorkspaceFragment" />
 
     </fragment>
 
@@ -355,6 +364,18 @@
         android:name="com.example.accessiblevideoeditor.ui.fragments.ImageChromaFragment"
         android:label="ImageChromaFragment"
         tools:layout="@layout/fragment_image_chroma" />
+
+    <fragment
+        android:id="@+id/accessibleCameraFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.AccessibleCameraFragment"
+        android:label="AccessibleCameraFragment"
+        tools:layout="@layout/fragment_accessible_camera" />
+
+    <fragment
+        android:id="@+id/textBasedEditorFragment"
+        android:name="com.example.accessiblevideoeditor.ui.fragments.TextBasedEditorFragment"
+        android:label="TextBasedEditorFragment"
+        tools:layout="@layout/fragment_text_based_editor" />
 
 </navigation>
 

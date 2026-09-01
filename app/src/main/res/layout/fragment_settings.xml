@@ -11,7 +11,7 @@
             <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginBottom="16dp" android:background="?android:attr/listDivider" />
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="@string/string_196" android:textAppearance="?attr/textAppearanceTitleMedium" />
             <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.FilledBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:hint="@string/string_197">
-                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGeminiApiKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" />
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGeminiApiKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:contentDescription="@string/cd_gemini_api_key" android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
             <TextView android:id="@+id/tvLabelGeminiModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_198" android:labelFor="@id/spGeminiModel" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginBottom="4dp" />
             <Spinner android:id="@+id/spGeminiModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:minHeight="48dp" android:contentDescription="@string/string_198" />

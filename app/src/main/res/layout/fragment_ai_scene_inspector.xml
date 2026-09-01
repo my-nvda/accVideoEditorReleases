@@ -60,6 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="وصف المشاهد المكتشفة"
+                    android:contentDescription="@string/cd_inspection_results"
                     android:inputType="none"
                     android:minLines="8"
                     android:textIsSelectable="true" />

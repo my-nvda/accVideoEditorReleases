@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Camera Preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/layoutModeSelector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBar" />
+
+    <!-- Top Bar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1A1A1A"
+        app:title="@string/title_accessible_camera"
+        app:titleTextColor="#FFFFFF"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Real-time Guidance Banner -->
+    <TextView
+        android:id="@+id/tvCameraGuidance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#CC000000"
+        android:textColor="#00FF00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        android:focusable="true"
+        android:accessibilityLiveRegion="assertive"
+        android:text="@string/guidance_no_face"
+        app:layout_constraintTop_toBottomOf="@+id/topBar" />
+
+    <!-- Floating Flash Toggle Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnToggleFlash"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="💡"
+        android:textSize="20sp"
+        android:backgroundTint="#80000000"
+        android:contentDescription="زر تشغيل وإيقاف كشاف الفلاش"
+        app:layout_constraintTop_toBottomOf="@+id/tvCameraGuidance"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Floating Switch Camera Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSwitchCamera"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:text="🔄"
+        android:textSize="20sp"
+        android:backgroundTint="#80000000"
+        android:contentDescription="زر تبديل الكاميرا بين الأمامية والخلفية"
+        app:layout_constraintTop_toBottomOf="@+id/tvCameraGuidance"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Object Description Banner (Bottom of Preview) -->
+    <TextView
+        android:id="@+id/tvObjectDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#99000000"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:visibility="gone"
+        android:focusable="true"
+        android:accessibilityLiveRegion="polite"
+        app:layout_constraintBottom_toTopOf="@+id/layoutModeSelector" />
+
+    <!-- Countdown Timer Overlay -->
+    <TextView
+        android:id="@+id/tvCountdownOverlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFCC00"
+        android:textSize="80sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/layoutModeSelector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBar"
+        tools:text="3" />
+
+    <!-- Main Mode Selector (Photo vs Video) -->
+    <LinearLayout
+        android:id="@+id/layoutModeSelector"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#222222"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/bottomBar">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnModePhoto"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="وضع التقاط الصور"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:contentDescription="تفعيل وضع التقاط الصور" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:background="#44FFFFFF"
+            android:layout_gravity="center" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnModeVideo"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="وضع تسجيل الفيديو"
+            android:textColor="#88FFFFFF"
+            android:textSize="14sp"
+            android:contentDescription="تفعيل وضع تسجيل الفيديو" />
+
+    </LinearLayout>
+
+    <!-- Bottom Controls Bar -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:background="#1A1A1A"
+        android:gravity="center"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- More Options Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMoreOptions"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="خيارات الأوضاع"
+            android:textSize="13sp"
+            android:contentDescription="زر مزيد من الخيارات والأوضاع الذكية"
+            app:cornerRadius="30dp" />
+
+        <!-- Shutter/Record Button (Central) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnShutter"
+            android:layout_width="140dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="📸 التقاط"
+            android:textSize="16sp"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#000000"
+            android:contentDescription="زر التقاط الصورة"
+            app:cornerRadius="30dp" />
+
+        <!-- Settings Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSettings"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="⚙️"
+            android:contentDescription="إعدادات الكاميرا الذكية" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

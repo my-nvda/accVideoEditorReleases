@@ -17,23 +17,40 @@ object AccessibilityUtils {
         ViewCompat.setAccessibilityPaneTitle(view, title)
     }
 
+    fun isAccessibilityEnabled(context: android.content.Context): Boolean {
+        return try {
+            val am = context.getSystemService(android.content.Context.ACCESSIBILITY_SERVICE) as? android.view.accessibility.AccessibilityManager
+            am?.isEnabled == true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     fun focusView(targetView: View) {
         val doFocus = {
-            targetView.isFocusable = true
-            targetView.isFocusableInTouchMode = true
-            targetView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+            try {
+                targetView.isFocusable = true
+                targetView.isFocusableInTouchMode = true
+                targetView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
 
-            targetView.requestRectangleOnScreen(android.graphics.Rect(0, 0, targetView.width, targetView.height), true)
-            targetView.requestFocus()
-            
-            ViewCompat.performAccessibilityAction(targetView, AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS, null)
-            
-            val eventState = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED)
-            eventState.className = targetView.javaClass.name
-            eventState.packageName = targetView.context.packageName
-            targetView.sendAccessibilityEventUnchecked(eventState)
+                targetView.requestRectangleOnScreen(android.graphics.Rect(0, 0, targetView.width, targetView.height), true)
+                targetView.requestFocus()
+                
+                ViewCompat.performAccessibilityAction(targetView, AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS, null)
+                
+                if (isAccessibilityEnabled(targetView.context)) {
+                    try {
+                        val eventState = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED)
+                        eventState.className = targetView.javaClass.name
+                        eventState.packageName = targetView.context.packageName
+                        targetView.sendAccessibilityEventUnchecked(eventState)
+                    } catch (_: Exception) {}
 
-            targetView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                    try {
+                        targetView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                    } catch (_: Exception) {}
+                }
+            } catch (_: Exception) {}
         }
 
         doFocus()

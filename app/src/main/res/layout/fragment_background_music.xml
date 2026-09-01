@@ -9,6 +9,15 @@
             <TextView android:id="@+id/tvBgMusicFile" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:visibility="gone" />
             <TextView android:id="@+id/lblBgVolume" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/label_bg_volume" android:textSize="16sp" android:textStyle="bold" android:labelFor="@id/spinnerBgVolume" />
             <Spinner android:id="@+id/spinnerBgVolume" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:contentDescription="@string/label_bg_volume" />
+            
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switchAutoDucking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/setting_auto_ducking"
+                android:checked="false" />
+
             <Button android:id="@+id/btnApply" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:text="@string/btn_apply" android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>

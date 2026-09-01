@@ -1,18 +1,95 @@
-<?xml version='1.0' encoding='utf-8'?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
-    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:title="@string/btn_cinematic_lut_shaders" app:titleTextColor="?attr/colorOnPrimary" />
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:padding="16dp">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="12dp">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-                    <TextView android:id="@+id/tvModelStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_model_status_checking" android:textSize="14sp" android:textStyle="bold" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btnDownloadModel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/btn_download_lut_model" android:visibility="gone" android:minHeight="48dp" />
-                    <ProgressBar android:id="@+id/pbModelDownload" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:max="100" android:visibility="gone" />
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="@string/btn_cinematic_lut_shaders"
+        app:titleTextColor="?attr/colorOnPrimary" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectMedia"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/btn_select_media_lut"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:id="@+id/tvSelectedMedia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_selected_media_none"
+                android:textSize="14sp"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Cinematic Preset Selector -->
+            <TextView
+                android:id="@+id/lblPreset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="اختر التأثير السينمائي:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:labelFor="@id/spinnerPreset" />
+
+            <Spinner
+                android:id="@+id/spinnerPreset"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:contentDescription="تأثيرات سينمائية جاهزة" />
+
+            <!-- Description Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutline">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tvPresetDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="14sp"
+                        android:focusable="true"
+                        android:text="" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.button.MaterialButton android:id="@+id/btnSelectMedia" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="@string/btn_select_media_lut" android:minHeight="48dp" />
-            <TextView android:id="@+id/tvSelectedMedia" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_selected_media_none" android:textSize="14sp" android:layout_marginBottom="16dp" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/btnApplyLut" android:layout_width="match_parent" android:layout_height="60dp" android:text="@string/btn_apply_lut_action" android:minHeight="48dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApplyLut"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="@string/btn_apply_lut_action"
+                android:minHeight="48dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

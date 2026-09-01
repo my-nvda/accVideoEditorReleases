@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.databinding.FragmentVolunteerTranslationBinding
 import com.example.accessiblevideoeditor.ui.AppStrings
+import com.example.accessiblevideoeditor.ui.LanguageManager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,12 +29,20 @@ class VolunteerTranslationFragment : Fragment() {
     private var _binding: FragmentVolunteerTranslationBinding? = null
     private val binding get() = _binding!!
 
+    private val SOURCE_LOCAL = 0
+    private val SOURCE_CLOUD = 1
+    private var currentSource = SOURCE_LOCAL
+
     private var selectedLangCode = "en"
     private var selectedCategory = ""
     
     private val originalStrings = mutableMapOf<String, String>()
     private val categorizedStrings = mutableMapOf<String, List<String>>()
+    
+    private val localTranslations = mutableMapOf<String, String>()
+    private val cloudTranslations = mutableMapOf<String, String>()
     private val translations = mutableMapOf<String, String>()
+    
     private var categories = listOf<String>()
     private var lastBeepPercent = -5
 
@@ -88,14 +97,23 @@ class VolunteerTranslationFragment : Fragment() {
                     }
                     
                     if (valid) {
-                        val file = File(requireContext().filesDir, "custom_lang_$selectedLangCode.json")
+                        val fileName = if (currentSource == SOURCE_LOCAL) "local_lang_$selectedLangCode.json" else "cloud_lang_$selectedLangCode.json"
+                        val file = File(requireContext().filesDir, fileName)
                         file.writeText(jsonString)
+                        
+                        // Reload AppStrings
                         AppStrings.loadCustomStrings(requireContext())
                         
                         val newKeys = json.keys()
                         while (newKeys.hasNext()) {
                             val k = newKeys.next()
-                            translations[k] = json.getString(k)
+                            val v = json.getString(k)
+                            translations[k] = v
+                            if (currentSource == SOURCE_LOCAL) {
+                                localTranslations[k] = v
+                            } else {
+                                cloudTranslations[k] = v
+                            }
                         }
                         
                         Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_260), Toast.LENGTH_SHORT).show()
@@ -137,8 +155,12 @@ class VolunteerTranslationFragment : Fragment() {
                     true
                 }
                 R.id.action_export -> {
-                    val fileName = "translations_${selectedLangCode}.json"
+                    val fileName = if (currentSource == SOURCE_LOCAL) "local_translations_${selectedLangCode}.json" else "cloud_translations_${selectedLangCode}.json"
                     exportLauncher.launch(fileName)
+                    true
+                }
+                R.id.action_sync -> {
+                    syncFromLocal()
                     true
                 }
                 else -> false
@@ -146,16 +168,34 @@ class VolunteerTranslationFragment : Fragment() {
         }
 
         setupLanguageSpinner()
+        setupSourceTabs()
         
         binding.rvTranslations.layoutManager = LinearLayoutManager(requireContext())
         adapter = TranslationAdapter(
             requireContext(),
             emptyList(),
             originalStrings,
-            translations
+            translations,
+            localTranslations,
+            isCloudSource = (currentSource == SOURCE_CLOUD),
+            onApplySuggestion = { key, suggestion ->
+                translations[key] = suggestion
+                cloudTranslations[key] = suggestion
+                val keys = categorizedStrings[selectedCategory] ?: emptyList()
+                val idx = keys.indexOf(key)
+                if (idx >= 0) {
+                    adapter.notifyItemChanged(idx)
+                }
+                calculateProgress()
+            }
         ) { key, newText ->
             translations[key] = newText
-            updateProgressText() // optionally update without full recalc
+            if (currentSource == SOURCE_LOCAL) {
+                localTranslations[key] = newText
+            } else {
+                cloudTranslations[key] = newText
+            }
+            updateProgressText()
         }
         binding.rvTranslations.adapter = adapter
         
@@ -171,6 +211,51 @@ class VolunteerTranslationFragment : Fragment() {
         })
 
         loadData()
+    }
+
+    private fun setupSourceTabs() {
+        val localTab = binding.tabTranslationSource.newTab().setText(AppStrings.get(requireContext(), R.string.string_translation_local))
+        val cloudTab = binding.tabTranslationSource.newTab().setText(AppStrings.get(requireContext(), R.string.string_translation_cloud))
+        
+        binding.tabTranslationSource.addTab(localTab)
+        binding.tabTranslationSource.addTab(cloudTab)
+        binding.tabTranslationSource.selectTab(localTab)
+        binding.tvTranslationModeDescription.text = AppStrings.get(requireContext(), R.string.msg_translation_local_desc)
+
+        binding.tabTranslationSource.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab != null) {
+                    currentSource = if (tab.position == 1) SOURCE_CLOUD else SOURCE_LOCAL
+                    
+                    val descRes = if (currentSource == SOURCE_LOCAL) R.string.msg_translation_local_desc else R.string.msg_translation_cloud_desc
+                    binding.tvTranslationModeDescription.text = AppStrings.get(requireContext(), descRes)
+
+                    // Switch current active translations reference
+                    translations.clear()
+                    if (currentSource == SOURCE_LOCAL) {
+                        translations.putAll(localTranslations)
+                    } else {
+                        translations.putAll(cloudTranslations)
+                    }
+
+                    // Update adapter settings
+                    adapter.updateData(
+                        newIsCloudSource = (currentSource == SOURCE_CLOUD),
+                        newTranslations = translations,
+                        newLocalTranslations = localTranslations
+                    )
+
+                    // Show/hide sync menu item
+                    val syncItem = binding.topAppBar.menu.findItem(R.id.action_sync)
+                    syncItem?.isVisible = (currentSource == SOURCE_CLOUD)
+
+                    updateList()
+                    calculateProgress()
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
     }
 
     private fun setupLanguageSpinner() {
@@ -195,20 +280,58 @@ class VolunteerTranslationFragment : Fragment() {
         binding.contentContainer.visibility = View.GONE
         
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val file = File(requireContext().filesDir, "custom_lang_$selectedLangCode.json")
-            val existingTranslations = mutableMapOf<String, String>()
-            if (file.exists()) {
+            val localFile = File(requireContext().filesDir, "local_lang_$selectedLangCode.json")
+            val cloudFile = File(requireContext().filesDir, "cloud_lang_$selectedLangCode.json")
+            val customFile = File(requireContext().filesDir, "custom_lang_$selectedLangCode.json")
+            
+            val tempLocal = mutableMapOf<String, String>()
+            val tempCloud = mutableMapOf<String, String>()
+
+            // 1. Load cloud translations
+            if (cloudFile.exists()) {
                 try {
-                    val json = JSONObject(file.readText(Charsets.UTF_8))
+                    val json = JSONObject(cloudFile.readText(Charsets.UTF_8))
                     for (key in json.keys()) {
-                        existingTranslations[key] = json.getString(key)
+                        tempCloud[key] = json.getString(key)
                     }
                 } catch (e: Exception) { e.printStackTrace() }
             }
 
-            translations.clear()
-            originalStrings.clear()
+            // 2. Load local translations
+            if (localFile.exists()) {
+                try {
+                    val json = JSONObject(localFile.readText(Charsets.UTF_8))
+                    for (key in json.keys()) {
+                        tempLocal[key] = json.getString(key)
+                    }
+                } catch (e: Exception) { e.printStackTrace() }
+            }
 
+            // 3. Load old custom_lang file for backward compatibility
+            if (customFile.exists() && !localFile.exists()) {
+                try {
+                    val json = JSONObject(customFile.readText(Charsets.UTF_8))
+                    for (key in json.keys()) {
+                        tempLocal[key] = json.getString(key)
+                    }
+                    customFile.renameTo(localFile)
+                } catch (e: Exception) { e.printStackTrace() }
+            }
+
+            localTranslations.clear()
+            localTranslations.putAll(tempLocal)
+
+            cloudTranslations.clear()
+            cloudTranslations.putAll(tempCloud)
+
+            translations.clear()
+            if (currentSource == SOURCE_LOCAL) {
+                translations.putAll(localTranslations)
+            } else {
+                translations.putAll(cloudTranslations)
+            }
+
+            originalStrings.clear()
             val catMap = mutableMapOf<String, MutableList<String>>()
             
             val fields = R.string::class.java.fields
@@ -223,8 +346,14 @@ class VolunteerTranslationFragment : Fragment() {
                         val cat = getCategoryArabic(arText)
                         if (!catMap.containsKey(cat)) catMap[cat] = mutableListOf()
                         catMap[cat]?.add(keyName)
-                        
-                        translations[keyName] = existingTranslations[keyName] ?: ""
+
+                        // Populate empty keys
+                        if (!localTranslations.containsKey(keyName)) {
+                            localTranslations[keyName] = ""
+                        }
+                        if (!cloudTranslations.containsKey(keyName)) {
+                            cloudTranslations[keyName] = ""
+                        }
                     }
                 } catch (e: Exception) { }
             }
@@ -247,6 +376,10 @@ class VolunteerTranslationFragment : Fragment() {
                 if (index >= 0 && index < binding.tabCategories.tabCount) {
                     binding.tabCategories.selectTab(binding.tabCategories.getTabAt(index))
                 }
+
+                // Update menu visibility
+                val syncItem = binding.topAppBar.menu.findItem(R.id.action_sync)
+                syncItem?.isVisible = (currentSource == SOURCE_CLOUD)
                 
                 updateList()
                 calculateProgress()
@@ -277,6 +410,8 @@ class VolunteerTranslationFragment : Fragment() {
             conf.setLocale(java.util.Locale(selectedLangCode))
             val localizedContext = requireContext().createConfigurationContext(conf)
             
+            val activeMap = if (currentSource == SOURCE_LOCAL) localTranslations else cloudTranslations
+
             originalStrings.keys.forEach { key ->
                 try {
                     val id = requireContext().resources.getIdentifier(key, "string", requireContext().packageName)
@@ -285,7 +420,7 @@ class VolunteerTranslationFragment : Fragment() {
                         val fbStr = requireContext().getString(id) // Get default
                         if (locStr != fbStr && locStr.isNotBlank()) {
                             translatedCount++
-                        } else if (translations[key]?.isNotBlank() == true) {
+                        } else if (activeMap[key]?.isNotBlank() == true) {
                             translatedCount++
                         }
                     }
@@ -307,25 +442,71 @@ class VolunteerTranslationFragment : Fragment() {
     }
 
     private fun updateProgressText() {
-        // Quick update without deep recalculation if needed, or just let it be.
+        // Quick update without deep recalculation
     }
 
     private fun saveAndApply() {
         try {
-            val json = JSONObject()
-            translations.forEach { (k, v) -> 
+            val jsonLocal = JSONObject()
+            localTranslations.forEach { (k, v) -> 
                 if (v.isNotBlank()) {
-                    json.put(k, v) 
+                    jsonLocal.put(k, v) 
                 }
             }
-            val file = File(requireContext().filesDir, "custom_lang_$selectedLangCode.json")
-            file.writeText(json.toString(4))
+            val fileLocal = File(requireContext().filesDir, "local_lang_$selectedLangCode.json")
+            fileLocal.writeText(jsonLocal.toString(4))
+
+            val jsonCloud = JSONObject()
+            cloudTranslations.forEach { (k, v) -> 
+                if (v.isNotBlank()) {
+                    jsonCloud.put(k, v) 
+                }
+            }
+            val fileCloud = File(requireContext().filesDir, "cloud_lang_$selectedLangCode.json")
+            fileCloud.writeText(jsonCloud.toString(4))
+
             AppStrings.loadCustomStrings(requireContext())
             Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_256), Toast.LENGTH_SHORT).show()
             requireActivity().recreate()
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireContext(), AppStrings.get(requireContext(), R.string.string_257), Toast.LENGTH_LONG).show()
+        }
+    }
+    
+    private fun syncFromLocal() {
+        var syncCount = 0
+        localTranslations.forEach { (k, v) ->
+            if (v.isNotBlank() && cloudTranslations[k].isNullOrBlank()) {
+                cloudTranslations[k] = v
+                syncCount++
+            }
+        }
+
+        if (syncCount > 0) {
+            // Update active map reference if currently in cloud mode
+            if (currentSource == SOURCE_CLOUD) {
+                translations.clear()
+                translations.putAll(cloudTranslations)
+                adapter.updateData(
+                    newIsCloudSource = true,
+                    newTranslations = translations,
+                    newLocalTranslations = localTranslations
+                )
+                updateList()
+                calculateProgress()
+            }
+            Toast.makeText(
+                requireContext(),
+                AppStrings.get(requireContext(), R.string.msg_sync_suggestions_success, syncCount),
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                AppStrings.get(requireContext(), R.string.msg_no_suggestions_to_sync),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
     
@@ -344,4 +525,3 @@ class VolunteerTranslationFragment : Fragment() {
         _binding = null
     }
 }
-

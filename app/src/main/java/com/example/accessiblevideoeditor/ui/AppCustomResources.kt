@@ -70,9 +70,52 @@ class AppCustomResources(
     override fun openRawResource(id: Int): InputStream = original.openRawResource(id)
     override fun openRawResource(id: Int, value: TypedValue?): InputStream = original.openRawResource(id, value)
     override fun openRawResourceFd(id: Int): AssetFileDescriptor = original.openRawResourceFd(id)
-    override fun getValue(id: Int, outValue: TypedValue?, resolveRefs: Boolean) = original.getValue(id, outValue, resolveRefs)
-    override fun getValue(name: String?, outValue: TypedValue?, resolveRefs: Boolean) = original.getValue(name, outValue, resolveRefs)
-    override fun getValueForDensity(id: Int, density: Int, outValue: TypedValue?, resolveRefs: Boolean) = original.getValueForDensity(id, density, outValue, resolveRefs)
+    override fun getValue(id: Int, outValue: TypedValue?, resolveRefs: Boolean) {
+        original.getValue(id, outValue, resolveRefs)
+        if (outValue != null) {
+            AppStrings.customStrings?.let { strings ->
+                try {
+                    if (outValue.type == TypedValue.TYPE_STRING && outValue.string != null) {
+                        val name = original.getResourceEntryName(id)
+                        strings[name]?.let { translated ->
+                            outValue.string = translated
+                        }
+                    }
+                } catch (_: Exception) { }
+            }
+        }
+    }
+
+    override fun getValue(name: String?, outValue: TypedValue?, resolveRefs: Boolean) {
+        original.getValue(name, outValue, resolveRefs)
+        if (outValue != null) {
+            AppStrings.customStrings?.let { strings ->
+                try {
+                    if (outValue.type == TypedValue.TYPE_STRING && outValue.string != null && name != null) {
+                        strings[name]?.let { translated ->
+                            outValue.string = translated
+                        }
+                    }
+                } catch (_: Exception) { }
+            }
+        }
+    }
+
+    override fun getValueForDensity(id: Int, density: Int, outValue: TypedValue?, resolveRefs: Boolean) {
+        original.getValueForDensity(id, density, outValue, resolveRefs)
+        if (outValue != null) {
+            AppStrings.customStrings?.let { strings ->
+                try {
+                    if (outValue.type == TypedValue.TYPE_STRING && outValue.string != null) {
+                        val name = original.getResourceEntryName(id)
+                        strings[name]?.let { translated ->
+                            outValue.string = translated
+                        }
+                    }
+                } catch (_: Exception) { }
+            }
+        }
+    }
     override fun getIdentifier(name: String?, defType: String?, defPackage: String?): Int = original.getIdentifier(name, defType, defPackage)
     override fun getResourceName(resid: Int): String = original.getResourceName(resid)
     override fun getResourcePackageName(resid: Int): String = original.getResourcePackageName(resid)

@@ -35,8 +35,14 @@ class ProjectsDashboardFragment : Fragment() {
     private val selectVideoLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         val currentContext = context ?: return@registerForActivityResult
         if (uri != null) {
+            val ext = currentContext.contentResolver.getType(uri)?.split("/")?.lastOrNull() ?: "mp4"
+            val copiedFile = com.example.accessiblevideoeditor.media.MediaUtils.copyUriToProjectsDir(
+                currentContext, uri, "proj_main_${System.currentTimeMillis()}.$ext"
+            )
+            val finalVideoPath = copiedFile?.absolutePath ?: uri.toString()
+            
             val name = getString(R.string.btn_new_project) + " " + SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
-            val project = UnifiedProjectModel(name = name, videoPath = uri.toString())
+            val project = UnifiedProjectModel(name = name, videoPath = finalVideoPath)
             UnifiedProjectManager.saveProject(currentContext, project)
             
             val bundle = Bundle().apply {

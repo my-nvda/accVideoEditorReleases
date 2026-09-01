@@ -106,10 +106,16 @@ class ReverseMediaFragment : Fragment() {
                     val success = FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray(), input)
                     
                     if (success) {
-                        FileUtils.saveToGallery(appContext, File(outputPath), "video/mp4")
+                        val mime = if (reverseVideo) "video/mp4" else "audio/mp3"
+                        val savedUri = FileUtils.saveToGallery(appContext, File(outputPath), mime)
                         withContext(Dispatchers.Main) {
-                            if (isAdded) {
-                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_222), Toast.LENGTH_SHORT).show()
+                            if (isAdded && context != null) {
+                                com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                    requireContext(),
+                                    savedUri,
+                                    AppStrings.get(requireContext(), R.string.string_222),
+                                    mime
+                                )
                             }
                         }
                     } else {

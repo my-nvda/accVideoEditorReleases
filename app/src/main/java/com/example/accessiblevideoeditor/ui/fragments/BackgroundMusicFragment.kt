@@ -1,4 +1,4 @@
-﻿package com.example.accessiblevideoeditor.ui.fragments
+package com.example.accessiblevideoeditor.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -97,11 +97,12 @@ class BackgroundMusicFragment : Fragment() {
                 return@setOnClickListener
             }
             val vol = volumeLevels[binding.spinnerBgVolume.selectedItemPosition]
-            processMixBackgroundMusic(main, bg, vol)
+            val autoDuck = binding.switchAutoDucking.isChecked
+            processMixBackgroundMusic(main, bg, vol, autoDuck)
         }
     }
 
-    private fun processMixBackgroundMusic(main: Uri, bg: Uri, volume: Float) {
+    private fun processMixBackgroundMusic(main: Uri, bg: Uri, volume: Float, autoDuckingEnabled: Boolean) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val tempMain = MediaUtils.copyUriToTempFile(requireContext(), main, "main_media_${System.currentTimeMillis()}")
@@ -117,7 +118,11 @@ class BackgroundMusicFragment : Fragment() {
 
                     val duration = FFmpegProcessor.getMediaDurationMs(tempMain.absolutePath)
 
-                    val filter = "[0:a]aresample=44100[a0];[1:a]volume=$volume,aresample=44100[a1];[a0][a1]amix=inputs=2:duration=first[outa]"
+                    val filter = if (autoDuckingEnabled) {
+                        "[0:a]aresample=44100[a0];[1:a]volume=$volume,aresample=44100[a1];[a1][a0]sidechaincompress=threshold=0.15:ratio=4:attack=50:release=500[ducked];[a0][ducked]amix=inputs=2:duration=first[outa]"
+                    } else {
+                        "[0:a]aresample=44100[a0];[1:a]volume=$volume,aresample=44100[a1];[a0][a1]amix=inputs=2:duration=first[outa]"
+                    }
 
                     val commandArgs = mutableListOf<String>()
                     commandArgs.addAll(listOf("-y", "-i", tempMain.absolutePath, "-i", tempBg.absolutePath))

@@ -30,16 +30,12 @@ class MergeVideosFragment : Fragment() {
     private var _binding: FragmentMergeVideosBinding? = null
     private val binding get() = _binding!!
 
-    private var selectedUris: List<Uri> = emptyList()
+    private val selectedUris = mutableListOf<Uri>()
 
     private val videoPickerLauncher = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
-        selectedUris = uris
-        if (uris.isNotEmpty()) {
-            binding.tvSelectedCount.visibility = View.VISIBLE
-            binding.tvSelectedCount.text = AppStrings.get(requireContext(), R.string.string_4, uris.size)
-        } else {
-            binding.tvSelectedCount.visibility = View.GONE
-        }
+        selectedUris.clear()
+        selectedUris.addAll(uris)
+        updateVideoListUI()
     }
 
     override fun onCreateView(
@@ -95,6 +91,19 @@ class MergeVideosFragment : Fragment() {
                     }
                     val outputPath = appContext.cacheDir.absolutePath + "/merged_${System.currentTimeMillis()}.mp4"
                     
+                    // Storage check
+                    var totalInputSize = 0L
+                    inputs.forEach { path ->
+                        totalInputSize += java.io.File(path).length()
+                    }
+                    if (!com.example.accessiblevideoeditor.utils.StorageUtils.isSpaceAvailable(appContext, (totalInputSize * 1.5).toLong())) {
+                        withContext(Dispatchers.Main) {
+                            com.example.accessiblevideoeditor.utils.StorageUtils.showLowSpaceWarning(requireContext(), view)
+                            ProcessingManager.stopProcessing()
+                        }
+                        return@launch
+                    }
+
                     val hasAudioList = inputs.map { path ->
                         val info = com.arthenica.ffmpegkit.FFprobeKit.getMediaInformation(path)
                         info?.mediaInformation?.streams?.any { it.type == "audio" } ?: false
@@ -168,10 +177,15 @@ class MergeVideosFragment : Fragment() {
                     
                     val success = FFmpegProcessor.executeWithProgress(commandArgs.toTypedArray(), totalDurationMs = if (totalMs > 0f) totalMs else null)
                     if (success) {
-                        FileUtils.saveToGallery(appContext, File(outputPath), "video/mp4")
+                        val savedUri = FileUtils.saveToGallery(appContext, File(outputPath), "video/mp4")
                         withContext(Dispatchers.Main) {
-                            if (isAdded) {
-                                Toast.makeText(appContext, AppStrings.get(appContext, R.string.string_240), Toast.LENGTH_SHORT).show()
+                            if (isAdded && context != null) {
+                                com.example.accessiblevideoeditor.ui.ShareDialogHelper.showSuccessShareDialog(
+                                    requireContext(),
+                                    savedUri,
+                                    AppStrings.get(requireContext(), R.string.string_240),
+                                    "video/mp4"
+                                )
                             }
                         }
                     } else {
@@ -200,6 +214,139 @@ class MergeVideosFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updateVideoListUI() {
+        val context = context ?: return
+        if (selectedUris.isNotEmpty()) {
+            binding.tvVideosOrderHeader.visibility = View.VISIBLE
+            binding.layoutVideoList.visibility = View.VISIBLE
+            binding.tvSelectedCount.visibility = View.VISIBLE
+            binding.tvSelectedCount.text = AppStrings.get(context, R.string.string_4, selectedUris.size)
+        } else {
+            binding.tvVideosOrderHeader.visibility = View.GONE
+            binding.layoutVideoList.visibility = View.GONE
+            binding.tvSelectedCount.visibility = View.GONE
+        }
+
+        binding.layoutVideoList.removeAllViews()
+
+        selectedUris.forEachIndexed { index, uri ->
+            val row = android.widget.LinearLayout(context).apply {
+                orientation = android.widget.LinearLayout.HORIZONTAL
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 8, 0, 8)
+                }
+                gravity = android.view.Gravity.CENTER_VERTICAL
+            }
+
+            val fileName = com.example.accessiblevideoeditor.utils.FileUtils.getFileName(context, uri) ?: "Video ${index + 1}"
+            val tvName = android.widget.TextView(context).apply {
+                text = "${index + 1}. $fileName"
+                layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                textSize = 14f
+                contentDescription = "الفيديو رقم ${index + 1}: $fileName"
+            }
+            row.addView(tvName)
+
+            // Move Up button
+            val btnUp = com.google.android.material.button.MaterialButton(context, null, com.google.android.material.R.style.Widget_Material3_Button_IconButton).apply {
+                text = "▲"
+                contentDescription = "نقل الفيديو رقم ${index + 1} لأعلى"
+                isEnabled = index > 0
+                minWidth = 48
+                minHeight = 48
+                setOnClickListener {
+                    if (index > 0) {
+                        val temp = selectedUris[index]
+                        selectedUris[index] = selectedUris[index - 1]
+                        selectedUris[index - 1] = temp
+                        updateVideoListUI()
+                        announceAccessibility("تم نقل الفيديو رقم ${index + 1} لأعلى، الترتيب الجديد الآن هو ${index}")
+                    }
+                }
+            }
+            row.addView(btnUp)
+
+            // Move Down button
+            val btnDown = com.google.android.material.button.MaterialButton(context, null, com.google.android.material.R.style.Widget_Material3_Button_IconButton).apply {
+                text = "▼"
+                contentDescription = "نقل الفيديو رقم ${index + 1} لأسفل"
+                isEnabled = index < selectedUris.size - 1
+                minWidth = 48
+                minHeight = 48
+                setOnClickListener {
+                    if (index < selectedUris.size - 1) {
+                        val temp = selectedUris[index]
+                        selectedUris[index] = selectedUris[index + 1]
+                        selectedUris[index + 1] = temp
+                        updateVideoListUI()
+                        announceAccessibility("تم نقل الفيديو رقم ${index + 1} لأسفل، الترتيب الجديد الآن هو ${index + 2}")
+                    }
+                }
+            }
+            row.addView(btnDown)
+
+            // Preview button
+            val btnPreview = com.google.android.material.button.MaterialButton(context, null, com.google.android.material.R.style.Widget_Material3_Button_IconButton).apply {
+                text = "👁️"
+                contentDescription = "معاينة واستعراض الفيديو رقم ${index + 1}: $fileName"
+                minWidth = 48
+                minHeight = 48
+                setOnClickListener {
+                    previewVideo(uri)
+                }
+            }
+            row.addView(btnPreview)
+
+            // Remove button
+            val btnRemove = com.google.android.material.button.MaterialButton(context, null, com.google.android.material.R.style.Widget_Material3_Button_IconButton).apply {
+                text = "✕"
+                contentDescription = "حذف وإزالة الفيديو رقم ${index + 1} من القائمة"
+                minWidth = 48
+                minHeight = 48
+                setOnClickListener {
+                    selectedUris.removeAt(index)
+                    updateVideoListUI()
+                    announceAccessibility("تمت إزالة الفيديو رقم ${index + 1} من القائمة")
+                }
+            }
+            row.addView(btnRemove)
+
+            binding.layoutVideoList.addView(row)
+        }
+    }
+
+    private fun announceAccessibility(message: String) {
+        view?.announceForAccessibility(message)
+    }
+
+    private fun previewVideo(uri: Uri) {
+        val currentContext = context ?: return
+        val dialogView = LayoutInflater.from(currentContext).inflate(R.layout.dialog_video_preview, null)
+        val playerView = dialogView.findViewById<androidx.media3.ui.PlayerView>(R.id.playerView)
+
+        val player = androidx.media3.exoplayer.ExoPlayer.Builder(currentContext).build().apply {
+            setMediaItem(androidx.media3.common.MediaItem.fromUri(uri))
+            prepare()
+            playWhenReady = true
+        }
+        playerView.player = player
+
+        androidx.appcompat.app.AlertDialog.Builder(currentContext)
+            .setTitle(AppStrings.get(currentContext, R.string.btn_preview_combined) ?: "معاينة الفيديو")
+            .setView(dialogView)
+            .setPositiveButton(getString(R.string.btn_close)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setOnDismissListener {
+                player.release()
+            }
+            .create()
+            .show()
     }
 }
 

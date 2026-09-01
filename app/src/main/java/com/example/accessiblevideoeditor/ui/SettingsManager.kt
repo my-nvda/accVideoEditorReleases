@@ -15,6 +15,7 @@ object SettingsManager {
     private const val KEY_GEMINI_API_KEY = "gemini_api_key"
     private const val KEY_GEMINI_MODEL = "gemini_model"
     private const val KEY_EXPORT_QUALITY = "export_quality"
+    private const val KEY_SHOULD_ASK_QUALITY = "should_ask_export_quality"
 
     private lateinit var prefs: SharedPreferences
 
@@ -41,6 +42,8 @@ object SettingsManager {
         private set
     var exportQualityState = "high"
         private set
+    var shouldAskExportQualityState = true
+        private set
 
     fun init(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -54,6 +57,7 @@ object SettingsManager {
         geminiApiKeyState = prefs.getString(KEY_GEMINI_API_KEY, "") ?: ""
         geminiModelState = prefs.getString(KEY_GEMINI_MODEL, "gemini-3.5-flash") ?: "gemini-3.5-flash"
         exportQualityState = prefs.getString(KEY_EXPORT_QUALITY, "high") ?: "high"
+        shouldAskExportQualityState = prefs.getBoolean(KEY_SHOULD_ASK_QUALITY, true)
     }
 
     var isStartupSoundEnabled: Boolean
@@ -124,6 +128,13 @@ object SettingsManager {
         set(value) {
             prefs.edit().putString(KEY_EXPORT_QUALITY, value).apply()
             exportQualityState = value
+        }
+
+    var shouldAskExportQuality: Boolean
+        get() = shouldAskExportQualityState
+        set(value) {
+            prefs.edit().putBoolean(KEY_SHOULD_ASK_QUALITY, value).apply()
+            shouldAskExportQualityState = value
         }
 }
 

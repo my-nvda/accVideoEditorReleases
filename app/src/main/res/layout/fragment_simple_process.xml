@@ -3,7 +3,7 @@
     <com.google.android.material.appbar.MaterialToolbar android:id="@+id/topAppBar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:titleTextColor="?attr/colorOnPrimary" app:navigationIcon="@android:drawable/ic_menu_revert" />
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="16dp">
-            <TextView android:id="@+id/tvTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:textAppearance="?attr/textAppearanceTitleLarge" />
+            <TextView android:id="@+id/tvTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:textAppearance="?attr/textAppearanceTitleLarge" android:importantForAccessibility="no" />
             <com.google.android.material.button.MaterialButton android:id="@+id/btnSelectFile" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:text="@string/string_140" android:minHeight="48dp" />
             <com.google.android.material.button.MaterialButton android:id="@+id/btnProcess" android:layout_width="match_parent" android:layout_height="wrap_content" android:enabled="false" android:text="@string/string_117" android:minHeight="48dp" />
         </LinearLayout>

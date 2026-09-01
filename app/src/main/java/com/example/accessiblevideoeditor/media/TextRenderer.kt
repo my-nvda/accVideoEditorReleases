@@ -17,7 +17,9 @@ object TextRenderer {
         options: TextOptions,
         outputFile: File
     ): Boolean {
+        var bitmap: Bitmap? = null
         try {
+            outputFile.parentFile?.mkdirs()
             val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = options.textColor
                 textSize = options.textSizeSp * 2.5f
@@ -33,11 +35,21 @@ object TextRenderer {
                 }
             }
 
-            val textWidth = textPaint.measureText(options.text).toInt() + 40 // padding
+            // Support HTML formatting and trim extra trailing newlines appended by Html.fromHtml
+            val rawSpannedText = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                android.text.Html.fromHtml(options.text, android.text.Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                @Suppress("DEPRECATION")
+                android.text.Html.fromHtml(options.text)
+            }
+            val spannedText = trimSpanned(rawSpannedText)
+            val plainText = spannedText.toString()
+
+            val textWidth = textPaint.measureText(plainText).toInt() + 40 // padding
             val fontMetrics = textPaint.fontMetrics
             val textHeight = (fontMetrics.descent - fontMetrics.ascent).toInt() + 20 // padding
             
-            val bitmap = Bitmap.createBitmap(textWidth, textHeight, Bitmap.Config.ARGB_8888)
+            bitmap = Bitmap.createBitmap(textWidth, textHeight, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
 
             if (options.bgColor != Color.TRANSPARENT) {
@@ -48,19 +60,81 @@ object TextRenderer {
                 canvas.drawRect(0f, 0f, textWidth.toFloat(), textHeight.toFloat(), bgPaint)
             }
 
-            canvas.drawText(options.text, 20f, -fontMetrics.ascent + 10f, textPaint)
+            // Handle RTL script align mapping
+            val isRtl = android.text.BidiFormatter.getInstance().isRtl(plainText)
+            val layoutAlignment = when (options.alignment) {
+                TextAlignment.LEFT -> if (isRtl) Layout.Alignment.ALIGN_OPPOSITE else Layout.Alignment.ALIGN_NORMAL
+                TextAlignment.CENTER -> Layout.Alignment.ALIGN_CENTER
+                TextAlignment.RIGHT -> if (isRtl) Layout.Alignment.ALIGN_NORMAL else Layout.Alignment.ALIGN_OPPOSITE
+            }
+
+            // Use StaticLayout to draw spanned text (handles color spans correctly)
+            // Use (textWidth - 40) constraint for correct padding bounds
+            val contentWidth = maxOf(10, textWidth - 40)
+            val staticLayout = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                StaticLayout.Builder.obtain(spannedText, 0, spannedText.length, textPaint, contentWidth)
+                    .setAlignment(layoutAlignment)
+                    .setLineSpacing(0f, 1f)
+                    .setIncludePad(true)
+                    .build()
+            } else {
+                @Suppress("DEPRECATION")
+                StaticLayout(spannedText, textPaint, contentWidth, layoutAlignment, 1f, 0f, true)
+            }
+
+            canvas.save()
+            canvas.translate(20f, 10f)
+
+            // 1. Draw Outline Stroke Pass (Black Outline)
+            // Strip ForegroundColorSpans from the outline layout so that the outline is purely black
+            val outlineSpanned = android.text.SpannableStringBuilder(spannedText)
+            val colorSpans = outlineSpanned.getSpans(0, outlineSpanned.length, android.text.style.ForegroundColorSpan::class.java)
+            for (span in colorSpans) {
+                outlineSpanned.removeSpan(span)
+            }
+
+            val strokePaint = TextPaint(textPaint).apply {
+                style = Paint.Style.STROKE
+                strokeWidth = 10f
+                color = Color.BLACK
+                clearShadowLayer()
+            }
+
+            val outlineLayout = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                StaticLayout.Builder.obtain(outlineSpanned, 0, outlineSpanned.length, strokePaint, contentWidth)
+                    .setAlignment(layoutAlignment)
+                    .setLineSpacing(0f, 1f)
+                    .setIncludePad(true)
+                    .build()
+            } else {
+                @Suppress("DEPRECATION")
+                StaticLayout(outlineSpanned, strokePaint, contentWidth, layoutAlignment, 1f, 0f, true)
+            }
+            outlineLayout.draw(canvas)
+
+            // 2. Draw Fill Pass (Original/Span Colors)
+            staticLayout.draw(canvas)
+            canvas.restore()
 
             FileOutputStream(outputFile).use { out ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             }
-            bitmap.recycle()
             return true
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             e.printStackTrace()
             return false
+        } finally {
+            bitmap?.recycle()
         }
     }
 
+    private fun trimSpanned(spanned: CharSequence): CharSequence {
+        var len = spanned.length
+        while (len > 0 && spanned[len - 1].isWhitespace()) {
+            len--
+        }
+        return if (len == spanned.length) spanned else spanned.subSequence(0, len)
+    }
 
     enum class TextPosition {
         TOP, CENTER, BOTTOM
@@ -92,8 +166,10 @@ object TextRenderer {
         options: TextOptions,
         outputFile: File
     ): Boolean {
+        var bitmap: Bitmap? = null
         try {
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            outputFile.parentFile?.mkdirs()
+            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
             
             drawTextOnCanvas(canvas, width, height, options)
@@ -101,11 +177,12 @@ object TextRenderer {
             FileOutputStream(outputFile).use { out ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             }
-            bitmap.recycle()
             return true
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             e.printStackTrace()
             return false
+        } finally {
+            bitmap?.recycle()
         }
     }
 
@@ -116,11 +193,16 @@ object TextRenderer {
         sourceBitmap: Bitmap,
         options: TextOptions
     ): Bitmap {
-        // Create a mutable copy of the source bitmap
-        val resultBitmap = sourceBitmap.copy(Bitmap.Config.ARGB_8888, true)
-        val canvas = Canvas(resultBitmap)
-        drawTextOnCanvas(canvas, resultBitmap.width, resultBitmap.height, options)
-        return resultBitmap
+        try {
+            // Create a mutable copy of the source bitmap
+            val resultBitmap = sourceBitmap.copy(Bitmap.Config.ARGB_8888, true) ?: return sourceBitmap
+            val canvas = Canvas(resultBitmap)
+            drawTextOnCanvas(canvas, resultBitmap.width, resultBitmap.height, options)
+            return resultBitmap
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            return sourceBitmap
+        }
     }
 
     private fun drawTextOnCanvas(canvas: Canvas, width: Int, height: Int, options: TextOptions) {
@@ -142,36 +224,57 @@ object TextRenderer {
         }
 
         val padding = (width * 0.05f).toInt() // 5% padding
-        val textWidth = width - (padding * 2)
+        val textWidth = maxOf(10, width - (padding * 2))
 
+        // Support HTML formatting and trim extra newlines
+        val rawSpannedText = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            android.text.Html.fromHtml(options.text, android.text.Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            @Suppress("DEPRECATION")
+            android.text.Html.fromHtml(options.text)
+        }
+        val spannedText = trimSpanned(rawSpannedText)
+        val plainText = spannedText.toString()
+
+        // Handle RTL script align mapping
+        val isRtl = android.text.BidiFormatter.getInstance().isRtl(plainText)
         val layoutAlignment = when (options.alignment) {
-            TextAlignment.LEFT -> Layout.Alignment.ALIGN_NORMAL
+            TextAlignment.LEFT -> if (isRtl) Layout.Alignment.ALIGN_OPPOSITE else Layout.Alignment.ALIGN_NORMAL
             TextAlignment.CENTER -> Layout.Alignment.ALIGN_CENTER
-            TextAlignment.RIGHT -> Layout.Alignment.ALIGN_OPPOSITE
+            TextAlignment.RIGHT -> if (isRtl) Layout.Alignment.ALIGN_NORMAL else Layout.Alignment.ALIGN_OPPOSITE
         }
 
         // Use StaticLayout to handle multi-line text and Arabic shaping automatically
         val staticLayout = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            StaticLayout.Builder.obtain(options.text, 0, options.text.length, textPaint, textWidth)
+            StaticLayout.Builder.obtain(spannedText, 0, spannedText.length, textPaint, textWidth)
                 .setAlignment(layoutAlignment)
                 .setLineSpacing(0f, 1f)
                 .setIncludePad(true)
                 .build()
         } else {
             @Suppress("DEPRECATION")
-            StaticLayout(options.text, textPaint, textWidth, layoutAlignment, 1f, 0f, true)
+            StaticLayout(spannedText, textPaint, textWidth, layoutAlignment, 1f, 0f, true)
         }
 
         val textHeight = staticLayout.height
 
         // Calculate Y position based on requested position
-        val startY = when (options.position) {
+        var startY = when (options.position) {
             TextPosition.TOP -> (height * 0.1f).toInt()
             TextPosition.CENTER -> (height - textHeight) / 2
             TextPosition.BOTTOM -> height - textHeight - (height * 0.1f).toInt()
         }
+        // Prevent negative startY clipping
+        if (startY < 0) startY = 0
 
-        // Draw Background Box (Padded Box Backdrop with Rounded Corners)
+        // Calculate exact bounding width of the text layout to size the background box
+        var maxLineWidth = 0f
+        for (line in 0 until staticLayout.lineCount) {
+            maxLineWidth = maxOf(maxLineWidth, staticLayout.getLineWidth(line))
+        }
+        val actualTextWidth = maxLineWidth.toInt()
+
+        // Draw Background Box centered according to layout alignment
         if (options.bgColor != Color.TRANSPARENT) {
             val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = options.bgColor
@@ -179,10 +282,18 @@ object TextRenderer {
             }
             val boxPaddingH = (width * 0.04f).coerceAtLeast(24f)
             val boxPaddingV = (height * 0.015f).coerceAtLeast(12f)
+            
+            // Calculate horizontal bounds centering the backdrop box around aligned text
+            val boxLeft = when (layoutAlignment) {
+                Layout.Alignment.ALIGN_CENTER -> padding + (textWidth - actualTextWidth) / 2f
+                Layout.Alignment.ALIGN_OPPOSITE -> (padding + textWidth - actualTextWidth).toFloat()
+                Layout.Alignment.ALIGN_NORMAL -> padding.toFloat()
+            }
+            
             val bgRect = android.graphics.RectF(
-                (padding - boxPaddingH).coerceAtLeast(0f),
+                (boxLeft - boxPaddingH).coerceAtLeast(0f),
                 (startY - boxPaddingV).coerceAtLeast(0f),
-                (padding + textWidth + boxPaddingH).coerceAtMost(width.toFloat()),
+                (boxLeft + actualTextWidth + boxPaddingH).coerceAtMost(width.toFloat()),
                 (startY + textHeight + boxPaddingV).coerceAtMost(height.toFloat())
             )
             canvas.drawRoundRect(bgRect, 20f, 20f, bgPaint)
@@ -191,6 +302,34 @@ object TextRenderer {
         // Draw Text
         canvas.save()
         canvas.translate(padding.toFloat(), startY.toFloat())
+
+        // 1. Draw Outline Stroke Pass (Black Outline)
+        val outlineSpanned = android.text.SpannableStringBuilder(spannedText)
+        val colorSpans = outlineSpanned.getSpans(0, outlineSpanned.length, android.text.style.ForegroundColorSpan::class.java)
+        for (span in colorSpans) {
+            outlineSpanned.removeSpan(span)
+        }
+
+        val strokePaint = TextPaint(textPaint).apply {
+            style = Paint.Style.STROKE
+            strokeWidth = 10f // Outline width
+            color = Color.BLACK
+            clearShadowLayer()
+        }
+
+        val outlineLayout = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            StaticLayout.Builder.obtain(outlineSpanned, 0, outlineSpanned.length, strokePaint, textWidth)
+                .setAlignment(layoutAlignment)
+                .setLineSpacing(0f, 1f)
+                .setIncludePad(true)
+                .build()
+        } else {
+            @Suppress("DEPRECATION")
+            StaticLayout(outlineSpanned, strokePaint, textWidth, layoutAlignment, 1f, 0f, true)
+        }
+        outlineLayout.draw(canvas)
+
+        // 2. Draw Fill Pass (Original/Span Colors)
         staticLayout.draw(canvas)
         canvas.restore()
     }

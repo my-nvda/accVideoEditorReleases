@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swAutoCapture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/setting_auto_capture" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swHaptics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="التنبيه بالاهتزازات عند توسيط الوجه" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swTilt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/setting_tilt_level" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swObject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/setting_object_detector" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swBeeping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/setting_beeping_guidance" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/swVibRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/setting_vibration_guidance" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_camera_timer"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinnerTimer"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewScanHistory"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="عرض سجل مسح الرموز (Scan History)"
+            android:minHeight="48dp" />
+
+    </LinearLayout>
+</ScrollView>

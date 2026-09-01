@@ -7,6 +7,7 @@
     <string name="mode_noise_dsp">Optimized Local DSP (Offline - Light)</string>
     <string name="mode_noise_dfn3_offline">DeepFilterNet3 AI (Offline - Smart)</string>
     <string name="mode_noise_cloud_online">Studio AI (Online - High Quality)</string>
+    <string name="mode_noise_cleanunet">CleanUNet AI (Offline - Studio Quality)</string>
     <string name="string_1">Describe this photo or video in detail. Focus on visuals, people, actions and written texts if available.</string>
     <string name="string_2">Extract and transcribe the text from this audio file with high accuracy. Write only the extracted text without additions.</string>
     <string name="string_3">Error: Gemini API key is missing. Please add it from settings.</string>
@@ -147,7 +148,7 @@
     <string name="string_138">Reverse Audio</string>
     <string name="string_139">Merge now</string>
     <string name="string_140">Choose a file</string>
-    <string name="string_141">Copy text</string>
+    <string name="string_141">Text copied to clipboard successfully</string>
     <string name="string_142">Operation</string>
     <string name="string_143">purple</string>
     <string name="string_144">Facebook</string>
@@ -175,7 +176,7 @@
 accessibility in mind. It supports 11 languages and offers professional features such as video merging, text 
 customization, smart cutting, and more.</string>
     <string name="string_163">Version 1.0.0</string>
-    <string name="string_164">Developed by Accessibility First Team</string>
+    <string name="string_164">Developed by Al-Abir</string>
     <string name="string_170">Choose a file</string>
     <string name="string_171">File Selected</string>
     <string name="string_172">Share</string>
@@ -641,4 +642,102 @@ customization, smart cutting, and more.</string>
     <string name="welcome_dialog_message">We are glad to have you! To receive important processing updates and notifications, please allow enabling notifications.</string>
     <string name="welcome_dialog_positive">Enable Notifications</string>
     <string name="welcome_dialog_negative">Continue Without Notifications</string>
+
+    <string name="model_status_cleanunet_loaded">Model Status: CleanUNet FP16 model loaded locally ✅ (%1$d MB)</string>
+    <string name="model_status_cleanunet_not_installed">Model Status: Model not installed locally (Size 90 MB)</string>
+    <string name="dialog_download_message_cleanunet">This engine requires downloading the high-quality speech enhancement model CleanUNet FP16 (90 MB). Do you want to start downloading now?</string>
+    <string name="btn_download_cleanunet_model">Download CleanUNet FP16 Model (90 MB)</string>
+
+    <string name="string_translation_local">Local Translation</string>
+    <string name="string_translation_cloud">Cloud Translation</string>
+    <string name="string_translation_suggestion">Local Suggestion: %1$s</string>
+    <string name="btn_apply_suggestion">Apply</string>
+    <string name="action_sync_cloud_from_local">Sync from Local</string>
+    <string name="msg_sync_suggestions_success">Synced %1$d missing translations from Local tab</string>
+    <string name="msg_no_suggestions_to_sync">No missing translations to sync from Local tab</string>
+    <string name="msg_translation_local_desc">Local Override Mode: Edits customize translations on this device only. Take effect immediately.</string>
+    <string name="msg_translation_cloud_desc">Cloud Cache Mode: Prepares custom translations for cloud synchronization and OTA storage.</string>
+
+    <!-- New Accessible Camera & Features Strings -->
+    <string name="btn_accessible_camera">Accessible Camera</string>
+    <string name="title_accessible_camera">Accessible Audio-Guided Camera</string>
+    <string name="cd_accessible_camera">Open Accessible Camera with real-time audio guidance</string>
+    <string name="cd_text_content">Edit box, Text Content</string>
+    <string name="cd_start_time">Edit box, Start Time</string>
+    <string name="cd_end_time">Edit box, End Time</string>
+    <string name="cd_dubbing_text">Edit box, Voice Dubbing Text</string>
+    <string name="cd_custom_duration">Edit box, Custom Duration</string>
+    <string name="cd_gemini_api_key">Edit box, Gemini API Key</string>
+    <string name="cd_slide_duration">Edit box, Slide Duration</string>
+    <string name="cd_silence_threshold">Edit box, Silence Threshold Level in decibels</string>
+    <string name="cd_min_silence_duration">Edit box, Minimum Silence Duration in seconds</string>
+    <string name="cd_gemini_question">Edit box, AI Question</string>
+    <string name="cd_inspection_results">Edit box, Inspection Results</string>
+    <string name="cd_ocr_results">Edit box, Extracted Text</string>
+    <string name="cd_transcription_results">Edit box, Transcribed Text</string>
+
+    <!-- Camera Settings Dialog -->
+    <string name="camera_settings_title">Camera Settings</string>
+    <string name="btn_camera_settings">Camera Settings</string>
+    <string name="setting_auto_capture">Auto-capture on centered face &amp; open eyes</string>
+    <string name="setting_volume_shortcuts">Use volume keys as physical triggers</string>
+    <string name="setting_object_detector">Speak detected objects (Back Camera)</string>
+    <string name="setting_beeping_guidance">Continuous beep guidance tone</string>
+    <string name="setting_vibration_guidance">Vibration feedback during recording</string>
+    <string name="setting_tilt_level">Phone level/straightness guide</string>
+    <string name="setting_camera_timer">Audible countdown timer:</string>
+    
+    <!-- Camera States & Guidance -->
+    <string name="guidance_no_face">No face detected</string>
+    <string name="guidance_face_centered">Centered! Hold still...</string>
+    <string name="guidance_multiple_faces">Multiple faces detected</string>
+    <string name="guidance_move_left">Move phone left</string>
+    <string name="guidance_move_right">Move phone right</string>
+    <string name="guidance_move_up">Move phone up</string>
+    <string name="guidance_move_down">Move phone down</string>
+    <string name="guidance_tilt_left">Tilt phone left</string>
+    <string name="guidance_tilt_right">Tilt phone right</string>
+    <string name="guidance_level">Level</string>
+    <string name="guidance_eyes_closed">Warning: Eyes closed</string>
+    <string name="guidance_not_smiling">Please smile for the photo</string>
+    <string name="guidance_dark_environment">Warning: Environment is dark, recommended to turn on flash</string>
+    <string name="guidance_photo_taken">Photo captured successfully and saved to Gallery</string>
+    <string name="btn_record_video">🎥 Record Video</string>
+    <string name="btn_stop_recording">⏹️ Stop Recording</string>
+    <string name="guidance_video_saved">Video saved to Gallery successfully</string>
+    
+    <!-- Audio Ducking & Soundscapes -->
+    <string name="setting_auto_ducking">Auto-ducking: Lower background music during speech</string>
+    <string name="label_soundscape_presets">Ambient Soundscapes:</string>
+    <string name="soundscape_none">None</string>
+    <string name="soundscape_rain">Gentle Rain Loop</string>
+    <string name="soundscape_keyboard">Typewriter Keyboard Clicks</string>
+    
+    <!-- Project Auto-Recovery -->
+    <string name="recovery_dialog_title">Project Auto-Recovery</string>
+    <string name="recovery_dialog_msg">An unsaved project session was found. Would you like to restore it and resume editing?</string>
+    <string name="btn_restore">Restore</string>
+    
+    <!-- Multi-trim/delete modes -->
+    <string name="label_trim_mode">Cutter Operation Mode:</string>
+    <string name="trim_mode_keep">Keep Selected Ranges (Trim)</string>
+    <string name="trim_mode_delete">Cut and Exclude Selected Ranges (Delete)</string>
+    <string name="btn_add_range">Add Range</string>
+    <string name="btn_preview_combined">Preview Output (Skip Excluded)</string>
+    <string name="label_added_ranges">Configured Ranges:</string>
+    
+    <!-- Cinematic presets -->
+    <string name="preset_lut_default">Default Vintage Wash</string>
+    <string name="preset_lut_warm">Warm Sunset Golden</string>
+    <string name="preset_lut_hollywood">Hollywood Teal &amp; Orange</string>
+    <string name="preset_lut_cool">Cool Sci-Fi Icy</string>
+    <string name="preset_lut_bw">Classic Drama Black &amp; White</string>
+    <string name="preset_lut_vintage_pastel">Nostalgic Vintage Pastel</string>
+    
+    <string name="desc_lut_default">Washed-out vintage retro coloring, giving a classic nostalgic feel.</string>
+    <string name="desc_lut_warm">Increases orange and yellow tones, simulating the look of a warm sunset.</string>
+    <string name="desc_lut_hollywood">Teal and Orange action movie look, enhancing skin tones and background depth.</string>
+    <string name="desc_lut_cool">Boosts blue tones and reduces warm colors, creating a cold, mysterious Sci-Fi vibe.</string>
+    <string name="desc_lut_bw">Removes all color data, creating a high-contrast dramatic vintage film aesthetic.</string>
+    <string name="desc_lut_vintage_pastel">Reduces saturation and contrast, creating soft pastel nostalgic childhood memories look.</string>
 </resources>

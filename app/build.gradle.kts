@@ -13,8 +13,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 122
-        versionName = "26.5"
+        versionCode = 125
+        versionName = "26.8"
         ndk {
             abiFilters += setOf("arm64-v8a", "armeabi-v7a")
         }
@@ -134,12 +134,31 @@ dependencies {
 
   // Local DeepFilterNet3 AI Noise Reduction
   implementation("io.github.kaleyravideo:android-deepfilternet:0.0.8")
+
+  // ONNX Runtime for CleanUNet FP16 and future AI model inference
+  implementation("com.microsoft.onnxruntime:onnxruntime-android:1.20.0")
+
+  // Apache Commons Compress for extracting downloaded model packages (tar.bz2)
+  implementation("org.apache.commons:commons-compress:1.26.1")
   
   // ExoPlayer for Video Preview
   val media3_version = "1.3.1"
   implementation("androidx.media3:media3-exoplayer:$media3_version")
   implementation("androidx.media3:media3-ui:$media3_version")
   implementation("androidx.media3:media3-session:$media3_version")
+
+  // CameraX dependencies
+  val cameraVersion = "1.3.1"
+  implementation("androidx.camera:camera-core:$cameraVersion")
+  implementation("androidx.camera:camera-camera2:$cameraVersion")
+  implementation("androidx.camera:camera-lifecycle:$cameraVersion")
+  implementation("androidx.camera:camera-view:$cameraVersion")
+
+  // ML Kit dependencies for Accessible Guided Camera
+  implementation("com.google.mlkit:face-detection:16.1.6")
+  implementation("com.google.mlkit:image-labeling:17.0.8")
+  implementation("com.google.mlkit:text-recognition:16.0.0")
+  implementation("com.google.mlkit:barcode-scanning:17.2.0")
   
 
 

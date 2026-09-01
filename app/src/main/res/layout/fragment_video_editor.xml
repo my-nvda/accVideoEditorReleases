@@ -4,7 +4,7 @@
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
             <Button android:id="@+id/btnSelectVideo" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/string_47" android:minHeight="48dp" />
-            <androidx.media3.ui.PlayerView android:id="@+id/playerView" android:layout_width="match_parent" android:layout_height="200dp" android:layout_marginTop="16dp" />
+            <androidx.media3.ui.PlayerView android:id="@+id/playerView" android:layout_width="match_parent" android:layout_height="200dp" android:layout_marginTop="16dp" app:show_timeout="0" />
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
                 <com.google.android.material.button.MaterialButton android:id="@+id/btnSetStartTime" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginEnd="4dp" android:text="@string/btn_set_start" android:minHeight="48dp" />
                 <com.google.android.material.button.MaterialButton android:id="@+id/btnPreviewRange" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="0dp" android:layout_weight="1.2" android:layout_height="wrap_content" android:layout_marginHorizontal="4dp" android:text="@string/btn_preview_range" android:minHeight="48dp" />
@@ -13,12 +13,21 @@
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardElevation="2dp" android:layout_marginTop="16dp" android:layout_marginBottom="16dp">
                 <include android:id="@+id/textPanel" layout="@layout/layout_text_customization_panel" />
             </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardElevation="2dp" android:layout_marginBottom="16dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:id="@+id/tvLabelAnimType" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تأثير حركة النص (Text Animation):" android:labelFor="@id/spAnimType" />
+                    <Spinner android:id="@+id/spAnimType" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:minHeight="48dp" android:contentDescription="تأثير حركة النص" />
+                    
+                    <TextView android:id="@+id/tvLabelShapeMask" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="شكل وإطار الفيديو (Video Shape Mask):" android:labelFor="@id/spShapeMask" />
+                    <Spinner android:id="@+id/spShapeMask" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:contentDescription="شكل وإطار الفيديو" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="16dp">
                 <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginEnd="8dp">
-                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/etStartTime" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/string_23" />
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/etStartTime" android:layout_width="match_parent" android:layout_height="wrap_content" android:contentDescription="@string/cd_start_time" android:hint="@string/string_23" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginStart="8dp">
-                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEndTime" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/string_34" />
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEndTime" android:layout_width="match_parent" android:layout_height="wrap_content" android:contentDescription="@string/cd_end_time" android:hint="@string/string_34" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
             <Button android:id="@+id/btnApply" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/string_248" android:minHeight="48dp" />

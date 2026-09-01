@@ -52,6 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/string_103"
+                android:contentDescription="@string/cd_transcription_results"
                 android:inputType="none"
                 android:minLines="5"
                 android:textIsSelectable="true" />
