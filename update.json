@@ -1,6 +1,6 @@
 {
-    "releaseNotes": "تحديث الإصدار 2.4.16:\n- إصلاح مشكلة التركيز (Focus) لقارئ الشاشة عند الدخول لأي شاشة جديدة.\n- استعادة ميزات تعديل النصوص (الظل، الألوان، أحجام الخط) في شاشات تعديل الفيديو والصور.\n- تعريب كافة الشاشات المتبقية وإصلاح مشاكل النصوص الثابتة.",
-    "versionCode": 19,
-    "versionName": "2.4.16",
-    "downloadUrl": "https://github.com/my-nvda/AccessibleVideoEditor/releases/download/v2.4.16/app-release.apk"
+    "versionCode": 125,
+    "versionName": "26.8",
+    "downloadUrl": "https://raw.githubusercontent.com/my-nvda/accVideoEditorReleases/main/app-release.apk",
+    "releaseNotes": "تحديث الإصدار 26.8:\n- ميزة المونتاج القائم على النص (Text-Based Video Editing): تفريغ كلام الفيديو إلى نص وحذف المقاطع عبر النص المكتوب بدقة وسرعة.\n- ثبات دائم لعناصر المشغل (Persistent Player Controls): عدم اختفاء أزرار التحكم بالصوت والفيديو تلقائياً لسهولة التصفح عبر TalkBack.\n- تحسينات شمولية في الاستقرار وإصلاح مشكلات التوقف المفاجئ."
 }
