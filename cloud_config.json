@@ -199,7 +199,11 @@
       "e0c9ef4bd15c7752"
     ],
     "btnNoiseReduction": [
-      "062c80e6a4faab64"
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
     ],
     "btnBackgroundMusic": [
       "062c80e6a4faab64",
@@ -217,9 +221,6 @@
     ],
     "btnAiSceneInspector": [
       "062c80e6a4faab64",
-      "0dddefbf349537f7",
-      "36aa4cd0ca16f745",
-      "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAiVoiceDubbing": [
@@ -241,14 +242,16 @@
     ],
     "btnCinematicLutShaders": [
       "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
       "e0c9ef4bd15c7752"
     ],
     "btnAiSceneAudioDescription": [
       "062c80e6a4faab64"
     ],
     "btnSubtitlesOcrSrt": [
-      "062c80e6a4faab64",
-      "58df865bb003bac8"
+      "062c80e6a4faab64"
     ]
   },
   "allAvailableFeatureIds": {
