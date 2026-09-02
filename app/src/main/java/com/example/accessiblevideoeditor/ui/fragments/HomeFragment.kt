@@ -291,7 +291,7 @@ class HomeFragment : Fragment() {
                         for (id in allFeatures) {
                             val isGloballyDisabled = result.currentlyDisabledIds.contains(id)
                             val whitelist = result.whitelistedFeatures[id] ?: emptyList()
-                            val isWhitelisted = androidId.isNotBlank() && whitelist.contains(androidId)
+                            val isWhitelisted = androidId.isNotBlank() && whitelist.any { it.trim().equals(androidId.trim(), ignoreCase = true) }
                             if (!isGloballyDisabled || isWhitelisted) {
                                 enabledFeatures.add(id)
                             }
