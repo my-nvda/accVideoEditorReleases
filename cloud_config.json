@@ -1,0 +1,410 @@
+{
+  "disabledFeatures": [
+    "btnVideoEditor",
+    "btnImageEditor",
+    "btnWatermark",
+    "btnCreateBlankImage",
+    "btnVideoTrimmer",
+    "btnSmartCut",
+    "btnAudioEditor",
+    "btnAudioStudio",
+    "btnAiAnalysis",
+    "btnStt",
+    "btnOcr",
+    "btnFastConverter",
+    "btnBoostVolume",
+    "btnExtractAudio",
+    "btnCompressVideo",
+    "btnMergeVideos",
+    "btnReverseMedia",
+    "btnSlideshowMaker",
+    "btnTickerText",
+    "btnBatchProcess",
+    "btnSpeedControl",
+    "btnNoiseReduction",
+    "btnBackgroundMusic",
+    "btnAudioNormalization",
+    "btnAiSceneInspector",
+    "btnAiVoiceDubbing",
+    "btnAudioStemSeparator",
+    "btnAutoShortsCreator",
+    "btnCinematicLutShaders",
+    "btnAiSceneAudioDescription",
+    "btnSubtitlesOcrSrt"
+  ],
+  "newFeatures": [
+    {
+      "id": "cleanunet_fp16",
+      "featureId": "cleanunet_fp16",
+      "title": "CleanUNet FP16 AI Noise Reduction Model",
+      "description": "High-fidelity studio quality speech enhancement model (90MB)",
+      "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/cleanunet_fp16.tar.bz2",
+      "version": 1
+    },
+    {
+      "id": "resemble_enhance_fp32",
+      "featureId": "resemble_enhance_fp32",
+      "title": "AI Studio (Resemble Enhance) Speech Enhancement Model",
+      "description": "High-fidelity generative studio speech enhancement model (49MB)",
+      "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/resemble_enhance_fp32.tar.bz2",
+      "version": 1
+    }
+  ],
+  "featurePatches": [],
+  "whitelistedDevices": {
+    "btnTextBasedEditor": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnVideoEditor": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnImageEditor": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnWatermark": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnCreateBlankImage": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnVideoTrimmer": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnSmartCut": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnAudioEditor": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnAudioStudio": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnAiAnalysis": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnStt": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8"
+    ],
+    "btnOcr": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnFastConverter": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnBoostVolume": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnExtractAudio": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnCompressVideo": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnMergeVideos": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnReverseMedia": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnSlideshowMaker": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnTickerText": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnBatchProcess": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnSpeedControl": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnNoiseReduction": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnBackgroundMusic": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnAudioNormalization": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnAiSceneInspector": [
+      "062c80e6a4faab64",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnAiVoiceDubbing": [
+      "062c80e6a4faab64"
+    ],
+    "btnAudioStemSeparator": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnAutoShortsCreator": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnCinematicLutShaders": [
+      "062c80e6a4faab64",
+      "0dddefbf349537f7",
+      "36aa4cd0ca16f745",
+      "58df865bb003bac8",
+      "e0c9ef4bd15c7752"
+    ],
+    "btnAiSceneAudioDescription": [
+      "062c80e6a4faab64"
+    ],
+    "btnSubtitlesOcrSrt": [
+      "062c80e6a4faab64"
+    ]
+  },
+  "allAvailableFeatureIds": {
+    "btnVideoEditor": "محرر الفيديو الشامل",
+    "btnImageEditor": "محرر الصور",
+    "btnWatermark": "إضافة علامة مائية ونصوص",
+    "btnCreateBlankImage": "إنشاء صورة ملونة فارغة",
+    "btnVideoTrimmer": "قص الفيديو المحدد",
+    "btnSmartCut": "القص الذكي للصمت والهدوء",
+    "btnAudioEditor": "محرر الصوتيات والتأثيرات",
+    "btnAudioStudio": "استوديو الهندسة الصوتية",
+    "btnAiAnalysis": "تحليل الصور والفيديوهات بالذكاء الاصطناعي",
+    "btnStt": "التفريغ التلقائي للصوت إلى نص",
+    "btnOcr": "قراءة وتفريغ النصوص من الصور OCR",
+    "btnFastConverter": "المحول السريع لصيغ الفيديو والصوت",
+    "btnBoostVolume": "تضخيم ورفع مستوى الصوت",
+    "btnExtractAudio": "استخراج الصوت من الفيديو",
+    "btnCompressVideo": "تقليل وحجم وضغط الفيديو",
+    "btnMergeVideos": "دمج الفيديوهات وتأثيرات الانتقال",
+    "btnReverseMedia": "عكس اتجاه تشغيل الفيديو والصوت",
+    "btnSlideshowMaker": "صانع العروض والشرائح من الصور",
+    "btnTickerText": "شريط الأخبار المتحرك على الفيديو",
+    "btnBatchProcess": "المعالجة الجماعية للملفات",
+    "btnSpeedControl": "تغيير سرعة التشغيل",
+    "btnNoiseReduction": "إزالة الضوضاء وتصفية التشويش",
+    "btnBackgroundMusic": "دمج موسيقى خلفية",
+    "btnAudioNormalization": "موازنة مستوى الصوت التلقائي",
+    "btnAiSceneInspector": "مستكشف ومشرح مشاهد الفيديو الذكي",
+    "btnAiVoiceDubbing": "دبلجة وتوليد الصوت بالذكاء الاصطناعي",
+    "btnAudioStemSeparator": "عازل ومحلل الآلات والموسيقى",
+    "btnAutoShortsCreator": "مولد الفيديوهات القصيرة والقوالب الذكية",
+    "btnCinematicLutShaders": "حزمة الفلاتر والتأثيرات السينمائية",
+    "btnAiSceneAudioDescription": "الوصف الصوتي التفاعلي",
+    "btnSubtitlesOcrSrt": "مستخرج وقارئ الترجمات الشاشاتية SRT"
+  },
+  "deviceNames": {
+    "062c80e6a4faab64": "ahmed salah",
+    "0dddefbf349537f7": "hosam ali",
+    "36aa4cd0ca16f745": "omar alganzoury",
+    "58df865bb003bac8": "ramez maged",
+    "e0c9ef4bd15c7752": "abd alazez al alamry"
+  },
+  "github_token": "Uks4eGQwcDhIZjBDdkJva29NWUdqQ3p5UXhMc1MxeElyaXpFX3BoZw==",
+  "github_repo": "my-nvda/AccessibleVideoEditor",
+  "telemetryConfig": {
+    "token": "Uks4eGQwcDhIZjBDdkJva29NWUdqQ3p5UXhMc1MxeElyaXpFX3BoZw==",
+    "repo": "my-nvda/AccessibleVideoEditor"
+  },
+  "textAnimations": [
+    {
+      "value": "none",
+      "name": "none (بدون حركة)"
+    },
+    {
+      "value": "fade_in",
+      "name": "fade_in (ظهور وتلاشي ناعم 🌟)"
+    },
+    {
+      "value": "fade_out",
+      "name": "fade_out (تلاشي ختامي تدريجي 🌑)"
+    },
+    {
+      "value": "fade_in_out",
+      "name": "fade_in_out (ظهور ناعم وتلاشي ختامي 🌅)"
+    },
+    {
+      "value": "slide_up",
+      "name": "slide_up (انزلاق صاعد من الأسفل ⬆️)"
+    },
+    {
+      "value": "slide_down",
+      "name": "slide_down (انزلاق هابط من الأعلى ⬇️)"
+    },
+    {
+      "value": "slide_left",
+      "name": "slide_left (انزلاق جانبي لليسار ⬅️)"
+    },
+    {
+      "value": "slide_right",
+      "name": "slide_right (انزلاق جانبي لليمين ➡️)"
+    },
+    {
+      "value": "zoom_in",
+      "name": "zoom_in (انبثاق وتكبير مفاجئ 💥)"
+    },
+    {
+      "value": "elastic_zoom",
+      "name": "elastic_zoom (تكبير مرن ممتد 🪀)"
+    },
+    {
+      "value": "pulse",
+      "name": "pulse (نبض متكرر 💓)"
+    },
+    {
+      "value": "typewriter",
+      "name": "typewriter (آلة كاتبة ⌨️)"
+    },
+    {
+      "value": "bounce_in",
+      "name": "bounce_in (ارتطام مرن ومطاطي 🏀)"
+    },
+    {
+      "value": "mask_reveal",
+      "name": "mask_reveal (ظهور سينمائي خلف قناع 🎬)"
+    },
+    {
+      "value": "blink",
+      "name": "blink (وميض سريع متقطع 💡)"
+    },
+    {
+      "value": "flicker",
+      "name": "flicker (تأثير تشويش كهربائي ⚡)"
+    },
+    {
+      "value": "wave",
+      "name": "wave (حركة موجية تموجية 🌊)"
+    },
+    {
+      "value": "rotate_in",
+      "name": "rotate_in (دوران حلزوني للداخل 🌀)"
+    }
+  ],
+  "aiModelsConfig": {
+    "cleanunet_fp16": {
+      "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/cleanunet_fp16.tar.bz2",
+      "version": 1
+    },
+    "resemble_enhance_fp32": {
+      "downloadUrl": "https://media.githubusercontent.com/media/my-nvda/accVideoEditorReleases/main/models/resemble_enhance_fp32.tar.bz2",
+      "version": 1
+    }
+  },
+  "announcements": [
+    {
+      "id": "ann_1786607347636",
+      "title": "تقييم",
+      "message": "أرجو أن أحظى من حضراتكم بتقييم دقيق للتطبيق ، فتقييماتكم وشكاواكم هي وقود التحديثات يا كِرام ، متحمس فعلا لأسمع منكم عن ما واجهتم من أخطاء",
+      "targetGroup": "all",
+      "scheduleTime": 0
+    },
+    {
+      "id": "ann_1786955339599",
+      "title": "عن ميزة المشاريع داخل التطبيق",
+      "message": "هل لديكم أي إقتراحات بخصوص فكرة المشروع الكامل داخل التطبيق ، أود أن أسمع منكم إقتراحاتكم لنرى ما الممكن منها",
+      "targetGroup": "all",
+      "scheduleTime": 0
+    }
+  ]
+}

@@ -302,7 +302,7 @@ class HomeFragment : Fragment() {
                             showAnnouncementDialog(currentContext, ann)
                         }
                     } else {
-                        enabledFeatures.clear()
+                        enabledFeatures.addAll(allFeatures)
                     }
                 }
             } catch (e: Exception) {
