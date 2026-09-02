@@ -345,6 +345,9 @@
         <action
             android:id="@+id/action_projectsDashboardFragment_to_unifiedWorkspaceFragment"
             app:destination="@id/unifiedWorkspaceFragment" />
+        <action
+            android:id="@+id/action_projectsDashboardFragment_to_textBasedEditorFragment"
+            app:destination="@id/textBasedEditorFragment" />
     </fragment>
 
     <fragment

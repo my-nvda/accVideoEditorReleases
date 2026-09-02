@@ -217,6 +217,7 @@ class ProjectsDashboardFragment : Fragment() {
                     val popup = PopupMenu(view.context, view)
                     popup.menu.add(0, 1, 0, getString(R.string.menu_rename))
                     popup.menu.add(0, 2, 0, getString(R.string.menu_duplicate))
+                    popup.menu.add(0, 4, 0, "المونتاج النصي (تقطيع حسب الكلام) ✂️")
                     popup.menu.add(0, 3, 0, getString(R.string.menu_delete))
                     
                     popup.setOnMenuItemClickListener { menuItem ->
@@ -228,6 +229,18 @@ class ProjectsDashboardFragment : Fragment() {
                             2 -> {
                                 UnifiedProjectManager.duplicateProject(view.context, project)
                                 loadProjects()
+                                true
+                            }
+                            4 -> {
+                                val bundle = Bundle().apply {
+                                    putString("videoUri", project.videoPath)
+                                    putString("videoPath", project.videoPath)
+                                }
+                                try {
+                                    findNavController().navigate(R.id.action_projectsDashboardFragment_to_textBasedEditorFragment, bundle)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                                 true
                             }
                             3 -> {

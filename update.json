@@ -1,6 +1,6 @@
 {
-    "versionCode": 128,
-    "versionName": "26.9.2",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.9.2/app-release.apk",
-    "releaseNotes": "🚀 ما الجديد في الإصدار 26.9.2؟\n⚡ 1. تحسين هائل لسرعة التحميل على الواي فاي (Wi-Fi Speed Boost)\n• تم زيادة ذاكرة التجميع (Buffer) إلى 128KB وتفعيل اتصالات HTTP السريعة والـ IPv4 الفوري، ليعمل التنزيل على الواي فاي بأعلى سرعة خط ممكنة وبشكل مباشر!\n⚡ 2. تفعيل شامل ومباشر لكافة الأدوات والميزات بدون أي قيود شبكة.\n✂️ 3. المونتاج القائم على النص (Text-Based Video Editing)\n🎮 4. ثبات دائم لعناصر المشغل لجميع المستخدمين (TalkBack)"
+    "versionCode": 129,
+    "versionName": "26.9.3",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.9.3/app-release.apk",
+    "releaseNotes": "🚀 ما الجديد في الإصدار 26.9.3؟\n✂️ 1. إضافة المونتاج النصي (تقطيع حسب الكلام) إلى شاشة قائمة المشاريع (Projects Dashboard)\n• يمكنك الآن فتح أي مشروع فيديو محفوظ سلفاً مباشرة في أداة التعديل القائم على النص وحذف الجمل والكلمات غير المرغوبة بسهولة وسلاسة!\n⚡ 2. تحسين هائل لسرعة التحميل على الواي فاي (Wi-Fi Speed Boost)\n• زيادة ذاكرة التجميع (Buffer) إلى 128KB وتفعيل اتصالات HTTP السريعة والـ IPv4 الفوري.\n⚡ 3. تفعيل شامل ومباشر لكافة الأدوات والميزات بدون أي قيود شبكة."
 }

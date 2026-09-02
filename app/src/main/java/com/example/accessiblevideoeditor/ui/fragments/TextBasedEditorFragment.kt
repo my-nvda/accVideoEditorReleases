@@ -63,6 +63,17 @@ class TextBasedEditorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val uriArg = arguments?.getString("videoUri") ?: arguments?.getString("videoPath")
+        if (!uriArg.isNullOrEmpty()) {
+            selectedUri = if (uriArg.startsWith("content://") || uriArg.startsWith("file://")) {
+                Uri.parse(uriArg)
+            } else {
+                Uri.fromFile(File(uriArg))
+            }
+            binding.tvSelectedFile.visibility = View.VISIBLE
+            binding.tvSelectedFile.text = "تم اختيار فيديو المشروع: " + (selectedUri?.lastPathSegment ?: "فيديو مشروع")
+        }
+
         binding.topAppBar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
