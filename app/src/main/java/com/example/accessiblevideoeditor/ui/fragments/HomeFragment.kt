@@ -108,6 +108,7 @@ class HomeFragment : Fragment() {
             binding.btnCreateBlankImage.text = AppStrings.get(context, R.string.string_271)
             binding.btnVideoTrimmer.text = AppStrings.get(context, R.string.string_94)
             binding.btnSmartCut.text = AppStrings.get(context, R.string.string_45)
+            binding.btnTextBasedEditor.text = "المونتاج النصي (تقطيع حسب الكلام) ✂️"
             binding.btnAudioEditor.text = AppStrings.get(context, R.string.string_102)
             binding.btnAudioStudio.text = AppStrings.get(context, R.string.string_55)
             binding.btnAiAnalysis.text = AppStrings.get(context, R.string.string_31)
@@ -174,6 +175,7 @@ class HomeFragment : Fragment() {
             binding.btnVideoEditor.setOnClickListener { handleFeatureClick("btnVideoEditor", R.id.action_homeFragment_to_videoEditorFragment, it) }
             binding.btnVideoTrimmer.setOnClickListener { handleFeatureClick("btnVideoTrimmer", R.id.action_homeFragment_to_videoTrimmerFragment, it) }
             binding.btnSmartCut.setOnClickListener { handleFeatureClick("btnSmartCut", R.id.action_homeFragment_to_smartCutFragment, it) }
+            binding.btnTextBasedEditor.setOnClickListener { handleFeatureClick("btnTextBasedEditor", R.id.action_homeFragment_to_textBasedEditorFragment, it) }
             binding.btnMergeVideos.setOnClickListener { handleFeatureClick("btnMergeVideos", R.id.action_homeFragment_to_mergeVideosFragment, it) }
             binding.btnReverseMedia.setOnClickListener { handleFeatureClick("btnReverseMedia", R.id.action_homeFragment_to_reverseMediaFragment, it) }
             binding.btnAudioEditor.setOnClickListener { handleFeatureClick("btnAudioEditor", R.id.action_homeFragment_to_audioEditorFragment, it) }
@@ -218,6 +220,7 @@ class HomeFragment : Fragment() {
                 binding.btnCreateBlankImage to "btnCreateBlankImage",
                 binding.btnVideoTrimmer to "btnVideoTrimmer",
                 binding.btnSmartCut to "btnSmartCut",
+                binding.btnTextBasedEditor to "btnTextBasedEditor",
                 binding.btnAudioEditor to "btnAudioEditor",
                 binding.btnAudioStudio to "btnAudioStudio",
                 binding.btnAiAnalysis to "btnAiAnalysis",

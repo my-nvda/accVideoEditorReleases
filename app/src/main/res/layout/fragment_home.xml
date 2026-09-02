@@ -15,6 +15,7 @@
                 <Button android:id="@+id/btnCreateBlankImage" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnVideoTrimmer" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnSmartCut" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
+                <Button android:id="@+id/btnTextBasedEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnAudioEditor" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnAudioStudio" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />
                 <Button android:id="@+id/btnAiAnalysis" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:minHeight="48dp" />

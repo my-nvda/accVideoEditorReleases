@@ -13,8 +13,8 @@ android {
         applicationId = "com.example.accessiblevideoeditor"
         minSdk = 29
         targetSdk = 36
-        versionCode = 125
-        versionName = "26.8"
+        versionCode = 126
+        versionName = "26.9"
         ndk {
             abiFilters += setOf("arm64-v8a", "armeabi-v7a")
         }
