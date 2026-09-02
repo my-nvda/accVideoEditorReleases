@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.accessiblevideoeditor.BuildConfig
 import com.example.accessiblevideoeditor.R
 import com.example.accessiblevideoeditor.MainActivity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -86,39 +87,115 @@ object AppUpdater {
     }
 
     fun downloadAndInstall(context: Context, updateInfo: UpdateInfo): Long {
-        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val targetFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "AccessibleVideoEditor_Update.apk")
+        if (targetFile.exists()) {
+            try { targetFile.delete() } catch (_: Exception) {}
+        }
+
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as? DownloadManager
         val uri = Uri.parse(updateInfo.downloadUrl)
         val title = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_202) } catch (_: Exception) { context.getString(R.string.string_202) }
         val desc = try { com.example.accessiblevideoeditor.ui.AppStrings.get(context, R.string.string_203, updateInfo.versionName) } catch (_: Exception) { context.getString(R.string.string_203, updateInfo.versionName) }
-        
-        val request = DownloadManager.Request(uri)
-            .setTitle(if (title.isNotBlank()) title else context.getString(R.string.string_213))
-            .setDescription(if (desc.isNotBlank()) desc else context.getString(R.string.string_243, updateInfo.versionName))
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "AccessibleVideoEditor_Update.apk")
 
-        val downloadId = downloadManager.enqueue(request)
-
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(c: Context, intent: Intent) {
-                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                if (id == downloadId) {
-                    installApk(context, downloadId)
-                    try { context.unregisterReceiver(this) } catch (_: Exception) {}
-                }
-            }
+        if (downloadManager == null) {
+            startDirectHttpDownload(context, updateInfo)
+            return -1L
         }
 
         try {
-            androidx.core.content.ContextCompat.registerReceiver(
-                context,
-                receiver,
-                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                androidx.core.content.ContextCompat.RECEIVER_EXPORTED
-            )
-        } catch (_: Exception) {}
+            val request = DownloadManager.Request(uri)
+                .setTitle(if (title.isNotBlank()) title else context.getString(R.string.string_213))
+                .setDescription(if (desc.isNotBlank()) desc else context.getString(R.string.string_243, updateInfo.versionName))
+                .setMimeType("application/vnd.android.package-archive")
+                .addRequestHeader("User-Agent", "Mozilla/5.0 (Linux; Android 10; Mobile)")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "AccessibleVideoEditor_Update.apk")
 
-        return downloadId
+            val downloadId = downloadManager.enqueue(request)
+
+            val receiver = object : BroadcastReceiver() {
+                override fun onReceive(c: Context, intent: Intent) {
+                    val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                    if (id == downloadId) {
+                        installApk(context, downloadId)
+                        try { context.unregisterReceiver(this) } catch (_: Exception) {}
+                    }
+                }
+            }
+
+            try {
+                androidx.core.content.ContextCompat.registerReceiver(
+                    context,
+                    receiver,
+                    IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+                    androidx.core.content.ContextCompat.RECEIVER_EXPORTED
+                )
+            } catch (_: Exception) {}
+
+            return downloadId
+        } catch (e: Exception) {
+            e.printStackTrace()
+            startDirectHttpDownload(context, updateInfo)
+            return -1L
+        }
+    }
+
+    private fun startDirectHttpDownload(context: Context, updateInfo: UpdateInfo) {
+        val appContext = context.applicationContext
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val targetFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "AccessibleVideoEditor_Update.apk")
+                if (targetFile.exists()) try { targetFile.delete() } catch (_: Exception) {}
+
+                var connUrl = URL(updateInfo.downloadUrl)
+                var connection = connUrl.openConnection() as HttpURLConnection
+                connection.instanceFollowRedirects = true
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 10; Mobile)")
+                connection.connectTimeout = 15000
+                connection.readTimeout = 15000
+
+                var redirects = 0
+                while ((connection.responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+                        connection.responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
+                        connection.responseCode == 307 || connection.responseCode == 308) && redirects < 5) {
+                    val newUrl = connection.getHeaderField("Location")
+                    connection.disconnect()
+                    connUrl = URL(newUrl)
+                    connection = connUrl.openConnection() as HttpURLConnection
+                    connection.instanceFollowRedirects = true
+                    connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 10; Mobile)")
+                    connection.connectTimeout = 15000
+                    connection.readTimeout = 15000
+                    redirects++
+                }
+
+                if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                    connection.inputStream.use { input ->
+                        targetFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        installFromFile(appContext, targetFile)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun installFromFile(context: Context, file: File) {
+        if (!file.exists()) return
+        try {
+            val fileUri = FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", file)
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(fileUri, "application/vnd.android.package-archive")
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun observeDownload(context: Context, downloadId: Long): Flow<DownloadProgress> = flow {
