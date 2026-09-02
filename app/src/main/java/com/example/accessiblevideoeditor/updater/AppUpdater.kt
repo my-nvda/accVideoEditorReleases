@@ -107,7 +107,10 @@ object AppUpdater {
                 .setTitle(if (title.isNotBlank()) title else context.getString(R.string.string_213))
                 .setDescription(if (desc.isNotBlank()) desc else context.getString(R.string.string_243, updateInfo.versionName))
                 .setMimeType("application/vnd.android.package-archive")
-                .addRequestHeader("User-Agent", "Mozilla/5.0 (Linux; Android 10; Mobile)")
+                .addRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                .addRequestHeader("Accept-Encoding", "identity")
+                .addRequestHeader("Connection", "Keep-Alive")
+                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "AccessibleVideoEditor_Update.apk")
 
@@ -144,15 +147,22 @@ object AppUpdater {
         val appContext = context.applicationContext
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                try {
+                    System.setProperty("java.net.preferIPv4Stack", "true")
+                    System.setProperty("java.net.preferIPv6Addresses", "false")
+                } catch (_: Exception) {}
+
                 val targetFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "AccessibleVideoEditor_Update.apk")
                 if (targetFile.exists()) try { targetFile.delete() } catch (_: Exception) {}
 
                 var connUrl = URL(updateInfo.downloadUrl)
                 var connection = connUrl.openConnection() as HttpURLConnection
                 connection.instanceFollowRedirects = true
-                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 10; Mobile)")
-                connection.connectTimeout = 15000
-                connection.readTimeout = 15000
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                connection.setRequestProperty("Accept-Encoding", "identity")
+                connection.setRequestProperty("Connection", "Keep-Alive")
+                connection.connectTimeout = 30000
+                connection.readTimeout = 30000
 
                 var redirects = 0
                 while ((connection.responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
@@ -163,16 +173,22 @@ object AppUpdater {
                     connUrl = URL(newUrl)
                     connection = connUrl.openConnection() as HttpURLConnection
                     connection.instanceFollowRedirects = true
-                    connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 10; Mobile)")
-                    connection.connectTimeout = 15000
-                    connection.readTimeout = 15000
+                    connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                    connection.setRequestProperty("Accept-Encoding", "identity")
+                    connection.setRequestProperty("Connection", "Keep-Alive")
+                    connection.connectTimeout = 30000
+                    connection.readTimeout = 30000
                     redirects++
                 }
 
                 if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-                    connection.inputStream.use { input ->
-                        targetFile.outputStream().use { output ->
-                            input.copyTo(output)
+                    java.io.BufferedInputStream(connection.inputStream, 131072).use { input ->
+                        java.io.BufferedOutputStream(targetFile.outputStream(), 131072).use { output ->
+                            val buffer = ByteArray(131072) // 128 KB high-speed buffer
+                            var bytesRead: Int
+                            while (input.read(buffer).also { bytesRead = it } != -1) {
+                                output.write(buffer, 0, bytesRead)
+                            }
                         }
                     }
                     withContext(Dispatchers.Main) {

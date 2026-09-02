@@ -430,16 +430,23 @@ object CloudConfigManager {
             var currentUrl = downloadUrl
             var redirectCount = 0
 
+            try {
+                System.setProperty("java.net.preferIPv4Stack", "true")
+                System.setProperty("java.net.preferIPv6Addresses", "false")
+            } catch (_: Exception) {}
+
             while (redirectCount < 5) {
                 val url = URL(currentUrl)
                 val conn = url.openConnection() as HttpURLConnection
                 connection = conn
                 conn.useCaches = false
                 conn.instanceFollowRedirects = true
-                conn.connectTimeout = 20000
-                conn.readTimeout = 20000
+                conn.connectTimeout = 30000
+                conn.readTimeout = 30000
                 conn.requestMethod = "GET"
                 conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                conn.setRequestProperty("Accept-Encoding", "identity")
+                conn.setRequestProperty("Connection", "Keep-Alive")
                 
                 // Add Range header for resumption
                 if (downloadedBytes > 0) {
@@ -473,10 +480,12 @@ object CloudConfigManager {
                 val retryConn = url.openConnection() as HttpURLConnection
                 connection = retryConn
                 retryConn.useCaches = false
-                retryConn.connectTimeout = 20000
-                retryConn.readTimeout = 20000
+                retryConn.connectTimeout = 30000
+                retryConn.readTimeout = 30000
                 retryConn.requestMethod = "GET"
                 retryConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                retryConn.setRequestProperty("Accept-Encoding", "identity")
+                retryConn.setRequestProperty("Connection", "Keep-Alive")
                 responseCode = retryConn.responseCode
             }
 
@@ -494,9 +503,9 @@ object CloudConfigManager {
                     downloadedBytes = 0L
                 }
 
-                conn.inputStream.use { input ->
-                    java.io.FileOutputStream(tmpFile, append).use { output ->
-                        val buffer = ByteArray(16384)
+                java.io.BufferedInputStream(conn.inputStream, 131072).use { input ->
+                    java.io.BufferedOutputStream(java.io.FileOutputStream(tmpFile, append), 131072).use { output ->
+                        val buffer = ByteArray(131072) // 128 KB high-speed buffer
                         var bytesRead: Int
                         var lastReportedProgress = -1
 
