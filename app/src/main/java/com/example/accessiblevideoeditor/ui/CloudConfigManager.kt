@@ -206,12 +206,16 @@ object CloudConfigManager {
 
                 val previousDisabled = prefs?.getStringSet(KEY_DISABLED_SET, emptySet()) ?: emptySet()
                 
-                // Detect re-enabled features (was disabled before, but no longer disabled now)
+                // Detect re-enabled features
                 val reEnabled = previousDisabled.filter { !currentDisabled.contains(it) }
                 result.reEnabledFeatureIds = reEnabled
 
-                // Update saved disabled set
-                prefs?.edit()?.putStringSet(KEY_DISABLED_SET, currentDisabled)?.apply()
+                // Update saved disabled set (clear immediately if current is empty)
+                if (currentDisabled.isEmpty()) {
+                    prefs?.edit()?.remove(KEY_DISABLED_SET)?.apply()
+                } else {
+                    prefs?.edit()?.putStringSet(KEY_DISABLED_SET, currentDisabled)?.apply()
+                }
                 result.currentlyDisabledIds = currentDisabled
 
                 // 2. Process New Features & Updates requiring user download with Fault-Tolerant Regex Fallback

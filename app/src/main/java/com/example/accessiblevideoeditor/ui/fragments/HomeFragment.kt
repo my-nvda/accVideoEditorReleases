@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
         "btnSubtitlesOcrSrt"
     )
 
-    private val enabledFeatures = mutableSetOf<String>()
+    private val enabledFeatures = mutableSetOf<String>().apply { addAll(allFeatures) }
 
     private fun handleFeatureClick(featureId: String, actionId: Int, view: View) {
         val context = context ?: return
