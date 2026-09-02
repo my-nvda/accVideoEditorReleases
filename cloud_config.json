@@ -21,6 +21,7 @@
   "featurePatches": [],
   "whitelistedDevices": {
     "btnTextBasedEditor": [
+      "*",
       "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
@@ -28,6 +29,7 @@
       "e0c9ef4bd15c7752"
     ],
     "btnVideoEditor": [
+      "*",
       "062c80e6a4faab64",
       "0dddefbf349537f7",
       "36aa4cd0ca16f745",
