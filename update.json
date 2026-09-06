@@ -1,6 +1,6 @@
 {
-    "versionCode": 132,
-    "versionName": "26.9.6",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.9.6/app-release.apk",
-    "releaseNotes": "🚀 ما الجديد في الإصدار 26.9.6؟\n⚡ 1. إصلاح جذري وشامل لعملية تنزيل النماذج السحابية (CleanUNet & Resemble & Vocal Separator)\n🛡️ 2. منع تجمد الهاتف تماماً وإصلاح مشكلة إجهاد الذاكرة العشوائية (RAM OOM Fix)\n✅ 3. تفعيل التنزيل السلس والموثوق بدون أي انقطاع"
+    "versionCode": 133,
+    "versionName": "26.9.7",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.9.7/app-release.apk",
+    "releaseNotes": "🚀 ما الجديد في الإصدار 26.9.7؟\n🛠️ 1. إصلاح خلل تثبيت التحديثات تلقائياً (APK Auto-Installer Fix)\n📱 2. دعم كامل للتبسيط والتثبيت في نظام Android 8+ و Android 10+ (Scoped Storage & Unknown Sources Permissions)\n⚡ 3. تحسين استقرار التحديثات والمزامنة المباشرة"
 }
