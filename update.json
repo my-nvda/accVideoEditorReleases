@@ -1,6 +1,6 @@
 {
-    "versionCode": 134,
-    "versionName": "26.9.8",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.9.8/app-release.apk",
-    "releaseNotes": "🚀 ما الجديد في الإصدار 26.9.8؟\n🤖 1. دعم أحدث نماذج الذكاء الاصطناعي Gemini 3.8 Flash رسمياً مع جلب النماذج المباشرة وخطط الانتقال التلقائي Fallback.\n🔒 2. إضافة نظام التحكم الفوري وحظر الأجهزة عن بُعد (Remote Device Activation & Blacklist) عبر Firebase Realtime Database.\n💡 3. تحسين واجهة صانع الفيديوهات القصيرة (Auto Shorts) لتعمل محلياً 100% وإزالة تنبيهات التنزيل لغير أدوات AI.\n⚡ 4. إزالة حزم Resemble Enhance وتحسين أداء التطبيق واستقراره."
+    "versionCode": 135,
+    "versionName": "26.12.5",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.12.5/app-release.apk",
+    "releaseNotes": "🚀 ما الجديد في الإصدار 26.12.5؟\n🔒 1. تفعيل نظام الأمان والأذونات للأجهزة (Default Blocked / Manual Approval).\n🤖 2. دعم أحدث نماذج Gemini 3.8 Flash رسمياً.\n💡 3. تحسين واجهة Auto Shorts وتثبيت التحديثات السحابية المباشرة."
 }
