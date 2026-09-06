@@ -1,6 +1,6 @@
 {
-    "versionCode": 131,
-    "versionName": "26.9.5",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.9.5/app-release.apk",
-    "releaseNotes": "🚀 ما الجديد في الإصدار 26.9.5؟\n✅ 1. تفعيل المونتاج النصي وكافة الخدمات على كافة الأجهزة 100%\n⚡ 2. إصلاح ظهور رسالة التعطيل السحابي الخاطئة\n⭐ 3. تفعيل المفضلة والترجمة لجميع الخدمات والشاشات"
+    "versionCode": 132,
+    "versionName": "26.9.6",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.9.6/app-release.apk",
+    "releaseNotes": "🚀 ما الجديد في الإصدار 26.9.6؟\n⚡ 1. إصلاح جذري وشامل لعملية تنزيل النماذج السحابية (CleanUNet & Resemble & Vocal Separator)\n🛡️ 2. منع تجمد الهاتف تماماً وإصلاح مشكلة إجهاد الذاكرة العشوائية (RAM OOM Fix)\n✅ 3. تفعيل التنزيل السلس والموثوق بدون أي انقطاع"
 }
