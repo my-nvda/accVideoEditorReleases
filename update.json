@@ -1,7 +1,7 @@
 {
-    "versionCode": 147,
-    "versionName": "26.13.7",
-    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.13.7/app-release.apk",
-    "isForceUpdate": false,
+    "versionCode": 146,
+    "versionName": "26.13.6",
+    "downloadUrl": "https://github.com/my-nvda/accVideoEditorReleases/releases/download/v26.13.6/app-release.apk",
+    "isForceUpdate": true,
     "releaseNotes": "."
 }
